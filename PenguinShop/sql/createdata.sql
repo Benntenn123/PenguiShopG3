@@ -276,3 +276,12 @@ CREATE TABLE Banner (
     bannerID INT IDENTITY(1,1) PRIMARY KEY,
     bannerLink NVARCHAR(255)
 );
+
+
+CREATE TABLE TokenUser(
+	token_id INT IDENTITY(1,1) PRIMARY KEY,
+	token NVARCHAR(255),
+	userID INT,
+	create_date_token DATETIME,
+	FOREIGN KEY(userID) REFERENCES dbo.tbUsers(userID),
+)

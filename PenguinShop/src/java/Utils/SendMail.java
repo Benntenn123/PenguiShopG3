@@ -16,10 +16,10 @@ import java.io.UnsupportedEncodingException;
 import java.util.Properties;
 
 public class SendMail {
-    public static boolean sendMailAsync(String email, String nameUser, String userId) {
+    public static boolean sendMailAsync(String email, String nameUser, String userId,String token) {
         Thread thread = new Thread(() -> {
             try {
-                SendMail.guiMailVerify(email, nameUser, userId);
+                SendMail.guiMailVerify(email, nameUser, userId,token);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -30,7 +30,7 @@ public class SendMail {
     }
     
     
-    public static boolean guiMailVerify(String email, String nameUser, String userId) throws UnsupportedEncodingException, AddressException, MessagingException {
+    public static boolean guiMailVerify(String email, String nameUser, String userId, String token) throws UnsupportedEncodingException, AddressException, MessagingException {
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.host", Gmail.HOST_NAME);
@@ -54,7 +54,7 @@ public class SendMail {
             String subject = "Xác thực tài khoản của bạn";
 
             // Tạo token cho link xác thực bằng cách ghép userId với UUID
-            String token = StringConvert.combineUserIdAndUUID(userId);
+            
             String verifyLink = "http://127.0.0.1:8080/PenguinShop/verify?token=" + token; // Thay "yourdomain.com" bằng domain của bạn
 
             // Nội dung email mới
