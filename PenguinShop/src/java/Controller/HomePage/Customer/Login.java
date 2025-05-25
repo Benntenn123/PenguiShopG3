@@ -4,7 +4,7 @@
  */
 package Controller.HomePage.Customer;
 
-import Bo.HashPassword;
+import Utils.HashPassword;
 import DAL.UserDAO;
 import Models.User;
 import java.io.IOException;

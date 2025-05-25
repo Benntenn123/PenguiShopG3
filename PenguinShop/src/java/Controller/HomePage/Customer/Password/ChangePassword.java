@@ -5,7 +5,7 @@
 package Controller.HomePage.Customer.Password;
 
 import APIKey.Capcha;
-import Bo.HashPassword;
+import Utils.HashPassword;
 import Controller.HomePage.Customer.Login;
 import DAL.UserDAO;
 import Models.User;

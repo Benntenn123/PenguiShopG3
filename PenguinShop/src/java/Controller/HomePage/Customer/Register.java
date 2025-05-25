@@ -1,8 +1,8 @@
 package Controller.HomePage.Customer;
 
 import APIKey.Capcha;
-import Bo.HashPassword;
-import Bo.VerifyCapcha;
+import Utils.HashPassword;
+import Utils.VerifyCapcha;
 import DAL.UserDAO;
 import java.io.IOException;
 import java.io.PrintWriter;

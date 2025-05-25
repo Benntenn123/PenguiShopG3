@@ -54,7 +54,7 @@ public class UserProfile extends HttpServlet {
                 String fileName = filePart.getSubmittedFileName();
                 byte[] imageData = filePart.getInputStream().readAllBytes();
                 String baseUrl = request.getRequestURL().toString().replace(request.getRequestURI(), request.getContextPath());
-                imageUser = Bo.ImageServices.saveImageToLocal(imageData, fileName, baseUrl);
+                imageUser = Utils.ImageServices.saveImageToLocal(imageData, fileName, baseUrl);
             }
 
         } catch (Exception e) {

@@ -4,7 +4,7 @@
  */
 package DAL;
 
-import Bo.HashPassword;
+import Utils.HashPassword;
 import Models.User;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -148,8 +148,8 @@ public class UserDAO extends DBContext {
     }
 
     public boolean addUser(String[] info) {
-        String sql = "INSERT INTO dbo.tbUsers(fullName,password,roleID,phone,email,image_user)\n"
-                + "VALUES(?,?,?,?,?,?)";
+        String sql = "INSERT INTO dbo.tbUsers(fullName,password,roleID,phone,email,image_user,status_account)\n"
+                + "VALUES(?,?,?,?,?,?,?)";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, info[0] + " " + info[1]);
@@ -158,6 +158,7 @@ public class UserDAO extends DBContext {
             ps.setString(4, info[3]);
             ps.setString(5, info[2]);
             ps.setString(6, info[5]);
+            ps.setInt(7, 2);  // trạng thái inactive
             int result = ps.executeUpdate();
             if (result > 0) {
                 return true;
@@ -165,6 +166,9 @@ public class UserDAO extends DBContext {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return false;
+    }
+    public boolean updateStatusAccount(){
         return false;
     }
 }
