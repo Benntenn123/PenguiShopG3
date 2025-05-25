@@ -168,7 +168,18 @@ public class UserDAO extends DBContext {
         }
         return false;
     }
-    public boolean updateStatusAccount(){
+    public boolean updateStatusAccount(int userID){
+        String sql = "UPDATE dbo.tbUsers SET status_account = 1 WHERE userID = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, userID);
+            int result = ps.executeUpdate();
+            if (result > 0) {
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return false;
     }
 }

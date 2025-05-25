@@ -1,4 +1,4 @@
-package Controller.HomePage.Customer;
+package Controller.HomePage.Customer.Auth;
 
 import APIKey.Capcha;
 import Utils.HashPassword;
