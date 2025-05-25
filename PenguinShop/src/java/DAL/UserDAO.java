@@ -71,7 +71,7 @@ public class UserDAO  extends DBContext {
     
     public static void main(String[] args) {
         UserDAO udao = new UserDAO();
-        System.out.println(udao.checkCorrectPassword(1, HashPassword.hashWithSHA256("Son@1234")));
+        System.out.println(udao.checkExistPhoneUser("0987654321"));
     }
     public boolean updatePassword(int userID, String newPassword) {
         String sql = "UPDATE tbUsers SET password = ? WHERE userID = ?";
@@ -99,6 +99,41 @@ public class UserDAO  extends DBContext {
             ps.setInt(7, user.getUserID());
             int rowsAffected = ps.executeUpdate();
             return rowsAffected > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    
+    public boolean checkExistPhoneUser(String phone){
+        String sql = "Select count(*) from tbUsers where phone = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, phone);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                int row = rs.getInt(1);
+                if(row >0){
+                    return true;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    public boolean checkExistEmail(String email){
+        String sql = "Select count(*) from tbUsers where email = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, email);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                int row = rs.getInt(1);
+                if(row >0){
+                    return true;
+                }
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
