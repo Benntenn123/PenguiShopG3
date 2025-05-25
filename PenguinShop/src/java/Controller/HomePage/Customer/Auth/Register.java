@@ -89,6 +89,7 @@ public class Register extends HttpServlet {
         }
     }
     
+    
     private String[] getInfoUser(HttpServletRequest request){
         String fname = request.getParameter("fname");
         String lname = request.getParameter("lname");
