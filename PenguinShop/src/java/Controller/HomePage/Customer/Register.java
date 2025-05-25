@@ -1,5 +1,8 @@
 package Controller.HomePage.Customer;
 
+import APIKey.Capcha;
+import Bo.HashPassword;
+import Bo.VerifyCapcha;
 import DAL.UserDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -8,9 +11,16 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.json.JSONObject;
 
 @WebServlet(name = "Register", urlPatterns = {"/register"})
 public class Register extends HttpServlet {
@@ -59,8 +69,79 @@ public class Register extends HttpServlet {
             res = checkEmail(request,email);
         }
         response.getWriter().write(res);
+        if(action.equals("register")){
+            String[] info = getInfoUser(request);
+            if (info != null) {
+                if(udao.addUser(info)){
+                    request.getSession().setAttribute("ms", "Đăng kí thành công");
+                    response.sendRedirect("trangchu");
+                }
+                else{
+                    request.getSession().setAttribute("error", "Đã có lỗi xảy ra. Vui Lòng Thử Lại!");
+                    response.sendRedirect("login");
+                }
+            }
+            else{
+                
+                response.sendRedirect("login");
+               
+            }
+        }
+    }
+    
+    private String[] getInfoUser(HttpServletRequest request){
+        String fname = request.getParameter("fname");
+        String lname = request.getParameter("lname");
+        String email = request.getParameter("email");
+        String phone = request.getParameter("phone");
+        String password = request.getParameter("password");
+        String rePass = request.getParameter("re-password");
+        String img_avatar = "http://localhost:8080/PenguinShop/Images/vn-11134207-7ras8-m2j1kxknq7qqdd.jpeg";
+        String error = "";
+        
+        String recaptchaResponse = request.getParameter("g-recaptcha-response");
+        LOGGER.info("Register attempt: fname={}, lname={}, email={}, phone={}, password={}, repass={}", 
+                    fname, lname, email, phone, password, rePass);
+        LOGGER.info("Lấy thành công capcha{}", recaptchaResponse);
+        // check null rỗng các trường
+        if (isAnyFieldEmpty(fname, lname, email, phone, password, rePass)) {
+            request.getSession().setAttribute("error", "Vui lòng điền đủ thông tin.");
+            return null;
+        }
+        // check trùng password
+        if (!password.equals(rePass)) {
+            request.getSession().setAttribute("error", "Mật khẩu xác nhận không khớp.");
+            return null;
+        }
+
+        // Validate reCAPTCHA
+        if (!VerifyCapcha.verifyRecaptcha(recaptchaResponse)) {
+            request.getSession().setAttribute("error", "Vui lòng hoàn thành reCAPTCHA.");
+            return null;
+        }
+        //check valid format email (có thể update kiểu check - trước mắt chỉ check có @)
+        if (!isValidEmail(email)) {
+            request.getSession().setAttribute("error", "Email phải chứa ký tự @.");
+            return null;
+        }
+        
+        // Check if email or phone already exists
+        if (udao.checkExistEmail(email)) {
+            request.getSession().setAttribute("error", "Email đã được sử dụng.");
+            return null;
+        }
+        if (udao.checkExistPhoneUser(phone)) {
+            request.getSession().setAttribute("error", "Số điện thoại đã được sử dụng.");
+            return null;
+        }
+        return new String[]{fname, lname, email, phone, HashPassword.hashWithSHA256(password), img_avatar};
+        
+    }
+    private boolean isValidEmail(String email) {
+        return email != null && email.contains("@");
     }
 
+    
     private String checkPhone(HttpServletRequest request, String phone_number) {  
         String status = "oke";
         if (udao.checkExistPhoneUser(phone_number)) {
@@ -75,6 +156,16 @@ public class Register extends HttpServlet {
         }
         return "{\"status\":\"" + status + "\"}";
     }
+    private boolean isAnyFieldEmpty(String... fields) {
+        for (String field : fields) {
+            if (field == null || field.trim().isEmpty()) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    
 
     @Override
     public String getServletInfo() {

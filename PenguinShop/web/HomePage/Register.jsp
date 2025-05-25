@@ -144,37 +144,42 @@
                 <div class="login-section account-section">
                     <div style="height: 98.1rem !important" class="review-form">
                         <h5 class="comment-title">Đăng Kí</h5>
-                        <form>
-                            <div class=" account-inner-form">
+                        <form method="post" action="register">
+                            <input type="hidden" name="action" value="register"/>
+                            <div class="account-inner-form">
                                 <div class="review-form-name">
                                     <label for="fname" class="form-label">Tên</label>
-                                    <input type="text" id="fname" class="form-control" placeholder="Nhập tên của bạn">
+                                    <input type="text" name="fname" id="fname" class="form-control" placeholder="Nhập tên của bạn">
+                                    <span class="validation-message" id="fname-message"></span>
                                 </div>
                                 <div class="review-form-name">
                                     <label for="lname" class="form-label">Họ</label>
-                                    <input type="text" id="lname" class="form-control" placeholder="Nhập họ của bạn">
+                                    <input type="text" name="lname" id="lname" class="form-control" placeholder="Nhập họ của bạn">
+                                    <span class="validation-message" id="lname-message"></span>
                                 </div>
                             </div>
-                            <div class=" account-inner-form">
+                            <div class="account-inner-form">
                                 <div class="review-form-name">
                                     <label for="email" class="form-label">Địa chỉ Email*</label>
-                                    <input type="email" id="email" class="form-control" placeholder="user@gmail.com">
+                                    <input name="email" type="email" id="email" class="form-control" placeholder="user@gmail.com">
                                     <span class="validation-message" id="email-message"></span>
                                 </div>
                                 <div class="review-form-name">
                                     <label for="phone" class="form-label">Số điện thoại*</label>
-                                    <input type="tel" id="phone" class="form-control" placeholder="+84388**0899">
+                                    <input name="phone" type="tel" id="phone" class="form-control" placeholder="+84388**0899">
                                     <span class="validation-message" id="phone-message"></span>
                                 </div>
                             </div>
-                            <div class=" account-inner-form">
+                            <div class="account-inner-form">
                                 <div class="review-form-name">
-                                    <label for="password" class="form-label">Mật Khẩu</label>
-                                    <input type="password" id="password" class="form-control" placeholder="Nhập mật khẩu của bạn">
+                                    <label for="password" name="password" class="form-label">Mật Khẩu</label>
+                                    <input type="password" name="password" id="password" class="form-control" placeholder="Nhập mật khẩu của bạn">
+                                    <span class="validation-message" id="password-message"></span>
                                 </div>
                                 <div class="review-form-name">
                                     <label for="re-password" class="form-label">Xác nhận mật khẩu</label>
-                                    <input type="password" id="re-password" class="form-control" placeholder="Xác nhận mật khẩu">
+                                    <input type="password" name="re-password" id="re-password" class="form-control" placeholder="Xác nhận mật khẩu">
+                                    <span class="validation-message" id="re-password-message"></span>
                                 </div>
                             </div>
                             <div class="password-requirements">
@@ -193,6 +198,7 @@
                             </div>
                             <div>
                                 <div style="margin: 20px 0px" class="g-recaptcha" data-sitekey="6LexoiArAAAAAAknmJMBGgZ0a1zuLa03LmsjDfov"></div>
+                                <span class="validation-message" id="recaptcha-message"></span>
                             </div>
 
                             <div class="review-form-name checkbox">
@@ -201,12 +207,13 @@
                                     <p class="remember">
                                         Tôi đồng ý với các điều khoản của <span class="inner-text">PenguinShop.</span></p>
                                 </div>
+                                <span class="validation-message" id="terms-message"></span>
                             </div>
                             <div class="login-btn text-center">
-                                <a href="#" class="shop-btn" id="create-account-btn">Tạo tài khoản</a>
-                                <span class="shop-account">Đã có tài khoản ?<a href="login">Đăng nhập ngay</a></span>
+                                <button type="submit" class="shop-btn" id="create-account-btn">Tạo tài khoản</button>
                             </div>
                         </form>
+                        <span class="shop-account">Đã có tài khoản? <a href="login">Đăng nhập ngay</a></span>
                         <div class="login-social text-center">
                             <h5 style="font-size: 16px; margin-top: 1rem !important" class="comment-title">Tiếp tục với</h5>
                             <ul class="social-icon">
@@ -229,21 +236,31 @@
         <!--------------- login-section-end --------------->
 
         <!--------------- footer-section--------------->
-
+        <jsp:include page="Common/Footer.jsp" />
         <!--------------- footer-section-end --------------->
 
         <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-
         <script>
             document.addEventListener('DOMContentLoaded', function () {
+                const form = document.querySelector('form[action="register"]');
                 const passwordInput = document.getElementById('password');
                 const emailInput = document.getElementById('email');
                 const phoneInput = document.getElementById('phone');
+                const fnameInput = document.getElementById('fname');
+                const lnameInput = document.getElementById('lname');
+                const confirmPasswordInput = document.getElementById('re-password');
+                const termsCheckbox = document.getElementById('terms');
                 const lengthReq = document.getElementById('length-req');
                 const uppercaseReq = document.getElementById('uppercase-req');
                 const specialReq = document.getElementById('special-req');
                 const emailMessage = document.getElementById('email-message');
                 const phoneMessage = document.getElementById('phone-message');
+                const fnameMessage = document.getElementById('fname-message');
+                const lnameMessage = document.getElementById('lname-message');
+                const passwordMessage = document.getElementById('password-message');
+                const rePasswordMessage = document.getElementById('re-password-message');
+                const termsMessage = document.getElementById('terms-message');
+                const recaptchaMessage = document.getElementById('recaptcha-message');
 
                 // Validation cho password
                 passwordInput.addEventListener('input', function () {
@@ -268,6 +285,13 @@
                         updateRequirement(specialReq, true);
                     } else {
                         updateRequirement(specialReq, false);
+                    }
+
+                    // Kiểm tra password rỗng
+                    if (password.length === 0) {
+                        resetValidation(passwordInput, passwordMessage);
+                    } else {
+                        showValidationMessage(passwordInput, passwordMessage, '', '');
                     }
                 });
 
@@ -304,6 +328,39 @@
                     checkPhoneExists(phone);
                 });
 
+                // Validation cho fname
+                fnameInput.addEventListener('blur', function () {
+                    const fname = this.value.trim();
+                    if (fname.length === 0) {
+                        showValidationMessage(fnameInput, fnameMessage, 'Vui lòng nhập tên', 'error');
+                    } else {
+                        resetValidation(fnameInput, fnameMessage);
+                    }
+                });
+
+                // Validation cho lname
+                lnameInput.addEventListener('blur', function () {
+                    const lname = this.value.trim();
+                    if (lname.length === 0) {
+                        showValidationMessage(lnameInput, lnameMessage, 'Vui lòng nhập họ', 'error');
+                    } else {
+                        resetValidation(lnameInput, lnameMessage);
+                    }
+                });
+
+                // Validation cho confirm password
+                confirmPasswordInput.addEventListener('blur', function () {
+                    const confirmPassword = this.value;
+                    const password = passwordInput.value;
+                    if (confirmPassword.length === 0) {
+                        showValidationMessage(confirmPasswordInput, rePasswordMessage, 'Vui lòng xác nhận mật khẩu', 'error');
+                    } else if (confirmPassword !== password) {
+                        showValidationMessage(confirmPasswordInput, rePasswordMessage, 'Mật khẩu xác nhận không khớp', 'error');
+                    } else {
+                        showValidationMessage(confirmPasswordInput, rePasswordMessage, 'Mật khẩu xác nhận hợp lệ', 'success');
+                    }
+                });
+
                 function updateRequirement(element, isValid) {
                     const icon = element.querySelector('i');
 
@@ -323,7 +380,9 @@
                     messageElement.className = `validation-message ${type}`;
                     
                     input.classList.remove('error', 'success');
-                    input.classList.add(type);
+                    if (type) {
+                        input.classList.add(type);
+                    }
                 }
 
                 function showLoadingMessage(input, messageElement, message) {
@@ -341,7 +400,7 @@
 
                 function checkEmailExists(email) {
                     showLoadingMessage(emailInput, emailMessage, 'Đang kiểm tra email...');
-                    $.ajax({
+                    return $.ajax({
                         url: "register",
                         type: "POST",
                         data: {
@@ -350,24 +409,22 @@
                         },
                         success: function (response) {
                             if (response.status === "exist") {
-                                 showValidationMessage(emailInput, emailMessage, 'Địa chỉ email này đã được sử dụng', 'error');
-
+                                showValidationMessage(emailInput, emailMessage, 'Địa chỉ email này đã được sử dụng', 'error');
                             } else if (response.status === "oke") {
                                 showValidationMessage(emailInput, emailMessage, 'Địa chỉ email hợp lệ', 'success');
                             } else {
-                                toastr.error("Error.");
+                                toastr.error("Lỗi kiểm tra email.");
                             }
                         },
                         error: function (xhr, status, error) {
-                            alert("Error");
+                            toastr.error("Lỗi kết nối server khi kiểm tra email.");
                         }
                     });
                 }
 
                 function checkPhoneExists(phone) {
                     showLoadingMessage(phoneInput, phoneMessage, 'Đang kiểm tra số điện thoại...');
-                    
-                    $.ajax({
+                    return $.ajax({
                         url: "register",
                         type: "POST",
                         data: {
@@ -376,70 +433,119 @@
                         },
                         success: function (response) {
                             if (response.status === "exist") {
-                                 showValidationMessage(phoneInput, phoneMessage, 'Số điện thoại này đã được sử dụng', 'error');
-
+                                showValidationMessage(phoneInput, phoneMessage, 'Số điện thoại này đã được sử dụng', 'error');
                             } else if (response.status === "oke") {
                                 showValidationMessage(phoneInput, phoneMessage, 'Số điện thoại hợp lệ', 'success');
                             } else {
-                                toastr.error("Error.");
+                                toastr.error("Lỗi kiểm tra số điện thoại.");
                             }
                         },
                         error: function (xhr, status, error) {
-                            alert("Error");
+                            toastr.error("Lỗi kết nối server khi kiểm tra số điện thoại.");
                         }
                     });
                 }
 
                 // Xử lý submit form
-                document.getElementById('create-account-btn').addEventListener('click', function (e) {
-                    e.preventDefault();
+                form.addEventListener('submit', async function (e) {
+                    e.preventDefault(); // Ngăn submit mặc định
 
-                    const password = document.getElementById('password').value;
-                    const confirmPassword = document.getElementById('re-password').value;
-                    const termsChecked = document.getElementById('terms').checked;
+                    // Lấy giá trị các trường
+                    const fname = fnameInput.value.trim();
+                    const lname = lnameInput.value.trim();
+                    const email = emailInput.value.trim();
+                    const phone = phoneInput.value.trim();
+                    const password = passwordInput.value;
+                    const confirmPassword = confirmPasswordInput.value;
+                    const termsChecked = termsCheckbox.checked;
 
-                    // Kiểm tra tất cả các yêu cầu mật khẩu
+                    // Kiểm tra trường rỗng
+                    if (!fname) {
+                        showValidationMessage(fnameInput, fnameMessage, 'Vui lòng nhập tên', 'error');
+                        fnameInput.focus();
+                        return;
+                    }
+                    if (!lname) {
+                        showValidationMessage(lnameInput, lnameMessage, 'Vui lòng nhập họ', 'error');
+                        lnameInput.focus();
+                        return;
+                    }
+                    if (!email) {
+                        showValidationMessage(emailInput, emailMessage, 'Vui lòng nhập email', 'error');
+                        emailInput.focus();
+                        return;
+                    }
+                    if (!phone) {
+                        showValidationMessage(phoneInput, phoneMessage, 'Vui lòng nhập số điện thoại', 'error');
+                        phoneInput.focus();
+                        return;
+                    }
+                    if (!password) {
+                        showValidationMessage(passwordInput, passwordMessage, 'Vui lòng nhập mật khẩu', 'error');
+                        passwordInput.focus();
+                        return;
+                    }
+                    if (!confirmPassword) {
+                        showValidationMessage(confirmPasswordInput, rePasswordMessage, 'Vui lòng xác nhận mật khẩu', 'error');
+                        confirmPasswordInput.focus();
+                        return;
+                    }
+
+                    // Kiểm tra mật khẩu
                     const isLengthValid = password.length >= 8;
                     const isUppercaseValid = /[A-Z]/.test(password);
                     const isSpecialValid = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password);
 
                     if (!isLengthValid || !isUppercaseValid || !isSpecialValid) {
-                        alert('Vui lòng đảm bảo mật khẩu đáp ứng tất cả các yêu cầu!');
+                        showValidationMessage(passwordInput, passwordMessage, 'Vui lòng đảm bảo mật khẩu đáp ứng tất cả các yêu cầu', 'error');
+                        passwordInput.focus();
                         return;
                     }
 
                     if (password !== confirmPassword) {
-                        alert('Mật khẩu xác nhận không khớp!');
+                        showValidationMessage(confirmPasswordInput, rePasswordMessage, 'Mật khẩu xác nhận không khớp', 'error');
+                        confirmPasswordInput.focus();
                         return;
                     }
 
-                    // Kiểm tra email và phone validation
+                    // Kiểm tra email và phone bằng AJAX
                     const emailHasError = emailInput.classList.contains('error');
                     const phoneHasError = phoneInput.classList.contains('error');
-                    
-                    if (emailHasError || phoneHasError) {
-                        alert('Vui lòng kiểm tra lại email và số điện thoại!');
+
+                    if (!emailHasError && !emailInput.classList.contains('success')) {
+                        await checkEmailExists(email); // Chờ AJAX hoàn tất
+                    }
+                    if (!phoneHasError && !phoneInput.classList.contains('success')) {
+                        await checkPhoneExists(phone); // Chờ AJAX hoàn tất
+                    }
+
+                    // Kiểm tra lại sau AJAX
+                    if (emailInput.classList.contains('error') || phoneInput.classList.contains('error')) {
+                        showValidationMessage(emailInput, emailMessage, 'Vui lòng kiểm tra lại email và số điện thoại', 'error');
                         return;
                     }
 
+                    // Kiểm tra checkbox điều khoản
                     if (!termsChecked) {
-                        alert('Vui lòng đồng ý với các điều khoản!');
+                        showValidationMessage(termsCheckbox, termsMessage, 'Vui lòng đồng ý với các điều khoản', 'error');
+                        termsCheckbox.focus();
                         return;
                     }
 
-                    // Nếu tất cả đều hợp lệ, có thể submit form
-                    alert('Đăng ký thành công!');
-                    // Thêm logic submit form ở đây
+                    // Kiểm tra reCAPTCHA
+                    const recaptchaResponse = grecaptcha.getResponse();
+                    if (!recaptchaResponse) {
+                        showValidationMessage(null, recaptchaMessage, 'Vui lòng xác minh reCAPTCHA', 'error');
+                        return;
+                    }
+
+                    // Nếu tất cả hợp lệ, submit form
+                    form.submit();
                 });
             });
         </script>
 
-        <!--------------- footer-section--------------->
-        <jsp:include page="Common/Footer.jsp" />
-        <!--------------- footer-section-end --------------->
-
         <jsp:include page="Common/Js.jsp" />
         <jsp:include page="Common/Message.jsp" />
-
     </body>
 </html>

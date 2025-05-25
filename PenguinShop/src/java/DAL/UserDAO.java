@@ -10,7 +10,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class UserDAO  extends DBContext {
+public class UserDAO extends DBContext {
+
     public boolean authenticateUser(String email, String password) {
         String sql = "SELECT * FROM tbUsers WHERE email = ? AND password = ?";
         try {
@@ -24,7 +25,7 @@ public class UserDAO  extends DBContext {
         }
         return false;
     }
-   
+
     public User loadUserInfoByEmail(String email) {
         String sql = "SELECT * FROM tbUsers WHERE email = ?";
         try {
@@ -49,7 +50,7 @@ public class UserDAO  extends DBContext {
         }
         return null;
     }
-    
+
     public boolean checkCorrectPassword(int userID, String password) {
         String sql = "SELECT count(*) FROM tbUsers WHERE userID = ? and password = ?";
         try {
@@ -59,7 +60,7 @@ public class UserDAO  extends DBContext {
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 int result = rs.getInt(1);
-                if(result >0){
+                if (result > 0) {
                     return true;
                 }
             }
@@ -68,11 +69,15 @@ public class UserDAO  extends DBContext {
         }
         return false;
     }
-    
+
     public static void main(String[] args) {
         UserDAO udao = new UserDAO();
-        System.out.println(udao.checkExistPhoneUser("0987654321"));
+        String[] info = new String[]{"Lương","Nguyễn", "nguyenluongk2k4@gmail.com", "0936971273", "50f890eed24bfcd3ec4f2de7743fad1f8fadb9fc17665fada25f33a2c90acaee",
+        "http://localhost:8080/PenguinShop/Images/vn-11134207-7ras8-m2j1kxknq7qqdd.jpeg"};
+                
+        System.out.println(udao.addUser(info));
     }
+
     public boolean updatePassword(int userID, String newPassword) {
         String sql = "UPDATE tbUsers SET password = ? WHERE userID = ?";
         try {
@@ -86,6 +91,7 @@ public class UserDAO  extends DBContext {
         }
         return false;
     }
+
     public boolean updateUserProfile(User user) {
         String sql = "UPDATE tbUsers SET fullName = ?, address = ?, birthday = ?, phone = ?, email = ?, image_user = ? WHERE userID = ?";
         try {
@@ -104,8 +110,8 @@ public class UserDAO  extends DBContext {
         }
         return false;
     }
-    
-    public boolean checkExistPhoneUser(String phone){
+
+    public boolean checkExistPhoneUser(String phone) {
         String sql = "Select count(*) from tbUsers where phone = ?";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
@@ -113,7 +119,7 @@ public class UserDAO  extends DBContext {
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 int row = rs.getInt(1);
-                if(row >0){
+                if (row > 0) {
                     return true;
                 }
             }
@@ -122,7 +128,8 @@ public class UserDAO  extends DBContext {
         }
         return false;
     }
-    public boolean checkExistEmail(String email){
+
+    public boolean checkExistEmail(String email) {
         String sql = "Select count(*) from tbUsers where email = ?";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
@@ -130,9 +137,30 @@ public class UserDAO  extends DBContext {
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 int row = rs.getInt(1);
-                if(row >0){
+                if (row > 0) {
                     return true;
                 }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean addUser(String[] info) {
+        String sql = "INSERT INTO dbo.tbUsers(fullName,password,roleID,phone,email,image_user)\n"
+                + "VALUES(?,?,?,?,?,?)";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, info[0] + " " + info[1]);
+            ps.setString(2, info[4]);
+            ps.setInt(3, 2); // User quyền 2
+            ps.setString(4, info[3]);
+            ps.setString(5, info[2]);
+            ps.setString(6, info[5]);
+            int result = ps.executeUpdate();
+            if (result > 0) {
+                return true;
             }
         } catch (SQLException e) {
             e.printStackTrace();

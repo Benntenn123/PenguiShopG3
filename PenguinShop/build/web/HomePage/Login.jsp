@@ -114,7 +114,7 @@
                                 <button type="submit" class="shop-btn">Đăng Nhập</button>
                                 <span class="shop-account">
                                     Bạn không có tài khoản ?
-                                    <a href="create-account.html">Đăng kí ngay</a>
+                                    <a href="register">Đăng kí ngay</a>
                                 </span>
                             </div>
                         </form>
