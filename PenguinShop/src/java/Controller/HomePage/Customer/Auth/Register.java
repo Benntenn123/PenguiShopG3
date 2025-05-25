@@ -1,9 +1,11 @@
 package Controller.HomePage.Customer.Auth;
 
 import APIKey.Capcha;
+import Const.Account;
 import Utils.HashPassword;
 import Utils.VerifyCapcha;
 import DAL.UserDAO;
+import Utils.SendMail;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -72,8 +74,10 @@ public class Register extends HttpServlet {
         if(action.equals("register")){
             String[] info = getInfoUser(request);
             if (info != null) {
-                if(udao.addUser(info)){
+                int newAccount = udao.addUser(info);
+                if(newAccount > -1){
                     request.getSession().setAttribute("ms", "Đăng kí thành công");
+                    SendMail.sendMailAsync(info[2], info[0], String.valueOf(newAccount));
                     response.sendRedirect("trangchu");
                 }
                 else{
@@ -90,6 +94,7 @@ public class Register extends HttpServlet {
     }
     
     
+    
     private String[] getInfoUser(HttpServletRequest request){
         String fname = request.getParameter("fname");
         String lname = request.getParameter("lname");
@@ -97,7 +102,7 @@ public class Register extends HttpServlet {
         String phone = request.getParameter("phone");
         String password = request.getParameter("password");
         String rePass = request.getParameter("re-password");
-        String img_avatar = "http://localhost:8080/PenguinShop/Images/vn-11134207-7ras8-m2j1kxknq7qqdd.jpeg";
+        String img_avatar = Account.AVATAR_DEFAULT_USER;
         String error = "";
         
         String recaptchaResponse = request.getParameter("g-recaptcha-response");

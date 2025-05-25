@@ -4,6 +4,7 @@
  */
 package DAL;
 
+import Const.Account;
 import Utils.HashPassword;
 import Models.User;
 import java.sql.PreparedStatement;
@@ -72,9 +73,9 @@ public class UserDAO extends DBContext {
 
     public static void main(String[] args) {
         UserDAO udao = new UserDAO();
-        String[] info = new String[]{"Lương","Nguyễn", "nguyenluongk2k4@gmail.com", "0936971273", "50f890eed24bfcd3ec4f2de7743fad1f8fadb9fc17665fada25f33a2c90acaee",
-        "http://localhost:8080/PenguinShop/Images/vn-11134207-7ras8-m2j1kxknq7qqdd.jpeg"};
-                
+        String[] info = new String[]{"Lương", "Nguyễn", "nguyenluongk2k4@gmail.com", "0936971273", "50f890eed24bfcd3ec4f2de7743fad1f8fadb9fc17665fada25f33a2c90acaee",
+            Account.AVATAR_DEFAULT_USER};
+
         System.out.println(udao.addUser(info));
     }
 
@@ -147,32 +148,67 @@ public class UserDAO extends DBContext {
         return false;
     }
 
-    public boolean addUser(String[] info) {
-        String sql = "INSERT INTO dbo.tbUsers(fullName,password,roleID,phone,email,image_user,status_account)\n"
-                + "VALUES(?,?,?,?,?,?,?)";
+    public int addUser(String[] info) {
+        String insertSql = "INSERT INTO dbo.tbUsers(fullName, password, roleID, phone, email, image_user, status_account) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String selectSql = "SELECT userID FROM dbo.tbUsers WHERE email = ?";
+
+        int userId = -1;
+
         try {
-            PreparedStatement ps = connection.prepareStatement(sql);
-            ps.setString(1, info[0] + " " + info[1]);
-            ps.setString(2, info[4]);
-            ps.setInt(3, 2); // User quyền 2
-            ps.setString(4, info[3]);
-            ps.setString(5, info[2]);
-            ps.setString(6, info[5]);
-            ps.setInt(7, 2);  // trạng thái inactive
-            int result = ps.executeUpdate();
+            connection.setAutoCommit(false);
+
+            PreparedStatement insertPs = connection.prepareStatement(insertSql);
+            String fullName = info[0] + " " + info[1];
+
+            insertPs.setString(1, fullName);
+            insertPs.setString(2, info[4]);
+            insertPs.setInt(3, Account.ROLE_CUSTOMER);
+            insertPs.setString(4, info[3]);
+            insertPs.setString(5, info[2]); // email
+            insertPs.setString(6, info[5]);
+            insertPs.setInt(7, Account.INACTIVE_ACCOUNT);
+
+            int result = insertPs.executeUpdate();
+
             if (result > 0) {
-                return true;
+                PreparedStatement selectPs = connection.prepareStatement(selectSql);
+                selectPs.setString(1, info[2]); // email
+
+                ResultSet rs = selectPs.executeQuery();
+                if (rs.next()) {
+                    userId = rs.getInt("userID");
+                }
+
+                rs.close();
+                selectPs.close();
             }
+
+            connection.commit();
         } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
             e.printStackTrace();
+        } finally {
+            try {
+                connection.setAutoCommit(true);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
-        return false;
+
+        return userId;
     }
-    public boolean updateStatusAccount(int userID){
-        String sql = "UPDATE dbo.tbUsers SET status_account = 1 WHERE userID = ?";
+
+    public boolean updateStatusAccount(int userID) {
+        String sql = "UPDATE dbo.tbUsers SET status_account = ? WHERE userID = ?";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
-            ps.setInt(1, userID);
+            ps.setInt(1, Account.ACTIVE_ACCOUNT);
+            ps.setInt(2, userID);
             int result = ps.executeUpdate();
             if (result > 0) {
                 return true;
