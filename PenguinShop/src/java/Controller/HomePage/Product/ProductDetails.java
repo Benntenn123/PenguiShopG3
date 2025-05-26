@@ -9,7 +9,9 @@ import Controller.HomePage.Customer.Auth.Login;
 import DAL.CategoriesDAO;
 import DAL.ProductDao;
 import Models.Category;
+import Models.Color;
 import Models.ProductVariant;
+import Models.Size;
 import Models.Tag;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -70,13 +72,21 @@ public class ProductDetails extends HttpServlet {
             List<Tag> tag = pdao.loadTagProduct(pv.getProduct().getProductId());
             request.setAttribute("tag", tag);
             
-            List<Integer> catego = new ArrayList<>();
+            List<Integer> catego = new ArrayList<>();    //load sản phẩm sát với các categories mà product detail này đang đứng
+            
             for (Category ca : cate) {
                 System.out.println(ca.getCategoryId());
                 catego.add(ca.getCategoryId());
             }
             List<ProductVariant> relatedProduct = pdao.getRelatedProduct(catego);          
             request.setAttribute("relatedProduct", relatedProduct);
+            
+            List<Size> sizePro = pdao.loadSizeProduct(pv.getProduct().getProductId());
+            request.setAttribute("sizePro", sizePro);
+            
+            List<Color> colorPro = pdao.loadColorProduct(pv.getProduct().getProductId());
+            request.setAttribute("colorPro", colorPro);
+            
             
         } catch (Exception e) {
             request.getSession().setAttribute("error", "Link không đúng vui lòng thử lại");

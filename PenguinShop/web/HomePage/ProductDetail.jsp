@@ -4,7 +4,43 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <style>
+            .product-color-selector {
+                margin: 20px 0;
+                max-width: 300px;
+            }
 
+            .product-color-selector p {
+                font-weight: bold;
+                margin-bottom: 10px;
+                color: #333;
+            }
+
+            .color-item {
+                margin-bottom: 8px;
+            }
+
+            .color-item input[type="checkbox"] {
+                margin-right: 8px;
+                accent-color: #ff5733; /* Màu checkbox khi chọn: cam */
+                width: 18px;
+                height: 18px;
+                cursor: pointer;
+                vertical-align: middle;
+            }
+
+            .color-item label {
+                font-size: 16px;
+                color: #444;
+                cursor: pointer;
+                vertical-align: middle;
+            }
+
+            .color-item input[type="checkbox"]:checked + label {
+                font-weight: bold; /* Nhãn đậm khi checkbox được chọn */
+                color: #ff5733; /* Màu nhãn khi chọn: cam */
+            }
+        </style>
         <jsp:include page="Common/Css.jsp"/>
     </head>
     <body>
@@ -110,27 +146,21 @@
                                         </div>
                                     </div>
                                     <ul class="size-option">
-                                        <li class="option">
-                                            <span class="option-text">Small</span>
-                                            <span class="option-measure">3”W x 3”D x 5”H</span>
-                                        </li>
-                                        <li class="option">
-                                            <span class="option-text">Medium</span>
-                                            <span class="option-measure">3”W x 3”D x 6”H</span>
-                                        </li>
-                                        <li class="option">
-                                            <span class="option-text">Large</span>
-                                            <span class="option-measure">6”W x 3”D x 7”H</span>
-                                        </li>
-                                        <li class="option">
-                                            <span class="option-text">Extra Large</span>
-                                            <span class="option-measure">8”W x 4”D x 8”H</span>
-                                        </li>
-                                        <li class="option">
-                                            <span class="option-text">2XL</span>
-                                            <span class="option-measure">10”W x 5”D x 9”H</span>
-                                        </li>
+                                        <c:forEach var="sizePro" items="${sizePro}">
+                                            <li class="option">
+                                                <span class="option-text">Cỡ ${sizePro.sizeName}</span> 
+                                            </li>
+                                        </c:forEach>
                                     </ul>
+                                </div>
+                                <div class="product-color-selector">
+                                    <p>Chọn Màu Sắc:</p>
+                                    <c:forEach var="colorPro" items="${colorPro}">
+                                        <div class="color-item">
+                                            <input type="checkbox" name="colors" value="${colorPro.colorName}" id="color-${colorPro.colorName}">
+                                            <label for="color-${colorPro.colorName}">${colorPro.colorName}</label>
+                                        </div>
+                                    </c:forEach>
                                 </div>
                                 <div class="product-quantity">
                                     <div class="quantity-wrapper">
@@ -170,8 +200,8 @@
                                 <hr>
                                 <div class="product-details">
                                     <p class="category">Danh mục: <c:forEach var="cate" items="${cate}"><span class="inner-text">${cate.categoryName}</span></c:forEach></p>
-                                        <p class="tags">Tags :<c:forEach var="tag" items="${tag}"> <span class="inner-text">${tag.tagName} , </span></c:forEach></p>
-                                        <p class="sku">SKU : <span class="inner-text">${pv.product.sku}</span></p>
+                                    <p class="tags">Tags :<c:forEach var="tag" items="${tag}"> <span class="inner-text">${tag.tagName} , </span></c:forEach></p>
+                                    <p class="sku">SKU : <span class="inner-text">${pv.product.sku}</span></p>
                                 </div>
                                 <hr>
 
@@ -218,11 +248,11 @@
                             <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab"
                                     data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home"
                                     aria-selected="true">Description</button>
-                            <button class="nav-link" id="nav-review-tab" data-bs-toggle="tab" data-bs-target="#nav-review"
-                                    type="button" role="tab" aria-controls="nav-review" aria-selected="false">Reviews</button>
-                            <button class="nav-link" id="nav-seller-tab" data-bs-toggle="tab" data-bs-target="#nav-seller"
-                                    type="button" role="tab" aria-controls="nav-seller" aria-selected="false">Seller
-                                Info</button>
+                            <!--                            <button class="nav-link" id="nav-review-tab" data-bs-toggle="tab" data-bs-target="#nav-review"
+                                                                type="button" role="tab" aria-controls="nav-review" aria-selected="false">Reviews</button>
+                                                        <button class="nav-link" id="nav-seller-tab" data-bs-toggle="tab" data-bs-target="#nav-seller"
+                                                                type="button" role="tab" aria-controls="nav-seller" aria-selected="false">Seller
+                                                            Info</button>-->
 
                         </div>
                     </nav>
@@ -233,34 +263,10 @@
                             <div class="product-intro-section">
                                 <h5 class="intro-heading">Introduction</h5>
                                 <p class="product-details">
-                                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum
-                                    has been the industry's standard dummy text ever since the 1500s, when an unknown
-                                    printer took a galley of type and scrambled it to make a type specimen book. It has
-                                    survived not only five centuries but also the on leap into electronic typesetting,
-                                    remaining essentially unchanged. It wasn’t popularised in the 1960s with the release of
-                                    Letraset sheets containing Lorem Ipsum passages, andei more recently with desktop
-                                    publishing software like Aldus PageMaker including versions of Lorem Ipsum to make a
-                                    type specimen book.
+                                    ${pv.product.full_description}
                                 </p>
                             </div>
-                            <div class="product-feature">
-                                <h5 class="intro-heading">Features :</h5>
-                                <ul>
-                                    <li>
-                                        <p>slim body with metal cover</p>
-                                    </li>
-                                    <li>
-                                        <p>latest Intel Core i5-1135G7 processor (4 cores / 8 threads)</p>
-                                    </li>
-                                    <li>
-                                        <p>8GB DDR4 RAM and fast 512GB PCIe SSD</p>
-                                    </li>
-                                    <li>
-                                        <p>NVIDIA GeForce MX350 2GB GDDR5 graphics card backlit keyboard, touchpad with
-                                            gesture support</p>
-                                    </li>
-                                </ul>
-                            </div>
+
                         </div>
                         <div class="tab-pane fade" id="nav-review" role="tabpanel" aria-labelledby="nav-review-tab"
                              tabindex="0">
@@ -332,52 +338,52 @@
                 <div class="weekly-sale-section">
                     <div class="row g-5">
                         <c:forEach var="relatedProduct" items="${relatedProduct}">
-                        <div class="col-lg-3 col-md-6">
-                            <div class="product-wrapper" data-aos="fade-up">
-                                <div class="product-img">
-                                    <img src="api/img/${relatedProduct.product.imageMainProduct}" style="width: 308px; height: 313px; object-fit: fill; display: block; margin: 0;" 
-                                         alt="product-img">
-                                    
-                                </div>
-                                <div class="product-info">
-                                    <div class="ratings">
-                                        <span>
-                                            <svg width="75" height="15" viewBox="0 0 75 15" fill="none"
-                                                 xmlns="http://www.w3.org/2000/svg">
-                                            <path
-                                                d="M7.5 0L9.18386 5.18237H14.6329L10.2245 8.38525L11.9084 13.5676L7.5 10.3647L3.09161 13.5676L4.77547 8.38525L0.367076 5.18237H5.81614L7.5 0Z"
-                                                fill="#FFA800" />
-                                            <path
-                                                d="M22.5 0L24.1839 5.18237H29.6329L25.2245 8.38525L26.9084 13.5676L22.5 10.3647L18.0916 13.5676L19.7755 8.38525L15.3671 5.18237H20.8161L22.5 0Z"
-                                                fill="#FFA800" />
-                                            <path
-                                                d="M37.5 0L39.1839 5.18237H44.6329L40.2245 8.38525L41.9084 13.5676L37.5 10.3647L33.0916 13.5676L34.7755 8.38525L30.3671 5.18237H35.8161L37.5 0Z"
-                                                fill="#FFA800" />
-                                            <path
-                                                d="M52.5 0L54.1839 5.18237H59.6329L55.2245 8.38525L56.9084 13.5676L52.5 10.3647L48.0916 13.5676L49.7755 8.38525L45.3671 5.18237H50.8161L52.5 0Z"
-                                                fill="#FFA800" />
-                                            <path
-                                                d="M67.5 0L69.1839 5.18237H74.6329L70.2245 8.38525L71.9084 13.5676L67.5 10.3647L63.0916 13.5676L64.7755 8.38525L60.3671 5.18237H65.8161L67.5 0Z"
-                                                fill="#FFA800" />
-                                            </svg>
-                                        </span>
+                            <div class="col-lg-3 col-md-6">
+                                <div class="product-wrapper" data-aos="fade-up">
+                                    <div class="product-img">
+                                        <img src="api/img/${relatedProduct.product.imageMainProduct}" style="width: 308px; height: 313px; object-fit: fill; display: block; margin: 0;" 
+                                             alt="product-img">
+
                                     </div>
-                                    <div class="product-description">
-                                        <a href="productdetail?id=${relatedProduct.product.productId}" class="product-details" 
+                                    <div class="product-info">
+                                        <div class="ratings">
+                                            <span>
+                                                <svg width="75" height="15" viewBox="0 0 75 15" fill="none"
+                                                     xmlns="http://www.w3.org/2000/svg">
+                                                <path
+                                                    d="M7.5 0L9.18386 5.18237H14.6329L10.2245 8.38525L11.9084 13.5676L7.5 10.3647L3.09161 13.5676L4.77547 8.38525L0.367076 5.18237H5.81614L7.5 0Z"
+                                                    fill="#FFA800" />
+                                                <path
+                                                    d="M22.5 0L24.1839 5.18237H29.6329L25.2245 8.38525L26.9084 13.5676L22.5 10.3647L18.0916 13.5676L19.7755 8.38525L15.3671 5.18237H20.8161L22.5 0Z"
+                                                    fill="#FFA800" />
+                                                <path
+                                                    d="M37.5 0L39.1839 5.18237H44.6329L40.2245 8.38525L41.9084 13.5676L37.5 10.3647L33.0916 13.5676L34.7755 8.38525L30.3671 5.18237H35.8161L37.5 0Z"
+                                                    fill="#FFA800" />
+                                                <path
+                                                    d="M52.5 0L54.1839 5.18237H59.6329L55.2245 8.38525L56.9084 13.5676L52.5 10.3647L48.0916 13.5676L49.7755 8.38525L45.3671 5.18237H50.8161L52.5 0Z"
+                                                    fill="#FFA800" />
+                                                <path
+                                                    d="M67.5 0L69.1839 5.18237H74.6329L70.2245 8.38525L71.9084 13.5676L67.5 10.3647L63.0916 13.5676L64.7755 8.38525L60.3671 5.18237H65.8161L67.5 0Z"
+                                                    fill="#FFA800" />
+                                                </svg>
+                                            </span>
+                                        </div>
+                                        <div class="product-description">
+                                            <a href="productdetail?id=${relatedProduct.product.productId}" class="product-details" 
                                                style="display: block; height: 40px; line-height: 20px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 100%; font-size: 16px;">
                                                 ${relatedProduct.product.productName}
                                             </a>
-                                        <div class="price">
-<!--                                            <span class="price-cut">$32.99</span>-->
-                                            <span class="new-price">${relatedProduct.price}VND</span>
+                                            <div class="price">
+                                                <!--                                            <span class="price-cut">$32.99</span>-->
+                                                <span class="new-price">${relatedProduct.price}VND</span>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="product-cart-btn">
-                                    <a href="cart.html" class="product-btn">Thêm giỏ hàng</a>
+                                    <div class="product-cart-btn">
+                                        <a href="cart.html" class="product-btn">Thêm giỏ hàng</a>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
                         </c:forEach>
                     </div>
                 </div>

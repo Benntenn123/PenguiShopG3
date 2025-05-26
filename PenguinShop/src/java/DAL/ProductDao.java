@@ -5,8 +5,10 @@
 package DAL;
 
 import Models.Category;
+import Models.Color;
 import Models.Product;
 import Models.ProductVariant;
+import Models.Size;
 import Models.Tag;
 import Models.Type;
 import Models.User;
@@ -108,8 +110,8 @@ public class ProductDao extends DBContext {
             PreparedStatement ps = connection.prepareStatement(sql);
             for (int i = 0; i < categoriesID.size(); i++) {
                 ps.setInt(i + 1, categoriesID.get(i));
-            }   
-            
+            }
+
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Product p = new Product(rs.getInt("productID"),
@@ -124,7 +126,7 @@ public class ProductDao extends DBContext {
         }
         return list;
     }
-   
+
     public List<ProductVariant> loadTop4ProductHotWeek() {
         String sql = "SELECT TOP 4 \n"
                 + "    p.productID,\n"
@@ -160,7 +162,7 @@ public class ProductDao extends DBContext {
     }
 
     public ProductVariant loadProductWithID(int variantID) {
-        String sql = "SELECT p.productID,p.productName,p.imageMainProduct,pv.variantID,pv.price,p.description,p.SKU FROM dbo.tbProduct p\n"
+        String sql = "SELECT p.productID,p.productName,p.imageMainProduct,pv.variantID,pv.price,p.description,p.SKU,p.full_description FROM dbo.tbProduct p\n"
                 + "JOIN dbo.tbProductVariant pv ON pv.productID = p.productID\n"
                 + "JOIN dbo.tbBrand br ON br.brandID = p.brandID\n"
                 + "JOIN dbo.tbProductType pt ON pt.productTypeID = p.productTypeID\n"
@@ -175,7 +177,8 @@ public class ProductDao extends DBContext {
                         rs.getString("productName"),
                         rs.getString("imageMainProduct"),
                         rs.getString("description"),
-                        rs.getString("SKU"));
+                        rs.getString("SKU"),
+                        rs.getString("full_description"));
                 ProductVariant pv = new ProductVariant(rs.getInt("variantID"),
                         p, rs.getDouble("price"));
                 return pv;
@@ -223,4 +226,49 @@ public class ProductDao extends DBContext {
         return list;
     }
 
+    public List<Size> loadSizeProduct(int productID) {
+        String sql = "SELECT DISTINCT \n"
+                + "	s.sizeID,\n"
+                + "    s.sizeName\n"
+                + "FROM tbProduct p\n"
+                + "JOIN tbProductVariant pv ON p.productID = pv.productID\n"
+                + "JOIN tbSize s ON pv.sizeID = s.sizeID\n"
+                + "JOIN tbColor c ON pv.colorID = c.colorID\n"
+                + "WHERE p.productID = ?;";
+        List<Size> list = new ArrayList<>();
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, productID);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                list.add(new Size(rs.getInt(1), rs.getString(2)));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public List<Color> loadColorProduct(int productID) {
+        String sql = "SELECT DISTINCT \n"
+                + "	c.colorID,\n"
+                + "    c.colorName\n"
+                + "FROM tbProduct p\n"
+                + "JOIN tbProductVariant pv ON p.productID = pv.productID\n"
+                + "JOIN tbSize s ON pv.sizeID = s.sizeID\n"
+                + "JOIN tbColor c ON pv.colorID = c.colorID\n"
+                + "WHERE p.productID = ?;";
+        List<Color> list = new ArrayList<>();
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, productID);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                list.add(new Color(rs.getInt(1), rs.getString(2)));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
 }

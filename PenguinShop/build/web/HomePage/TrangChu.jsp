@@ -6,6 +6,201 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
         <jsp:include page="Common/Css.jsp"/>
+        <style>
+            .partnership-chat-button {
+                position: fixed;
+                bottom: 30px;
+                right: 30px;
+                width: 60px;
+                height: 60px;
+                background: linear-gradient(135deg, #AE1C9A 0%, #c44ca8 100%);
+                border-radius: 50%;
+                border: none;
+                cursor: pointer;
+                box-shadow: 0 8px 25px rgba(174, 28, 154, 0.4);
+                transition: all 0.3s ease;
+                z-index: 1000;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .partnership-chat-button:hover {
+                transform: scale(1.1);
+                box-shadow: 0 12px 30px rgba(174, 28, 154, 0.6);
+            }
+
+            .partnership-chat-button svg {
+                width: 28px;
+                height: 28px;
+                fill: white;
+            }
+
+            /* Partnership Chat Window */
+            .partnership-chat-window {
+                position: fixed;
+                bottom: 100px;
+                right: 30px;
+                width: 400px;
+                height: 600px;
+                background: white;
+                border-radius: 20px;
+                box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+                transform: translateY(20px) scale(0.9);
+                opacity: 0;
+                visibility: hidden;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                z-index: 999;
+                overflow: hidden;
+            }
+
+            .partnership-chat-window.active {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+                visibility: visible;
+            }
+
+            .partnership-chat-header {
+                background: linear-gradient(135deg, #AE1C9A 0%, #c44ca8 100%);
+                color: white;
+                padding: 20px;
+                text-align: center;
+                position: relative;
+            }
+
+            .partnership-chat-header h3 {
+                font-size: 1.3rem;
+                font-weight: 600;
+            }
+
+            .partnership-chat-header p {
+                font-size: 0.9rem;
+                opacity: 0.9;
+                margin-top: 5px;
+            }
+
+            .partnership-close-btn {
+                position: absolute;
+                top: 15px;
+                right: 15px;
+                background: none;
+                border: none;
+                color: white;
+                font-size: 1.5rem;
+                cursor: pointer;
+                width: 30px;
+                height: 30px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 50%;
+                transition: background 0.2s;
+            }
+
+            .partnership-close-btn:hover {
+                background: rgba(255,255,255,0.2);
+            }
+
+            .partnership-chat-form {
+                padding: 25px;
+                height: calc(100% - 80px);
+                overflow-y: auto;
+            }
+
+            .partnership-form-group {
+                margin-bottom: 20px;
+            }
+
+            .partnership-form-group label {
+                display: block;
+                margin-bottom: 8px;
+                color: #333;
+                font-weight: 500;
+                font-size: 0.95rem;
+            }
+
+            .partnership-form-group input,
+            .partnership-form-group select,
+            .partnership-form-group textarea {
+                width: 100%;
+                padding: 12px 15px;
+                border: 2px solid #e1e5e9;
+                border-radius: 12px;
+                font-size: 0.95rem;
+                transition: border-color 0.3s, box-shadow 0.3s;
+                font-family: inherit;
+            }
+
+            .partnership-form-group input:focus,
+            .partnership-form-group select:focus,
+            .partnership-form-group textarea:focus {
+                outline: none;
+                border-color: #AE1C9A;
+                box-shadow: 0 0 0 3px rgba(174, 28, 154, 0.1);
+            }
+
+            .partnership-form-group textarea {
+                resize: vertical;
+                min-height: 80px;
+            }
+
+            .partnership-submit-btn {
+                width: 100%;
+                background: linear-gradient(135deg, #AE1C9A 0%, #c44ca8 100%);
+                color: white;
+                border: none;
+                padding: 15px;
+                border-radius: 12px;
+                font-size: 1rem;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                margin-top: 10px;
+            }
+
+            .partnership-submit-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 25px rgba(174, 28, 154, 0.3);
+            }
+
+            .partnership-submit-btn:active {
+                transform: translateY(0);
+            }
+
+            /* Responsive */
+            @media (max-width: 480px) {
+                .partnership-chat-window {
+                    width: calc(100vw - 20px);
+                    height: calc(100vh - 40px);
+                    bottom: 20px;
+                    right: 10px;
+                    left: 10px;
+                    border-radius: 15px;
+                }
+
+                .partnership-chat-button {
+                    bottom: 20px;
+                    right: 20px;
+                }
+            }
+
+            /* Success Message */
+            .partnership-success-message {
+                background: #d4edda;
+                color: #155724;
+                border: 1px solid #c3e6cb;
+                padding: 15px;
+                border-radius: 12px;
+                margin-bottom: 20px;
+                text-align: center;
+                display: none;
+            }
+
+            .partnership-success-message.show {
+                display: block;
+            }
+
+        </style>
     </head>
     <body>
 
@@ -1311,54 +1506,166 @@
                 </div>
             </div>
         </section>
+        <button class="partnership-chat-button" id="partnershipChatToggle">
+            <svg viewBox="0 0 24 24">
+            <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 1L9 7V9C9 10.1 9.9 11 11 11V16L12 17L13 16V11C14.1 11 15 10.1 15 9V7H21M7 10.5C7 9.7 6.3 9 5.5 9S4 9.7 4 10.5 4.7 12 5.5 12 7 11.3 7 10.5M20 10.5C20 9.7 19.3 9 18.5 9S17 9.7 17 10.5 17.7 12 18.5 12 20 11.3 20 10.5M12 20C12 21.1 11.1 22 10 22H6C4.9 22 4 21.1 4 20V18H8V20H12M20 18V20C20 21.1 19.1 22 18 22H14C12.9 22 12 21.1 12 20V18H20Z"/>
+            </svg>
+        </button>
         <!--------------- flash-section-end--------------->
+        <div class="partnership-chat-window" id="partnershipChatWindow">
+            <div class="partnership-chat-header">
+                <button class="partnership-close-btn" id="partnershipCloseChat">&times;</button>
+                <h3 style="font-size: 16px !important;color: white">🤝 Hỗ trợ cộng tác</h3>
+                <p style="font-size: 16px !important;color: white">Gửi thông tin để chúng tôi liên hệ!</p>
+            </div>
 
+            <div class="partnership-chat-form">
+                <div style="font-size: 16px !important;color: white" class="partnership-success-message" id="partnershipSuccessMessage">
+                    ✅ Cảm ơn bạn! Chúng tôi đã nhận được thông tin và sẽ liên hệ lại trong thời gian sớm nhất.
+                </div>
+
+                <form id="partnershipSupportForm">
+                    <div  class="partnership-form-group">
+                        <label style="font-size: 16px !important;" for="partnershipFullName">Họ và tên *</label>
+                        <input style="font-size: 16px !important;" type="text" id="partnershipFullName" name="fullName" required placeholder="Nhập họ tên của bạn">
+                    </div>
+
+                    <div class="partnership-form-group">
+                        <label style="font-size: 16px !important;" for="partnershipPhone">Số điện thoại *</label>
+                        <input style="font-size: 16px !important;" type="tel" id="partnershipPhone" name="phone" required placeholder="Nhập số điện thoại">
+                    </div>
+
+                    <div class="partnership-form-group">
+                        <label style="font-size: 16px !important;" for="partnershipEmail">Email *</label>
+                        <input style="font-size: 16px !important;" type="email" id="partnershipEmail" name="email" required placeholder="Nhập địa chỉ email">
+                    </div>
+
+                    <div class="partnership-form-group">
+                        <label style="font-size: 16px !important;" for="partnershipIssueType">Vấn đề gặp phải *</label>
+                        <select style="font-size: 16px !important;" id="partnershipIssueType" name="issueType" required>
+                            <option value="">-- Chọn loại vấn đề --</option>
+                            <option value="account">Trạng thái tài khoản</option>
+                            <option value="purchase">Vấn đề mua hàng</option>
+                            <option value="payment">Vấn đề thanh toán</option>
+                            <option value="shipping">Vấn đề giao hàng</option>
+                            <option value="refund">Hoàn tiền/Đổi trả</option>
+                            <option value="technical">Lỗi kỹ thuật</option>
+                            <option value="other">Vấn đề khác</option>
+                        </select>
+                    </div>
+
+                    <div class="partnership-form-group">
+                        <label style="font-size: 16px !important;" for="partnershipDescription">Nội dung mô tả *</label>
+                        <textarea style="font-size: 16px !important;" id="partnershipDescription" name="description" required placeholder="Mô tả chi tiết vấn đề bạn đang gặp phải..."></textarea>
+                    </div>
+
+                    <button style="font-size: 16px !important;" type="submit" class="partnership-submit-btn">
+                        📨 Gửi thông tin
+                    </button>
+                </form>
+            </div>
+        </div>
         <!--------------- footer-section--------------->
         <jsp:include page="Common/Footer.jsp"/>
         <!--------------- footer-section-end--------------->
-        
 
 
-            <!-- Thêm script thuần JS -->
-            <script>
-                document.addEventListener('DOMContentLoaded', function () {
-                    var swiper = document.querySelector('.hero-swiper');
-                    var prevButton = document.querySelector('.swiper-button-prev');
-                    var nextButton = document.querySelector('.swiper-button-next');
-                    var slides = document.querySelectorAll('.swiper-slide');
-                    var currentIndex = 0;
 
-                    // Hàm hiển thị slide hiện tại
-                    function showSlide(index) {
-                        if (index < 0) {
-                            currentIndex = slides.length - 1;
-                        } else if (index >= slides.length) {
-                            currentIndex = 0;
-                        }
-                        slides.forEach(function (slide, i) {
-                            slide.style.display = i === currentIndex ? 'block' : 'none';
-                        });
+        <!-- Thêm script thuần JS -->
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                var swiper = document.querySelector('.hero-swiper');
+                var prevButton = document.querySelector('.swiper-button-prev');
+                var nextButton = document.querySelector('.swiper-button-next');
+                var slides = document.querySelectorAll('.swiper-slide');
+                var currentIndex = 0;
+
+                // Hàm hiển thị slide hiện tại
+                function showSlide(index) {
+                    if (index < 0) {
+                        currentIndex = slides.length - 1;
+                    } else if (index >= slides.length) {
+                        currentIndex = 0;
                     }
-
-                    // Nút trước
-                    prevButton.addEventListener('click', function () {
-                        currentIndex--;
-                        showSlide(currentIndex);
+                    slides.forEach(function (slide, i) {
+                        slide.style.display = i === currentIndex ? 'block' : 'none';
                     });
+                }
 
-                    // Nút sau
-                    nextButton.addEventListener('click', function () {
-                        currentIndex++;
-                        showSlide(currentIndex);
-                    });
-
-                    // Hiển thị slide đầu tiên khi tải trang
+                // Nút trước
+                prevButton.addEventListener('click', function () {
+                    currentIndex--;
                     showSlide(currentIndex);
                 });
-            </script>
 
-            <jsp:include page="Common/Js.jsp"/>
-            <jsp:include page="Common/Message.jsp"/>
+                // Nút sau
+                nextButton.addEventListener('click', function () {
+                    currentIndex++;
+                    showSlide(currentIndex);
+                });
+
+                // Hiển thị slide đầu tiên khi tải trang
+                showSlide(currentIndex);
+            });
+        </script>
+        <script>
+            // Get elements
+            const chatToggle = document.getElementById('partnershipChatToggle');
+            const chatWindow = document.getElementById('partnershipChatWindow');
+            const closeChat = document.getElementById('partnershipCloseChat');
+            const supportForm = document.getElementById('partnershipSupportForm');
+            const successMessage = document.getElementById('partnershipSuccessMessage');
+
+            // Toggle chat window
+            chatToggle.addEventListener('click', () => {
+                chatWindow.classList.add('active');
+            });
+
+            // Close chat window
+            closeChat.addEventListener('click', () => {
+                chatWindow.classList.remove('active');
+            });
+
+            // Close when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!chatWindow.contains(e.target) && !chatToggle.contains(e.target)) {
+                    chatWindow.classList.remove('active');
+                }
+            });
+
+            // Handle form submission
+            supportForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+
+                // Get form data
+                const formData = new FormData(supportForm);
+                const data = Object.fromEntries(formData);
+
+                // Show success message
+                successMessage.classList.add('show');
+
+                // Reset form
+                supportForm.reset();
+
+                // Hide success message after 5 seconds
+                setTimeout(() => {
+                    successMessage.classList.remove('show');
+                }, 5000);
+
+                // Log data (in real app, send to server)
+                console.log('Support request:', data);
+            });
+
+            // Hide success message when typing
+            const inputs = supportForm.querySelectorAll('input, select, textarea');
+            inputs.forEach(input => {
+                input.addEventListener('input', () => {
+                    successMessage.classList.remove('show');
+                });
+            });
+        </script>
+        <jsp:include page="Common/Js.jsp"/>
+        <jsp:include page="Common/Message.jsp"/>
 
 
     </body>

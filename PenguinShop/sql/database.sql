@@ -102,20 +102,6 @@ INSERT INTO tbProductVariant (productID, colorID, sizeID, quantity, price, stock
 (10, 1, 1, 90, 599000.00, 1), -- Bóng Nike Strike, Đỏ, S
 (11, 2, 2, 50, 699000.00, 1); -- Vợt Puma Speed, Xanh, M
 
--- tbMaterial
-INSERT INTO tbMaterial (materialName, materialDescription) VALUES
-(N'Polyester', N'Chất liệu bền, thoáng khí'),
-(N'Cotton', N'Chất liệu mềm mại, thấm hút tốt');
-
--- tbColor
-INSERT INTO tbColor (colorName) VALUES
-(N'Đỏ'),
-(N'Xanh');
-
--- tbSize
-INSERT INTO tbSize (sizeName) VALUES
-(N'S'),
-(N'M');
 
 -- tbVariantMaterial
 INSERT INTO tbVariantMaterial (variantID, materialID, percentage) VALUES

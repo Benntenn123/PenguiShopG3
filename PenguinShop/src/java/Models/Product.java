@@ -15,6 +15,16 @@ public class Product {
     private String imageMainProduct;
     private String description;
     private double weight;
+    private String full_description;
+
+    public Product(int productId, String productName, String imageMainProduct, String description, String sku, String full_description) {
+        this.productId = productId;
+        this.productName = productName;
+        this.sku = sku;
+        this.imageMainProduct = imageMainProduct;
+        this.description = description;
+        this.full_description = full_description;
+    }
 
     public Product(int productId, String productName, String imageMainProduct, String description) {
         this.productId = productId;
@@ -69,6 +79,14 @@ public class Product {
 
     public void setProductId(int productId) {
         this.productId = productId;
+    }
+
+    public String getFull_description() {
+        return full_description;
+    }
+
+    public void setFull_description(String full_description) {
+        this.full_description = full_description;
     }
 
     public String getProductName() {
