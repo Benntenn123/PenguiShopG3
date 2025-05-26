@@ -9,6 +9,15 @@ public class Category {
     private int categoryId;
     private String categoryName;
     private String sportType;
+    private String imageCategory;
+
+    public Category(int categoryId, String categoryName, String sportType, String imageCategory) {
+        this.categoryId = categoryId;
+        this.categoryName = categoryName;
+        this.sportType = sportType;
+        this.imageCategory = imageCategory;
+    }
+    
 
     public Category(int categoryId, String categoryName, String sportType) {
         this.categoryId = categoryId;
@@ -41,6 +50,14 @@ public class Category {
 
     public void setSportType(String sportType) {
         this.sportType = sportType;
+    }
+
+    public String getImageCategory() {
+        return imageCategory;
+    }
+
+    public void setImageCategory(String imageCategory) {
+        this.imageCategory = imageCategory;
     }
     
     

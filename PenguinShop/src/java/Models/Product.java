@@ -27,6 +27,12 @@ public class Product {
         this.weight = weight;
     }
 
+    public Product(int productId, String productName, String imageMainProduct) {
+        this.productId = productId;
+        this.productName = productName;
+        this.imageMainProduct = imageMainProduct;
+    }
+
     public Product(String productName, String imageMainProduct) {
         this.productName = productName;
         this.imageMainProduct = imageMainProduct;

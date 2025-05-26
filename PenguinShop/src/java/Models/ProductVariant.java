@@ -26,6 +26,12 @@ public class ProductVariant {
         this.product = product;
     }
 
+    public ProductVariant(int variantID, Product product, double price) {
+        this.variantID = variantID;
+        this.product = product;
+        this.price = price;
+    }
+
     
 
     public int getVariantID() {
