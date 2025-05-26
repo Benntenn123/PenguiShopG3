@@ -60,19 +60,18 @@ INSERT INTO tbSize (sizeName) VALUES
 (N'M');
 
 -- tbProduct
-INSERT INTO tbProduct (productName, SKU, productTypeID, brandID, importDate, imageMainProduct, description, weight) VALUES
-(N'ao-thun-chay-bo-advanced-vent-techgraphic-camo-504-xam-ghi_43_dbwx2y.jpg', N'SKU001', 1, 1, '2025-05-25 16:00:00', N'ao-thun-chay-bo-advanced-vent-techgraphic-camo-504-xam-ghi_43_dbwx2y.jpg', N'Áo chạy bộ thoáng khí', 250.00),
-(N'Biker Shorts nữ chạy bộ 8inch', N'SKU002', 2, 2, '2025-05-25 16:00:00', N'biker-short-nu-chay-bo-8-inch-631_-den_mu1koi.jpg', N'Quần chạy bộ co giãn', 300.00),
-(N'Áo Polo Nam APLV047-10V', N'APLV047-10VXL', 1, 6, '2025-05-25 16:00:00', N'b6ba5dcd6d0f3b22b520fcb8ca87397b68adae246206ae7873d6fdb38624078f777ed3_7f0e6e24d0b44a58af496d1d86089c6f_dp22ri.webp', N'Áo polo thoáng khí', 250.00),
-(N'Giày chạy bộ Nike Air Max', N'SKU003', 3, 1, '2025-05-26 10:00:00', N'v1748241783/W_AIR_MAX_DN8_sxh4ag.jpg', N'Giày chạy bộ nhẹ, êm ái, công nghệ Air Max', 350.00),
-(N'Áo bóng rổ Adidas Pro', N'SKU004', 1, 2, '2025-05-26 10:00:00', N'Ao_Thun_Bong_Ro_Khong_Tay_adidas_Unisex_JD6133_01_laydown_ioit2d.jpg', N'Áo bóng rổ thoáng khí, thiết kế chuyên nghiệp', 200.00),
-(N'Vợt Pickerball Puma Elite', N'SKU005', 4, 3, '2025-05-26 10:00:00', N'Vot-Pickleball-Facolos-Pro-Elite-Neon-1_lyvvbt.png', N'Vợt Pickerball chất lượng cao, độ bền tốt', 300.00),
-(N'Quần Thể Thao Nam 7" Ultra Shorts', N'SKU006', 2, 4, '2025-05-26 10:00:00', N'QTT.7.US_-Ultra-Short-7in-Xanh_-ForestNight-1_sfqfvc.webp', N'Quần tập luyện co giãn, thoải mái', 250.00),
-(N'Giày Sneaker Unisex Fila Rayflide Canvas - Đen', N'SKU007', 3, 5, '2025-05-26 10:00:00', N'1RM02742F-978-1_vrcdgs.jpg', N'Giày cầu lông nhẹ, bám sân tốt', 400.00),
-(N'Quần short Nam AKSU895-2V', N'SKU008', 1, 6, '2025-05-26 10:00:00', N'v1748242135/xx_00273_56727614041f462daf940bbe20b7fb56_tey71l.jpg', N'Quần short nam thoải mái, phong cách thể thao', 600.00),
-(N'Áo thun nữ HER', N'SKU009', 1, 1, '2025-05-26 10:00:00', N'C3_81o-thun-n_E1_BB_AF-HER_d3sgys.jpg', N'Áo ba lỗ thể thao nữ thoáng khí, thời trang', 500.00),
-(N'Áo jersey hình trang trí nam PUMA x KIDSUPER', N'SKU010', 1, 3, '2025-05-26 10:00:00', N'C3_81o-jersey-h_C3_ACnh-trang-tr_C3_AD-nam-PUMA-x-KIDSUPER_d7btsb.jpg', N'Áo jersey nam PUMA x KIDSUPER, phong cách độc đáo', 200.00);
-
+INSERT INTO tbProduct (productName, SKU, productTypeID, brandID, importDate, imageMainProduct, description, full_description, weight) VALUES
+(N'Áo thun chạy bộ Advanced Vent Tech Graphic Camo', N'SKU001', 1, 1, '2025-05-25 16:00:00', N'ao-thun-chay-bo-advanced-vent-techgraphic-camo-504-xam-ghi_43_dbwx2y.jpg', N'Áo chạy bộ thoáng khí', N'Áo thun chạy bộ Advanced Vent Tech Graphic Camo là sản phẩm cao cấp được thiết kế dành riêng cho những người yêu thích chạy bộ và các hoạt động thể thao ngoài trời. Với chất liệu polyester thoáng khí tiên tiến, áo giúp giữ mát cơ thể, loại bỏ mồ hôi nhanh chóng nhờ công nghệ Dri-FIT độc quyền từ Nike. Thiết kế họa tiết camo thời trang mang lại phong cách cá tính, phù hợp cho cả nam và nữ. Sản phẩm có đường may chắc chắn, độ co giãn tốt, hỗ trợ tối đa các chuyển động linh hoạt trong suốt quá trình tập luyện. Áo phù hợp cho chạy bộ đường dài, tập gym hoặc các buổi dạo chơi ngoài trời dưới điều kiện thời tiết nóng ẩm. Hướng dẫn bảo quản: Giặt máy ở nhiệt độ thấp, tránh sử dụng chất tẩy mạnh để giữ màu sắc và chất lượng vải lâu dài. Đây là lựa chọn lý tưởng cho những ai tìm kiếm sự kết hợp hoàn hảo giữa hiệu suất và phong cách.', 250.00),
+(N'Biker Shorts nữ chạy bộ 8inch', N'SKU002', 2, 2, '2025-05-25 16:00:00', N'biker-short-nu-chay-bo-8-inch-631_-den_mu1koi.jpg', N'Quần chạy bộ co giãn', N'Biker Shorts nữ chạy bộ 8inch từ Adidas là dòng sản phẩm được thiết kế dành riêng cho phụ nữ yêu thích vận động, đặc biệt là chạy bộ và yoga. Chất liệu chính là hỗn hợp elastane và polyester với khả năng co giãn 4 chiều, mang lại cảm giác thoải mái tối đa và hỗ trợ cơ bắp hiệu quả trong suốt quá trình tập luyện. Độ dài 8 inch lý tưởng để che phủ vừa phải, kết hợp với đường may phẳng chống cọ xát, giúp giảm kích ứng da. Quần có thiết kế ôm sát cơ thể, tôn dáng và tích hợp túi nhỏ để đựng chìa khóa hoặc điện thoại. Phù hợp cho các buổi chạy bộ buổi sáng, tập luyện trong phòng gym hoặc các hoạt động ngoài trời. Lưu ý bảo quản: Giặt tay hoặc giặt máy ở chế độ nhẹ, tránh sấy khô để giữ độ đàn hồi. Sản phẩm là sự kết hợp hoàn hảo giữa tính năng và phong cách thời trang hiện đại.', 300.00),
+(N'Áo Polo Nam APLV047-10V', N'APLV047-10VXL', 1, 6, '2025-05-25 16:00:00', N'b6ba5dcd6d0f3b22b520fcb8ca87397b68adae246206ae7873d6fdb38624078f777ed3_7f0e6e24d0b44a58af496d1d86089c6f_dp22ri.webp', N'Áo polo thoáng khí', N'Áo Polo Nam APLV047-10V từ Li-Ning mang đến sự kết hợp hoàn hảo giữa phong cách lịch lãm và tính năng thể thao. Được may từ chất liệu cotton pha polyester thoáng khí, áo giúp thấm hút mồ hôi nhanh, giữ cho cơ thể khô ráo trong các hoạt động nhẹ nhàng như đi bộ, chơi golf hoặc tham dự sự kiện ngoài trời. Thiết kế cổ polo cổ điển với hàng khuy tinh tế, kết hợp các đường cắt hiện đại, tạo nên vẻ ngoài thanh lịch nhưng không kém phần năng động. Sản phẩm có độ bền cao nhờ kỹ thuật may tinh xảo, phù hợp cho cả nam giới yêu thích phong cách đa dụng. Hướng dẫn sử dụng: Giặt máy ở nhiệt độ trung bình, tránh sử dụng chất tẩy mạnh để giữ màu sắc tươi mới. Đây là lựa chọn lý tưởng cho những ai muốn nổi bật trong cả công việc và giải trí.', 250.00),
+(N'Giày chạy bộ Nike Air Max', N'SKU003', 3, 1, '2025-05-26 10:00:00', N'v1748241783/W_AIR_MAX_DN8_sxh4ag.jpg', N'Giày chạy bộ nhẹ, êm ái, công nghệ Air Max', N'Giày chạy bộ Nike Air Max là biểu tượng của sự đổi mới trong ngành thể thao với công nghệ đệm khí Air Max độc quyền, mang lại cảm giác êm ái và giảm chấn vượt trội cho từng bước chạy. Được chế tạo từ chất liệu lưới thoáng khí kết hợp với da tổng hợp cao cấp, giày không chỉ nhẹ nhàng mà còn bền bỉ, phù hợp cho chạy bộ đường dài, tập luyện cường độ cao hoặc sử dụng hàng ngày. Thiết kế hiện đại với đế ngoài bằng cao su chống trơn trượt, tăng độ bám trên nhiều bề mặt. Sản phẩm hướng đến người chơi từ nghiệp dư đến chuyên nghiệp, với các tùy chọn màu sắc đa dạng. Hướng dẫn bảo quản: Vệ sinh bằng khăn ẩm, tránh ngâm nước quá lâu để bảo vệ lớp đệm khí. Đây là đôi giày hoàn hảo cho những ai đam mê tốc độ và phong cách.', 350.00),
+(N'Áo bóng rổ Adidas Pro', N'SKU004', 1, 2, '2025-05-26 10:00:00', N'Ao_Thun_Bong_Ro_Khong_Tay_adidas_Unisex_JD6133_01_laydown_ioit2d.jpg', N'Áo bóng rổ thoáng khí, thiết kế chuyên nghiệp', N'Áo bóng rổ Adidas Pro được thiết kế dành riêng cho các vận động viên chuyên nghiệp, với chất liệu polyester thoáng khí và công nghệ Climalite giúp thấm hút mồ hôi nhanh chóng, giữ cơ thể khô ráo trong các trận đấu gay cấn. Thiết kế không tay tối ưu hóa phạm vi chuyển động, kết hợp các chi tiết in ấn tinh tế, tạo nên phong cách mạnh mẽ trên sân. Áo phù hợp cho cả thi đấu chính thức và tập luyện, hỗ trợ tối đa trong các pha bật nhảy hoặc di chuyển nhanh. Sản phẩm lý tưởng cho người chơi bóng rổ từ cấp độ bán chuyên đến chuyên nghiệp. Hướng dẫn bảo quản: Giặt máy ở chế độ nhẹ, tránh dùng nước nóng để giữ màu sắc và độ co giãn. Một lựa chọn không thể thiếu cho đam mê bóng rổ!', 200.00),
+(N'Vợt Pickerball Puma Elite', N'SKU005', 4, 3, '2025-05-26 10:00:00', N'Vot-Pickleball-Facolos-Pro-Elite-Neon-1_lyvvbt.png', N'Vợt Pickerball chất lượng cao, độ bền tốt', N'Vợt Pickerball Puma Elite là sản phẩm cao cấp được chế tạo từ vật liệu composite tiên tiến, mang lại độ bền vượt trội và hiệu suất tối ưu cho mọi cú đánh. Thiết kế mặt vợt phẳng với lớp phủ đặc biệt giúp tăng độ kiểm soát bóng, trong khi tay cầm ergonomics giảm căng thẳng cho cổ tay trong các trận đấu dài. Sản phẩm phù hợp cho cả người chơi nghiệp dư muốn nâng cao kỹ năng lẫn vận động viên chuyên nghiệp. Vợt có trọng lượng nhẹ, cân bằng tốt, lý tưởng cho các kiểu chơi tấn công hoặc phòng ngự. Hướng dẫn bảo quản: Lau sạch sau khi sử dụng, tránh để tiếp xúc với ánh nắng trực tiếp quá lâu. Đây là người bạn đồng hành hoàn hảo trên sân Pickerball!', 300.00),
+(N'Quần Thể Thao Nam 7" Ultra Shorts', N'SKU006', 2, 4, '2025-05-26 10:00:00', N'QTT.7.US_-Ultra-Short-7in-Xanh_-ForestNight-1_sfqfvc.webp', N'Quần tập luyện co giãn, thoải mái', N'Quần Thể Thao Nam 7" Ultra Shorts từ Coolmate mang đến sự thoải mái tối đa với chất liệu cotton pha elastane co giãn 4 chiều, hỗ trợ mọi chuyển động trong các bài tập gym, chạy bộ hoặc yoga. Thiết kế ngắn 7 inch giúp tăng sự thoáng mát, kết hợp với túi hai bên tiện lợi để đựng đồ dùng cá nhân như chìa khóa hoặc điện thoại. Đường may chắc chắn, chống xước, phù hợp cho nam giới yêu thích phong cách thể thao hiện đại. Sản phẩm có độ bền cao, dễ dàng giặt máy và nhanh khô. Hướng dẫn bảo quản: Giặt ở nhiệt độ thấp, tránh sấy khô để giữ độ co giãn. Đây là lựa chọn hoàn hảo cho các buổi tập luyện năng động!', 250.00),
+(N'Giày Sneaker Unisex Fila Rayflide Canvas - Đen', N'SKU007', 3, 5, '2025-05-26 10:00:00', N'1RM02742F-978-1_vrcdgs.jpg', N'Giày cầu lông nhẹ, bám sân tốt', N'Giày Sneaker Unisex Fila Rayflide Canvas - Đen là sản phẩm lý tưởng cho những ai đam mê cầu lông với đế cao su chống trơn trượt, đảm bảo độ bám sân vượt trội trên nhiều bề mặt. Chất liệu vải canvas pha lưới thoáng khí giúp đôi chân luôn khô ráo, trong khi lớp đệm EVA mang lại cảm giác êm ái. Thiết kế unisex với kiểu dáng tối giản nhưng phong cách, phù hợp cho cả thi đấu và sử dụng hàng ngày. Giày có trọng lượng nhẹ, hỗ trợ tối đa trong các pha di chuyển nhanh. Hướng dẫn bảo quản: Lau bằng khăn ẩm, tránh ngâm nước để bảo vệ lớp đế. Một đôi giày hoàn hảo cho mọi sân chơi!', 400.00),
+(N'Quần short Nam AKSU895-2V', N'SKU008', 1, 6, '2025-05-26 10:00:00', N'v1748242135/xx_00273_56727614041f462daf940bbe20b7fb56_tey71l.jpg', N'Quần short nam thoải mái, phong cách thể thao', N'Quần short Nam AKSU895-2V từ Li-Ning được thiết kế với chất liệu polyester thoáng khí và elastane co giãn, mang lại sự thoải mái tối ưu cho các hoạt động thể thao ngoài trời như chạy bộ, bóng đá hoặc leo núi. Thiết kế hiện đại với các đường cắt tinh tế, kết hợp túi sâu tiện lợi, phù hợp cho nam giới yêu thích phong cách năng động. Quần có khả năng chống nhăn, dễ giặt và nhanh khô, lý tưởng cho các chuyến đi dài ngày. Hướng dẫn bảo quản: Giặt máy ở chế độ nhẹ, tránh chất tẩy mạnh để giữ màu sắc và độ bền. Sản phẩm là sự kết hợp hoàn hảo giữa chức năng và thời trang!', 600.00),
+(N'Áo thun nữ HER', N'SKU009', 1, 1, '2025-05-26 10:00:00', N'C3_81o-thun-n_E1_BB_AF-HER_d3sgys.jpg', N'Áo ba lỗ thể thao nữ thoáng khí, thời trang', N'Áo thun nữ HER từ Nike là lựa chọn hoàn hảo cho phụ nữ yêu thích thể thao với thiết kế ba lỗ thoáng khí, giúp tối ưu hóa sự thoải mái trong các bài tập như yoga, chạy bộ hoặc gym. Chất liệu cotton pha polyester mềm mại, thấm hút mồ hôi nhanh, kết hợp đường cắt ôm sát tôn lên vóc dáng nữ tính. Áo có màu sắc tươi sáng và họa tiết tinh tế, phù hợp cho cả mặc tập luyện lẫn dạo phố. Sản phẩm bền bỉ, dễ dàng bảo quản với khả năng chống xù lông. Hướng dẫn bảo quản: Giặt máy ở nhiệt độ thấp, tránh sấy khô để giữ form áo. Một item không thể thiếu trong tủ đồ thể thao của bạn!', 500.00),
+(N'Áo jersey hình trang trí nam PUMA x KIDSUPER', N'SKU010', 1, 3, '2025-05-26 10:00:00', N'C3_81o-jersey-h_C3_ACnh-trang-tr_C3_AD-nam-PUMA-x-KIDSUPER_d7btsb.jpg', N'Áo jersey nam PUMA x KIDSUPER, phong cách độc đáo', N'Áo jersey nam PUMA x KIDSUPER là sản phẩm hợp tác độc quyền, mang đến sự kết hợp giữa phong cách thể thao và nghệ thuật đường phố. Thiết kế nổi bật với các họa tiết trang trí độc đáo, in ấn chất lượng cao, cùng chất liệu polyester thoáng khí giúp giữ mát trong các hoạt động ngoài trời. Áo có độ co giãn tốt, đường may chắc chắn, phù hợp cho nam giới yêu thích thể hiện cá tính qua thời trang. Sản phẩm lý tưởng cho các buổi dạo chơi, biểu diễn hoặc tập luyện nhẹ. Hướng dẫn bảo quản: Giặt tay hoặc giặt máy ở chế độ nhẹ, tránh dùng nước nóng để giữ màu sắc sống động. Một tuyên ngôn phong cách từ PUMA và KIDSUPER!', 200.00);
 -- tbProductCategory
 INSERT INTO tbProductCategory (productID, categoryID) VALUES
 (1, 1), -- Áo chạy bộ nam: Chạy bộ
@@ -140,16 +139,37 @@ INSERT INTO tbFeedback (productID, variantID, userID, rating, comment, feedbackD
 
 -- tbImages
 INSERT INTO tbImages (productID, feedbackID, imageURL, imageCaption) VALUES
-(1, NULL, N'ao_chay_bo_nam.jpg', N'Áo chạy bộ nam màu đỏ'),
+(1, NULL, N'ao-thun-chay-bo-advanced-vent-techgraphic-camo-504-xam-ghi_43_dbwx2y.jpg', N'Áo chạy bộ nam màu đỏ'),
+(1, NULL, N'ao-thun-chay-bo-advanced-vent-techgraphic-camo-504-xam-ghi_43_ogbrij.jpg', N'Áo chạy bộ nam màu đỏ'),
+(1, NULL, N'ao-thun-chay-bo-advanced-vent-techgraphic-camo-506-xam-ghi_40_kvqzhg.webp', N'Áo chạy bộ nam màu đỏ'),
+(1, NULL, N'ao-thun-chay-bo-advanced-vent-techgraphic-camo-514-xam-ghi_hcdqrl.webp', N'Áo chạy bộ nam màu đỏ'),
+(1, NULL, N'ao-thun-chay-bo-advanced-vent-techgraphic-camo-538-xam-ghi_atahag.webp', N'Áo chạy bộ nam màu đỏ'),
+(1, NULL, N'ao-thun-chay-bo-advanced-vent-techgraphic-camo-515-xam-ghi_yimi9v.webp', N'Áo chạy bộ nam màu đỏ'),
+(1, NULL, N'ao-thun-chay-bo-advanced-vent-techgraphic-camo-523-xam-ghi_xjotnv.jpg', N'Áo chạy bộ nam màu đỏ'),
 (2, NULL, N'quan_chay_bo_nu.jpg', N'Quần chạy bộ nữ màu xanh'),
 (NULL, 1, N'feedback_ao_chay_bo.jpg', N'Hình ảnh áo chạy bộ đỏ size S từ khách hàng'),
 (NULL, 2, N'feedback_quan_chay_bo.jpg', N'Hình ảnh quần chạy bộ xanh size M từ khách hàng');
 
--- tbProductTag
-INSERT INTO tbProductTag (productID, tagName, tagDescription) VALUES
-(1, N'Thoáng khí', N'Chất liệu thoáng khí, phù hợp chạy bộ'),
-(2, N'Co giãn', N'Chất liệu co giãn, thoải mái khi vận động');
 
+-- tbProductTag
+INSERT INTO tbTag (tagName, tagDescription) VALUES
+(N'Thoáng khí', N'Chất liệu thoáng khí, phù hợp cho các hoạt động thể thao'),
+(N'Nhẹ', N'Trọng lượng nhẹ, dễ dàng vận động'),
+(N'Chống mồ hôi', N'Công nghệ chống thấm mồ hôi hiệu quả'),
+(N'Co giãn', N'Chất liệu co giãn, thoải mái khi vận động'),
+(N'Êm ái', N'Đệm êm ái, giảm chấn tốt'),
+(N'Chuyên nghiệp', N'Thiết kế dành cho vận động viên chuyên nghiệp');
+
+-- Dữ liệu cho tbProductTag
+INSERT INTO tbProductTag (productID, tagID) VALUES
+(1, 1), -- Áo chạy bộ nam: Thoáng khí
+(1, 2), -- Áo chạy bộ nam: Nhẹ
+(1, 3), -- Áo chạy bộ nam: Chống mồ hôi
+(2, 4), -- Quần chạy bộ nữ: Co giãn
+(4, 5), -- Giày Nike Air Max: Êm ái
+(4, 1), -- Giày Nike Air Max: Thoáng khí (reusing the tag)
+(5, 6), -- Áo Adidas Pro: Chuyên nghiệp
+(5, 1); -- Áo Adidas Pro: Thoáng khí (reusing the tag)
 -- tbCart
 INSERT INTO tbCart (userID, variantID, quantity, addedDate) VALUES
 (2, 1, 2, '2025-05-25 16:20:00'),

@@ -11,26 +11,49 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+public class CategoriesDAO extends DBContext {
 
-public class CategoriesDAO extends DBContext{
-    public List<Category> getAllCategory(){
+    public List<Category> getAllCategory() {
         List<Category> list = new ArrayList<>();
         String sql = "SELECT * FROM dbo.tbCategory";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
-            while (rs.next()) {                
+            while (rs.next()) {
                 Category c = new Category(rs.getInt(1),
                         rs.getString(2),
                         rs.getString(3),
                         rs.getString(4));
                 list.add(c);
             }
-            
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return list;
     }
-    
+
+    public List<Category> getCategoryProduct(int productID) {
+        String sql = "SELECT c.categoryID,c.categoryName FROM dbo.tbProduct p \n"
+                + "JOIN dbo.tbProductCategory pc ON pc.productID = p.productID\n"
+                + "JOIN dbo.tbCategory c ON c.categoryID = pc.categoryID\n"
+                + "WHERE p.productID = ?";
+        List<Category> list = new ArrayList<>();
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, productID);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Category c = new Category(rs.getInt(1),
+                        rs.getString(2));
+                        
+                list.add(c);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
 }

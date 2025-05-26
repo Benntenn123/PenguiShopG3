@@ -7,12 +7,14 @@ package DAL;
 import Models.Category;
 import Models.Product;
 import Models.ProductVariant;
+import Models.Tag;
 import Models.Type;
 import Models.User;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ProductDao extends DBContext {
@@ -86,6 +88,43 @@ public class ProductDao extends DBContext {
         return list;
     }
 
+    public List<ProductVariant> getRelatedProduct(List<Integer> categoriesID) {
+
+        if (categoriesID == null || categoriesID.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        String sql = "SELECT TOP 4 * FROM dbo.tbProduct p \n"
+                + "JOIN dbo.tbProductCategory pc ON pc.productID = p.productID\n"
+                + "JOIN dbo.tbCategory c ON c.categoryID = pc.categoryID\n"
+                + "JOIN dbo.tbProductVariant pv ON pv.productID = p.productID\n"
+                + "WHERE c.categoryID IN ("
+                + String.join(",", Collections.nCopies(categoriesID.size(), "?"))
+                + ")\n"
+                + "ORDER BY p.importDate DESC";
+
+        List<ProductVariant> list = new ArrayList<>();
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            for (int i = 0; i < categoriesID.size(); i++) {
+                ps.setInt(i + 1, categoriesID.get(i));
+            }   
+            
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Product p = new Product(rs.getInt("productID"),
+                        rs.getString("productName"),
+                        rs.getString("imageMainProduct"));
+                ProductVariant pv = new ProductVariant(rs.getInt("variantID"),
+                        p, rs.getDouble("price"));
+                list.add(pv);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+   
     public List<ProductVariant> loadTop4ProductHotWeek() {
         String sql = "SELECT TOP 4 \n"
                 + "    p.productID,\n"
@@ -119,4 +158,69 @@ public class ProductDao extends DBContext {
         }
         return list;
     }
+
+    public ProductVariant loadProductWithID(int variantID) {
+        String sql = "SELECT p.productID,p.productName,p.imageMainProduct,pv.variantID,pv.price,p.description,p.SKU FROM dbo.tbProduct p\n"
+                + "JOIN dbo.tbProductVariant pv ON pv.productID = p.productID\n"
+                + "JOIN dbo.tbBrand br ON br.brandID = p.brandID\n"
+                + "JOIN dbo.tbProductType pt ON pt.productTypeID = p.productTypeID\n"
+                + "WHERE pv.variantID = ?;";
+
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, variantID);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Product p = new Product(rs.getInt("productID"),
+                        rs.getString("productName"),
+                        rs.getString("imageMainProduct"),
+                        rs.getString("description"),
+                        rs.getString("SKU"));
+                ProductVariant pv = new ProductVariant(rs.getInt("variantID"),
+                        p, rs.getDouble("price"));
+                return pv;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public List<String> loadImageProductWithID(int productID) {
+        String sql = "SELECT i.imageURL FROM tbProduct p \n"
+                + "JOIN dbo.tbImages i ON i.productID = p.productID\n"
+                + "WHERE i.productID = ?";
+        List<String> list = new ArrayList<>();
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, productID);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                list.add(rs.getString(1));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public List<Tag> loadTagProduct(int productID) {
+        String sql = "SELECT t.tagID, t.tagName FROM dbo.tbProduct p\n"
+                + "JOIN dbo.tbProductTag pt ON pt.productID = p.productID\n"
+                + "JOIN tbTag t ON pt.tagID = t.tagID\n"
+                + "WHERE p.productID = ?";
+        List<Tag> list = new ArrayList<>();
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, productID);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                list.add(new Tag(rs.getInt(1), rs.getString(2)));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
 }

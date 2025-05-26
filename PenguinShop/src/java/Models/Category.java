@@ -17,6 +17,11 @@ public class Category {
         this.sportType = sportType;
         this.imageCategory = imageCategory;
     }
+
+    public Category(int categoryId, String categoryName) {
+        this.categoryId = categoryId;
+        this.categoryName = categoryName;
+    }
     
 
     public Category(int categoryId, String categoryName, String sportType) {

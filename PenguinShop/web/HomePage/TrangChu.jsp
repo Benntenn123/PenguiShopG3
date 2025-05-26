@@ -1,4 +1,3 @@
-
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -772,20 +771,17 @@
                     <div class="row gy-4 gx-5 gy-lg-0">
                         <div class="col-lg-6">
                             <div class="product-wrapper wrapper-one" data-aos="fade-right" 
-                                 style="background-image: url('api/img/Frame_87642_gmkefh.webp'); background-size: cover; background-position: center;">
-                                <div class="wrapper-info">
-                                    <span style="color: white" class="wrapper-subtitle">MAN WEAR</span>
-                                    <h4 style="color: white" class="wrapper-details">MÙA HÈ KHÔNG NÓNG 
-                                        <span style="color: white" class="wrapper-inner-title">CÙNG PENGUIN</span> SHOP.
+                                 style="background-image: url('api/img/Frame_87642_gmkefh.webp'); background-size: cover; background-position: center; position: relative;">
+                                <div class="wrapper-info" style="left: -150px; width: 430px;position: relative; background-color: rgba(0, 0, 0, 0.3);border-radius: 20px; padding: 20px;">
+                                    <span style="color: white; font-size: 24px; font-family: Arial, sans-serif;" class="wrapper-subtitle">MAN WEAR</span>
+                                    <h4 style="color: white; font-family: Arial, sans-serif;" class="wrapper-details">MÙA HÈ KHÔNG NÓNG 
+                                        <span style="color: white;" class="wrapper-inner-title">CÙNG PENGUIN</span> SHOP.
                                     </h4>
                                     <a href="product-sidebar.html" class="shop-btn">Shop Now
                                         <span>
-                                            <svg width="8" height="14" viewBox="0 0 8 14" fill="none"
-                                                 xmlns="http://www.w3.org/2000/svg">
-                                            <rect x="1.45312" y="0.914062" width="9.25346" height="2.05632"
-                                                  transform="rotate(45 1.45312 0.914062)" />
-                                            <rect x="8" y="7.45703" width="9.25346" height="2.05632"
-                                                  transform="rotate(135 8 7.45703)" />
+                                            <svg width="8" height="14" viewBox="0 0 8 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <rect x="1.45312" y="0.914062" width="9.25346" height="2.05632" transform="rotate(45 1.45312 0.914062)" fill="#A3CFFA" />
+                                            <rect x="8" y="7.45703" width="9.25346" height="2.05632" transform="rotate(135 8 7.45703)" fill="#A3CFFA" />
                                             </svg>
                                         </span>
                                     </a>
@@ -793,13 +789,14 @@
                             </div>
                         </div>
                         <div class="col-lg-6">
-                            <div class="product-wrapper wrapper-two" data-aos="fade-up">
-                                <div class="wrapper-info">
-                                    <span class="wrapper-subtitle">Mega OFFER</span>
-                                    <h4 class="wrapper-details">
-                                        Make your New
-                                        <span class="wrapper-inner-title">Styles with Our</span>
-                                        Products
+                            <div class="product-wrapper wrapper-two" data-aos="fade-up"
+                                 style="background-image: url('api/img/Frame_87638_sleq2z.webp'); background-size: cover; background-position: center;">
+                                <div class="wrapper-info" style="position: relative; background-color: rgba(0, 0, 0, 0.3);border-radius: 20px; padding: 20px;">
+                                    <span style="color:white;" class="wrapper-subtitle">WOMEN ACTIVE</span>
+                                    <h4 style="color:white;" class="wrapper-details">
+                                        MÙA HÈ KHÔNG NÓNG
+                                        <span style="color:white;" class="wrapper-inner-title">CÙNG PENGUIN</span>
+                                        SHOP
                                     </h4>
                                     <a href="product-sidebar.html" class="shop-btn">Shop Now
                                         <span>
@@ -1319,56 +1316,49 @@
         <!--------------- footer-section--------------->
         <jsp:include page="Common/Footer.jsp"/>
         <!--------------- footer-section-end--------------->
+        
 
 
+            <!-- Thêm script thuần JS -->
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    var swiper = document.querySelector('.hero-swiper');
+                    var prevButton = document.querySelector('.swiper-button-prev');
+                    var nextButton = document.querySelector('.swiper-button-next');
+                    var slides = document.querySelectorAll('.swiper-slide');
+                    var currentIndex = 0;
 
-
-
-
-
-
-
-
-        <!-- Thêm script thuần JS -->
-        <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                var swiper = document.querySelector('.hero-swiper');
-                var prevButton = document.querySelector('.swiper-button-prev');
-                var nextButton = document.querySelector('.swiper-button-next');
-                var slides = document.querySelectorAll('.swiper-slide');
-                var currentIndex = 0;
-
-                // Hàm hiển thị slide hiện tại
-                function showSlide(index) {
-                    if (index < 0) {
-                        currentIndex = slides.length - 1;
-                    } else if (index >= slides.length) {
-                        currentIndex = 0;
+                    // Hàm hiển thị slide hiện tại
+                    function showSlide(index) {
+                        if (index < 0) {
+                            currentIndex = slides.length - 1;
+                        } else if (index >= slides.length) {
+                            currentIndex = 0;
+                        }
+                        slides.forEach(function (slide, i) {
+                            slide.style.display = i === currentIndex ? 'block' : 'none';
+                        });
                     }
-                    slides.forEach(function (slide, i) {
-                        slide.style.display = i === currentIndex ? 'block' : 'none';
+
+                    // Nút trước
+                    prevButton.addEventListener('click', function () {
+                        currentIndex--;
+                        showSlide(currentIndex);
                     });
-                }
 
-                // Nút trước
-                prevButton.addEventListener('click', function () {
-                    currentIndex--;
+                    // Nút sau
+                    nextButton.addEventListener('click', function () {
+                        currentIndex++;
+                        showSlide(currentIndex);
+                    });
+
+                    // Hiển thị slide đầu tiên khi tải trang
                     showSlide(currentIndex);
                 });
+            </script>
 
-                // Nút sau
-                nextButton.addEventListener('click', function () {
-                    currentIndex++;
-                    showSlide(currentIndex);
-                });
-
-                // Hiển thị slide đầu tiên khi tải trang
-                showSlide(currentIndex);
-            });
-        </script>
-
-        <jsp:include page="Common/Js.jsp"/>
-        <jsp:include page="Common/Message.jsp"/>
+            <jsp:include page="Common/Js.jsp"/>
+            <jsp:include page="Common/Message.jsp"/>
 
 
     </body>

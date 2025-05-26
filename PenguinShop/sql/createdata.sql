@@ -122,6 +122,7 @@ CREATE TABLE tbProduct (
     importDate DATETIME,
     imageMainProduct NVARCHAR(200),
     description NVARCHAR(500),
+    full_description NVARCHAR(Max),
     weight DECIMAL(5, 2),
     FOREIGN KEY (productTypeID) REFERENCES tbProductType(productTypeID),
     FOREIGN KEY (brandID) REFERENCES tbBrand(brandID)
@@ -200,12 +201,20 @@ CREATE TABLE tbImages (
 );
 
 -- Bảng thẻ tag của sản phẩm
-CREATE TABLE tbProductTag (
+CREATE TABLE tbTag (
     tagID INT PRIMARY KEY IDENTITY(1,1),
+    tagName NVARCHAR(50) NOT NULL UNIQUE, -- Ensure tags are unique
+    tagDescription NVARCHAR(200)
+);
+
+-- Bảng liên kết sản phẩm và tag (junction table cho many-to-many)
+CREATE TABLE tbProductTag (
+    productTagID INT PRIMARY KEY IDENTITY(1,1),
     productID INT,
-    tagName NVARCHAR(50) NOT NULL,
-    tagDescription NVARCHAR(200),
-    FOREIGN KEY (productID) REFERENCES tbProduct(productID)
+    tagID INT,
+    FOREIGN KEY (productID) REFERENCES tbProduct(productID),
+    FOREIGN KEY (tagID) REFERENCES tbTag(tagID),
+    CONSTRAINT UK_ProductTag UNIQUE (productID, tagID) -- Prevent duplicate associations
 );
 
 -- Bảng liên kết biến thể sản phẩm với chất liệu
