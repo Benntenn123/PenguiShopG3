@@ -61,8 +61,8 @@ INSERT INTO tbSize (sizeName) VALUES
 
 -- tbProduct
 INSERT INTO tbProduct (productName, SKU, productTypeID, brandID, importDate, imageMainProduct, description, weight) VALUES
-(N'Áo chạy bộ nam', N'SKU001', 1, 1, '2025-05-25 16:00:00', N'ao_chay_bo_nam', N'Áo chạy bộ thoáng khí', 250.00),
-(N'Quần chạy bộ nữ', N'SKU002', 2, 2, '2025-05-25 16:00:00', N'quan_chay_bo_nu', N'Quần chạy bộ co giãn', 300.00),
+(N'ao-thun-chay-bo-advanced-vent-techgraphic-camo-504-xam-ghi_43_dbwx2y.jpg', N'SKU001', 1, 1, '2025-05-25 16:00:00', N'ao-thun-chay-bo-advanced-vent-techgraphic-camo-504-xam-ghi_43_dbwx2y.jpg', N'Áo chạy bộ thoáng khí', 250.00),
+(N'Biker Shorts nữ chạy bộ 8inch', N'SKU002', 2, 2, '2025-05-25 16:00:00', N'biker-short-nu-chay-bo-8-inch-631_-den_mu1koi.jpg', N'Quần chạy bộ co giãn', 300.00),
 (N'Áo Polo Nam APLV047-10V', N'APLV047-10VXL', 1, 6, '2025-05-25 16:00:00', N'b6ba5dcd6d0f3b22b520fcb8ca87397b68adae246206ae7873d6fdb38624078f777ed3_7f0e6e24d0b44a58af496d1d86089c6f_dp22ri.webp', N'Áo polo thoáng khí', 250.00),
 (N'Giày chạy bộ Nike Air Max', N'SKU003', 3, 1, '2025-05-26 10:00:00', N'v1748241783/W_AIR_MAX_DN8_sxh4ag.jpg', N'Giày chạy bộ nhẹ, êm ái, công nghệ Air Max', 350.00),
 (N'Áo bóng rổ Adidas Pro', N'SKU004', 1, 2, '2025-05-26 10:00:00', N'Ao_Thun_Bong_Ro_Khong_Tay_adidas_Unisex_JD6133_01_laydown_ioit2d.jpg', N'Áo bóng rổ thoáng khí, thiết kế chuyên nghiệp', 200.00),

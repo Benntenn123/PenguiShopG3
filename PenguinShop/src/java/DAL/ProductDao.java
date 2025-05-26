@@ -86,4 +86,37 @@ public class ProductDao extends DBContext {
         return list;
     }
 
+    public List<ProductVariant> loadTop4ProductHotWeek() {
+        String sql = "SELECT TOP 4 \n"
+                + "    p.productID,\n"
+                + "    p.productName,\n"
+                + "    pv.variantID,\n"
+                + "	pv.price,\n"
+                + "    p.imageMainProduct,\n"
+                + "    COALESCE(SUM(od.quantity_product), 0) AS totalSold\n"
+                + "FROM tbProduct p\n"
+                + "LEFT JOIN tbProductVariant pv ON p.productID = pv.productID\n"
+                + "LEFT JOIN tbOrderDetail od ON pv.variantID = od.variantID\n"
+                + "LEFT JOIN tbOrder o ON od.orderID = o.orderID\n"
+                + "WHERE o.orderDate IS NULL \n"
+                + "   OR o.orderDate BETWEEN DATEADD(DAY, -7, GETDATE()) AND GETDATE()\n"
+                + "GROUP BY p.productID, p.productName,pv.variantID,pv.price,  p.imageMainProduct\n"
+                + "ORDER BY totalSold DESC, p.productName ASC;";
+        List<ProductVariant> list = new ArrayList<>();
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Product p = new Product(rs.getInt("productID"),
+                        rs.getString("productName"),
+                        rs.getString("imageMainProduct"));
+                ProductVariant pv = new ProductVariant(rs.getInt("variantID"),
+                        p, rs.getDouble("price"));
+                list.add(pv);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
 }

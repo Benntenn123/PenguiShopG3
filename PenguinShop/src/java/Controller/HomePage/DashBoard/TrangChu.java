@@ -47,8 +47,14 @@ public class TrangChu extends HttpServlet {
         List<Brand> br = brdao.getAllBrand();
         request.setAttribute("brand", br);
         
+        List<Brand> sixbr = brdao.gettop6BrandHighestOrder();
+        request.setAttribute("sixbr", sixbr);
+        
         List<ProductVariant> newArrival = pdao.getNewArrival();
         request.setAttribute("newArrival", newArrival);
+        
+        List<ProductVariant> top4Week = pdao.loadTop4ProductHotWeek();
+        request.setAttribute("top4Week", top4Week);
         
         List<ProductVariant> hot = pdao.getHotProduct();
         request.setAttribute("hot", hot);
