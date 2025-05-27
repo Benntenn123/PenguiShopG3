@@ -10,11 +10,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class TokenDAO extends DBContext{
+public class TokenDAO extends DBContext {
 
-    
-
-    public boolean saveToken(int userID, String token , String create_date) {
+    public boolean saveToken(int userID, String token, String create_date) {
         String sql = "INSERT INTO dbo.TokenUser\n"
                 + "( userID,token, create_date_token)\n"
                 + "VALUES(?,?,?)";
@@ -32,6 +30,7 @@ public class TokenDAO extends DBContext{
         }
         return false;
     }
+
     public String[] getTokenNewest(int userID) {
         String sql = "SELECT TOP 1 * FROM dbo.TokenUser WHERE userID = ?";
         String token = "";
@@ -40,7 +39,7 @@ public class TokenDAO extends DBContext{
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, userID);
             ResultSet rs = ps.executeQuery();
-            while (rs.next()) {                
+            while (rs.next()) {
                 token = rs.getString("token");
                 created_date = rs.getString("create_date_token");
             }
@@ -49,9 +48,48 @@ public class TokenDAO extends DBContext{
         }
         return new String[]{token, created_date};
     }
-    
-    public boolean saveToken(){
+
+    public boolean saveToken(int userID, String otpCode, String createdAt, int isUsed) {
+        String sql = "INSERT INTO dbo.OTPCode\n"
+                + "( userID, otpCode, createdAt,isUsed)\n"
+                + "VALUES\n"
+                + "(? , ? , ?, ?)";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, userID);
+            ps.setString(2, otpCode);
+            ps.setString(3, createdAt);
+            ps.setInt(4, isUsed);
+            int result = ps.executeUpdate();
+            if (result > 0) {
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return false;
     }
-    
+
+    public String[] loadNewestToken(int userID) {
+        String sql = "SELECT TOP 1 otpCode, createdAt, isUsed\n"
+                + "FROM OTPCode\n"
+                + "WHERE userID = ?\n"
+                + "ORDER BY createdAt DESC;";
+        String otp = "";
+        String createdAt = "";
+        String isUsed = "";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, userID);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {                
+                otp = rs.getString(1);
+                createdAt = rs.getString(2);
+                isUsed = String.valueOf(rs.getInt(3));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return new String[] {otp, createdAt,isUsed};
+    }
 }

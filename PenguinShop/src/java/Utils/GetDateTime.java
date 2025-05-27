@@ -6,6 +6,7 @@ package Utils;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
 
 
@@ -26,5 +27,17 @@ public class GetDateTime {
         LocalDateTime now = LocalDateTime.now();
         long minutesDiff = ChronoUnit.MINUTES.between(inputTime, now);
         return minutesDiff <= 3;
+    }
+    public static LocalDateTime parseDateTime(String dateTimeStr) {
+        if (dateTimeStr == null || dateTimeStr.isEmpty()) {
+            return null;
+        }
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            return LocalDateTime.parse(dateTimeStr, formatter);
+        } catch (DateTimeParseException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }
