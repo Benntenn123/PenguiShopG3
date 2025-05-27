@@ -326,3 +326,12 @@ CREATE TABLE tbProductPromotion (
         (productID IS NULL AND variantID IS NOT NULL)
     )
 );
+
+CREATE TABLE OTPCode(
+    otpID INT PRIMARY KEY IDENTITY(1,1),
+    userID INT NOT NULL,
+    otpCode NVARCHAR(6) NOT NULL,
+    createdAt DATETIME NOT NULL DEFAULT GETDATE(),
+    isUsed BIT NOT NULL DEFAULT 0,
+    FOREIGN KEY (userID) REFERENCES tbUsers(userID)
+);
