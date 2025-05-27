@@ -106,7 +106,7 @@
                                     <label for="rememberMe" class="address"> Nhớ tôi</label>
                                 </div>
                                 <div class="forget-pass">
-                                    <a style="font-size: 16px" href="forgot-password.html">Bạn quên mật khẩu?</a>
+                                    <a style="font-size: 16px" href="forgotpassword">Bạn quên mật khẩu?</a>
                                 </div>
                             </div>
 

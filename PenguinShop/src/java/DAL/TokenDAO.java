@@ -92,4 +92,20 @@ public class TokenDAO extends DBContext {
         }
         return new String[] {otp, createdAt,isUsed};
     }
+
+    public boolean markOTPAsUsed(int userID, String storedOtp) {
+        String sql = "UPDATE dbo.OTPCode SET isUsed = 1 WHERE userID = ? AND otpCode = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, userID);
+            ps.setString(2, storedOtp);
+            int result = ps.executeUpdate();
+            if(result >0){
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }

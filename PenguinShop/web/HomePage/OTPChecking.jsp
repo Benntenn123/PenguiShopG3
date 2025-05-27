@@ -152,7 +152,7 @@
             </div>
         </c:if>
         
-        <form action="ForgotPasswordServlet" method="POST" id="otpForm">
+        <form action="otpchecking" method="POST" id="otpForm">
             <input type="hidden" name="step" value="3">
             <input type="hidden" name="email" value="${sessionScope.email}">
             <input type="hidden" name="verification_method" value="${sessionScope.verificationMethod}">

@@ -25,6 +25,6 @@ public class HashPassword {
         }
     }
     public static void main(String[] args) {
-        System.out.println(hashWithSHA256("Son@1234"));
+        System.out.println(hashWithSHA256("Luong@vip123"));
     }
 }

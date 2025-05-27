@@ -9,7 +9,6 @@ import Const.StatusOTP;
 import DAL.TokenDAO;
 import Models.User;
 import Utils.GetDateTime;
-import static Utils.GetDateTime.parseDateTime;
 import Utils.SendMail;
 import Utils.StringConvert;
 import jakarta.mail.MessagingException;
@@ -98,8 +97,7 @@ public class VerificationMethod extends HttpServlet {
         boolean shouldGenerateNewOTP = true;
         if (!existingOtp.isEmpty()) {
             boolean isUsed = "1".equals(isUsedStr);
-            LocalDateTime createdAt = GetDateTime.parseDateTime(createdAtStr);
-            boolean isWithinThreeMinutes = createdAt != null && GetDateTime.isWithinThreeMinutes(createdAt);
+            boolean isWithinThreeMinutes = createdAtStr != null && GetDateTime.isWithinThreeMinutes(createdAtStr);
 
             if (!isUsed && isWithinThreeMinutes) {
                 // OTP chưa sử dụng và chưa quá 3 phút → Báo lỗi

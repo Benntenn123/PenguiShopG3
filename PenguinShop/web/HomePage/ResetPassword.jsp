@@ -203,7 +203,7 @@
             Xác thực thành công! Vui lòng tạo mật khẩu mới cho tài khoản của bạn.
         </p>
         
-        <form action="ForgotPasswordServlet" method="POST" id="resetPasswordForm">
+        <form action="reset_password" method="POST" id="resetPasswordForm">
             <input type="hidden" name="step" value="4">
             <input type="hidden" name="email" value="${sessionScope.email}">
             <input type="hidden" name="resetToken" value="${sessionScope.resetToken}">
@@ -295,7 +295,7 @@
             <a href="login.jsp">← Quay về đăng nhập</a>
         </div>
     </div>
-    
+    <jsp:include page="Common/Js.jsp"/>
     <script>
         // Password visibility toggle
         function togglePassword(inputId) {
@@ -480,7 +480,7 @@
     </script>
     
     <jsp:include page="Common/Footer.jsp"/>
-    <jsp:include page="Common/Js.jsp"/>
+    
     <jsp:include page="Common/Message.jsp"/>
 </body>
 </html>
