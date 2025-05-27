@@ -316,7 +316,7 @@
                                             </div>
                                             <div class="product-description">
                                                 <a style="display: block; height: 40px; line-height: 20px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 100%; font-size: 16px;"
-                                                    href="productdetails?id=${item.variantID}" class="product-details">${item.product.productName}
+                                                    href="productdetail?id=${item.variantID}" class="product-details">${item.product.productName}
                                                 </a>
                                                 <div class="price">
 <!--                                                    <span class="price-cut">$36.99</span>-->
@@ -447,18 +447,7 @@
         <jsp:include page="Common/Js.jsp"/>
         <jsp:include page="Common/Message.jsp"/>
         
-        <script>
-            function goToPage(pageNumber) {
-                // Lấy URL hiện tại
-                const currentUrl = new URL(window.location);
-                
-                // Set hoặc update parameter 'page'
-                currentUrl.searchParams.set('page', pageNumber);
-                
-                // Chuyển đến URL mới
-                window.location.href = currentUrl.toString();
-            }
-        </script>
+        
         <!--------------- footer-section-end--------------->
 
 

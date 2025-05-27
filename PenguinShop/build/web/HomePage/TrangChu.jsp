@@ -291,7 +291,7 @@
                                             </span>
                                         </div>
                                         <div class="product-description">
-                                            <a href="product-info.html" class="product-details" 
+                                            <a href="productdetail?id=${NewArrival.variantID}" class="product-details" 
                                                style="display: block; height: 40px; line-height: 20px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 100%; font-size: 16px;">
                                                 ${newArrival.product.productName}
                                             </a>
@@ -851,7 +851,7 @@
                                             </span>
                                         </div>
                                         <div class="product-description">
-                                            <a href="product-info.html" class="product-details" 
+                                            <a href="productdetail?id=${hot.variantID}" class="product-details" 
                                                style="display: block; width: 160px; line-height: 20px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; height: 100%; font-size: 14px;">
                                                 ${hot.product.productName}
                                             </a>
@@ -943,7 +943,7 @@
                                             </span>
                                         </div>
                                         <div class="product-description">
-                                            <a href="product-info.html" class="product-details" 
+                                            <a href="productdetail?id=${top4Week.variantID}" class="product-details" 
                                                style="display: block; height: 40px; line-height: 20px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 100%; font-size: 16px;">
                                                 ${top4Week.product.productName}
                                             </a>
