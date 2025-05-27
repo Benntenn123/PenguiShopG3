@@ -12,6 +12,7 @@ import Models.Size;
 import Models.Tag;
 import Models.Type;
 import Models.User;
+import Utils.StringConvert;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -270,5 +271,224 @@ public class ProductDao extends DBContext {
             e.printStackTrace();
         }
         return list;
+    }
+
+    public List<ProductVariant> loadProductVariants(String[] categoryIDs, String[] brandIDs, String[] colorIDs,
+            String[] sizeIDs, String from, String to, String q, int page, int pageSize) {
+
+        StringBuilder sql = new StringBuilder(
+                "SELECT DISTINCT p.productID, p.productName, p.imageMainProduct, pv.variantID, pv.price "
+                + "FROM tbProduct p "
+                + "JOIN tbProductVariant pv ON p.productID = pv.productID "
+                + "LEFT JOIN tbBrand b ON p.brandID = b.brandID "
+                + "LEFT JOIN tbColor col ON pv.colorID = col.colorID "
+                + "LEFT JOIN tbSize s ON pv.sizeID = s.sizeID "
+                + "WHERE 1=1 "
+        );
+
+        List<Object> paramsList = new ArrayList<>();
+
+        // Filter by category using EXISTS to avoid duplicates
+        int[] categoryIntIDs = StringConvert.convertToIntArray(categoryIDs);
+        if (categoryIntIDs != null) {
+            String placeholders = String.join(",", java.util.Collections.nCopies(categoryIntIDs.length, "?"));
+            sql.append("AND EXISTS (SELECT 1 FROM tbProductCategory pc WHERE pc.productID = p.productID AND pc.categoryID IN (" + placeholders + ")) ");
+            for (int id : categoryIntIDs) {
+                paramsList.add(id);
+            }
+        }
+
+        // Filter by brand
+        int[] brandIntIDs = StringConvert.convertToIntArray(brandIDs);
+        if (brandIntIDs != null) {
+            String placeholders = String.join(",", java.util.Collections.nCopies(brandIntIDs.length, "?"));
+            sql.append("AND b.brandID IN (" + placeholders + ") ");
+            for (int id : brandIntIDs) {
+                paramsList.add(id);
+            }
+        }
+
+        // Filter by color
+        int[] colorIntIDs = StringConvert.convertToIntArray(colorIDs);
+        if (colorIntIDs != null) {
+            String placeholders = String.join(",", java.util.Collections.nCopies(colorIntIDs.length, "?"));
+            sql.append("AND col.colorID IN (" + placeholders + ") ");
+            for (int id : colorIntIDs) {
+                paramsList.add(id);
+            }
+        }
+
+        // Filter by size
+        int[] sizeIntIDs = StringConvert.convertToIntArray(sizeIDs);
+        if (sizeIntIDs != null) {
+            String placeholders = String.join(",", java.util.Collections.nCopies(sizeIntIDs.length, "?"));
+            sql.append("AND s.sizeID IN (" + placeholders + ") ");
+            for (int id : sizeIntIDs) {
+                paramsList.add(id);
+            }
+        }
+
+        // Price range
+        if (from != null && !from.trim().isEmpty()) {
+            try {
+                sql.append("AND pv.price >= ? ");
+                paramsList.add(Double.parseDouble(from.trim()));
+            } catch (NumberFormatException e) {
+            }
+        }
+        if (to != null && !to.trim().isEmpty()) {
+            try {
+                sql.append("AND pv.price <= ? ");
+                paramsList.add(Double.parseDouble(to.trim()));
+            } catch (NumberFormatException e) {
+            }
+        }
+
+        // Search query
+        if (q != null && !q.trim().isEmpty()) {
+            sql.append("AND p.productName LIKE ? ");
+            paramsList.add("%" + q.trim() + "%");
+        }
+
+        // Pagination
+        int offset = (page - 1) * pageSize;
+        sql.append("ORDER BY pv.variantID OFFSET ? ROWS FETCH NEXT ? ROWS ONLY ");
+        paramsList.add(offset);
+        paramsList.add(pageSize);
+
+        List<ProductVariant> list = new ArrayList<>();
+        try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
+            for (int i = 0; i < paramsList.size(); i++) {
+                ps.setObject(i + 1, paramsList.get(i));
+            }
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Product product = new Product(
+                        rs.getInt("productID"),
+                        rs.getString("productName"),
+                        rs.getString("imageMainProduct")
+                );
+                ProductVariant variant = new ProductVariant(
+                        rs.getInt("variantID"),
+                        product,
+                        rs.getDouble("price")
+                );
+                list.add(variant);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public int calculateTotalProductVariants(String[] categoryIDs, String[] brandIDs, String[] colorIDs,
+            String[] sizeIDs, String from, String to, String q) {
+
+        StringBuilder sql = new StringBuilder(
+                "SELECT COUNT(DISTINCT pv.variantID) "
+                + "FROM tbProduct p "
+                + "JOIN tbProductVariant pv ON p.productID = pv.productID "
+                + "LEFT JOIN tbBrand b ON p.brandID = b.brandID "
+                + "LEFT JOIN tbColor col ON pv.colorID = col.colorID "
+                + "LEFT JOIN tbSize s ON pv.sizeID = s.sizeID "
+                + "WHERE 1=1 "
+        );
+
+        List<Object> paramsList = new ArrayList<>();
+
+        // categoryID filter
+        int[] categoryIntIDs = StringConvert.convertToIntArray(categoryIDs);
+        if (categoryIntIDs != null) {
+            String placeholders = String.join(",", java.util.Collections.nCopies(categoryIntIDs.length, "?"));
+            sql.append("AND EXISTS (SELECT 1 FROM tbProductCategory pc WHERE pc.productID = p.productID AND pc.categoryID IN (" + placeholders + ")) ");
+            for (int id : categoryIntIDs) {
+                paramsList.add(id);
+            }
+        }
+
+        // brand
+        int[] brandIntIDs = StringConvert.convertToIntArray(brandIDs);
+        if (brandIntIDs != null) {
+            String placeholders = String.join(",", java.util.Collections.nCopies(brandIntIDs.length, "?"));
+            sql.append("AND b.brandID IN (" + placeholders + ") ");
+            for (int id : brandIntIDs) {
+                paramsList.add(id);
+            }
+        }
+
+        // color
+        int[] colorIntIDs = StringConvert.convertToIntArray(colorIDs);
+        if (colorIntIDs != null) {
+            String placeholders = String.join(",", java.util.Collections.nCopies(colorIntIDs.length, "?"));
+            sql.append("AND col.colorID IN (" + placeholders + ") ");
+            for (int id : colorIntIDs) {
+                paramsList.add(id);
+            }
+        }
+
+        // size
+        int[] sizeIntIDs = StringConvert.convertToIntArray(sizeIDs);
+        if (sizeIntIDs != null) {
+            String placeholders = String.join(",", java.util.Collections.nCopies(sizeIntIDs.length, "?"));
+            sql.append("AND s.sizeID IN (" + placeholders + ") ");
+            for (int id : sizeIntIDs) {
+                paramsList.add(id);
+            }
+        }
+
+        // price
+        if (from != null && !from.trim().isEmpty()) {
+            try {
+                sql.append("AND pv.price >= ? ");
+                paramsList.add(Double.parseDouble(from.trim()));
+            } catch (NumberFormatException e) {
+            }
+        }
+        if (to != null && !to.trim().isEmpty()) {
+            try {
+                sql.append("AND pv.price <= ? ");
+                paramsList.add(Double.parseDouble(to.trim()));
+            } catch (NumberFormatException e) {
+            }
+        }
+
+        // search
+        if (q != null && !q.trim().isEmpty()) {
+            sql.append("AND p.productName LIKE ? ");
+            paramsList.add("%" + q.trim() + "%");
+        }
+
+        try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
+            for (int i = 0; i < paramsList.size(); i++) {
+                ps.setObject(i + 1, paramsList.get(i));
+            }
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return 0;
+    }
+
+    public static void main(String[] args) {
+        String[] categories = {"1", "2"};
+        String[] brand = {"1"};
+        String[] color = {"1"};
+        String[] size = {"1"};
+        String from = "10000";
+        String to = "";
+        String q = "";
+        int page = 1;
+        int pageSize = 10;
+        ProductDao pdao = new ProductDao();
+        List<ProductVariant> list = pdao.loadProductVariants(categories, brand,
+                color, size, from, to, q, page, pageSize);
+        for (ProductVariant productVariant : list) {
+            System.out.println(productVariant.getProduct().toString());
+        }
     }
 }

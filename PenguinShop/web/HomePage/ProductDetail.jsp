@@ -247,7 +247,7 @@
                         <div class="nav nav-tabs nav-item" id="nav-tab" role="tablist">
                             <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab"
                                     data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home"
-                                    aria-selected="true">Description</button>
+                                    aria-selected="true">Mô tả sản phẩm</button>
                             <!--                            <button class="nav-link" id="nav-review-tab" data-bs-toggle="tab" data-bs-target="#nav-review"
                                                                 type="button" role="tab" aria-controls="nav-review" aria-selected="false">Reviews</button>
                                                         <button class="nav-link" id="nav-seller-tab" data-bs-toggle="tab" data-bs-target="#nav-seller"
@@ -261,7 +261,7 @@
                         <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab"
                              tabindex="0" data-aos="fade-up">
                             <div class="product-intro-section">
-                                <h5 class="intro-heading">Introduction</h5>
+                                <h5 class="intro-heading">Mô tả</h5>
                                 <p class="product-details">
                                     ${pv.product.full_description}
                                 </p>

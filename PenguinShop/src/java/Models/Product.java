@@ -152,6 +152,11 @@ public class Product {
     public void setWeight(double weight) {
         this.weight = weight;
     }
+
+    @Override
+    public String toString() {
+        return "Product{" + "productId=" + productId + ", productName=" + productName + ", sku=" + sku + ", type=" + type + ", category=" + category + ", importDate=" + importDate + ", imageMainProduct=" + imageMainProduct + ", description=" + description + ", weight=" + weight + ", full_description=" + full_description + '}';
+    }
     
     
     
