@@ -15,6 +15,31 @@ public class Product {
     private String imageMainProduct;
     private String description;
     private double weight;
+    private String full_description;
+
+    public Product(int productId, String productName, String imageMainProduct, String description, String sku, String full_description) {
+        this.productId = productId;
+        this.productName = productName;
+        this.sku = sku;
+        this.imageMainProduct = imageMainProduct;
+        this.description = description;
+        this.full_description = full_description;
+    }
+
+    public Product(int productId, String productName, String imageMainProduct, String description) {
+        this.productId = productId;
+        this.productName = productName;
+        this.imageMainProduct = imageMainProduct;
+        this.description = description;
+    }
+
+    public Product(int productId, String productName, String imageMainProduct, String description,String sku) {
+        this.productId = productId;
+        this.productName = productName;
+        this.sku = sku;
+        this.imageMainProduct = imageMainProduct;
+        this.description = description;
+    }
 
     public Product(int productId, String productName, String sku, Type type, Category category, String importDate, String description, double weight) {
         this.productId = productId;
@@ -25,6 +50,12 @@ public class Product {
         this.importDate = importDate;
         this.description = description;
         this.weight = weight;
+    }
+
+    public Product(int productId, String productName, String imageMainProduct) {
+        this.productId = productId;
+        this.productName = productName;
+        this.imageMainProduct = imageMainProduct;
     }
 
     public Product(String productName, String imageMainProduct) {
@@ -48,6 +79,14 @@ public class Product {
 
     public void setProductId(int productId) {
         this.productId = productId;
+    }
+
+    public String getFull_description() {
+        return full_description;
+    }
+
+    public void setFull_description(String full_description) {
+        this.full_description = full_description;
     }
 
     public String getProductName() {
@@ -112,6 +151,11 @@ public class Product {
 
     public void setWeight(double weight) {
         this.weight = weight;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" + "productId=" + productId + ", productName=" + productName + ", sku=" + sku + ", type=" + type + ", category=" + category + ", importDate=" + importDate + ", imageMainProduct=" + imageMainProduct + ", description=" + description + ", weight=" + weight + ", full_description=" + full_description + '}';
     }
     
     

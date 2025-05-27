@@ -70,7 +70,7 @@
         <section class="login footer-padding">
             <div class="container">
                 <div class="login-section">
-                    <div class="review-form">
+                    <div style="height: 75rem !important" class="review-form">
                         <h5 class="comment-title">Đăng nhập</h5>
                         <form method="post" action="login">
                             <div class="review-form-name">
@@ -96,6 +96,9 @@
                                     value="<%= password %>"
                                     required
                                     />
+                                <div>
+                                    <div style="margin: 20px 0px" class="g-recaptcha" data-sitekey="6LexoiArAAAAAAknmJMBGgZ0a1zuLa03LmsjDfov"></div>
+                                </div>
                             </div>
                             <div class="review-form-name checkbox">
                                 <div class="checkbox-item">
@@ -111,7 +114,7 @@
                                 <button type="submit" class="shop-btn">Đăng Nhập</button>
                                 <span class="shop-account">
                                     Bạn không có tài khoản ?
-                                    <a href="create-account.html">Đăng kí ngay</a>
+                                    <a href="register">Đăng kí ngay</a>
                                 </span>
                             </div>
                         </form>
@@ -124,7 +127,7 @@
                                     </a>
                                 </li>
                                 <li class="comeback">
-                                    <a href="index.html">
+                                    <a href="trangchu">
                                         <i class='bx bx-home'></i>
                                     </a>
                                 </li>
@@ -135,7 +138,7 @@
             </div>
         </section>
         <!--------------- login-section-end --------------->
-
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
         <!--------------- footer-section--------------->
         <jsp:include page="Common/Footer.jsp" />
         <!--------------- footer-section-end--------------->

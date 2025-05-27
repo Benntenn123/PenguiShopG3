@@ -5,8 +5,8 @@
 package Controller.HomePage.Customer.Password;
 
 import APIKey.Capcha;
-import Bo.HashPassword;
-import Controller.HomePage.Customer.Login;
+import Utils.HashPassword;
+import Controller.HomePage.Customer.Auth.Login;
 import DAL.UserDAO;
 import Models.User;
 import com.google.gson.JsonObject;
