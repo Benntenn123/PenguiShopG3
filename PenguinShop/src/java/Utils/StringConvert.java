@@ -6,6 +6,7 @@ package Utils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 
 public class StringConvert {
@@ -51,5 +52,41 @@ public class StringConvert {
             result[i] = validIntegers.get(i);
         }
         return result;
+        
+    }
+    public static String maskPhoneNumber(String phone) {
+        if (phone == null || phone.length() < 7) {
+            return phone; // Không đủ dài để ẩn
+        }
+        int length = phone.length();
+        String start = phone.substring(0, 3);
+        String end = phone.substring(length - 3);
+        String maskedMiddle = "*".repeat(length - 6);
+        return start + maskedMiddle + end;
+    }
+
+    // Ẩn email, ví dụ: user@example.com -> u***@example.com
+    public static String maskEmail(String email) {
+        if (email == null || !email.contains("@")) {
+            return email;
+        }
+        String[] parts = email.split("@", 2);
+        String name = parts[0];
+        String domain = parts[1];
+        if (name.length() <= 1) {
+            return "*" + "@" + domain;
+        }
+        String start = name.substring(0, 1);
+        String maskedMiddle = "*".repeat(Math.max(0, name.length() - 1));
+        return start + maskedMiddle + "@" + domain;
+    }
+    
+    public static String generateRandom6DigitNumber() {
+        Random random = new Random();
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < 6; i++) {
+            sb.append(random.nextInt(10)); // Tạo số ngẫu nhiên từ 0-9
+        }
+        return sb.toString();
     }
 }

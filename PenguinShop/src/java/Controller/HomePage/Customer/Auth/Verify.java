@@ -1,6 +1,7 @@
 
 package Controller.HomePage.Customer.Auth;
 
+import Const.Account;
 import DAL.TokenDAO;
 import DAL.UserDAO;
 import Utils.StringConvert;
@@ -49,7 +50,7 @@ public class Verify extends HttpServlet {
             String[] old_token = StringConvert.splitUserIdAndUUID(oldTokenRaw[0]);
             
             if(verify[0].equals(old_token[0]) && token.equals(oldTokenRaw[0])){
-                if(udao.updateStatusAccount(userID)){
+                if(udao.updateStatusAccount(userID,Account.ACTIVE_ACCOUNT)){
                     request.getSession().setAttribute("ms", "Xác minh tài khoản thành công!");
                     response.sendRedirect("trangchu");
                 }

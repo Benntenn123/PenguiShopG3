@@ -26,6 +26,13 @@ import java.util.Date;
         this.email = email;
         this.image_user = image_user;
     }
+
+    public User(int userID, String fullName, String phone, String email) {
+        this.userID = userID;
+        this.fullName = fullName;
+        this.phone = phone;
+        this.email = email;
+    }
     
 
     // Constructor

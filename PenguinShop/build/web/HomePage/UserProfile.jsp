@@ -84,7 +84,7 @@
                                                         <p class="paragraph">Định dạng jpg,webp,png,jpeg. Kích cỡ tối đa 5mb
                                                         </p>
                                                         <div class="logo-upload">
-                                                            <img src="${user.image_user}" alt="upload"
+                                                            <img src="api/img/${user.image_user}" alt="upload"
                                                                  class="upload-img" id="upload-img">
                                                             <div class="upload-input">
                                                                 <label for="input-file">

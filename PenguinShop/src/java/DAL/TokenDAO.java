@@ -50,4 +50,8 @@ public class TokenDAO extends DBContext{
         return new String[]{token, created_date};
     }
     
+    public boolean saveToken(){
+        return false;
+    }
+    
 }

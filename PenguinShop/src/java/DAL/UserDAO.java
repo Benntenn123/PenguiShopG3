@@ -203,11 +203,11 @@ public class UserDAO extends DBContext {
         return userId;
     }
 
-    public boolean updateStatusAccount(int userID) {
+    public boolean updateStatusAccount(int userID, int status) {
         String sql = "UPDATE dbo.tbUsers SET status_account = ? WHERE userID = ?";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
-            ps.setInt(1, Account.ACTIVE_ACCOUNT);
+            ps.setInt(1, status);
             ps.setInt(2, userID);
             int result = ps.executeUpdate();
             if (result > 0) {
@@ -217,5 +217,28 @@ public class UserDAO extends DBContext {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public User getEmailAndPhone(String email_raw) {
+        String sql = "SELECT userID ,email,phone,fullName FROM dbo.tbUsers\n"
+                + "WHERE email = ?";
+        
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, email_raw);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {  
+                User u = new User(rs.getInt(1),
+                        rs.getString(4),
+                        rs.getString(3),
+                        rs.getString(2));
+                return u;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    
+    
     }
 }

@@ -8,11 +8,11 @@ INSERT INTO tbRoles (roleName) VALUES
 (N'Bán hàng');
 
 -- tbUsers
-INSERT INTO tbUsers (fullName, password, roleID, address, birthday, phone, email, image_user) VALUES
-(N'Sơn', N'50f890eed24bfcd3ec4f2de7743fad1f8fadb9fc17665fada25f33a2c90acaee', 1, N'123 Đường Lê Lợi, Hà Nội', '1990-05-15', N'0987654321', N'son123@gmail.com', N'vn-11134207-7ras8-m2j1kxknq7qqdd_vk04rb.jpg'),
-(N'Lan', N'50f890eed24bfcd3ec4f2de7743fad1f8fadb9fc17665fada25f33a2c90acaee', 2, N'456 Đường Trần Hưng Đạo, TP.HCM', '1992-08-20', N'0912345678', N'lan456@gmail.com', NULL),
-(N'Hoàng', N'50f890eed24bfcd3ec4f2de7743fad1f8fadb9fc17665fada25f33a2c90acaee', 2, N'789 Đường Nguyễn Huệ, Đà Nẵng', '1988-12-10', N'0934567890', N'hoang789@gmail.com', NULL),
-(N'Hải', N'50f890eed24bfcd3ec4f2de7743fad1f8fadb9fc17665fada25f33a2c90acaee', 3, N'321 Đường Phạm Văn Đồng, Hải Phòng', '1995-03-25', N'0976543210', N'hai321@gmail.com', NULL);
+INSERT INTO tbUsers (fullName, password, roleID, address, birthday, phone, email, image_user,status_account) VALUES
+(N'Sơn', N'50f890eed24bfcd3ec4f2de7743fad1f8fadb9fc17665fada25f33a2c90acaee', 1, N'123 Đường Lê Lợi, Hà Nội', '1990-05-15', N'0987654321', N'kn1802204@gmail.com', N'vn-11134207-7ras8-m2j1kxknq7qqdd_vk04rb.jpg',1),
+(N'Lan', N'50f890eed24bfcd3ec4f2de7743fad1f8fadb9fc17665fada25f33a2c90acaee', 2, N'456 Đường Trần Hưng Đạo, TP.HCM', '1992-08-20', N'0912345678', N'lan456@gmail.com', NULL,1),
+(N'Hoàng', N'50f890eed24bfcd3ec4f2de7743fad1f8fadb9fc17665fada25f33a2c90acaee', 2, N'789 Đường Nguyễn Huệ, Đà Nẵng', '1988-12-10', N'0934567890', N'hoang789@gmail.com', NULL,1),
+(N'Hải', N'50f890eed24bfcd3ec4f2de7743fad1f8fadb9fc17665fada25f33a2c90acaee', 3, N'321 Đường Phạm Văn Đồng, Hải Phòng', '1995-03-25', N'0976543210', N'hai321@gmail.com', NULL,1);
 
 -- tbBrand
 INSERT INTO tbBrand (brandName, logo, description) VALUES

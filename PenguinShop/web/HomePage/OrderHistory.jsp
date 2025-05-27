@@ -182,7 +182,7 @@
                                                         <div class="order-detail-item ${status.index > 0 ? 'hidden-detail' : ''}">
                                                             <div class="row">
                                                                 <div class="product-image col-md-2">
-                                                                    <img width="100px" src="${detail.variant.product.imageMainProduct}" alt="${detail.variant.product.productName}" onerror="this.src='assets/images/no-image.jpg'">
+                                                                    <img width="100px" src="api/img/${detail.variant.product.imageMainProduct}" alt="${detail.variant.product.productName}" onerror="this.src='assets/images/no-image.jpg'">
                                                                 </div>
                                                                 <div class="product-info col-md-9">
                                                                     <p><strong>Sản phẩm:</strong> ${detail.variant.product.productName}</p>

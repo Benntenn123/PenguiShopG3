@@ -77,6 +77,7 @@ CREATE TABLE tbUsers (
     phone NVARCHAR(15),
     email NVARCHAR(100),
     image_user NVARCHAR(200),
+    status_account int, 
     FOREIGN KEY (roleID) REFERENCES tbRoles(roleID)
 );
 
@@ -324,4 +325,13 @@ CREATE TABLE tbProductPromotion (
         (productID IS NOT NULL AND variantID IS NULL) OR 
         (productID IS NULL AND variantID IS NOT NULL)
     )
+);
+
+CREATE TABLE OTPCode(
+    otpID INT PRIMARY KEY IDENTITY(1,1),
+    userID INT NOT NULL,
+    otpCode NVARCHAR(6) NOT NULL,
+    createdAt DATETIME NOT NULL DEFAULT GETDATE(),
+    isUsed BIT NOT NULL DEFAULT 0,
+    FOREIGN KEY (userID) REFERENCES tbUsers(userID)
 );
