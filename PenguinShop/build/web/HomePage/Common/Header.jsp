@@ -51,14 +51,17 @@
                                         </svg>
                                     </span>
                                 </div>
+
                                 <div class="wrapper-main">
                                     <div class="search-section">
-                                        <input type="text" placeholder="Search Products.........">
+                                        <input id="searchInput" type="text" placeholder="Tìm kiếm sản phẩm.........">
                                             <div class="divider"></div>
-                                            <button type="button">All Categories</button>
-                                            <a href="#" class="shop-btn">Search</a>
+                                            <button type="button">Tất cả danh mục</button>
+                                            <a type="button" class="shop-btn" onclick="handleSearch()">Tìm kiếm</a>
                                     </div>
                                 </div>
+
+
                             </div>
 
                             <!-- change this -->

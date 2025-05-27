@@ -1664,6 +1664,21 @@
                 });
             });
         </script>
+        <script>
+            function handleSearch() {
+                // Lấy giá trị từ input có id="searchInput"
+                const searchInput = document.getElementById("searchInput").value.trim();
+
+                // Kiểm tra nếu input không rỗng
+                if (searchInput) {
+                    // Điều hướng sang trang search?q= với giá trị input được mã hóa
+                    window.location.href = `search?q=` +searchInput;
+                } else {
+                    // Nếu input rỗng, hiển thị thông báo
+                    alert("Vui lòng nhập từ khóa tìm kiếm!");
+                }
+            }
+        </script>
         <jsp:include page="Common/Js.jsp"/>
         <jsp:include page="Common/Message.jsp"/>
 
