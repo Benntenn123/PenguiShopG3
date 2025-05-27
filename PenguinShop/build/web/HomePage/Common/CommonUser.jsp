@@ -136,7 +136,7 @@
         </span>
     </a>
 
-<!--    <button class="nav-link" id="v-pills-ticket-tab" data-bs-toggle="pill"
+    <a href="logUser" class="nav-link" id="v-pills-ticket-tab"
             data-bs-target="#v-pills-ticket" type="button" role="tab" aria-controls="v-pills-ticket"
             aria-selected="false">
         <span>
@@ -151,9 +151,9 @@
             </svg>
         </span>
         <span class="text">
-            Support Ticket
+            Lịch sử Hoạt Động
         </span>
-    </button>-->
+    </a>
 
     <div class="nav-link">
         <a href="logout">

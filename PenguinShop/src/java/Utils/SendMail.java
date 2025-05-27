@@ -281,7 +281,7 @@ public class SendMail {
                     "            </div>\n" +
                     "            \n" +
                     "            <div class=\"expire-info\">\n" +
-                    "                ⏰ <strong>Mã này có hiệu lực trong 5 phút</strong><br>\n" +
+                    "                ⏰ <strong>Mã này có hiệu lực trong 3 phút</strong><br>\n" +
                     "                Thời gian tạo: <span id=\"currentTime\">" + createdDate + "</span>\n" +
                     "            </div>\n" +
                     "            \n" +

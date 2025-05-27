@@ -5,11 +5,14 @@
 package DAL;
 
 import Const.Account;
+import Models.Logs;
 import Utils.HashPassword;
 import Models.User;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserDAO extends DBContext {
 
@@ -222,12 +225,12 @@ public class UserDAO extends DBContext {
     public User getEmailAndPhone(String email_raw) {
         String sql = "SELECT userID ,email,phone,fullName FROM dbo.tbUsers\n"
                 + "WHERE email = ?";
-        
+
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, email_raw);
             ResultSet rs = ps.executeQuery();
-            while (rs.next()) {  
+            while (rs.next()) {
                 User u = new User(rs.getInt(1),
                         rs.getString(4),
                         rs.getString(3),
@@ -238,7 +241,93 @@ public class UserDAO extends DBContext {
             e.printStackTrace();
         }
         return null;
-    
-    
+
     }
+
+    public List<Logs> getLogsByTimeRange(int userID, String from, String to, int page, int pageSize) {
+        List<Logs> logs = new ArrayList<>();
+
+        StringBuilder sql = new StringBuilder(
+                "SELECT logID, userID, action, description, logDate FROM tbLogs WHERE 1=1"
+        );
+
+        List<Object> params = new ArrayList<>();
+
+        sql.append(" AND userID = ?");
+        params.add(userID);
+
+        if (from != null && !from.isEmpty()) {
+            sql.append(" AND logDate >= CAST(? AS DATE)");
+            params.add(from);
+        }
+
+        if (to != null && !to.isEmpty()) {
+            sql.append(" AND logDate < DATEADD(DAY, 1, CAST(? AS DATE))");
+            params.add(to);
+        }
+
+        sql.append(" ORDER BY logDate DESC");
+        sql.append(" OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
+
+        int offset = (page - 1) * pageSize;
+        params.add(offset);
+        params.add(pageSize);
+
+        try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i));
+            }
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Logs log = new Logs(
+                            rs.getInt(1),
+                            new User(rs.getInt(2)),
+                            rs.getString(3),
+                            rs.getString(5) // rs.getString(5) sửa lại thành 4 cho đúng column
+                    );
+                    logs.add(log);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return logs;
+    }
+
+    public int countLogsByTimeRange(int userID, String from, String to) {
+    StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM tbLogs WHERE 1=1");
+    List<Object> params = new ArrayList<>();
+
+    sql.append(" AND userID = ?");
+    params.add(userID);
+
+    if (from != null && !from.isEmpty()) {
+        sql.append(" AND logDate >= CAST(? AS DATE)");
+        params.add(from);
+    }
+
+    if (to != null && !to.isEmpty()) {
+        sql.append(" AND logDate < DATEADD(DAY, 1, CAST(? AS DATE))");
+        params.add(to);
+    }
+
+    try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
+        for (int i = 0; i < params.size(); i++) {
+            ps.setObject(i + 1, params.get(i));
+        }
+
+        try (ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+    return 0;
+}
+
 }

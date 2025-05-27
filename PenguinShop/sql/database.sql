@@ -205,3 +205,13 @@ INSERT INTO tbPromotion (promotionName, discountType, discountValue, startDate, 
 -- tbProductPromotion
 INSERT INTO tbProductPromotion (promotionID, productID) VALUES
 (1, 4); -- Giảm giá 20% cho Giày Nike Air Max
+
+INSERT INTO tbLogs (userID, action, description, logDate)
+VALUES 
+(1, N'Yêu cầu lấy lại mật khẩu', N'Người dùng đã yêu cầu gửi mã OTP để lấy lại mật khẩu qua email.', '2025-05-27 14:45:00'),
+(1, N'Gửi mã OTP', N'Hệ thống đã gửi mã OTP thành công đến email của người dùng.', '2025-05-27 14:46:00'),
+(1, N'Xác nhận OTP', N'Người dùng đã nhập mã OTP chính xác để xác minh danh tính.', '2025-05-27 14:50:00'),
+(1, N'Đặt lại mật khẩu', N'Người dùng đã đặt lại mật khẩu thành công.', '2025-05-27 14:55:00'),
+(1, N'Hoàn tất lấy lại mật khẩu', N'Quy trình lấy lại mật khẩu đã hoàn tất cho người dùng.', '2025-05-27 15:00:00'),
+(1, N'Yêu cầu lấy lại mật khẩu', N'Người dùng đã yêu cầu gửi mã OTP để lấy lại mật khẩu qua email.', '2025-05-14 10:30:00'),
+(1, N'Xác nhận OTP', N'Người dùng đã nhập mã OTP chính xác để xác minh danh tính.', '2025-05-14 10:35:00');

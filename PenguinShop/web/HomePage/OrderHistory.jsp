@@ -239,41 +239,6 @@
         <jsp:include page="Common/Js.jsp" />
         <jsp:include page="Common/Message.jsp" />
 
-        <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                document.querySelectorAll('.view-more-btn').forEach(button => {
-                    button.addEventListener('click', function () {
-                        const wrapper = button.closest('.order-wrapper');
-                        const container = wrapper.querySelector('.order-container');
-
-                        // Hiện tất cả các hidden detail
-                        container.querySelectorAll('.hidden-detail').forEach(el => {
-                            el.style.display = 'block';
-                        });
-
-                        // Thêm class để mở rộng chiều cao
-                        container.classList.add('expanded');
-
-                        // Ẩn nút
-                        button.style.display = 'none';
-                    });
-                });
-            });
-        </script>
-        <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const links = document.querySelectorAll('a[data-page]');
-
-        links.forEach(link => {
-            const page = link.getAttribute('data-page');
-            const url = new URL(window.location.href);
-            url.searchParams.set('page', page);
-            link.setAttribute('href', url.pathname + '?' + url.searchParams.toString());
-        });
-    });
-</script>
-
-
 
     </body>
 </html>

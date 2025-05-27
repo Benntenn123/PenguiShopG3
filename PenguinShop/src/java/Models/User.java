@@ -68,6 +68,10 @@ import java.util.Date;
     // Default Constructor
     public User() {}
 
+    public User(int userID) {
+        this.userID = userID;
+    }
+
     // Getters and Setters
     public int getUserID() {
         return userID;
