@@ -3,17 +3,35 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Controller/HomePage/DashBoard/TrangChu.java</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Controller/HomePage/Customer/ForgotPassword/ResetPassword.java</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Controller/HomePage/Customer/Auth/Login.java</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/DAL/UserDAO.java</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/web/HomePage/ListProducts.jsp</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Utils/HashPassword.java</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Controller/HomePage/Customer/ForgotPassword/ForgotPassword.java</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/web/HomePage/Login.jsp</file>
             <file>file:/F:/Git/PenguiShopG3/PenguinShop/web/HomePage/TrangChu.jsp</file>
-            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Models/ProductVariant.java</file>
-            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/DAL/ProductDao.java</file>
-            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Models/Brand.java</file>
-            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Controller/HomePage/Product/ProductDetails.java</file>
-            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/DAL/CategoriesDAO.java</file>
-            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/APIKey/CloudinaryConfig.java</file>
-            <file>file:/F:/Git/PenguiShopG3/PenguinShop/web/HomePage/ProductDetail.jsp</file>
-            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/DAL/BrandDAO.java</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Utils/GetDateTime.java</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Utils/SendMail.java</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Controller/HomePage/Customer/ForgotPassword/VerificationMethod.java</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/web/HomePage/Common/Header.jsp</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Controller/HomePage/Customer/ForgotPassword/OTPChecking.java</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Controller/HomePage/Customer/Auth/Register.java</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/web/HomePage/OrderHistory.jsp</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Controller/HomePage/DashBoard/TrangChu.java</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/web/HomePage/UserProfile.jsp</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Filter/FilterUser.java</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Filter/FilterForgotPassword.java</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/web/HomePage/Common/CommonUser.jsp</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/DAL/DBContext.java</file>
             <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Models/Product.java</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Const/Account.java</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Models/ProductVariant.java</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Models/User.java</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Controller/HomePage/Customer/Auth/Verify.java</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/DAL/ProductDao.java</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/DAL/TokenDAO.java</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/web/HomePage/Common/Footer.jsp</file>
         </group>
     </open-files>
 </project-private>
