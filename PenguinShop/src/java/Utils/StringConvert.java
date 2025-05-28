@@ -4,7 +4,9 @@
  */
 package Utils;
 
+import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
@@ -87,6 +89,38 @@ public class StringConvert {
         for (int i = 0; i < 6; i++) {
             sb.append(random.nextInt(10)); // Tạo số ngẫu nhiên từ 0-9
         }
+        return sb.toString();
+    }
+    
+    public static String generateRandomString() {
+        String upperCase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        String lowerCase = "abcdefghijklmnopqrstuvwxyz";
+        String digits = "0123456789";
+        String specialChars = "!@#$%^&*()_+-=[]{}|;:,.<>?";
+
+        SecureRandom random = new SecureRandom();
+
+        // Bắt buộc mỗi loại có ít nhất 1
+        List<Character> password = new ArrayList<>();
+        password.add(upperCase.charAt(random.nextInt(upperCase.length())));
+        password.add(digits.charAt(random.nextInt(digits.length())));
+        password.add(specialChars.charAt(random.nextInt(specialChars.length())));
+
+        // Các ký tự còn lại là chữ thường hoặc ngẫu nhiên trong 3 nhóm
+        String allChars = lowerCase + upperCase + digits + specialChars;
+        for (int i = 0; i < 5; i++) {
+            password.add(allChars.charAt(random.nextInt(lowerCase.length())));
+        }
+
+        // Trộn ngẫu nhiên để tránh cố định thứ tự
+        Collections.shuffle(password, random);
+
+        // Chuyển về String
+        StringBuilder sb = new StringBuilder();
+        for (char c : password) {
+            sb.append(c);
+        }
+
         return sb.toString();
     }
 }

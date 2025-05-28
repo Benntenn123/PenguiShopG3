@@ -6,7 +6,8 @@ package Const;
 
 
 public class Account {
-    public static final String AVATAR_DEFAULT_USER = "http://localhost:8080/PenguinShop/Images/vn-11134207-7ras8-m2j1kxknq7qqdd.jpeg";
+    public static final String AVATAR_DEFAULT_USER = "vn-11134207-7ras8-m2j1kxknq7qqdd_vk04rb.jpg";
+    
     
     //const role User
     public static int ROLE_CUSTOMER = 2;

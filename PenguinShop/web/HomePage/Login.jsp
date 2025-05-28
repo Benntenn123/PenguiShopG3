@@ -122,7 +122,7 @@
                             <h5 style="font-size: 16px" class="comment-title">Đăng nhập với</h5>
                             <ul class="social-icon">
                                 <li class="google">
-                                    <a href="#">
+                                    <a href="redirect_google">
                                         <i class='bx bxl-google'></i>
                                     </a>
                                 </li>

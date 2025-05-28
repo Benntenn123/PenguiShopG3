@@ -218,7 +218,7 @@
                             <h5 style="font-size: 16px; margin-top: 1rem !important" class="comment-title">Tiếp tục với</h5>
                             <ul class="social-icon">
                                 <li class="google">
-                                    <a href="#">
+                                    <a href="redirect_google">
                                         <i class='bx bxl-google'></i>
                                     </a>
                                 </li>

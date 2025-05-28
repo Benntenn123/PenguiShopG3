@@ -5,9 +5,11 @@
 package DAL;
 
 import Const.Account;
+import Models.GoogleAccount;
 import Models.Logs;
 import Utils.HashPassword;
 import Models.User;
+import Utils.StringConvert;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -297,37 +299,82 @@ public class UserDAO extends DBContext {
     }
 
     public int countLogsByTimeRange(int userID, String from, String to) {
-    StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM tbLogs WHERE 1=1");
-    List<Object> params = new ArrayList<>();
+        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM tbLogs WHERE 1=1");
+        List<Object> params = new ArrayList<>();
 
-    sql.append(" AND userID = ?");
-    params.add(userID);
+        sql.append(" AND userID = ?");
+        params.add(userID);
 
-    if (from != null && !from.isEmpty()) {
-        sql.append(" AND logDate >= CAST(? AS DATE)");
-        params.add(from);
-    }
-
-    if (to != null && !to.isEmpty()) {
-        sql.append(" AND logDate < DATEADD(DAY, 1, CAST(? AS DATE))");
-        params.add(to);
-    }
-
-    try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
-        for (int i = 0; i < params.size(); i++) {
-            ps.setObject(i + 1, params.get(i));
+        if (from != null && !from.isEmpty()) {
+            sql.append(" AND logDate >= CAST(? AS DATE)");
+            params.add(from);
         }
 
-        try (ResultSet rs = ps.executeQuery()) {
-            if (rs.next()) {
-                return rs.getInt(1);
+        if (to != null && !to.isEmpty()) {
+            sql.append(" AND logDate < DATEADD(DAY, 1, CAST(? AS DATE))");
+            params.add(to);
+        }
+
+        try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i));
             }
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-    } catch (SQLException e) {
-        e.printStackTrace();
+
+        return 0;
     }
 
-    return 0;
-}
+    public boolean CheckExistGGAccount(GoogleAccount gg) {
+        String sql = "Select count(*) from Accounts where email = ? and google_id = ?";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setString(1, gg.getEmail());
+            st.setString(2, gg.getId());
+
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                int arrow = rs.getInt(1);
+                if (arrow > 0) {
+                    return true;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean isertAccountGoogle(GoogleAccount gg) {
+        String sql = "INSERT INTO dbo.tbUsers\n"
+                + "(fullName,password,roleID,email,image_user,status_account,google_id)\n"
+                + "VALUES\n"
+                + "(?, ?, ?, ?, ?, ?, ?)";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, gg.getName());
+            ps.setString(2, StringConvert.generateRandomString());
+            ps.setInt(3, Account.ROLE_CUSTOMER);
+            ps.setString(4, gg.getEmail());
+            ps.setString(5, Account.AVATAR_DEFAULT_USER);
+            ps.setInt(6, Account.ACTIVE_ACCOUNT);
+            ps.setString(7, gg.getId());
+            
+            int row = ps.executeUpdate();
+            if(row>0){
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
 }

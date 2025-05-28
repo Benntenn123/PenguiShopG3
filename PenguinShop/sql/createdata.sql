@@ -78,6 +78,7 @@ CREATE TABLE tbUsers (
     email NVARCHAR(100),
     image_user NVARCHAR(200),
     status_account int, 
+	google_id NVARCHAR(255),
     FOREIGN KEY (roleID) REFERENCES tbRoles(roleID)
 );
 
