@@ -254,7 +254,7 @@
                                         <label for="toDate" style="font-size: 16px; font-weight: bold;">Đến ngày:</label>
                                         <input type="date" id="toDate" name="to" style="height: 36px; padding: 5px; border: 1px solid #ccc; border-radius: 4px;">
 
-                                        <button type="submit" style="background-color: #AE1C9A; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; transition: background-color 0.3s;">
+                                        <button type="submit" style="background-color: #AE1C9A; font-size: 14px; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; transition: background-color 0.3s;">
                                             Tìm kiếm
                                         </button>
                                     </form>
@@ -276,23 +276,23 @@
                                         <c:forEach var="order" items="${orders}" varStatus="orderStatus">
                                             <tr>
                                                 <td>
-                                                    <span style="font-size: 13px" class="order-date">${fn:substringBefore(order.orderDate, '.')}</span>
+                                                    <span style="font-size: 13px; font-weight: bold; vertical-align: central" class="order-date">${fn:substringBefore(order.orderDate, '.')}</span>
                                                 </td>
                                                 <td>
-                                                    <div style="font-size: 13px" style="max-width: 200px; word-wrap: break-word;">
+                                                    <div style="font-size: 13px ; font-weight: bold" style="max-width: 200px; word-wrap: break-word;">
                                                         ${order.shippingAddress}
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <span style="font-size: 13px" class="order-status status-${fn:toLowerCase(order.stringOrderStatus)}">
+                                                    <span style="font-size: 13px ; font-weight: bold ; padding: 0px !important" class="order-status status-${fn:toLowerCase(order.stringOrderStatus)}">
                                                         ${order.stringOrderStatus}
                                                     </span>
                                                 </td>
-                                                <td style="font-size: 13px" style="text-align: center;">
+                                                <td style="font-size: 13px ; font-weight: bold;" style="text-align: center;">
                                                     ${order.orderDetails.size()} sản phẩm
                                                 </td>
                                                 <td>
-                                                    <span style="font-size: 13px" class="order-total">${order.total} VND</span>
+                                                    <span style="font-size: 13px ; font-weight: bold" class="order-total">${order.total} VND</span>
                                                 </td>
                                                 <td>
                                                     <button class="view-details-btn" onclick="toggleOrderDetails(${orderStatus.index})">
@@ -306,15 +306,17 @@
                                                         <h5 style="margin-bottom: 15px; color: #AE1C9A;">Chi tiết đơn hàng</h5>
                                                         <c:forEach var="detail" items="${order.orderDetails}">
                                                             <div class="detail-item">
+                                                                <a href="productdetail?id=${detail.variant.variantID}">
                                                                 <img class="detail-image" 
                                                                      src="api/img/${detail.variant.product.imageMainProduct}" 
                                                                      alt="${detail.variant.product.productName}" 
-                                                                     onerror="this.src='assets/images/no-image.jpg'">
+                                                                     >
                                                                 <div class="detail-info">
                                                                     <p><strong>Sản phẩm:</strong> ${detail.variant.product.productName}</p>
                                                                     <p><strong>Số lượng:</strong> ${detail.quantity_product}</p>
                                                                     <p><strong>Giá:</strong> <span style="color: #AE1C9A; font-weight: bold;">${detail.price} VND</span></p>
                                                                 </div>
+                                                                </a>
                                                             </div>
                                                         </c:forEach>
                                                     </div>

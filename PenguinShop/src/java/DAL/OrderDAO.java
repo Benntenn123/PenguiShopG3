@@ -42,7 +42,7 @@ public class OrderDAO extends DBContext {
                 + "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY "
                 + ") "
                 + "SELECT o.*, od.detailID, od.price AS detailPrice, od.quantity_product, "
-                + "       p.productName, p.imageMainProduct "
+                + "      p.productId ,p.productName, p.imageMainProduct,pv.variantID "
                 + "FROM PagedOrders o "
                 + "LEFT JOIN tbOrderDetail od ON o.orderID = od.orderID "
                 + "JOIN tbProductVariant pv ON pv.variantID = od.variantID "
@@ -68,7 +68,7 @@ public class OrderDAO extends DBContext {
 
             ResultSet rs = ps.executeQuery();
             Map<Integer, Order> orderMap = new HashMap<>();
-
+            System.out.println(sql);
             while (rs.next()) {
                 int orderID = rs.getInt("orderID");
                 Order order = orderMap.get(orderID);
@@ -95,10 +95,11 @@ public class OrderDAO extends DBContext {
                             detailID,
                             rs.getDouble("detailPrice"),
                             rs.getInt("quantity_product"),
-                            new ProductVariant(
-                                    new Product(rs.getString("productName"), rs.getString("imageMainProduct"))
+                            new ProductVariant(rs.getInt("variantID"),
+                                    new Product(rs.getInt("productId"),rs.getString("productName"), rs.getString("imageMainProduct"))
                             )
                     );
+                    System.out.println("DB" + rs.getInt("variantID"));
                     order.getOrderDetails().add(detail);
                 }
             }
@@ -107,6 +108,7 @@ public class OrderDAO extends DBContext {
         }
         return orders;
     }
+    
 
     public int getTotalPages(int userID, String[] info) {
     int limit = 2;

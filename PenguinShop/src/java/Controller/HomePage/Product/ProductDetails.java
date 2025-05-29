@@ -59,6 +59,7 @@ public class ProductDetails extends HttpServlet {
             return;
         }
         try {
+            System.out.println("Variant"+variantID);
             int variant = Integer.parseInt(variantID);
             ProductVariant pv = pdao.loadProductWithID(variant); // load detail sp
             request.setAttribute("pv", pv);

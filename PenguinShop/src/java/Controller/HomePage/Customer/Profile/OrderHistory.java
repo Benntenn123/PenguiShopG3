@@ -7,6 +7,7 @@ package Controller.HomePage.Customer.Profile;
 import Controller.HomePage.Customer.Auth.Login;
 import DAL.OrderDAO;
 import Models.Order;
+import Models.OrderDetail;
 import Models.User;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -51,7 +52,7 @@ public class OrderHistory extends HttpServlet {
 
         // get All order
         List<Order> orders = odao.getOrder(user.getUserID(), info);
-        LOGGER.info("Load order user " + user.getFullName() + ": " + orders.size());
+        
 
         request.setAttribute("totalPages", odao.getTotalPages(user.getUserID(), info));
         request.setAttribute("currentPage", currentPage);

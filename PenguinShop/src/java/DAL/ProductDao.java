@@ -81,6 +81,7 @@ public class ProductDao extends DBContext {
                 Product p = new Product(rs.getInt("productID"),
                         rs.getString("productName"),
                         rs.getString("imageMainProduct"));
+                System.out.println("HOt"+rs.getInt("variantID"));
                 ProductVariant pv = new ProductVariant(rs.getInt("variantID"),
                         p, rs.getDouble("price"));
                 list.add(pv);

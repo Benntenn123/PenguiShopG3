@@ -12,6 +12,11 @@ public class ProductVariant {
     private double price;
     private String stockStatus;
 
+    public ProductVariant(int variantID, Product product) {
+        this.variantID = variantID;
+        this.product = product;
+    }
+
     public ProductVariant(int variantID, int quantity, Product product, Color color, Size size, double price, String stockStatus) {
         this.variantID = variantID;
         this.quantity = quantity;

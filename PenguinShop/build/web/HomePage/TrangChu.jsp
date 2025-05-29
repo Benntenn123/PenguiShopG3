@@ -431,6 +431,7 @@
                                 <div class="col-lg-3 col-md-6">
                                     <div class="product-wrapper" data-aos="fade-up">
                                         <div class="product-img">
+                                            <a href="productdetail?id=${top4Week.variantID}">
                                             <img src="api/img/${top4Week.product.imageMainProduct}"
                                                  style="width: 308px;
                                                  height: 313px;
@@ -438,7 +439,7 @@
                                                  display: block;
                                                  margin: 0;" 
                                                  alt="${top4Week.product.productName}">
-
+                                            </a>
 
                                         </div>
                                         <div class="product-info">
@@ -589,15 +590,18 @@
                             <c:forEach var="newArrival" items="${newArrival}">
                                 <div class="col-lg-3 col-sm-6">
                                     <div class="product-wrapper" data-aos="fade-up">
+                                        
                                         <div class="product-img">
+                                            <a href="productdetail?id=${newArrival.variantID}">
                                             <img src="api/img/${newArrival.product.imageMainProduct}" style="width: 308px;
                                                  height: 313px;
                                                  object-fit: fill;
                                                  display: block;
                                                  margin: 0;" 
                                                  alt="${newArrival.product.productName}">
-
+                                            </a>   
                                         </div>
+                                                 
                                         <div class="product-info">
                                             <div class="ratings">
                                                 <span>
@@ -622,7 +626,7 @@
                                                 </span>
                                             </div>
                                             <div class="product-description">
-                                                <a href="productdetail?id=${NewArrival.variantID}" class="product-details" 
+                                                <a href="productdetail?id=${newArrival.variantID}" class="product-details" 
                                                    style="display: block;
                                                    height: 40px;
                                                    line-height: 20px;
@@ -639,9 +643,11 @@
                                                 </div>
                                             </div>
                                         </div>
+                                             
                                         <div class="product-cart-btn">
                                             <a href="cart.html" class="product-btn">Thêm giỏ hàng</a>
                                         </div>
+                                                
                                     </div>
                                 </div>
                             </c:forEach>
@@ -1143,9 +1149,10 @@
                                 <div class="col-lg-4 col-md-6">
                                     <div class="product-wrapper" data-aos="fade-right">
                                         <div class="product-img">
+                                            <a href="productdetail?id=${hot.variantID}">
                                             <img src="api/img/${hot.product.imageMainProduct}"
                                                  alt="product-img">
-
+                                            </a>
                                         </div>
                                         <div class="product-info">
                                             <div class="ratings">
