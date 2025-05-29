@@ -102,7 +102,7 @@ public class VerificationMethod extends HttpServlet {
             if (!isUsed && isWithinThreeMinutes) {
                 // OTP chưa sử dụng và chưa quá 3 phút → Báo lỗi
                 session.setAttribute("error", "Một mã OTP đã được gửi trước đó. Vui lòng kiểm tra email của bạn.");
-                response.sendRedirect("forgotpassword");
+                response.sendRedirect("otpchecking");
                 return;
             }
             // Nếu OTP đã sử dụng hoặc quá 3 phút → Tạo OTP mới

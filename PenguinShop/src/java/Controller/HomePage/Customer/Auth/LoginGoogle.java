@@ -56,15 +56,19 @@ public class LoginGoogle extends HttpServlet {
             if (!udao.CheckExistGGAccount(gg)) {
                 if (udao.isertAccountGoogle(gg)) {
                     LOGGER.info("Tài khoản google lần đầu login -> Chuyển sang đăng kí");
+                    User user = udao.loadUserInfoByEmail(gg.getEmail());
+                    request.getSession().setAttribute("user", user);
                 } else {
                     LOGGER.info("Lỗi đăng kí account google (Do Database)");
                     error = "Đăng kí thất bại!";
                 }
 
+            } else {
+                User user = udao.loadUserInfoByEmail(gg.getEmail());
+                request.getSession().setAttribute("user", user);
+                ms = "Đăng nhập thành công!";
             }
-            User user = udao.loadUserInfoByEmail(gg.getEmail());
-            request.getSession().setAttribute("user", user);
-            ms = "Đăng nhập thành công!";
+
         } catch (ClientProtocolException e) {
             error = "Lỗi giao thức HTTP: " + e.getMessage();
             System.err.println("HTTP Protocol Error: " + e.getMessage());

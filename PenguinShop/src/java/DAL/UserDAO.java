@@ -34,12 +34,14 @@ public class UserDAO extends DBContext {
 
     public User loadUserInfoByEmail(String email) {
         String sql = "SELECT u.userID,u.fullName,u.roleID,d.addressDetail AS address, u.birthday,u.phone, u.email, u.image_user FROM tbUsers u \n"
-                + "JOIN dbo.tbDeliveryInfo d ON d.userID = u.userID\n"
+                + "LEFT JOIN dbo.tbDeliveryInfo d ON d.userID = u.userID\n"
                 + "WHERE u.email = ?";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, email);
+            System.out.println(sql);
             ResultSet rs = ps.executeQuery();
+            
             if (rs.next()) {
                 User user = new User();
                 user.setUserID(rs.getInt("userID"));
@@ -334,7 +336,7 @@ public class UserDAO extends DBContext {
     }
 
     public boolean CheckExistGGAccount(GoogleAccount gg) {
-        String sql = "Select count(*) from Accounts where email = ? and google_id = ?";
+        String sql = "Select count(*) from tbUsers where email = ? and google_id = ?";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setString(1, gg.getEmail());
@@ -367,7 +369,7 @@ public class UserDAO extends DBContext {
             ps.setString(5, Account.AVATAR_DEFAULT_USER);
             ps.setInt(6, Account.ACTIVE_ACCOUNT);
             ps.setString(7, gg.getId());
-
+            System.out.println(sql);
             int row = ps.executeUpdate();
             if (row > 0) {
                 return true;
