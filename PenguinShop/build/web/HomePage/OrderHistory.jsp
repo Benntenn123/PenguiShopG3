@@ -8,66 +8,147 @@
     <head>
         <jsp:include page="Common/Css.jsp" />
         <style>
-            .order-container {
-                overflow: hidden;
-                max-height: 130px;
-                transition: max-height 0.6s ease-in-out;
-                border-radius: 8px;
-                margin: 10px 0;
-            }
-
-            .order-container.expanded {
-                max-height: 1000px;
-            }
-
-            .hidden-detail {
-                display: none;
-            }
-
-            .order-detail-item {
-                background-color: white;
-                padding: 15px;
-                margin: 8px 0;
-                border-radius: 6px;
-                box-shadow: 0px 2px 4px rgba(0,0,0,0.05);
-            }
-
-            .order-detail-item p {
-                margin: 5px 0;
-                color: #333;
-            }
-
-            .view-more-btn {
-                background-color: #AE1C9A;
-                color: white;
-                border: none;
-                padding: 8px 20px;
-                border-radius: 4px;
-                cursor: pointer;
-                transition: background-color 0.3s;
-            }
-
-            .view-more-btn:hover {
-                background-color: #AE1C9A;
-            }
-
-            .order-wrapper {
-                border: 1px solid #dee2e6;
-                padding: 20px;
-                border-radius: 10px;
-                margin-bottom: 20px;
+            /* Table Styles */
+            .order-table {
+                width: 100%;
+                border-collapse: collapse;
+                margin: 20px 0;
                 background-color: white;
                 box-shadow: 0px 2px 6px rgba(0,0,0,0.1);
+                border-radius: 10px;
+                overflow: hidden;
+            }
+
+            .order-table th {
+                background-color: #AE1C9A;
+                color: white;
+                padding: 15px;
+                text-align: left;
+                font-weight: bold;
+                font-size: 16px;
+            }
+
+            .order-table td {
+                padding: 15px;
+                border-bottom: 1px solid #dee2e6;
+                vertical-align: top;
+            }
+
+            .order-table tbody tr:hover {
+                background-color: #f8f9fa;
+            }
+
+            .order-table tbody tr:last-child td {
+                border-bottom: none;
             }
 
             .order-date {
-                color: #6c757d;
-                font-size: 0.9em;
+                font-weight: bold;
+                color: #333;
             }
 
-            .order-info {
-                margin: 15px 0;
-                line-height: 1.6;
+            .order-status {
+                padding: 5px 10px;
+                border-radius: 4px;
+                font-size: 14px;
+                font-weight: bold;
+                text-align: center;
+                display: inline-block;
+                min-width: 80px;
+            }
+
+            .status-pending {
+                background-color: #fff3cd;
+                color: #856404;
+            }
+
+            .status-processing {
+                background-color: #d1ecf1;
+                color: #0c5460;
+            }
+
+            .status-shipped {
+                background-color: #d4edda;
+                color: #155724;
+            }
+
+            .status-delivered {
+                background-color: #d1ecf1;
+                color: #0c5460;
+            }
+
+            .status-cancelled {
+                background-color: #f8d7da;
+                color: #721c24;
+            }
+
+            .order-total {
+                font-weight: bold;
+                color: #AE1C9A;
+                font-size: 16px;
+            }
+
+            .view-details-btn {
+                background-color: #AE1C9A;
+                color: white;
+                border: none;
+                padding: 8px 15px;
+                border-radius: 4px;
+                cursor: pointer;
+                transition: background-color 0.3s;
+                font-size: 14px;
+            }
+
+            .view-details-btn:hover {
+                background-color: #8e1680;
+            }
+
+            .order-details {
+                display: none;
+                background-color: #f8f9fa;
+                padding: 15px;
+                margin-top: 10px;
+                border-radius: 6px;
+                border-left: 4px solid #AE1C9A;
+            }
+
+            .detail-item {
+                display: flex;
+                align-items: center;
+                margin-bottom: 15px;
+                padding-bottom: 15px;
+                border-bottom: 1px solid #dee2e6;
+            }
+
+            .detail-item:last-child {
+                margin-bottom: 0;
+                padding-bottom: 0;
+                border-bottom: none;
+            }
+
+            .detail-image {
+                width: 60px;
+                height: 60px;
+                object-fit: cover;
+                border-radius: 4px;
+                margin-right: 15px;
+            }
+
+            .detail-info {
+                flex: 1;
+            }
+
+            .detail-info p {
+                margin: 3px 0;
+                color: #333;
+            }
+
+            .search-form {
+                background-color: white;
+                padding: 20px;
+                border-radius: 8px;
+                margin-bottom: 20px;
+                box-shadow: 0px 2px 6px rgba(0,0,0,0.1);
             }
 
             /* Pagination styles */
@@ -107,9 +188,7 @@
                 color: white;
                 border-color: #AE1C9A;
             }
-            .order-wrapper {
-                overflow: hidden;
-            }
+
             .pagination li a:hover:not(.active) {
                 background-color: #f8f9fa;
             }
@@ -123,6 +202,31 @@
                 color: #adb5bd;
                 pointer-events: none;
                 background-color: #f8f9fa;
+            }
+
+            /* Responsive */
+            @media (max-width: 768px) {
+                .order-table {
+                    font-size: 14px;
+                }
+                
+                .order-table th,
+                .order-table td {
+                    padding: 10px 8px;
+                }
+                
+                .search-form {
+                    padding: 15px;
+                }
+                
+                .search-form form {
+                    flex-direction: column;
+                    gap: 15px !important;
+                }
+                
+                .search-form label {
+                    margin-bottom: 5px;
+                }
             }
         </style>
     </head>
@@ -140,75 +244,92 @@
                         <div class="nav-content" id="v-pills-tabContent" style="flex: 1 0%;">
                         <div class="tab-pane" id="v-pills-review" role="tabpanel" aria-labelledby="v-pills-review-tab" tabindex="0">
                             <div class="orders-section">
-                                <div class="row g-5">
-                                    <div style="font-size: 18px;margin-bottom: 20px;">
-                                        <form method="get" action="" style="display: flex; align-items: center; gap: 10px;">
-                                            <label for="fromDate" style="font-size: 16px; font-weight: bold;">Từ ngày:</label>
-                                            <input type="date" id="fromDate" name="from" style="height: 36px;padding: 5px; border: 1px solid #ccc; border-radius: 4px;">
+                                
+                                <!-- Search Form -->
+                                <div class="search-form">
+                                    <form method="get" action="" style="display: flex; align-items: center; gap: 15px;">
+                                        <label for="fromDate" style="font-size: 16px; font-weight: bold;">Từ ngày:</label>
+                                        <input type="date" id="fromDate" name="from" style="height: 36px;padding: 5px; border: 1px solid #ccc; border-radius: 4px;">
 
-                                            <label for="toDate" style="font-size: 16px; font-weight: bold;">Đến ngày:</label>
-                                            <input type="date" id="toDate" name="to" style="height: 36px; padding: 5px; border: 1px solid #ccc; border-radius: 4px;">
+                                        <label for="toDate" style="font-size: 16px; font-weight: bold;">Đến ngày:</label>
+                                        <input type="date" id="toDate" name="to" style="height: 36px; padding: 5px; border: 1px solid #ccc; border-radius: 4px;">
 
-                                            <button type="submit" style="background-color: #AE1C9A; color: white; border: none; padding: 4px 15px; border-radius: 4px; cursor: pointer; transition: background-color 0.3s;">
-                                                Tìm kiếm
-                                            </button>
-                                        </form>
-                                    </div>
-                                    <c:forEach var="order" items="${orders}">
-                                        <div class="col-md-11">
-                                            <div style="width: 950px" class="order-wrapper">
-                                                <div class="order-header">
-                                                    <div class="order-date">
-                                                        <p style="color: black; font-weight: bold">Đơn hàng ngày : ${fn:substringBefore(order.orderDate, '.')}</p>
+                                        <button type="submit" style="background-color: #AE1C9A; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; transition: background-color 0.3s;">
+                                            Tìm kiếm
+                                        </button>
+                                    </form>
+                                </div>
 
+                                <!-- Orders Table -->
+                                <table class="order-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Ngày đặt hàng</th>
+                                            <th>Địa chỉ giao hàng</th>
+                                            <th>Trạng thái</th>
+                                            <th>Số lượng SP</th>
+                                            <th>Tổng tiền</th>
+                                            <th>Chi tiết</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <c:forEach var="order" items="${orders}" varStatus="orderStatus">
+                                            <tr>
+                                                <td>
+                                                    <span style="font-size: 13px" class="order-date">${fn:substringBefore(order.orderDate, '.')}</span>
+                                                </td>
+                                                <td>
+                                                    <div style="font-size: 13px" style="max-width: 200px; word-wrap: break-word;">
+                                                        ${order.shippingAddress}
                                                     </div>
-                                                    <div class="</div>row">
-                                                        <div style="font-size: 16px" class="order-info col-m</div>d-6">
-                                                            <strong>Địa chỉ:</strong> ${order.shippingAddress}
-                                                            <br />
-                                                            <strong>Trạng thái:</strong> ${order.stringOrderStatus}
-                                                        </div>
-                                                        <div style="font-size: 16px" class="order-info col-md-6">
-                                                            <strong>Tổng hóa đơn :</strong> ${order.total} VND
-                                                            <br />
-                                                            <strong>Số lượng: </strong> ${order.orderDetails.size()} sản phẩm 
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <!-- OrderDetail list -->
-                                                <div class="order-container">
-                                                    <c:forEach var="detail" items="${order.orderDetails}" varStatus="status">
-                                                        <div class="order-detail-item ${status.index > 0 ? 'hidden-detail' : ''}">
-                                                            <div class="row">
-                                                                <div class="product-image col-md-2">
-                                                                    <img width="100px" src="api/img/${detail.variant.product.imageMainProduct}" alt="${detail.variant.product.productName}" onerror="this.src='assets/images/no-image.jpg'">
-                                                                </div>
-                                                                <div class="product-info col-md-9">
+                                                </td>
+                                                <td>
+                                                    <span style="font-size: 13px" class="order-status status-${fn:toLowerCase(order.stringOrderStatus)}">
+                                                        ${order.stringOrderStatus}
+                                                    </span>
+                                                </td>
+                                                <td style="font-size: 13px" style="text-align: center;">
+                                                    ${order.orderDetails.size()} sản phẩm
+                                                </td>
+                                                <td>
+                                                    <span style="font-size: 13px" class="order-total">${order.total} VND</span>
+                                                </td>
+                                                <td>
+                                                    <button class="view-details-btn" onclick="toggleOrderDetails(${orderStatus.index})">
+                                                        Xem chi tiết
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="6" style="padding: 0;">
+                                                    <div id="orderDetails_${orderStatus.index}" class="order-details">
+                                                        <h5 style="margin-bottom: 15px; color: #AE1C9A;">Chi tiết đơn hàng</h5>
+                                                        <c:forEach var="detail" items="${order.orderDetails}">
+                                                            <div class="detail-item">
+                                                                <img class="detail-image" 
+                                                                     src="api/img/${detail.variant.product.imageMainProduct}" 
+                                                                     alt="${detail.variant.product.productName}" 
+                                                                     onerror="this.src='assets/images/no-image.jpg'">
+                                                                <div class="detail-info">
                                                                     <p><strong>Sản phẩm:</strong> ${detail.variant.product.productName}</p>
                                                                     <p><strong>Số lượng:</strong> ${detail.quantity_product}</p>
-                                                                    <p><strong>Giá:</strong> ${detail.price}</p>
+                                                                    <p><strong>Giá:</strong> <span style="color: #AE1C9A; font-weight: bold;">${detail.price} VND</span></p>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                    </c:forEach>
-                                                </div>
-                                                <c:if test="${order.orderDetails.size() > 1}">
-                                                    <div class="order-actions">
-                                                        <button style="font-size: 16px" class="view-more-btn">Xem thêm</button>
+                                                        </c:forEach>
                                                     </div>
-                                                </c:if>
-                                            </div>
-                                        </div>
-                                    </c:forEach>
-                                </div>
+                                                </td>
+                                            </tr>
+                                        </c:forEach>
+                                    </tbody>
+                                </table>
 
                                 <!-- Pagination -->
                                 <div class="pagination-container">
                                     <ul class="pagination">
                                         <c:if test="${currentPage > 1}">
-                                            <li class="next">
-                                                <a href="#" data-page="${currentPage - 1}">Trang trước <i class="fa fa-angle-left"></i></a>
+                                            <li class="prev">
+                                                <a href="#" data-page="${currentPage - 1}"><i class="fa fa-angle-left"></i> Trang trước</a>
                                             </li>
                                         </c:if>
                                         <c:forEach begin="1" end="${totalPages}" var="i">
@@ -223,8 +344,6 @@
                                             </li>
                                         </c:if>
                                     </ul>
-
-
                                 </div>
                             </div>
                         </div>
@@ -239,6 +358,32 @@
         <jsp:include page="Common/Js.jsp" />
         <jsp:include page="Common/Message.jsp" />
 
+        <script>
+            function toggleOrderDetails(index) {
+                const detailsDiv = document.getElementById('orderDetails_' + index);
+                const button = event.target;
+                
+                if (detailsDiv.style.display === 'none' || detailsDiv.style.display === '') {
+                    detailsDiv.style.display = 'block';
+                    button.textContent = 'Ẩn chi tiết';
+                } else {
+                    detailsDiv.style.display = 'none';
+                    button.textContent = 'Xem chi tiết';
+                }
+            }
+
+            // Pagination handling
+            document.querySelectorAll('.pagination a').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const page = this.getAttribute('data-page');
+                    if (page) {
+                        // Add your pagination logic here
+                        window.location.href = `?page=${page}`;
+                    }
+                });
+            });
+        </script>
 
     </body>
 </html>
