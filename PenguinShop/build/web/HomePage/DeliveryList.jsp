@@ -13,6 +13,9 @@
         <!-- Thêm Bootstrap CSS nếu chưa có trong Common/Css.jsp -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
         <style>
+            a {
+                text-decoration: none; /* Loại bỏ gạch chân */
+            }
             /* Giữ nguyên CSS hiện tại */
             .delivery-menu-container {
                 position: relative;
@@ -55,6 +58,41 @@
                 opacity: 1;
                 visibility: visible;
                 transform: translateY(0);
+            }
+
+            /* Style cho modal animation */
+            .modal-wrapper {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 9999;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                opacity: 0;
+                visibility: hidden;
+                transition: all 0.3s ease;
+            }
+
+            .modal-wrapper.active {
+                opacity: 1;
+                visibility: visible;
+            }
+
+            .modal-wrapper .modal-main {
+                transform: scale(0.7) translateY(-50px);
+                transition: all 0.3s ease;
+                max-width: 500px;
+                width: 90%;
+                max-height: 90vh;
+                overflow-y: auto;
+            }
+
+            .modal-wrapper.active .modal-main {
+                transform: scale(1) translateY(0);
             }
 
             .delivery-dropdown-item {
@@ -132,15 +170,15 @@
                                     </div>
                                     <!-- Row chứa các card địa chỉ -->
                                     <div class="row gy-md-0 g-5">
-                                        <c:forEach var="deInfo" items="${deInfo}">
+                                        <c:forEach var="deInfo" items="${deInfo}" varStatus="loop">
                                             <div class="col-md-6">
                                                 <div class="seller-info">
                                                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                                                        <h5 class="heading">Địa chỉ - ${deInfo.deliveryInfoID}</h5>
+                                                        <h5 class="heading">Địa chỉ - ${loop.index + 1}</h5> <!-- Sử dụng index + 1 để bắt đầu từ 1 -->
                                                         <div class="delivery-menu-container">
                                                             <button class="delivery-dots-btn" onclick="toggleDeliveryDropdown(event, ${deInfo.deliveryInfoID})">⋮</button>
                                                             <div class="delivery-dropdown-menu" data-delivery-id="${deInfo.deliveryInfoID}">
-                                                                <div class="delivery-dropdown-item" onclick="editDeliveryAddress(${deInfo.deliveryInfoID})">Chỉnh sửa</div>
+                                                                <div class="delivery-dropdown-item" onclick="editDeliveryAddress(${deInfo.deliveryInfoID}, '${deInfo.fullName}', '${deInfo.email}', '${deInfo.phone}', '${deInfo.city}', '${deInfo.addessDetail}')">Chỉnh sửa</div>
                                                                 <div class="delivery-dropdown-item delete" onclick="statusDeliveryAddress(${deInfo.deliveryInfoID})">Đặt làm mặc định</div>
                                                                 <div class="delivery-dropdown-item delete" onclick="deleteDeliveryAddress(${deInfo.deliveryInfoID})">Xóa</div>
                                                             </div>
@@ -169,10 +207,10 @@
                                                         </tr>
                                                         <c:if test="${deInfo.isDefault eq 1}">
                                                             <tr>
-                                                                <td class="label">Trạng thái:</td>
-                                                                <td class="value"><span class="default-badge">Mặc định</span></td>
-                                                            </c:if>
-                                                        </tr>
+                                                                <td style="color:red" class="label">Trạng thái:</td>
+                                                                <td style="color: red; font-weight: bold" class="value"><span class="default-badge">Mặc định</span></td>
+                                                            </tr>
+                                                        </c:if>
                                                     </table>
                                                 </div>
                                             </div>
@@ -246,6 +284,75 @@
                                                 </form>
                                             </div>
                                         </div>
+
+                                        <!-- Modal chỉnh sửa địa chỉ -->
+                                        <div class="modal-wrapper edit">
+                                            <div onclick="modalAction('.edit')" class="anywhere-away"></div>
+                                            <div class="login-section account-section modal-main">
+                                                <form action="updateDelivery" method="POST">
+                                                    <input type="hidden" id="edit-delivery-id" name="deliveryId">
+                                                    <div class="review-form">
+                                                        <div class="review-content">
+                                                            <h5 style="margin-bottom: 30px" class="comment-title">Chỉnh sửa thông tin người nhận</h5>
+                                                            <div class="close-btn">
+                                                                <img style="margin-bottom: 30px;width: 30px; height: auto" src="./HomePage/assets/images/homepage-one/close-btn.png"
+                                                                     onclick="modalAction('.edit')" alt="close-btn">
+                                                            </div>
+                                                        </div>
+                                                        <div class="account-inner-form">
+                                                            <div class="review-form-name">
+                                                                <label for="edit-fullname" class="form-label">Tên người nhận</label>
+                                                                <input type="text" id="edit-fullname" name="fullname" class="form-control"
+                                                                       placeholder="Nhập họ tên của bạn" required>
+                                                            </div>
+                                                            <div class="review-form-name">
+                                                                <label for="edit-useremail" class="form-label">Địa chỉ Email*</label>
+                                                                <input type="email" id="edit-useremail" name="email" class="form-control"
+                                                                       placeholder="user@gmail.com" required>
+                                                            </div>
+                                                        </div>
+                                                        <div class="account-inner-form">
+                                                            <div class="review-form-name">
+                                                                <label for="edit-userphone" class="form-label">Số điện thoại*</label>
+                                                                <input type="tel" id="edit-userphone" name="phone" class="form-control"
+                                                                       placeholder="0388**0899" required>
+                                                            </div>
+                                                            <div class="review-form-name">
+                                                                <label for="edit-province" class="form-label">Tỉnh*</label>
+                                                                <select id="edit-province" name="province" class="form-select" onchange="loadDistrictsForEdit(this.value)" required>
+                                                                    <option value="">Lựa chọn...</option>
+                                                                    <c:forEach var="province" items="${provinces}">
+                                                                        <option value="${province}">${province}</option>
+                                                                    </c:forEach>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="account-inner-form city-inner-form">
+                                                            <div class="review-form-name">
+                                                                <label for="edit-district" class="form-label">Quận/Huyện*</label>
+                                                                <select id="edit-district" name="district" class="form-select" onchange="loadWardsForEdit(this.value)" required>
+                                                                    <option value="">Lựa chọn...</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="review-form-name">
+                                                                <label for="edit-ward" class="form-label">Phường/Xã*</label>
+                                                                <select id="edit-ward" name="ward" class="form-select" required>
+                                                                    <option value="">Lựa chọn...</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="review-form-name address-form">
+                                                            <label for="edit-useraddress" class="form-label">Địa chỉ bổ sung*</label>
+                                                            <input type="text" id="edit-useraddress" name="addressDetail" class="form-control"
+                                                                   placeholder="Bao gồm ngách số bao nhiêu, số nhà bao nhiêu,..." required>
+                                                        </div>
+                                                        <div class="login-btn text-center">
+                                                            <button type="submit" class="shop-btn">Cập nhật địa chỉ</button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -273,12 +380,38 @@
                 }
             }
 
-            function editDeliveryAddress(deliveryId) {
-                var dropdown = document.querySelector(`.delivery-dropdown-menu[data-delivery-id="${deliveryId}"]`);
-                if (dropdown)
+            function editDeliveryAddress(deliveryId, fullName, email, phone, city, addressDetail) {
+                // Ẩn tất cả dropdown trước
+                document.querySelectorAll('.delivery-dropdown-menu.show').forEach(function (dropdown) {
                     dropdown.classList.remove('show');
-                document.getElementById('deliveryEditModal').classList.add('show');
-                // Thêm logic chỉnh sửa với deliveryId nếu cần
+                });
+                
+                // Fill dữ liệu vào form edit
+                document.getElementById('edit-delivery-id').value = deliveryId;
+                document.getElementById('edit-fullname').value = fullName;
+                document.getElementById('edit-useremail').value = email;
+                document.getElementById('edit-userphone').value = phone;
+                document.getElementById('edit-useraddress').value = addressDetail;
+                
+                // Tách city thành province, district, ward (giả sử format: "Province, District, Ward")
+                var cityParts = city.split(', ');
+                if (cityParts.length >= 1) {
+                    document.getElementById('edit-province').value = cityParts[0];
+                    if (cityParts.length >= 2) {
+                        // Load districts và set district
+                        loadDistrictsForEdit(cityParts[0], cityParts[1]);
+                        if (cityParts.length >= 3) {
+                            // Load wards và set ward
+                            setTimeout(function() {
+                                loadWardsForEdit(cityParts[1], cityParts[2]);
+                            }, 500);
+                        }
+                    }
+                }
+                
+                // Hiển thị modal edit
+                modalAction('.edit');
+                
                 console.log('Chỉnh sửa địa chỉ:', deliveryId);
             }
 
@@ -288,6 +421,7 @@
                     dropdown.classList.remove('show');
                 if (confirm('Bạn có muốn đặt địa chỉ này làm mặc định?')) {
                     alert('Địa chỉ đã được đặt làm mặc định!');
+                     window.location.href = "updatedelidefault?deID=" + deliveryId;
                 }
                 console.log('Đặt làm mặc định:', deliveryId);
             }
@@ -296,10 +430,10 @@
                 var dropdown = document.querySelector(`.delivery-dropdown-menu[data-delivery-id="${deliveryId}"]`);
                 if (dropdown)
                     dropdown.classList.remove('show');
-                
+
                 if (confirm('Bạn có chắc chắn muốn xóa địa chỉ này?')) {
                     alert('Địa chỉ đã được xóa!');
-                    window.location.href = "deletedelivery?deID=" +deliveryId; // Redirect về trang danh sách địa chỉ
+                    window.location.href = "deletedelivery?deID=" + deliveryId; // Redirect về trang danh sách địa chỉ
                 }
                 console.log('Xóa địa chỉ:', deliveryId);
             }
@@ -308,7 +442,16 @@
                 document.querySelector(selector).classList.toggle('active');
             }
 
-            // AJAX tải quận/huyện theo tỉnh
+            // Đóng dropdown khi click ra ngoài
+            document.addEventListener('click', function(event) {
+                if (!event.target.closest('.delivery-menu-container')) {
+                    document.querySelectorAll('.delivery-dropdown-menu.show').forEach(function (dropdown) {
+                        dropdown.classList.remove('show');
+                    });
+                }
+            });
+
+            // AJAX tải quận/huyện theo tỉnh cho form add
             function loadDistricts(province) {
                 console.log('Gọi loadDistricts với province:', province); // Debug
                 if (province === '') {
@@ -340,7 +483,7 @@
                 });
             }
 
-            // AJAX tải phường/xã theo quận/huyện
+            // AJAX tải phường/xã theo quận/huyện cho form add
             function loadWards(district) {
                 console.log('Gọi loadWards với district:', district); // Debug
                 if (district === '') {
@@ -364,6 +507,69 @@
                     },
                     error: function (xhr, status, error) {
                         console.error('Lỗi AJAX loadWards:', error); // Debug
+                        toastr.error("Lỗi kết nối server khi tải danh sách phường/xã.");
+                    }
+                });
+            }
+
+            // AJAX tải quận/huyện theo tỉnh cho form edit
+            function loadDistrictsForEdit(province, selectedDistrict) {
+                console.log('Gọi loadDistrictsForEdit với province:', province); // Debug
+                if (province === '') {
+                    $('#edit-district').empty().append('<option value="">Lựa chọn...</option>');
+                    $('#edit-ward').empty().append('<option value="">Lựa chọn...</option>');
+                    return;
+                }
+                $.ajax({
+                    url: "deliveryinfo",
+                    type: "POST",
+                    data: {
+                        method: "getDistricts",
+                        province: province
+                    },
+                    success: function (data) {
+                        console.log('Nhận response districts:', data); // Debug
+                        var districtSelect = $('#edit-district');
+                        districtSelect.empty().append('<option value="">Lựa chọn...</option>');
+                        $.each(data, function (index, district) {
+                            var selected = (selectedDistrict && district === selectedDistrict) ? 'selected' : '';
+                            districtSelect.append('<option value="' + district + '" ' + selected + '>' + district + '</option>');
+                        });
+                        // Reset dropdown phường/xã
+                        $('#edit-ward').empty().append('<option value="">Lựa chọn...</option>');
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Lỗi AJAX loadDistrictsForEdit:', error); // Debug
+                        toastr.error("Lỗi kết nối server khi tải danh sách quận/huyện.");
+                    }
+                });
+            }
+
+            // AJAX tải phường/xã theo quận/huyện cho form edit
+            function loadWardsForEdit(district, selectedWard) {
+                console.log('Gọi loadWardsForEdit với district:', district); // Debug
+                if (district === '') {
+                    $('#edit-ward').empty().append('<option value="">Lựa chọn...</option>');
+                    return;
+                }
+                $.ajax({
+                    url: "deliveryinfo",
+                    type: "POST",
+                    data: {
+                        method: "getWards",
+                        district: district
+                    },
+                    success: function (data) {
+                        console.log('Nhận response wards:', data); // Debug
+                        var wardSelect = $('#edit-ward');
+                        wardSelect.empty().append('<option value="">Lựa chọn...</option>');
+                        $.each(data, function (index, ward) {
+                            var selected = (selectedWard && ward === selectedWard) ? 'selected' : '';
+                            wardSelect.append('<option value="' + ward + '" ' + selected + '>' + ward + '</option>');
+                        });
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Lỗi AJAX loadWardsForEdit:', error); // Debug
                         toastr.error("Lỗi kết nối server khi tải danh sách phường/xã.");
                     }
                 });

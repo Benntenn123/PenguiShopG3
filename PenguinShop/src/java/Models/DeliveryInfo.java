@@ -29,6 +29,17 @@ public class DeliveryInfo {
         this.created_at = created_at;
         this.updated_at = updated_at;
     }
+    public DeliveryInfo(int deliveryInfoID,User user, String fullName, String phone, String email, String addessDetail, String city, String created_at, String updated_at) {
+        this.deliveryInfoID = deliveryInfoID;
+        this.user = user;
+        this.fullName = fullName;
+        this.phone = phone;
+        this.email = email;
+        this.addessDetail = addessDetail;
+        this.city = city;
+        this.created_at = created_at;
+        this.updated_at = updated_at;
+    }
 
     public DeliveryInfo(int deliveryInfoID, User user, String fullName, String phone, String email, String addessDetail, String city, String country, String postalCode, int isDefault, String created_at, String updated_at) {
         this.deliveryInfoID = deliveryInfoID;

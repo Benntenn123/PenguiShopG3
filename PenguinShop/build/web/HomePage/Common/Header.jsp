@@ -533,7 +533,7 @@
                     </button>
                     <div class="category-dropdown position-absolute" id="subMenu">
                         <ul class="category-list">
-                            <c:forEach var="cate" items="${cate}">
+                            <c:forEach var="cate" items="${cateMenu}">
                                 <li class="category-list-item">
                                     <a href="search?cate=${cate.categoryId}">
                                         <div class="dropdown-item">
@@ -595,7 +595,7 @@
                                     <div class="menu-list">
                                         <h5 class="menu-title">Nhãn hàng</h5>
                                         <ul>
-                                            <c:forEach var="brand" items="${brand}">
+                                            <c:forEach var="brand" items="${brandMenu}">
                                                 <li><a href="search?brand=${brand.brandID}">${brand.brandName}</a></li>
                                                 </c:forEach>
                                         </ul>

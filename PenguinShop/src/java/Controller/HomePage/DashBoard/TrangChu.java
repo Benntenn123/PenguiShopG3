@@ -59,6 +59,8 @@ public class TrangChu extends HttpServlet {
         List<ProductVariant> hot = pdao.getHotProduct();
         request.setAttribute("hot", hot);
         
+        request.getSession().setAttribute("cateMenu", cate);
+        request.getSession().setAttribute("brandMenu", br);
         request.getRequestDispatcher("HomePage/TrangChu.jsp").forward(request, response);
     } 
 

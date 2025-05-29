@@ -5,6 +5,7 @@
 
 package Controller.HomePage.Customer.Delivery;
 
+import DAL.DeliveryDAO;
 import Models.User;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -42,6 +43,19 @@ public class DeleteDelivery extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         String deID = request.getParameter("deID");
+        DeliveryDAO de = new DeliveryDAO();
+        try {
+            int deId = Integer.parseInt(deID);
+            if(de.deleteAllDeliveryInfo(deId)){
+                request.setAttribute("ms", "Xóa địa chỉ thành công");
+                response.sendRedirect("deliveryinfo");
+            }
+            else{
+                request.setAttribute("error", "Xóa địa chỉ không thành công");
+                response.sendRedirect("deliveryinfo");
+            }
+        } catch (Exception e) {
+        }
         
         
         
