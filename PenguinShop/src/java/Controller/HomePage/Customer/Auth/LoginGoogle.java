@@ -53,7 +53,7 @@ public class LoginGoogle extends HttpServlet {
             String accessToken = getToken(code);
             GoogleAccount gg = getUserInfo(accessToken);
             System.out.println(gg.toString());
-            if (!udao.CheckExistGGAccount(gg)) {
+            if (!udao.CheckExistGGAccount(gg) && !udao.checkExistEmail(gg.getEmail())) {
                 if (udao.isertAccountGoogle(gg)) {
                     LOGGER.info("Tài khoản google lần đầu login -> Chuyển sang đăng kí");
                     User user = udao.loadUserInfoByEmail(gg.getEmail());
