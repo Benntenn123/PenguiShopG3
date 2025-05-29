@@ -182,15 +182,3 @@
         <hr>
     </div>
 </section>
-<script>
-    function goToPage(pageNumber) {
-        // Lấy URL hiện tại
-        const currentUrl = new URL(window.location);
-
-        // Set hoặc update parameter 'page'
-        currentUrl.searchParams.set('page', pageNumber);
-
-        // Chuyển đến URL mới
-        window.location.href = currentUrl.toString();
-    }
-</script>

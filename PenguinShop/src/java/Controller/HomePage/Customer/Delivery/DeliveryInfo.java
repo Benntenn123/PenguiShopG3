@@ -4,7 +4,10 @@
  */
 package Controller.HomePage.Customer.Delivery;
 
+import DAL.DeliveryDAO;
+import Models.User;
 import Utils.ReadFile;
+import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -16,7 +19,7 @@ import java.util.List;
 
 @WebServlet(name = "DeliveryInfo", urlPatterns = {"/deliveryinfo"})
 public class DeliveryInfo extends HttpServlet {
-
+    DeliveryDAO deli = new DeliveryDAO();
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -40,13 +43,34 @@ public class DeliveryInfo extends HttpServlet {
         List<String> provinces = ReadFile.loadAllProvinces(request);
         request.setAttribute("provinces", provinces);
         
+        User user = (User) request.getSession().getAttribute("user");
+        
+        List<Models.DeliveryInfo> deInfo = deli.getAllDeliveryInfo(user.getUserID());
+        request.setAttribute("deInfo", deInfo);
+        
         request.getRequestDispatcher("HomePage/DeliveryList.jsp").forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        String method = request.getParameter("method");
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        Gson gson = new Gson();
+
+        if ("getDistricts".equals(method)) {
+            String province = request.getParameter("province");
+            List<String> districts = ReadFile.loadDistrictsByProvince(request,province);
+            response.getWriter().write(gson.toJson(districts));
+        } else if ("getWards".equals(method)) {
+            String district = request.getParameter("district");
+            List<String> wards = ReadFile.loadWardsByDistrict(request,district);
+            response.getWriter().write(gson.toJson(wards));
+        } else {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.getWriter().write("{\"error\":\"Invalid method\"}");
+        }
     }
 
     @Override

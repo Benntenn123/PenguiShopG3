@@ -124,5 +124,14 @@ public class StringConvert {
         return sb.toString();
     }
     
+    public static boolean isAnyFieldEmpty(String... fields) {
+        for (String field : fields) {
+            if (field == null || field.trim().isEmpty()) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
 }
 
