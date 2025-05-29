@@ -61,11 +61,11 @@
                                                         <div class="review-form-name address-form">
                                                             <label for="addres" class="form-label">Địa chỉ*</label>
                                                             <input type="text" id="addres" class="form-control"
-                                                                   placeholder="Địa chỉ" name="addres" value="${user.address}">
+                                                                   placeholder="Địa chỉ" readonly="" name="addres" value="${user.address}">
                                                         </div>
                                                         <div class="review-form-name address-form">
                                                             <label for="birthday" class="form-label">Ngày sinh*</label>
-                                                            <input type="text" id="birthday" class="form-control"
+                                                            <input type="date" id="birthday" class="form-control"
                                                                    placeholder="Ngày sinh" name="birthday" value="${user.birthday}">
                                                         </div>
 

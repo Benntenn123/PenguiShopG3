@@ -69,17 +69,34 @@ CREATE TABLE tbRolePermissions (
 -- Bảng thông tin người dùng
 CREATE TABLE tbUsers (
     userID INT PRIMARY KEY IDENTITY(1,1),
-    fullName NVARCHAR(100) NOT NULL,
-    password NVARCHAR(100) NOT NULL,
+    fullName NVARCHAR(100),
+    password NVARCHAR(256),
     roleID INT,
-    address NVARCHAR(200),
     birthday DATE,
-    phone NVARCHAR(15),
-    email NVARCHAR(100),
+    phone NVARCHAR(15) UNIQUE,
+    email NVARCHAR(100) UNIQUE,
     image_user NVARCHAR(200),
-    status_account int, 
-	google_id NVARCHAR(255),
+    status_account INT,
+    google_id NVARCHAR(255),
+    created_at DATETIME, -- Bỏ CURRENT_TIMESTAMP
+    updated_at DATETIME, -- Bỏ CURRENT_TIMESTAMP
     FOREIGN KEY (roleID) REFERENCES tbRoles(roleID)
+);
+
+CREATE TABLE tbDeliveryInfo (
+    deliveryInfoID INT PRIMARY KEY IDENTITY(1,1),
+    userID INT NOT NULL,
+    fullName NVARCHAR(100) NOT NULL,
+    phone NVARCHAR(15) NOT NULL,
+    email NVARCHAR(100),
+    addressDetail NVARCHAR(255) NOT NULL,
+    city NVARCHAR(100),
+    country NVARCHAR(100),
+    postalCode NVARCHAR(50),
+    isDefault BIT NOT NULL DEFAULT 0, -- Đánh dấu thông tin giao hàng mặc định
+    created_at DATETIME, -- Bỏ CURRENT_TIMESTAMP
+    updated_at DATETIME, -- Bỏ CURRENT_TIMESTAMP
+    FOREIGN KEY (userID) REFERENCES tbUsers(userID)
 );
 
 -- Bảng nhật ký hệ thống

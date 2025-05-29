@@ -44,5 +44,8 @@ public class GetDateTime {
             return false; // Trả về false nếu parse thất bại
         }
     }
+    public static void main(String[] args) {
+        System.out.println(GetDateTime.getCurrentTime());
+    }
 
 }

@@ -1,17 +1,11 @@
-<%-- 
-    Document   : UserProfile
-    Created on : Apr 21, 2025, 6:47:45 PM
-    Author     : fptshop
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <div style="min-width: 240px" class="nav nav-item nav-pills  me-3" id="v-pills-tab" role="tablist"
      aria-orientation="vertical">
     <!-- nav-buttons -->
 
     <a href="userprofile" class="nav-link" id="v-pills-profile-tab" 
-            aria-controls="v-pills-profile"
-            aria-selected="false">
+       aria-controls="v-pills-profile"
+       aria-selected="false">
         <span>
             <svg width="14" height="19" viewBox="0 0 14 19" fill="none"
                  xmlns="http://www.w3.org/2000/svg">
@@ -27,8 +21,8 @@
     </a>
 
     <a href="orderhistory" class="nav-link" id="v-pills-order-tab" 
-             aria-controls="v-pills-order"
-            aria-selected="false">
+       aria-controls="v-pills-order"
+       aria-selected="false">
         <span>
             <svg width="15" height="18" viewBox="0 0 15 18" fill="none"
                  xmlns="http://www.w3.org/2000/svg">
@@ -43,31 +37,31 @@
         </span>
     </a>
 
-<!--    <button class="nav-link" id="v-pills-wishlist-tab" data-bs-toggle="pill"
-            data-bs-target="#v-pills-wishlist" type="button" role="tab" aria-controls="v-pills-wishlist"
-            aria-selected="false">
-        <span>
-            <svg width="16" height="14" viewBox="0 0 16 14" fill="none"
-                 xmlns="http://www.w3.org/2000/svg">
-                <g clip-path="url(#clip0_113_3017)">
-                    <path
-                        d="M8.00893 1.94252C8.25673 1.67321 8.45526 1.43486 8.67664 1.22099C10.387 -0.427293 13.0628 -0.40281 14.7246 1.2714C16.3985 2.95785 16.4356 5.687 14.7674 7.39721C12.6907 9.52652 10.5848 11.6263 8.48882 13.7369C8.13819 14.0897 7.85825 14.0876 7.50619 13.7326C5.4188 11.6306 3.32426 9.53588 1.25187 7.41953C-0.424185 5.70788 -0.410617 2.98738 1.25258 1.293C2.92721 -0.413611 5.62304 -0.434494 7.35265 1.24836C7.56475 1.4543 7.76042 1.67825 8.00893 1.94252Z" />
-                </g>
-                <defs>
-                    <clipPath id="clip0_113_3017">
-                        <rect width="16" height="14" fill="white" />
-                    </clipPath>
-                </defs>
-            </svg>
-        </span>
-        <span class="text">
-            Wishlist
-        </span>
-    </button>-->
+    <!--    <button class="nav-link" id="v-pills-wishlist-tab" data-bs-toggle="pill"
+                data-bs-target="#v-pills-wishlist" type="button" role="tab" aria-controls="v-pills-wishlist"
+                aria-selected="false">
+            <span>
+                <svg width="16" height="14" viewBox="0 0 16 14" fill="none"
+                     xmlns="http://www.w3.org/2000/svg">
+                    <g clip-path="url(#clip0_113_3017)">
+                        <path
+                            d="M8.00893 1.94252C8.25673 1.67321 8.45526 1.43486 8.67664 1.22099C10.387 -0.427293 13.0628 -0.40281 14.7246 1.2714C16.3985 2.95785 16.4356 5.687 14.7674 7.39721C12.6907 9.52652 10.5848 11.6263 8.48882 13.7369C8.13819 14.0897 7.85825 14.0876 7.50619 13.7326C5.4188 11.6306 3.32426 9.53588 1.25187 7.41953C-0.424185 5.70788 -0.410617 2.98738 1.25258 1.293C2.92721 -0.413611 5.62304 -0.434494 7.35265 1.24836C7.56475 1.4543 7.76042 1.67825 8.00893 1.94252Z" />
+                    </g>
+                    <defs>
+                        <clipPath id="clip0_113_3017">
+                            <rect width="16" height="14" fill="white" />
+                        </clipPath>
+                    </defs>
+                </svg>
+            </span>
+            <span class="text">
+                Wishlist
+            </span>
+        </button>-->
 
-<!--    <button class="nav-link" id="v-pills-address-tab" data-bs-toggle="pill"
-            data-bs-target="#v-pills-address" type="button" role="tab" aria-controls="v-pills-address"
-            aria-selected="false">
+    <a href="deliveryinfo"class="nav-link" id="v-pills-address-tab"
+       data-bs-target="#v-pills-address" type="button" role="tab" aria-controls="v-pills-address"
+       aria-selected="false">
         <span>
             <svg width="14" height="20" viewBox="0 0 14 20" fill="none"
                  xmlns="http://www.w3.org/2000/svg">
@@ -87,9 +81,9 @@
             </svg>
         </span>
         <span class="text">
-            Address
+            Thông tin người nhận
         </span>
-    </button>
+    </a><!--
 
     <button class="nav-link" id="v-pills-review-tab" data-bs-toggle="pill"
             data-bs-target="#v-pills-review" type="button" role="tab" aria-controls="v-pills-review"
@@ -121,9 +115,9 @@
         </span>
     </button>-->
 
-<a class="nav-link" id="v-pills-password-tab" href="changepassword"
-            data-bs-target="#v-pills-password" role="tab" aria-controls="v-pills-password"
-            aria-selected="false">
+    <a class="nav-link" id="v-pills-password-tab" href="changepassword"
+       data-bs-target="#v-pills-password" role="tab" aria-controls="v-pills-password"
+       aria-selected="false">
         <span>
             <svg width="16" height="19" viewBox="0 0 16 19" fill="none"
                  xmlns="http://www.w3.org/2000/svg">
@@ -132,13 +126,13 @@
             </svg>
         </span>
         <span class="text">
-            Change Password
+            Đổi mật khẩu
         </span>
     </a>
 
     <a href="logUser" class="nav-link" id="v-pills-ticket-tab"
-            data-bs-target="#v-pills-ticket" type="button" role="tab" aria-controls="v-pills-ticket"
-            aria-selected="false">
+       data-bs-target="#v-pills-ticket" type="button" role="tab" aria-controls="v-pills-ticket"
+       aria-selected="false">
         <span>
             <svg width="18" height="20" viewBox="0 0 18 20" fill="none"
                  xmlns="http://www.w3.org/2000/svg">
@@ -174,7 +168,7 @@
                 </svg>
             </span>
             <span class="text">
-                Logout
+                Đăng xuất
             </span>
         </a>
     </div>

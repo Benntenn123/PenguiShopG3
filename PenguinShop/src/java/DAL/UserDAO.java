@@ -33,7 +33,9 @@ public class UserDAO extends DBContext {
     }
 
     public User loadUserInfoByEmail(String email) {
-        String sql = "SELECT * FROM tbUsers WHERE email = ?";
+        String sql = "SELECT u.userID,u.fullName,u.roleID,d.addressDetail AS address, u.birthday,u.phone, u.email, u.image_user FROM tbUsers u \n"
+                + "JOIN dbo.tbDeliveryInfo d ON d.userID = u.userID\n"
+                + "WHERE u.email = ?";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, email);
@@ -42,7 +44,6 @@ public class UserDAO extends DBContext {
                 User user = new User();
                 user.setUserID(rs.getInt("userID"));
                 user.setFullName(rs.getString("fullName"));
-                user.setPassword(rs.getString("password"));
                 user.setRoleID(rs.getInt("roleID"));
                 user.setAddress(rs.getString("address"));
                 user.setBirthday(rs.getDate("birthday"));
@@ -99,16 +100,16 @@ public class UserDAO extends DBContext {
     }
 
     public boolean updateUserProfile(User user) {
-        String sql = "UPDATE tbUsers SET fullName = ?, address = ?, birthday = ?, phone = ?, email = ?, image_user = ? WHERE userID = ?";
+        String sql = "UPDATE tbUsers SET fullName = ?, birthday = ?, phone = ?, email = ?, image_user = ? WHERE userID = ?";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, user.getFullName());
-            ps.setString(2, user.getAddress());
-            ps.setDate(3, new java.sql.Date(user.getBirthday().getTime()));
-            ps.setString(4, user.getPhone());
-            ps.setString(5, user.getEmail());
-            ps.setString(6, user.getImage_user());
-            ps.setInt(7, user.getUserID());
+            
+            ps.setDate(2, new java.sql.Date(user.getBirthday().getTime()));
+            ps.setString(3, user.getPhone());
+            ps.setString(4, user.getEmail());
+            ps.setString(5, user.getImage_user());
+            ps.setInt(6, user.getUserID());
             int rowsAffected = ps.executeUpdate();
             return rowsAffected > 0;
         } catch (SQLException e) {
@@ -366,9 +367,9 @@ public class UserDAO extends DBContext {
             ps.setString(5, Account.AVATAR_DEFAULT_USER);
             ps.setInt(6, Account.ACTIVE_ACCOUNT);
             ps.setString(7, gg.getId());
-            
+
             int row = ps.executeUpdate();
-            if(row>0){
+            if (row > 0) {
                 return true;
             }
         } catch (SQLException e) {

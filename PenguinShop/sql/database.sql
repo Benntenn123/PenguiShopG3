@@ -8,11 +8,18 @@ INSERT INTO tbRoles (roleName) VALUES
 (N'Bán hàng');
 
 -- tbUsers
-INSERT INTO tbUsers (fullName, password, roleID, address, birthday, phone, email, image_user,status_account) VALUES
-(N'Sơn', N'50f890eed24bfcd3ec4f2de7743fad1f8fadb9fc17665fada25f33a2c90acaee', 1, N'123 Đường Lê Lợi, Hà Nội', '1990-05-15', N'0987654321', N'kn1802204@gmail.com', N'vn-11134207-7ras8-m2j1kxknq7qqdd_vk04rb.jpg',1),
-(N'Lan', N'50f890eed24bfcd3ec4f2de7743fad1f8fadb9fc17665fada25f33a2c90acaee', 2, N'456 Đường Trần Hưng Đạo, TP.HCM', '1992-08-20', N'0912345678', N'lan456@gmail.com', NULL,1),
-(N'Hoàng', N'50f890eed24bfcd3ec4f2de7743fad1f8fadb9fc17665fada25f33a2c90acaee', 2, N'789 Đường Nguyễn Huệ, Đà Nẵng', '1988-12-10', N'0934567890', N'hoang789@gmail.com', NULL,1),
-(N'Hải', N'50f890eed24bfcd3ec4f2de7743fad1f8fadb9fc17665fada25f33a2c90acaee', 3, N'321 Đường Phạm Văn Đồng, Hải Phòng', '1995-03-25', N'0976543210', N'hai321@gmail.com', NULL,1);
+INSERT INTO tbUsers (fullName, password, roleID, birthday, phone, email, image_user, status_account, created_at) VALUES
+(N'Sơn', N'50f890eed24bfcd3ec4f2de7743fad1f8fadb9fc17665fada25f33a2c90acaee', 1, '1990-05-15', N'0987654321', N'kn1802204@gmail.com', N'vn-11134207-7ras8-m2j1kxknq7qqdd_vk04rb.jpg', 1, '2025-05-25 16:00:00'),
+(N'Lan', N'50f890eed24bfcd3ec4f2de7743fad1f8fadb9fc17665fada25f33a2c90acaee', 2, '1992-08-20', N'0912345678', N'lan456@gmail.com', NULL, 1, '2025-05-25 16:00:00'),
+(N'Hoàng', N'50f890eed24bfcd3ec4f2de7743fad1f8fadb9fc17665fada25f33a2c90acaee', 2, '1988-12-10', N'0934567890', N'hoang789@gmail.com', NULL, 1, '2025-05-25 16:00:00'),
+(N'Hải', N'50f890eed24bfcd3ec4f2de7743fad1f8fadb9fc17665fada25f33a2c90acaee', 3, '1995-03-25', N'0976543210', N'hai321@gmail.com', NULL, 1, '2025-05-25 16:00:00');
+
+
+INSERT INTO tbDeliveryInfo (userID, fullName, phone, email, addressDetail, city, country, postalCode, isDefault, created_at) VALUES
+(1, N'Sơn', N'0987654321', N'kn1802204@gmail.com', N'123 Đường Lê Lợi', N'Hà Nội', N'Việt Nam', NULL, 1, '2025-05-25 16:00:00'),
+(2, N'Lan', N'0912345678', N'lan456@gmail.com', N'456 Đường Trần Hưng Đạo', N'TP.HCM', N'Việt Nam', NULL, 1, '2025-05-25 16:00:00'),
+(3, N'Hoàng', N'0934567890', N'hoang789@gmail.com', N'789 Đường Nguyễn Huệ', N'Đà Nẵng', N'Việt Nam', NULL, 1, '2025-05-25 16:00:00'),
+(4, N'Hải', N'0976543210', N'hai321@gmail.com', N'321 Đường Phạm Văn Đồng', N'Hải Phòng', N'Việt Nam', NULL, 1, '2025-05-25 16:00:00');
 
 -- tbBrand
 INSERT INTO tbBrand (brandName, logo, description) VALUES
@@ -194,9 +201,11 @@ INSERT INTO tbOrderDetail (price, quantity_product, orderID, variantID) VALUES
 
 -- Banner
 INSERT INTO Banner (bannerLink) VALUES
-(N'banner1_xdests.png'),
-(N'banner2_pwls0t.webp'),
-(N'banner3_z6vfzn.webp');
+(N'v1748442991/1920x788_29_dhbmyl.webp'),
+(N'T-SHIRT__POLO_THE_THAO_-_Desktop2_qhzqio.webp'),
+(N'v1748443170/1920x788_1_promax_w62d1k.webp'),
+(N'T-SHIRT__POLO_THE_THAO_-_Desktop-1_dhf83g.webp'),
+(N'T-SHIRT__POLO_THE_THAO_-_Desktopzz_vw9vp7.jpg');
 
 -- tbPromotion
 INSERT INTO tbPromotion (promotionName, discountType, discountValue, startDate, endDate, description, isActive) VALUES

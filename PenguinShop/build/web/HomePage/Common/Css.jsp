@@ -2,7 +2,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="keywords"
-        content="Penguin - Bùi Văn Sơn Shop">
+        content="Penguin - Shop">
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
