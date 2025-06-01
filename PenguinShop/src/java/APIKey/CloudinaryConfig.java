@@ -12,8 +12,8 @@ public class CloudinaryConfig {
         try {
             cloudinary = new Cloudinary(ObjectUtils.asMap(
                 "cloud_name", "dcdwqd5up", // Thay bằng cloud_name của bạn
-                "api_key", "715755382767874", // Thay bằng API key
-                "api_secret", "lfNSLX0KnRLluTmMJmNHVzjJuzA", // Thay bằng API secret
+                "api_key", "951237837454779", // Thay bằng API key
+                "api_secret", "0JBYs-JYq07sAWbTu-FRbXSP8vM", // Thay bằng API secret
                 "secure", true
         ));
             
