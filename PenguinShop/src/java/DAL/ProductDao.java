@@ -81,7 +81,7 @@ public class ProductDao extends DBContext {
                 Product p = new Product(rs.getInt("productID"),
                         rs.getString("productName"),
                         rs.getString("imageMainProduct"));
-                System.out.println("HOt"+rs.getInt("variantID"));
+                System.out.println("HOt" + rs.getInt("variantID"));
                 ProductVariant pv = new ProductVariant(rs.getInt("variantID"),
                         p, rs.getDouble("price"));
                 list.add(pv);
@@ -476,20 +476,46 @@ public class ProductDao extends DBContext {
     }
 
     public static void main(String[] args) {
-        String[] categories = {"1", "2"};
-        String[] brand = {"1"};
-        String[] color = {"1"};
-        String[] size = {"1"};
-        String from = "10000";
-        String to = "";
-        String q = "";
-        int page = 1;
-        int pageSize = 10;
+//        String[] categories = {"1", "2"};
+//        String[] brand = {"1"};
+//        String[] color = {"1"};
+//        String[] size = {"1"};
+//        String from = "10000";
+//        String to = "";
+//        String q = "";
+//        int page = 1;
+//        int pageSize = 10;
+//        ProductDao pdao = new ProductDao();
+//        List<ProductVariant> list = pdao.loadProductVariants(categories, brand,
+//                color, size, from, to, q, page, pageSize);
+//        for (ProductVariant productVariant : list) {
+//            System.out.println(productVariant.getProduct().toString());
+//        }
         ProductDao pdao = new ProductDao();
-        List<ProductVariant> list = pdao.loadProductVariants(categories, brand,
-                color, size, from, to, q, page, pageSize);
-        for (ProductVariant productVariant : list) {
-            System.out.println(productVariant.getProduct().toString());
+        System.out.println(pdao.isValidProductAndVariant(1, 1));
+    }
+
+    public boolean isValidProductAndVariant(int variantID, int productID) {
+        String sql = "SELECT COUNT(*) FROM dbo.tbProductVariant"
+                + " WHERE productID = ? AND variantID = ?";
+
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, productID);
+            ps.setInt(2, variantID);
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                int result = rs.getInt(1);
+                if (result == 1) {
+                    return true;
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+        return false;
+
     }
 }

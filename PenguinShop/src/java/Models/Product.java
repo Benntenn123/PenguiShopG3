@@ -17,6 +17,10 @@ public class Product {
     private double weight;
     private String full_description;
 
+    public Product(int productId) {
+        this.productId = productId;
+    }
+
     public Product(int productId, String productName, String imageMainProduct, String description, String sku, String full_description) {
         this.productId = productId;
         this.productName = productName;

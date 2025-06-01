@@ -37,7 +37,7 @@
         </span>
     </a>
 
-    <!--    <button class="nav-link" id="v-pills-wishlist-tab" data-bs-toggle="pill"
+    <a href= "listCart" class="nav-link" id="v-pills-wishlist-tab"
                 data-bs-target="#v-pills-wishlist" type="button" role="tab" aria-controls="v-pills-wishlist"
                 aria-selected="false">
             <span>
@@ -55,9 +55,9 @@
                 </svg>
             </span>
             <span class="text">
-                Wishlist
+                Giỏ hàng của bạn
             </span>
-        </button>-->
+        </a>
 
     <a href="deliveryinfo"class="nav-link" id="v-pills-address-tab"
        data-bs-target="#v-pills-address" type="button" role="tab" aria-controls="v-pills-address"

@@ -200,161 +200,161 @@
                 display: block;
             }
             .penguinshop-membership-section {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #f8f9ff 0%, #eeebf7 100%);
-            border-radius: 20px;
-            padding: 40px;
-            max-width: 1300px;
-            margin: 0 auto;
-            box-shadow: 0 10px 30px rgba(174, 28, 154, 0.1);
-        }
-        
-        .penguinshop-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 30px;
-        }
-        
-        .penguinshop-left-content {
-            flex: 1;
-        }
-        
-        .penguinshop-title {
-            font-size: 24px;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 30px;
-            line-height: 1.4;
-        }
-        
-        .penguinshop-highlight-number {
-            color: #AE1C9A;
-            font-weight: 800;
-        }
-        
-        .penguinshop-benefits-grid {
-            display: flex;
-            gap: 20px;
-            flex-wrap: nowrap;
-        }
-        
-        .penguinshop-benefit-card {
-            background: #AE1C9A;
-            color: white;
-            padding: 20px 25px;
-            border-radius: 15px;
-            flex: 1;
-            min-width: 180px;
-            max-width: 200px;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 8px;
-            box-shadow: 0 5px 20px rgba(174, 28, 154, 0.3);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        
-        .penguinshop-benefit-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(174, 28, 154, 0.4);
-        }
-        
-        .penguinshop-benefit-icon {
-            width: 24px;
-            height: 24px;
-            margin-bottom: 5px;
-        }
-        
-        .penguinshop-benefit-title {
-            font-weight: bold;
-            font-size: 16px;
-            line-height: 1.3;
-        }
-        
-        .penguinshop-benefit-subtitle {
-            font-size: 14px;
-            opacity: 0.9;
-            line-height: 1.2;
-        }
-        
-        .penguinshop-multiplier {
-            font-size: 48px;
-            font-weight: 900;
-            color: white;
-            margin-left: 10px;
-        }
-        
-        .penguinshop-right-content {
-            flex-shrink: 0;
-            text-align: center;
-        }
-        
-        .penguinshop-activity-header {
-            font-size: 18px;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 15px;
-        }
-        
-        .penguinshop-activity-text {
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            font-size: 14px;
-            line-height: 1.6;
-            color: #555;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
-        }
-        
-        .penguinshop-join-button {
-            background: #000;
-            color: white;
-            padding: 15px 30px;
-            border: none;
-            border-radius: 25px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .penguinshop-join-button:hover {
-            background: #333;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-        
-        .penguinshop-arrow {
-            font-size: 18px;
-        }
-        
-        @media (max-width: 768px) {
+                font-family: 'Arial', sans-serif;
+                background: linear-gradient(135deg, #f8f9ff 0%, #eeebf7 100%);
+                border-radius: 20px;
+                padding: 40px;
+                max-width: 1300px;
+                margin: 0 auto;
+                box-shadow: 0 10px 30px rgba(174, 28, 154, 0.1);
+            }
+
             .penguinshop-container {
-                flex-direction: column;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
                 gap: 30px;
             }
-            
+
+            .penguinshop-left-content {
+                flex: 1;
+            }
+
+            .penguinshop-title {
+                font-size: 24px;
+                font-weight: bold;
+                color: #333;
+                margin-bottom: 30px;
+                line-height: 1.4;
+            }
+
+            .penguinshop-highlight-number {
+                color: #AE1C9A;
+                font-weight: 800;
+            }
+
             .penguinshop-benefits-grid {
-                flex-direction: column;
+                display: flex;
+                gap: 20px;
                 flex-wrap: nowrap;
             }
-            
+
             .penguinshop-benefit-card {
-                max-width: none;
+                background: #AE1C9A;
+                color: white;
+                padding: 20px 25px;
+                border-radius: 15px;
+                flex: 1;
+                min-width: 180px;
+                max-width: 200px;
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+                box-shadow: 0 5px 20px rgba(174, 28, 154, 0.3);
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
             }
-            
-            .penguinshop-membership-section {
-                padding: 30px 20px;
+
+            .penguinshop-benefit-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 25px rgba(174, 28, 154, 0.4);
             }
-            
-            .penguinshop-title {
-                font-size: 20px;
+
+            .penguinshop-benefit-icon {
+                width: 24px;
+                height: 24px;
+                margin-bottom: 5px;
             }
+
+            .penguinshop-benefit-title {
+                font-weight: bold;
+                font-size: 16px;
+                line-height: 1.3;
+            }
+
+            .penguinshop-benefit-subtitle {
+                font-size: 14px;
+                opacity: 0.9;
+                line-height: 1.2;
+            }
+
+            .penguinshop-multiplier {
+                font-size: 48px;
+                font-weight: 900;
+                color: white;
+                margin-left: 10px;
+            }
+
+            .penguinshop-right-content {
+                flex-shrink: 0;
+                text-align: center;
+            }
+
+            .penguinshop-activity-header {
+                font-size: 18px;
+                font-weight: bold;
+                color: #333;
+                margin-bottom: 15px;
+            }
+
+            .penguinshop-activity-text {
+                background: white;
+                padding: 20px;
+                border-radius: 12px;
+                margin-bottom: 20px;
+                font-size: 14px;
+                line-height: 1.6;
+                color: #555;
+                box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+            }
+
+            .penguinshop-join-button {
+                background: #000;
+                color: white;
+                padding: 15px 30px;
+                border: none;
+                border-radius: 25px;
+                font-size: 16px;
+                font-weight: bold;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                display: inline-flex;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .penguinshop-join-button:hover {
+                background: #333;
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            }
+
+            .penguinshop-arrow {
+                font-size: 18px;
+            }
+
+            @media (max-width: 768px) {
+                .penguinshop-container {
+                    flex-direction: column;
+                    gap: 30px;
+                }
+
+                .penguinshop-benefits-grid {
+                    flex-direction: column;
+                    flex-wrap: nowrap;
+                }
+
+                .penguinshop-benefit-card {
+                    max-width: none;
+                }
+
+                .penguinshop-membership-section {
+                    padding: 30px 20px;
+                }
+
+                .penguinshop-title {
+                    font-size: 20px;
+                }
             </style>
         </head>
         <body>
@@ -393,7 +393,7 @@
 
 
             <!--------------- hero-section-end --------------->
-            
+
             <!--------------- style-section --------------->
             <section style="margin-bottom: 50px" class="product-category">
                 <div class="container">
@@ -406,10 +406,10 @@
                             <div class="product-wrapper" data-aos="fade-right" data-aos-duration="200">
                                 <div class="wrapper-img">
                                     <a href="search?cate=${cate.categoryId}">
-                                    <img src="api/img/${cate.imageCategory}"style="width: 100px;
-                                         height: 100px;
-                                         border-radius: 50%;
-                                         object-fit: cover;" alt="${cate.categoryName}"></a>
+                                        <img src="api/img/${cate.imageCategory}"style="width: 100px;
+                                             height: 100px;
+                                             border-radius: 50%;
+                                             object-fit: cover;" alt="${cate.categoryName}"></a>
                                 </div>
                                 <div class="wrapper-info">
                                     <a href="search?cate=${cate.categoryId}" class="wrapper-details">${cate.categoryName}</a>
@@ -432,13 +432,13 @@
                                     <div class="product-wrapper" data-aos="fade-up">
                                         <div class="product-img">
                                             <a href="productdetail?id=${top4Week.variantID}">
-                                            <img src="api/img/${top4Week.product.imageMainProduct}"
-                                                 style="width: 308px;
-                                                 height: 313px;
-                                                 object-fit: fill;
-                                                 display: block;
-                                                 margin: 0;" 
-                                                 alt="${top4Week.product.productName}">
+                                                <img src="api/img/${top4Week.product.imageMainProduct}"
+                                                     style="width: 308px;
+                                                     height: 313px;
+                                                     object-fit: fill;
+                                                     display: block;
+                                                     margin: 0;" 
+                                                     alt="${top4Week.product.productName}">
                                             </a>
 
                                         </div>
@@ -484,7 +484,10 @@
                                             </div>
                                         </div>
                                         <div class="product-cart-btn">
-                                            <a href="cart.html" class="product-btn">Thêm giỏ hàng</a>
+                                            <a class="product-btn" 
+                                               data-user-id="${user.userID}" 
+                                               data-product-id="${top4Week.product.productId}" 
+                                               data-variant-id="${top4Week.variantID}">Thêm giỏ hàng</a>
                                         </div>
                                     </div>
                                 </div>
@@ -590,18 +593,18 @@
                             <c:forEach var="newArrival" items="${newArrival}">
                                 <div class="col-lg-3 col-sm-6">
                                     <div class="product-wrapper" data-aos="fade-up">
-                                        
+
                                         <div class="product-img">
                                             <a href="productdetail?id=${newArrival.variantID}">
-                                            <img src="api/img/${newArrival.product.imageMainProduct}" style="width: 308px;
-                                                 height: 313px;
-                                                 object-fit: fill;
-                                                 display: block;
-                                                 margin: 0;" 
-                                                 alt="${newArrival.product.productName}">
+                                                <img src="api/img/${newArrival.product.imageMainProduct}" style="width: 308px;
+                                                     height: 313px;
+                                                     object-fit: fill;
+                                                     display: block;
+                                                     margin: 0;" 
+                                                     alt="${newArrival.product.productName}">
                                             </a>   
                                         </div>
-                                                 
+
                                         <div class="product-info">
                                             <div class="ratings">
                                                 <span>
@@ -643,11 +646,11 @@
                                                 </div>
                                             </div>
                                         </div>
-                                             
+
                                         <div class="product-cart-btn">
                                             <a href="cart.html" class="product-btn">Thêm giỏ hàng</a>
                                         </div>
-                                                
+
                                     </div>
                                 </div>
                             </c:forEach>
@@ -660,7 +663,7 @@
             <!--------------- category-section-end--------------->
 
             <!--------------- brand-section--------------->
-            
+
             <!--------------- brand-section-end--------------->
 
             <!--------------- arrival-section--------------->
@@ -1150,8 +1153,8 @@
                                     <div class="product-wrapper" data-aos="fade-right">
                                         <div class="product-img">
                                             <a href="productdetail?id=${hot.variantID}">
-                                            <img src="api/img/${hot.product.imageMainProduct}"
-                                                 alt="product-img">
+                                                <img src="api/img/${hot.product.imageMainProduct}"
+                                                     alt="product-img">
                                             </a>
                                         </div>
                                         <div class="product-info">
@@ -1751,10 +1754,10 @@
 
                             <div class="penguinshop-benefit-card">
                                 <div style="display: flex;
-                                    align-items: center;">
+                                     align-items: center;">
                                     <div>
                                         <div class="penguinshop-benefit-title">Nếu sản phẩm có lỗi Hoàn tiền</div>
-<!--                                        <div class="penguinshop-benefit-subtitle">(X2 vào thứ 6)</div>-->
+                                        <!--                                        <div class="penguinshop-benefit-subtitle">(X2 vào thứ 6)</div>-->
                                     </div>
                                     <div class="penguinshop-multiplier">X2</div>
                                 </div>
@@ -1769,15 +1772,15 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <c:if test="${empty user}">
-                    <div class="penguinshop-right-content">
-                        
-                        <a href="login" class="penguinshop-join-button">
-                            GIA NHẬP PENGUINSHOP NGAY
-                            <span class="penguinshop-arrow">→</span>
-                        </a>
-                    </div>
+                        <div class="penguinshop-right-content">
+
+                            <a href="login" class="penguinshop-join-button">
+                                GIA NHẬP PENGUINSHOP NGAY
+                                <span class="penguinshop-arrow">→</span>
+                            </a>
+                        </div>
                     </c:if>
                 </div>
             </section>
@@ -1957,6 +1960,52 @@
                     }
                 }
             </script>
+            <script>
+                function addToCart(userID, productID, variantID) {
+                    
+                    // Send AJAX request to addCart endpoint
+                    $.ajax({
+                        url: "addCart",
+                        type: "POST",
+                        data: {
+                            userID: userID,
+                            productID: productID,
+                            variantID: variantID,
+                            quantity: 1 // Default quantity
+                        },
+                        success: function (response) {
+                            if (response.status === "success") {
+                                toastr.success("Đã thêm sản phẩm vào giỏ hàng!");
+                            } else if (response.status === "not_logged_in") {
+                                toastr.error("Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng!");
+                                setTimeout(() => {
+                                    window.location.href = "login"; // Redirect to login page
+                                }, 1500);
+                            } else {
+                                toastr.error(response.message || "Lỗi khi thêm sản phẩm vào giỏ hàng!");
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            toastr.error("Lỗi kết nối server, thử lại sau nha!");
+                        }
+                    });
+                }
+
+// Attach event listeners to all "Thêm giỏ hàng" buttons
+                document.addEventListener('DOMContentLoaded', function () {
+                    const cartButtons = document.querySelectorAll('.product-cart-btn .product-btn');
+                    cartButtons.forEach(button => {
+                        button.addEventListener('click', function (e) {
+                            e.preventDefault(); // Prevent default link behavior
+                            // Get data attributes from button
+                            const userID = this.getAttribute('data-user-id') || "";
+                            const productID = this.getAttribute('data-product-id');
+                            const variantID = this.getAttribute('data-variant-id');
+                            addToCart(userID, productID, variantID);
+                        });
+                    });
+                });
+            </script>    
             <jsp:include page="Common/Js.jsp"/>
             <jsp:include page="Common/Message.jsp"/>
 

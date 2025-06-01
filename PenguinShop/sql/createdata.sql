@@ -251,9 +251,10 @@ CREATE TABLE tbCart (
     cartID INT PRIMARY KEY IDENTITY(1,1),
     userID INT,
     variantID INT,
-    quantity INT NOT NULL CHECK (quantity > 0),
-    addedDate DATETIME NOT NULL DEFAULT GETDATE(),
+    quantity INT,
+    productID INT,
     FOREIGN KEY (userID) REFERENCES tbUsers(userID),
+    FOREIGN KEY(productID) REFERENCES tbProduct(productID),
     FOREIGN KEY (variantID) REFERENCES tbProductVariant(variantID)
 );
 

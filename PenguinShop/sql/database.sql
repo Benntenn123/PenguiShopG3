@@ -164,9 +164,8 @@ INSERT INTO tbProductTag (productID, tagID) VALUES
 (5, 6), -- Áo Adidas Pro: Chuyên nghiệp
 (5, 1); -- Áo Adidas Pro: Thoáng khí (reusing the tag)
 -- tbCart
-INSERT INTO tbCart (userID, variantID, quantity, addedDate) VALUES
-(2, 1, 2, '2025-05-25 16:20:00'),
-(3, 2, 1, '2025-05-25 16:25:00');
+INSERT INTO tbCart (userID, variantID, quantity, productID) VALUES
+(1, 1, 2, 1);
 
 -- tbRequests
 INSERT INTO tbRequests (userID, requestType, description, requestStatus, requestDate) VALUES

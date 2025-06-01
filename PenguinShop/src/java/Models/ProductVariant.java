@@ -12,6 +12,10 @@ public class ProductVariant {
     private double price;
     private String stockStatus;
 
+    public ProductVariant(int variantID) {
+        this.variantID = variantID;
+    }
+
     public ProductVariant(int variantID, Product product) {
         this.variantID = variantID;
         this.product = product;
