@@ -67,10 +67,16 @@ public class ProductDao extends DBContext {
     }
 
     public List<ProductVariant> getHotProduct() {
-        String sql = "SELECT TOP 8 * FROM dbo.tbProduct p \n"
+        String sql = "SELECT TOP 8 p.*, pv.*\n"
+                + "FROM dbo.tbProduct p\n"
                 + "JOIN dbo.tbProductCategory pc ON pc.productID = p.productID\n"
                 + "JOIN dbo.tbCategory c ON c.categoryID = pc.categoryID\n"
-                + "JOIN dbo.tbProductVariant pv ON pv.productID = p.productID\n"
+                + "OUTER APPLY (\n"
+                + "    SELECT TOP 1 *\n"
+                + "    FROM dbo.tbProductVariant pv\n"
+                + "    WHERE pv.productID = p.productID\n"
+                + "    ORDER BY pv.price ASC -- lấy variant có giá rẻ nhất\n"
+                + ") pv\n"
                 + "WHERE c.categoryID = 9\n"
                 + "ORDER BY p.importDate DESC";
         List<ProductVariant> list = new ArrayList<>();
@@ -81,7 +87,6 @@ public class ProductDao extends DBContext {
                 Product p = new Product(rs.getInt("productID"),
                         rs.getString("productName"),
                         rs.getString("imageMainProduct"));
-                System.out.println("HOt" + rs.getInt("variantID"));
                 ProductVariant pv = new ProductVariant(rs.getInt("variantID"),
                         p, rs.getDouble("price"));
                 list.add(pv);
@@ -517,5 +522,31 @@ public class ProductDao extends DBContext {
         }
         return false;
 
+    }
+
+    public ProductVariant loadProductVariant(int productId, int colorId, int sizeId) {
+        String sql = "SELECT p.variantID, p.price, p.quantity FROM dbo.tbProductVariant p \n"
+                + "JOIN dbo.tbProduct pr ON pr.productID = p.productID\n"
+                + "JOIN dbo.tbColor c ON c.colorID = p.colorID\n"
+                + "JOIN dbo.tbSize s ON s.sizeID = p.sizeID\n"
+                + "WHERE c.colorID = ? AND p.productID = ? AND p.sizeID = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, colorId);
+            ps.setInt(2, productId);
+            ps.setInt(3, sizeId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                ProductVariant pv = new ProductVariant(rs.getInt(1)
+                        , rs.getInt(3),
+                        rs.getInt(2));
+                return pv;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    
     }
 }
