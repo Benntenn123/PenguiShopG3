@@ -102,6 +102,7 @@ public class UserDAO extends DBContext {
     }
 
     public boolean updateUserProfile(User user) {
+        
         String sql = "UPDATE tbUsers SET fullName = ?, birthday = ?, phone = ?, email = ?, image_user = ? WHERE userID = ?";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);

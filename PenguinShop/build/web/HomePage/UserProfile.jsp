@@ -59,7 +59,7 @@
                                                         </div>
 
                                                         <div class="review-form-name address-form">
-                                                            <label for="addres" class="form-label">Địa chỉ*</label>
+                                                            <label for="addres" class="form-label">Địa chỉ</label>
                                                             <input type="text" id="addres" class="form-control"
                                                                    placeholder="Địa chỉ" readonly="" name="addres" value="${user.address}">
                                                         </div>
