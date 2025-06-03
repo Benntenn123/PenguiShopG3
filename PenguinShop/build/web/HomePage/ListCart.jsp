@@ -457,7 +457,7 @@
         <jsp:include page="Common/Js.jsp"/>
         <jsp:include page="Common/Message.jsp"/>
 
-         <script>
+        <script>
             $(document).ready(function () {
                 // Function to parse price from text (remove "VND" and convert to number)
                 function parsePriceFromText(priceText) {
@@ -514,25 +514,25 @@
                             cartId: cartId,
                             selected: isSelected
                         },
-                        beforeSend: function() {
+                        beforeSend: function () {
                             // Add loading state
                             $('body').addClass('loading');
                         },
-                        success: function(response) {
+                        success: function (response) {
                             console.log('Wishlist updated successfully');
                             // Handle success response if needed
                         },
-                        error: function(xhr, status, error) {
+                        error: function (xhr, status, error) {
                             console.error('Error updating wishlist:', error);
                             // Optionally show error message to user
                             alert('Có lỗi xảy ra khi cập nhật danh sách yêu thích. Vui lòng thử lại.');
-                            
+
                             // Revert checkbox state on error
                             const checkbox = $(`input[value="${cartId}"]`);
                             checkbox.prop('checked', !isSelected);
                             updateCartSummary();
                         },
-                        complete: function() {
+                        complete: function () {
                             // Remove loading state
                             $('body').removeClass('loading');
                         }
@@ -581,10 +581,10 @@
                 $('.product-select').change(function () {
                     const cartId = $(this).val();
                     const isSelected = $(this).is(':checked');
-                    
+
                     // Update UI immediately
                     updateCartSummary();
-                    
+
                     // Send request to backend
                     updateWishlist(cartId, isSelected);
                 });
@@ -592,18 +592,18 @@
                 // Select all handler
                 $('#select-all').change(function () {
                     const isChecked = $(this).is(':checked');
-                    
-                    $('.product-select').each(function() {
+
+                    $('.product-select').each(function () {
                         const wasChecked = $(this).is(':checked');
                         $(this).prop('checked', isChecked);
-                        
+
                         // Only send request if state actually changed
                         if (wasChecked !== isChecked) {
                             const cartId = $(this).val();
                             updateWishlist(cartId, isChecked);
                         }
                     });
-                    
+
                     updateCartSummary();
                 });
 
@@ -612,7 +612,7 @@
                     if (confirm('Bạn có chắc chắn muốn xóa sản phẩm này khỏi giỏ hàng?')) {
                         const cartId = $(this).data('cart-id');
                         const row = $(this).closest('.product-row');
-                        
+
                         // Send request to remove from backend
                         $.ajax({
                             url: 'removeFromCart',
@@ -620,16 +620,37 @@
                             data: {
                                 cartId: cartId
                             },
-                            beforeSend: function() {
+                            beforeSend: function () {
                                 row.addClass('loading');
                             },
-                            success: function(response) {
-                                row.remove();
-                                updateCartSummary();
+                            success: function (response) {
+                                try {
+                                    const data = typeof response === 'string' ? JSON.parse(response) : response;
+
+                                    if (data.status === 'success') {
+                                        row.remove(); // Xóa hàng chỉ khi thành công
+                                        updateCartSummary(); // Cập nhật giỏ hàng
+                                        toastr.success(data.message || 'Xóa sản phẩm thành công!', 'Thành công');
+                                    } else {
+                                        // Xử lý các trạng thái lỗi từ backend
+                                        toastr.error(data.message || 'Không thể xóa sản phẩm. Vui lòng thử lại.', 'Lỗi');
+                                    }
+                                } catch (e) {
+                                    console.error('Error parsing response:', e);
+                                    toastr.error('Đã có lỗi xảy ra khi xử lý phản hồi từ server.', 'Lỗi');
+                                }
+                                row.removeClass('loading');
                             },
-                            error: function(xhr, status, error) {
+                            error: function (xhr, status, error) {
                                 console.error('Error removing item:', error);
-                                alert('Có lỗi xảy ra khi xóa sản phẩm. Vui lòng thử lại.');
+                                let errorMessage = 'Có lỗi xảy ra khi xóa sản phẩm. Vui lòng thử lại.';
+                                try {
+                                    const data = JSON.parse(xhr.responseText);
+                                    errorMessage = data.message || errorMessage;
+                                } catch (e) {
+                                    console.error('Error parsing error response:', e);
+                                }
+                                toastr.error(errorMessage, 'Lỗi');
                                 row.removeClass('loading');
                             }
                         });
@@ -644,7 +665,7 @@
                         alert('Vui lòng chọn ít nhất một sản phẩm để thanh toán!');
                         return false;
                     }
-                    
+
                     // Optionally add loading state during form submission
                     $(this).find('button[type="submit"]').prop('disabled', true).text('Đang xử lý...');
                 });

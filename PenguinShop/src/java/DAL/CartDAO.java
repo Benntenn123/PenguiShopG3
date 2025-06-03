@@ -143,12 +143,49 @@ public class CartDAO extends DBContext {
         return false;
 
     }
+    public boolean deleteCart(int userID, int cartID) {
+        String sql = "DELETE FROM dbo.tbCart WHERE cartID = ? AND userID = ?";
+
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, cartID);
+            ps.setInt(2, userID);
+            int result = ps.executeUpdate();
+            if (result == 1) {
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+
+    }
+    
     
     public static void main(String[] args) {
         CartDAO cdao = new CartDAO();
-        List<Cart> ca = cdao.getCartUser(1);
-        for (Cart cart : ca) {
-            System.out.println(cart.getCartID());
+        System.out.println(cdao.isValidCartItem(7, 1));
+    }
+
+    public boolean isValidCartItem(int cartId, int userID) {
+        String sql = "select count(*) FROM dbo.tbCart WHERE cartID = ? AND userID = ?";
+
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, cartId);
+            ps.setInt(2, userID);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {                
+                int row = rs.getInt(1);
+                if(row == 1){
+                    return true;
+                }
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+        return false;
+    
     }
 }
