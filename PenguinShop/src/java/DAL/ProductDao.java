@@ -497,7 +497,7 @@ public class ProductDao extends DBContext {
 //            System.out.println(productVariant.getProduct().toString());
 //        }
         ProductDao pdao = new ProductDao();
-        System.out.println(pdao.isValidProductAndVariant(1, 1));
+        System.out.println(pdao.isValidProductAndVariant(15, 1));
     }
 
     public boolean isValidProductAndVariant(int variantID, int productID) {

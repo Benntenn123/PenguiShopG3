@@ -6,45 +6,72 @@ package DAL;
 
 import Models.Cart;
 import Models.Category;
+import Models.Color;
+import Models.Product;
+import Models.ProductVariant;
+import Models.Size;
+import Models.User;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CartDAO extends DBContext {
 
-    public Cart gerCartUser() {
-        String sql = "SELECT\n"
-                + "    c.cartID,\n"
-                + "    c.userID,\n"
-                + "    c.quantity,\n"
-                + "    p.productID,\n"
-                + "    p.productName,\n"
-                + "    p.imageMainProduct,\n"
-                + "    v.variantID,\n"
-                + "    v.price,\n"
-                + "    col.colorName,\n"
-                + "    s.sizeName\n"
-                + "FROM tbCart c\n"
-                + "INNER JOIN tbProductVariant v ON c.variantID = v.variantID\n"
-                + "INNER JOIN tbProduct p ON c.productID = p.productID AND v.productID = p.productID\n"
-                + "INNER JOIN tbColor col ON v.colorID = col.colorID\n"
-                + "INNER JOIN tbSize s ON v.sizeID = s.sizeID\n"
-                + "WHERE c.userID = ? AND v.variantID = ?;\n";
-        try {
-            PreparedStatement ps = connection.prepareStatement(sql);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                Category c = new Category(rs.getInt(1),
-                        rs.getString(2),
-                        rs.getString(3),
-                        rs.getString(4));
+     public List<Cart> getCartUser(int userID) {
+        List<Cart> cartItems = new ArrayList<>();
+        String sql = "SELECT c.cartID, c.userID, pv.variantID, p.productID, p.productName, p.imageMainProduct, " +
+                    "pv.price, pv.quantity AS variantQuantity, pv.stockStatus, c.quantity AS cartQuantity, " +
+                    "col.colorID, col.colorName, s.sizeID, s.sizeName " +
+                    "FROM dbo.tbCart c " +
+                    "JOIN dbo.tbProductVariant pv ON c.variantID = pv.variantID " +
+                    "JOIN dbo.tbProduct p ON pv.productID = p.productID " +
+                    "JOIN dbo.tbColor col ON pv.colorID = col.colorID " +
+                    "JOIN dbo.tbSize s ON pv.sizeID = s.sizeID " +
+                    "WHERE c.userID = ?";
 
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, userID);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    User user = new User(rs.getInt("userID"));
+                    Product product = new Product(
+                        rs.getInt("productID"),
+                        rs.getString("productName"),
+                        rs.getString("imageMainProduct")
+                    );
+                    Color color = new Color(
+                        rs.getInt("colorID"),
+                        rs.getString("colorName")
+                    );
+                    Size size = new Size(
+                        rs.getInt("sizeID"),
+                        rs.getString("sizeName")
+                    );
+                    ProductVariant variant = new ProductVariant(
+                        rs.getInt("variantID"),
+                        rs.getInt("variantQuantity"),
+                        product,
+                        color,
+                        size,
+                        rs.getDouble("price"),
+                        String.valueOf(rs.getInt("stockStatus")) // Convert INT to String
+                    );
+                    Cart cart = new Cart(
+                        rs.getInt("cartID"),
+                        user,
+                        variant,
+                        rs.getInt("cartQuantity"),
+                        product
+                    );
+                    cartItems.add(cart);
+                }
             }
-
         } catch (SQLException e) {
-            e.printStackTrace();
+            e.printStackTrace(); // Consider using a logging framework in production
         }
-        return null;
+        return cartItems;
     }
 
     public boolean checkExistProductInCart(int userID, int variantID) {
@@ -75,7 +102,6 @@ public class CartDAO extends DBContext {
         return false;
 
     }
-
 
     public boolean updateQuantity(int userID, int variantID) {
         String sql = "UPDATE dbo.tbCart SET quantity= quantity +1 WHERE userID = ?"
@@ -116,5 +142,13 @@ public class CartDAO extends DBContext {
         }
         return false;
 
+    }
+    
+    public static void main(String[] args) {
+        CartDAO cdao = new CartDAO();
+        List<Cart> ca = cdao.getCartUser(1);
+        for (Cart cart : ca) {
+            System.out.println(cart.getCartID());
+        }
     }
 }

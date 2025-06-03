@@ -67,7 +67,7 @@ public class AddCart extends HttpServlet {
             String[] info = getInfo(request);
             int productId = Integer.parseInt(info[1]);
             int variantId = Integer.parseInt(info[2]);
-
+            
             // Kiểm tra session user
             User user = (User) request.getSession().getAttribute("user");
             if (user == null) {
@@ -78,7 +78,7 @@ public class AddCart extends HttpServlet {
                 status = "invalid_input";
             } else {
                 // Kiểm tra sản phẩm/biến thể tồn tại
-                if (!pdao.isValidProductAndVariant(productId, variantId)) {
+                if (!pdao.isValidProductAndVariant(variantId,productId)) {
                     message = "Sản phẩm hoặc biến thể không tồn tại!";
                     status = "invalid_product";
                 } else {

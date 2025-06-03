@@ -2,6 +2,9 @@
 
 package Controller.HomePage.Cart;
 
+import DAL.CartDAO;
+import Models.Cart;
+import Models.User;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -9,10 +12,12 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.List;
 
 @WebServlet(name="ListCart", urlPatterns={"/listCart"})
 public class ListCart extends HttpServlet {
    
+    CartDAO cdao = new CartDAO();
    
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
@@ -35,10 +40,14 @@ public class ListCart extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
+        User user = (User) request.getSession().getAttribute("user");
+        if(user == null){
+            request.getSession().setAttribute("ms", "Vui lòng login ! ");
+            response.sendRedirect("login");
+        }
         
-        
-        
-        
+        List<Cart> cart = cdao.getCartUser(user.getUserID());
+        request.setAttribute("cart", cart);       
         request.getRequestDispatcher("HomePage/ListCart.jsp").forward(request, response);
     } 
 

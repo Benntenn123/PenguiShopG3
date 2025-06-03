@@ -20,12 +20,20 @@ public class Cart {
         this.product = product;
     }
 
+    public Cart(int cartID, ProductVariant variant, int quantity, Product product) {
+        this.cartID = cartID;
+        this.variant = variant;
+        this.quantity = quantity;
+        this.product = product;
+    }
+
     public Cart(User user, ProductVariant variant, int quantity, Product product) {
         this.user = user;
         this.variant = variant;
         this.quantity = quantity;
         this.product = product;
     }
+    
 
     public int getCartID() {
         return cartID;
