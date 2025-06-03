@@ -7,6 +7,7 @@ package Controller.HomePage.DashBoard;
 
 import DAL.BannerDAO;
 import DAL.BrandDAO;
+import DAL.CartDAO;
 import DAL.CategoriesDAO;
 import DAL.ProductDao;
 import Models.Banner;
@@ -22,6 +23,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 import DAL.ProductDao;
+import Models.User;
 
 @WebServlet(name="TrangChu", urlPatterns={"/trangchu"})
 public class TrangChu extends HttpServlet {
@@ -29,6 +31,7 @@ public class TrangChu extends HttpServlet {
     CategoriesDAO cdao = new CategoriesDAO();
     BrandDAO brdao = new BrandDAO();
     ProductDao pdao = new ProductDao();
+    CartDAO cadao = new CartDAO();
   
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
@@ -58,6 +61,13 @@ public class TrangChu extends HttpServlet {
         
         List<ProductVariant> hot = pdao.getHotProduct();
         request.setAttribute("hot", hot);
+        
+        User user = (User) request.getSession().getAttribute("user");
+        int totalCart = 0;
+        if(user != null){
+            totalCart = cadao.getCartUser(user.getUserID()).size();
+        }
+        request.getSession().setAttribute("totalCart", totalCart);
         
         request.getSession().setAttribute("cateMenu", cate);
         request.getSession().setAttribute("brandMenu", br);

@@ -325,7 +325,7 @@
                                             </div>
                                         </div>
                                         <div class="product-cart-btn">
-                                            <a href="cart.html" class="product-btn">Thêm giỏ hàng</a>
+                                            <a href="productdetail?id=${item.variantID}" class="product-btn">Xem chi tiết</a>
                                         </div>
                                     </div>
                                 </div>
