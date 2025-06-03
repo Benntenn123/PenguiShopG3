@@ -355,7 +355,7 @@
                                                         <tr class="table-row ticket-row product-row" data-product-id="1" data-price="20.00">
                                                             <td class="table-wrapper wrapper-checkbox">
                                                                 <div class="table-wrapper-center">
-                                                                    <input type="checkbox" name="selectedProducts" value="1" class="product-checkbox product-select">
+                                                                    <input type="checkbox" name="selectedProducts" value="${cart.cartID}" class="product-checkbox product-select">
                                                                 </div>
                                                             </td>
                                                             <td class="table-wrapper wrapper-product">
@@ -381,12 +381,12 @@
                                                             </td>
                                                             <td class="table-wrapper wrapper-price">
                                                                 <div class="table-wrapper-center">
-                                                                    <h5 class="heading unit-price">${cart.variant.price} VND</h5>
+                                                                    <h5 class="heading unit-price" data-price="${cart.variant.price}">${cart.variant.price} VND</h5>
                                                                 </div>
                                                             </td>
                                                             <td class="table-wrapper wrapper-size">
                                                                 <div class="table-wrapper-center">
-                                                                    <button onclick="changeVariant()" style="padding: 10px; width: 80px;
+                                                                    <button type="button" onclick="changeVariant()" style="padding: 10px; width: 80px;
                                                                             font-size: 14px; border-radius: 6px; border: 1px solid #AE1C9A">${cart.variant.size.sizeName} - ${cart.variant.color.colorName}</button>
                                                                 </div>
                                                             </td>
@@ -394,19 +394,19 @@
                                                                 <div class="table-wrapper-center">
                                                                     <div class="quantity-controls">
                                                                         <button type="button" class="quantity-btn minus-btn">-</button>
-                                                                        <input type="number" name="quantity_1" value="1" min="1" max="99" class="quantity-input">
+                                                                        <input type="number" name="quantity_${cart.cartID}" value="${cart.quantity}" min="1" max="${cart.variant.quantity}" class="quantity-input">
                                                                         <button type="button" class="quantity-btn plus-btn">+</button>
                                                                     </div>
                                                                 </div>
                                                             </td>
                                                             <td class="table-wrapper wrapper-total">
                                                                 <div class="table-wrapper-center">
-                                                                    <h5 class="heading total-price">$20.00</h5>
+                                                                    <h5 class="heading total-price">${cart.variant.price * cart.quantity} VND</h5>
                                                                 </div>
                                                             </td>
                                                             <td class="table-wrapper wrapper-action">
                                                                 <div class="table-wrapper-center">
-                                                                    <span class="remove-btn" style="cursor: pointer;">
+                                                                    <span class="remove-btn" style="cursor: pointer;" data-cart-id="${cart.cartID}">
                                                                         <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                                         <path d="M9.7 0.3C9.3 -0.1 8.7 -0.1 8.3 0.3L5 3.6L1.7 0.3C1.3 -0.1 0.7 -0.1 0.3 0.3C-0.1 0.7 -0.1 1.3 0.3 1.7L3.6 5L0.3 8.3C-0.1 8.7 -0.1 9.3 0.3 9.7C0.7 10.1 1.3 10.1 1.7 9.7L5 6.4L8.3 9.7C8.7 10.1 9.3 10.1 9.7 9.7C10.1 9.3 10.1 8.7 9.7 8.3L6.4 5L9.7 1.7C10.1 1.3 10.1 0.7 9.7 0.3Z" fill="#AAAAAA"></path>
                                                                         </svg>
@@ -457,14 +457,25 @@
         <jsp:include page="Common/Js.jsp"/>
         <jsp:include page="Common/Message.jsp"/>
 
-        <script>
+         <script>
             $(document).ready(function () {
+                // Function to parse price from text (remove "VND" and convert to number)
+                function parsePriceFromText(priceText) {
+                    return parseFloat(priceText.replace(/[^\d.]/g, '')) || 0;
+                }
+
+                // Function to format price with VND
+                function formatPrice(price) {
+                    return Math.round(price).toLocaleString('vi-VN') + ' VND';
+                }
+
                 // Update individual product total when quantity changes
                 function updateProductTotal(row) {
-                    const price = parseFloat(row.data('price'));
-                    const quantity = parseInt(row.find('.quantity-input').val());
+                    const priceElement = row.find('.unit-price');
+                    const price = parseFloat(priceElement.data('price')) || parsePriceFromText(priceElement.text());
+                    const quantity = parseInt(row.find('.quantity-input').val()) || 1;
                     const total = price * quantity;
-                    row.find('.total-price').text('$' + total.toFixed(2));
+                    row.find('.total-price').text(formatPrice(total));
                     updateCartSummary();
                 }
 
@@ -476,8 +487,9 @@
 
                     $('.product-select:checked').each(function () {
                         const row = $(this).closest('.product-row');
-                        const quantity = parseInt(row.find('.quantity-input').val());
-                        const price = parseFloat(row.data('price'));
+                        const quantity = parseInt(row.find('.quantity-input').val()) || 1;
+                        const priceElement = row.find('.unit-price');
+                        const price = parseFloat(priceElement.data('price')) || parsePriceFromText(priceElement.text());
 
                         selectedCount++;
                         totalQuantity += quantity;
@@ -487,17 +499,51 @@
                     $('#selected-count').text(selectedCount);
                     $('#summary-count').text(selectedCount);
                     $('#summary-quantity').text(totalQuantity);
-                    $('#grand-total').text('$' + grandTotal.toFixed(2));
+                    $('#grand-total').text(formatPrice(grandTotal));
 
                     // Enable/disable checkout button
                     $('#checkout-btn').prop('disabled', selectedCount === 0);
                 }
 
+                // Function to send wishlist update to backend
+                function updateWishlist(cartId, isSelected) {
+                    $.ajax({
+                        url: 'addWhist',
+                        type: 'POST',
+                        data: {
+                            cartId: cartId,
+                            selected: isSelected
+                        },
+                        beforeSend: function() {
+                            // Add loading state
+                            $('body').addClass('loading');
+                        },
+                        success: function(response) {
+                            console.log('Wishlist updated successfully');
+                            // Handle success response if needed
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Error updating wishlist:', error);
+                            // Optionally show error message to user
+                            alert('Có lỗi xảy ra khi cập nhật danh sách yêu thích. Vui lòng thử lại.');
+                            
+                            // Revert checkbox state on error
+                            const checkbox = $(`input[value="${cartId}"]`);
+                            checkbox.prop('checked', !isSelected);
+                            updateCartSummary();
+                        },
+                        complete: function() {
+                            // Remove loading state
+                            $('body').removeClass('loading');
+                        }
+                    });
+                }
+
                 // Quantity button handlers
                 $('.plus-btn').click(function () {
                     const input = $(this).siblings('.quantity-input');
-                    const currentVal = parseInt(input.val());
-                    const maxVal = parseInt(input.attr('max'));
+                    const currentVal = parseInt(input.val()) || 1;
+                    const maxVal = parseInt(input.attr('max')) || 99;
 
                     if (currentVal < maxVal) {
                         input.val(currentVal + 1);
@@ -507,8 +553,8 @@
 
                 $('.minus-btn').click(function () {
                     const input = $(this).siblings('.quantity-input');
-                    const currentVal = parseInt(input.val());
-                    const minVal = parseInt(input.attr('min'));
+                    const currentVal = parseInt(input.val()) || 1;
+                    const minVal = parseInt(input.attr('min')) || 1;
 
                     if (currentVal > minVal) {
                         input.val(currentVal - 1);
@@ -518,9 +564,9 @@
 
                 // Quantity input change handler
                 $('.quantity-input').on('input change', function () {
-                    const minVal = parseInt($(this).attr('min'));
-                    const maxVal = parseInt($(this).attr('max'));
-                    let currentVal = parseInt($(this).val());
+                    const minVal = parseInt($(this).attr('min')) || 1;
+                    const maxVal = parseInt($(this).attr('max')) || 99;
+                    let currentVal = parseInt($(this).val()) || minVal;
 
                     if (isNaN(currentVal) || currentVal < minVal) {
                         $(this).val(minVal);
@@ -531,23 +577,62 @@
                     updateProductTotal($(this).closest('.product-row'));
                 });
 
-                // Product selection handler
+                // Product selection handler - with backend integration
                 $('.product-select').change(function () {
+                    const cartId = $(this).val();
+                    const isSelected = $(this).is(':checked');
+                    
+                    // Update UI immediately
                     updateCartSummary();
+                    
+                    // Send request to backend
+                    updateWishlist(cartId, isSelected);
                 });
 
                 // Select all handler
                 $('#select-all').change(function () {
                     const isChecked = $(this).is(':checked');
-                    $('.product-select').prop('checked', isChecked);
+                    
+                    $('.product-select').each(function() {
+                        const wasChecked = $(this).is(':checked');
+                        $(this).prop('checked', isChecked);
+                        
+                        // Only send request if state actually changed
+                        if (wasChecked !== isChecked) {
+                            const cartId = $(this).val();
+                            updateWishlist(cartId, isChecked);
+                        }
+                    });
+                    
                     updateCartSummary();
                 });
 
                 // Remove product handler
                 $('.remove-btn').click(function () {
                     if (confirm('Bạn có chắc chắn muốn xóa sản phẩm này khỏi giỏ hàng?')) {
-                        $(this).closest('.product-row').remove();
-                        updateCartSummary();
+                        const cartId = $(this).data('cart-id');
+                        const row = $(this).closest('.product-row');
+                        
+                        // Send request to remove from backend
+                        $.ajax({
+                            url: 'removeFromCart',
+                            type: 'POST',
+                            data: {
+                                cartId: cartId
+                            },
+                            beforeSend: function() {
+                                row.addClass('loading');
+                            },
+                            success: function(response) {
+                                row.remove();
+                                updateCartSummary();
+                            },
+                            error: function(xhr, status, error) {
+                                console.error('Error removing item:', error);
+                                alert('Có lỗi xảy ra khi xóa sản phẩm. Vui lòng thử lại.');
+                                row.removeClass('loading');
+                            }
+                        });
                     }
                 });
 
@@ -557,15 +642,25 @@
                     if (selectedProducts.length === 0) {
                         e.preventDefault();
                         alert('Vui lòng chọn ít nhất một sản phẩm để thanh toán!');
+                        return false;
                     }
+                    
+                    // Optionally add loading state during form submission
+                    $(this).find('button[type="submit"]').prop('disabled', true).text('Đang xử lý...');
                 });
 
-                // Initialize totals
+                // Initialize totals on page load
                 $('.product-row').each(function () {
                     updateProductTotal($(this));
                 });
                 updateCartSummary();
             });
+
+            // Function for variant change (placeholder)
+            function changeVariant() {
+                // This function should handle variant changes
+                console.log('Change variant functionality to be implemented');
+            }
         </script>
 
     </body>
