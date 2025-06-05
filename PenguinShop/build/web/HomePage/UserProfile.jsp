@@ -47,9 +47,9 @@
                                                         </div>
                                                         <div class=" account-inner-form">
                                                             <div class="review-form-name">
-                                                                <label for="gmail" class="form-label">Email*</label>
+                                                                <label for="gmail" class="form-label">Email</label>
                                                                 <input type="email" id="gmail" class="form-control"
-                                                                       placeholder="user@gmail.com" name="gmail" value="${user.email}">
+                                                                       placeholder="user@gmail.com" readonly="" name="gmail" value="${user.email}">
                                                             </div>
                                                             <div class="review-form-name">
                                                                 <label for="telephone" class="form-label">Số điện thoại*</label>

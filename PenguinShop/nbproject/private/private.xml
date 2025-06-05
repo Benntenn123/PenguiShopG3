@@ -5,16 +5,16 @@
         <group>
             <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Controller/HomePage/DashBoard/TrangChu.java</file>
             <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/DAL/CartDAO.java</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Controller/HomePage/Cart/RemoveFromCart.java</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/web/HomePage/UserProfile.jsp</file>
             <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/APIKey/Google.java</file>
-            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Controller/HomePage/Customer/Auth/LoginGoogle.java</file>
-            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Models/Cart.java</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/DAL/UserDAO.java</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Controller/HomePage/Customer/Profile/UserProfile.java</file>
             <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Models/Product.java</file>
             <file>file:/F:/Git/PenguiShopG3/PenguinShop/web/HomePage/TrangChu.jsp</file>
             <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Models/ProductVariant.java</file>
             <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/DAL/ProductDao.java</file>
-            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Controller/HomePage/Cart/GetMaterial.java</file>
-            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Controller/HomePage/Cart/ListCart.java</file>
-            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Controller/HomePage/Product/ProductDetails.java</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/web/HomePage/Common/Js.jsp</file>
             <file>file:/F:/Git/PenguiShopG3/PenguinShop/web/HomePage/ListCart.jsp</file>
             <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Controller/HomePage/Cart/AddCart.java</file>
         </group>
