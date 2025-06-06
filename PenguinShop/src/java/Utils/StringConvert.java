@@ -132,6 +132,16 @@ public class StringConvert {
         }
         return false;
     }
+    public static String cleanString(String input) {
+        if (input == null) {
+            return "";
+        }
+        // Loại bỏ ký tự đặc biệt, giữ lại chữ cái, số và ký tự tiếng Việt
+        String cleaned = input.replaceAll("[^\\p{L}\\p{N}\\s]", "");
+        // Chuẩn hóa khoảng trắng: thay nhiều khoảng trắng bằng một và loại bỏ khoảng trắng đầu/cuối
+        cleaned = cleaned.replaceAll("\\s+", " ").trim();
+        return cleaned;
+    }
     
 }
 

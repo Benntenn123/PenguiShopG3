@@ -13,6 +13,7 @@ import Models.Category;
 import Models.Color;
 import Models.ProductVariant;
 import Models.Size;
+import Utils.StringConvert;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -69,7 +70,8 @@ public class SearchProduct extends HttpServlet {
         String from = request.getParameter("from");               // Giá từ
         String page = request.getParameter("page");
         String to = request.getParameter("to");                   // Giá đến
-        String q = request.getParameter("q");
+        String q = StringConvert.cleanString(request.getParameter("q"));
+        System.out.println("q"+ q);
         int pages = 1;
         if (page != null) {
             try {
