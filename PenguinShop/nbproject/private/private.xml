@@ -4,13 +4,10 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Models/User.java</file>
-            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Controller/Admin/Customer/ListCustomerAdmin.java</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Utils/StringConvert.java</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Controller/HomePage/Product/SearchProduct.java</file>
             <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/DAL/UserDAO.java</file>
-            <file>file:/F:/Git/PenguiShopG3/PenguinShop/web/Admin/Common/RightSideBar.jsp</file>
-            <file>file:/F:/Git/PenguiShopG3/PenguinShop/web/Admin/Common/Js.jsp</file>
-            <file>file:/F:/Git/PenguiShopG3/PenguinShop/web/Admin/assets/js/submitForm.js</file>
             <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Models/Role.java</file>
-            <file>file:/F:/Git/PenguiShopG3/PenguinShop/web/Admin/ListCustomerAdmin.jsp</file>
         </group>
     </open-files>
 </project-private>
