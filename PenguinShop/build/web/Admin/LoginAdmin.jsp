@@ -24,10 +24,10 @@
                                             <h5 class="mb-0">Trang quản trị</h5>
                                             <p class="text-muted mt-2">Đăng nhập để tiếp tục</p>
                                         </div>
-                                        <form class="mt-4 pt-2" action="index.html">
+                                        <form class="mt-4 pt-2" action="loginAdmin" method="post">
                                             <div class="mb-3">
                                                 <label class="form-label">Địa chỉ Email</label>
-                                                <input type="text" class="form-control" id="username" placeholder="Nhập địa chỉ email">
+                                                <input type="text" name="email" class="form-control" id="username" placeholder="Nhập địa chỉ email">
                                             </div>
                                             <div class="mb-3">
                                                 <div class="d-flex align-items-start">
@@ -42,7 +42,7 @@
                                                 </div>
                                                 
                                                 <div class="input-group auth-pass-inputgroup">
-                                                    <input type="password" class="form-control" placeholder="Nhập mật khẩu" aria-label="Password" aria-describedby="password-addon">
+                                                    <input name="password" type="password" class="form-control" placeholder="Nhập mật khẩu" aria-label="Password" aria-describedby="password-addon">
                                                     <button class="btn btn-light shadow-none ms-0" type="button" id="password-addon"><i class="mdi mdi-eye-outline"></i></button>
                                                 </div>
                                             </div>
