@@ -7,6 +7,7 @@ package DAL;
 import Const.Account;
 import Models.GoogleAccount;
 import Models.Logs;
+import Models.Role;
 import Utils.HashPassword;
 import Models.User;
 import Utils.StringConvert;
@@ -41,7 +42,7 @@ public class UserDAO extends DBContext {
             ps.setString(1, email);
             System.out.println(sql);
             ResultSet rs = ps.executeQuery();
-            
+
             if (rs.next()) {
                 User user = new User();
                 user.setUserID(rs.getInt("userID"));
@@ -102,12 +103,12 @@ public class UserDAO extends DBContext {
     }
 
     public boolean updateUserProfile(User user) {
-        
+
         String sql = "UPDATE tbUsers SET fullName = ?, birthday = ?, phone = ?, email = ?, image_user = ? WHERE userID = ?";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, user.getFullName());
-            
+
             ps.setDate(2, new java.sql.Date(user.getBirthday().getTime()));
             ps.setString(3, user.getPhone());
             ps.setString(4, user.getEmail());
@@ -379,6 +380,67 @@ public class UserDAO extends DBContext {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public List<User> getAllUser(int page, int pageSize, String fullName, String email, String phone, int roleID) {
+        List<User> list = new ArrayList<>();
+        StringBuilder sql = new StringBuilder(
+                "SELECT u.userID, u.fullName, u.birthday, u.phone, u.email, u.image_user, r.roleName "
+                + "FROM dbo.tbUsers u "
+                + "INNER JOIN dbo.tbRoles r ON u.roleID = r.roleID "
+                + "WHERE u.roleID = ?"
+        );
+
+        // Add search conditions dynamically
+        List<String> searchParams = new ArrayList<>();
+        if (fullName != null && !fullName.trim().isEmpty()) {
+            sql.append(" AND u.fullName LIKE ?");
+            searchParams.add("%" + fullName.trim() + "%");
+        }
+        if (email != null && !email.trim().isEmpty()) {
+            sql.append(" AND u.email LIKE ?");
+            searchParams.add("%" + email.trim() + "%");
+        }
+        if (phone != null && !phone.trim().isEmpty()) {
+            sql.append(" AND u.phone LIKE ?");
+            searchParams.add("%" + phone.trim() + "%");
+        }
+
+        // Add pagination
+        sql.append(" ORDER BY u.userID OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
+
+        try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
+            int paramIndex = 1;
+            // Set roleID parameter
+            ps.setInt(paramIndex++, roleID);
+
+            // Set search parameters
+            for (String param : searchParams) {
+                ps.setString(paramIndex++, param);
+            }
+
+            // Set pagination parameters
+            ps.setInt(paramIndex++, (page - 1) * pageSize);
+            ps.setInt(paramIndex, pageSize);
+            System.out.println("Load User"+sql);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    User u = new User(
+                            rs.getInt("userID"),
+                            rs.getString("fullName"),
+                            rs.getDate("birthday"),
+                            rs.getString("phone"),
+                            rs.getString("email"),
+                            rs.getString("image_user"),
+                            new Role(0, rs.getString("roleName"))
+                    );
+                    list.add(u);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
     }
 
 }

@@ -5,6 +5,8 @@
 
 package Controller.Admin.DashBoard;
 
+import DAL.UserDAO;
+import Models.User;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -12,11 +14,12 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.List;
 
 
-@WebServlet(name="TrangChu", urlPatterns={"/admin/trangchu"})
-public class TrangChu extends HttpServlet {
-   
+@WebServlet(name="DashBoard", urlPatterns={"/admin/dashboard"})
+public class DashBoard extends HttpServlet {
+    
    
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
@@ -26,30 +29,33 @@ public class TrangChu extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet TrangChu</title>");  
+            out.println("<title>Servlet DashBoard</title>");  
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet TrangChu at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet DashBoard at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
     } 
 
-   
+    
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
+        
+        
         request.getRequestDispatcher("../Admin/TrangChu.jsp").forward(request, response);
     } 
-
     
+    
+
+   
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         processRequest(request, response);
     }
 
-    
     @Override
     public String getServletInfo() {
         return "Short description";
