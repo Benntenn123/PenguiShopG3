@@ -23,7 +23,9 @@ import java.util.List;
 public class ProductDao extends DBContext {
 
     public List<Product> getAll() {
-        String sql = "select * from tbProduct p join tbCategory c on p.categoryID = c.categoryID  join tbProductType t on p.productTypeID = t.productTypeID ";
+        String sql = "select * from tbProduct p join tbCategory c "
+                + "on p.categoryID = c.categoryID  "
+                + "join tbProductType t on p.productTypeID = t.productTypeID ";
         List<Product> list = new ArrayList<>();
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
