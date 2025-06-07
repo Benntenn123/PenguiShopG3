@@ -42,7 +42,7 @@ public class ListProduct extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         ProductDao pd = new ProductDao();
-        List<ProductVariant> list = pd.getProductVariants(, 0, 10);
+        List<ProductVariant> list = pd.getProductVariants(getData(request), 0, 10);
         request.setAttribute("listP", list);
         request.getRequestDispatcher("../Admin/ListProductAdmin.jsp").forward(request, response);
     } 

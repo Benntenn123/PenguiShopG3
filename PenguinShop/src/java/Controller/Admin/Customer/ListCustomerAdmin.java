@@ -16,11 +16,14 @@ import jakarta.servlet.http.HttpServlet;
 import static jakarta.servlet.http.HttpServlet.LEGACY_DO_HEAD;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet(name = "ListCustomerAdmin", urlPatterns = {"/admin/listCustomerAdmin"})
 public class ListCustomerAdmin extends HttpServlet {
+
     UserDAO udao = new UserDAO();
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -38,32 +41,51 @@ public class ListCustomerAdmin extends HttpServlet {
         }
     }
 
-    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String[] data = getData(request);
         try {
             int page = 1;
-            if(data[0] != null){
+            if (data[0] != null && !data[0].trim().isEmpty()) {
                 page = Integer.parseInt(data[0]);
             }
-            List<User> list = udao.getAllUser(page, 12,
-                data[2], data[4], data[3], Account.ROLE_CUSTOMER);
+            int batch = 2; // pageSize
+            List<User> list = udao.getAllUser(page, batch, data[1], data[3], data[2], Account.ROLE_CUSTOMER);
+            int totalResult = udao.getTotalUserRecords(Account.ROLE_CUSTOMER, data[1], data[3], data[2]);
+
+            int totalPages = (int) Math.ceil((double) totalResult / batch);
+            int startRecord = (page - 1) * batch + 1;
+            int endRecord = Math.min(startRecord + batch - 1, totalResult);
+
+            request.setAttribute("currentPage", page);
+            request.setAttribute("totalPages", totalPages);
+            request.setAttribute("totalRecords", totalResult);
+            request.setAttribute("startRecord", startRecord);
+            request.setAttribute("endRecord", endRecord);
             request.setAttribute("list", list);
+        } catch (NumberFormatException e) {
+            System.err.println("Invalid page number: " + data[0]);
+            request.setAttribute("error", "Invalid page number");
+            request.setAttribute("list", new ArrayList<User>());
+            request.setAttribute("currentPage", 1);
+            request.setAttribute("totalPages", 0);
+            request.setAttribute("totalRecords", 0);
+            request.setAttribute("startRecord", 0);
+            request.setAttribute("endRecord", 0);
         } catch (Exception e) {
+            System.err.println("Error loading customers: " + e.getMessage());
+            request.setAttribute("error", "Error loading customers");
         }
-        
+
         request.getRequestDispatcher("../Admin/ListCustomerAdmin.jsp").forward(request, response);
     }
 
     private String[] getData(HttpServletRequest request) {
         String page = request.getParameter("page");
-        String fullname = request.getParameter("fullName");
-        String birthday = request.getParameter("birthday");
+        String fullname = request.getParameter("fullname");
         String phone = request.getParameter("phone");
         String email = request.getParameter("email");
-        String image_user = request.getParameter("image_user");
-        return new String[]{page, fullname, birthday, phone, email, image_user};
+        return new String[]{page, fullname, phone, email};
     }
 
     @Override

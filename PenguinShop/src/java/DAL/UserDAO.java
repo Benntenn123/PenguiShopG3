@@ -442,5 +442,46 @@ public class UserDAO extends DBContext {
         }
         return list;
     }
+    public int getTotalUserRecords(int roleID, String fullName, String email, String phone) {
+        StringBuilder sql = new StringBuilder(
+                "SELECT COUNT(*) AS total " +
+                "FROM dbo.tbUsers u " +
+                "INNER JOIN dbo.tbRoles r ON u.roleID = r.roleID " +
+                "WHERE u.roleID = ?"
+        );
+
+        List<String> searchParams = new ArrayList<>();
+        if (fullName != null && !fullName.trim().isEmpty()) {
+            sql.append(" AND u.fullName LIKE ?");
+            searchParams.add("%" + fullName.trim() + "%");
+        }
+        if (email != null && !email.trim().isEmpty()) {
+            sql.append(" AND u.email LIKE ?");
+            searchParams.add("%" + email.trim() + "%");
+        }
+        if (phone != null && !phone.trim().isEmpty()) {
+            sql.append(" AND u.phone LIKE ?");
+            searchParams.add("%" + phone.trim() + "%");
+        }
+
+        try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
+            int paramIndex = 1;
+            ps.setInt(paramIndex++, roleID);
+
+            for (String param : searchParams) {
+                ps.setString(paramIndex++, param);
+            }
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("total");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+    
 
 }
