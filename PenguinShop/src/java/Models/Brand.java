@@ -11,6 +11,10 @@ public class Brand {
     private String logo;
     private String description;
 
+    public Brand(String brandName) {
+        this.brandName = brandName;
+    }
+
     public Brand(int brandID, String brandName, String logo) {
         this.brandID = brandID;
         this.brandName = brandName;

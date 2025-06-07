@@ -7,6 +7,7 @@ package Controller.Admin.Products;
 
 import DAL.ProductDao;
 import Models.Product;
+import Models.ProductVariant;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -41,10 +42,23 @@ public class ListProduct extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         ProductDao pd = new ProductDao();
-        List<Product> productList = pd.getAll();
-        request.setAttribute("listP", productList);
-        request.getRequestDispatcher("../Admin/ProductList.jsp").forward(request, response);
+        List<ProductVariant> list = pd.getProductVariants(, 0, 10);
+        request.setAttribute("listP", list);
+        request.getRequestDispatcher("../Admin/ListProductAdmin.jsp").forward(request, response);
     } 
+    
+    private String[] getData(HttpServletRequest request){
+        String search = request.getParameter("productName");
+        String color = request.getParameter("color");
+        String size = request.getParameter("size");
+        String status = request.getParameter("status");
+        String quantity = request.getParameter("quantity");
+        String type = request.getParameter("type");
+        String brand = request.getParameter("brand");
+        String categories = request.getParameter("cate");
+        return new String[]{search,color,size,status,
+            quantity,type,brand,categories};
+    }
     
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)

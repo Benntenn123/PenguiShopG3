@@ -3,12 +3,19 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/F:/Git/PenguiShopG3/PenguinShop/web/Admin/Common/Header.jsp</file>
-            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Models/User.java</file>
-            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Utils/StringConvert.java</file>
             <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Controller/HomePage/Product/SearchProduct.java</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Controller/Admin/Products/ListProduct.java</file>
             <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/DAL/UserDAO.java</file>
             <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Models/Role.java</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/web/Admin/ListCustomerAdmin.jsp</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Models/Product.java</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/web/Admin/Common/Header.jsp</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Models/ProductVariant.java</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Models/User.java</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Utils/StringConvert.java</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/DAL/ProductDao.java</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/web/Admin/ListProductAdmin.jsp</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Models/Type.java</file>
         </group>
     </open-files>
 </project-private>

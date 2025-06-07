@@ -16,9 +16,37 @@ public class Product {
     private String description;
     private double weight;
     private String full_description;
+    private Brand brand;
 
+    public Product(int productId, String productName, String sku, Type type, Category category, String importDate, String imageMainProduct, String description, double weight, String full_description, Brand brand) {
+        this.productId = productId;
+        this.productName = productName;
+        this.sku = sku;
+        this.type = type;
+        this.category = category;
+        this.importDate = importDate;
+        this.imageMainProduct = imageMainProduct;
+        this.description = description;
+        this.weight = weight;
+        this.full_description = full_description;
+        this.brand = brand;
+    }
+    
     public Product(int productId) {
         this.productId = productId;
+    }
+
+    public Product(int productId, String productName, String sku, Type type, Category category, String importDate, String imageMainProduct, String description, double weight, String full_description) {
+        this.productId = productId;
+        this.productName = productName;
+        this.sku = sku;
+        this.type = type;
+        this.category = category;
+        this.importDate = importDate;
+        this.imageMainProduct = imageMainProduct;
+        this.description = description;
+        this.weight = weight;
+        this.full_description = full_description;
     }
 
     public Product(int productId, String productName, String imageMainProduct, String description, String sku, String full_description) {
@@ -95,6 +123,14 @@ public class Product {
 
     public String getProductName() {
         return productName;
+    }
+
+    public Brand getBrand() {
+        return brand;
+    }
+
+    public void setBrand(Brand brand) {
+        this.brand = brand;
     }
 
     public String getImageMainProduct() {
