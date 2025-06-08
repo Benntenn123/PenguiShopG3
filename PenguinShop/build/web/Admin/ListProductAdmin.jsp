@@ -15,5 +15,6 @@
         
         <jsp:include page="Common/RightSideBar.jsp"/>
         <jsp:include page="Common/Js.jsp"/>
+        <jsp:include page="Common/Message.jsp"/>
     </body>
 </html>

@@ -360,7 +360,7 @@ public class UserDAO extends DBContext {
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, gg.getName());
-            ps.setString(2, StringConvert.generateRandomString());
+            ps.setString(2, HashPassword.hashWithSHA256(StringConvert.generateRandomString()));
             ps.setInt(3, Account.ROLE_CUSTOMER);
             ps.setString(4, gg.getEmail());
             ps.setString(5, Account.AVATAR_DEFAULT_USER);
