@@ -507,33 +507,62 @@
 
                 // Function to send wishlist update to backend
                 function updateWishlist(cartId, isSelected) {
+                    const row = $(`input[value="${cartId}"]`).closest('.product-row');
+                    const quantity = parseInt(row.find('.quantity-input').val()) || 1;
+                    const priceElement = row.find('.unit-price');
+                    const price = parseFloat(priceElement.data('price')) || parsePriceFromText(priceElement.text());
+                    const total = price * quantity;
+
+                    // Validate quantity và total
+                    if (quantity < 1 || isNaN(total)) {
+                        toastr.error('Số lượng hoặc giá không hợp lệ!');
+                        $(`input[value="${cartId}"]`).prop('checked', !isSelected); // Revert checkbox
+                        updateCartSummary();
+                        return;
+                    }
+
                     $.ajax({
                         url: 'addWhist',
                         type: 'POST',
                         data: {
                             cartId: cartId,
-                            selected: isSelected
+                            quantity: quantity,
+                            total: total,
+                            action: isSelected ? 'add' : 'remove'
                         },
                         beforeSend: function () {
-                            // Add loading state
                             $('body').addClass('loading');
                         },
                         success: function (response) {
-                            console.log('Wishlist updated successfully');
-                            // Handle success response if needed
+                            try {
+                                const data = typeof response === 'string' ? JSON.parse(response) : response;
+                                if (data.success) {
+                                    toastr.success(data.message || 'Cập nhật danh sách thanh toán thành công!');
+                                } else {
+                                    toastr.error(data.message || 'Cập nhật danh sách thanh toán thất bại!');
+                                    // Revert checkbox state on error
+                                    const checkbox = $(`input[value="${cartId}"]`);
+                                    checkbox.prop('checked', !isSelected);
+                                    updateCartSummary();
+                                }
+                            } catch (e) {
+                                console.error('Error parsing response:', e);
+                                toastr.error('Lỗi xử lý phản hồi từ server!');
+                                // Revert checkbox state
+                                const checkbox = $(`input[value="${cartId}"]`);
+                                checkbox.prop('checked', !isSelected);
+                                updateCartSummary();
+                            }
                         },
                         error: function (xhr, status, error) {
-                            console.error('Error updating wishlist:', error);
-                            // Optionally show error message to user
-                            alert('Có lỗi xảy ra khi cập nhật danh sách yêu thích. Vui lòng thử lại.');
-
-                            // Revert checkbox state on error
+                            console.error('AJAX error:', status, error);
+                            toastr.error('Có lỗi xảy ra, vui lòng thử lại!');
+                            // Revert checkbox state
                             const checkbox = $(`input[value="${cartId}"]`);
                             checkbox.prop('checked', !isSelected);
                             updateCartSummary();
                         },
                         complete: function () {
-                            // Remove loading state
                             $('body').removeClass('loading');
                         }
                     });
