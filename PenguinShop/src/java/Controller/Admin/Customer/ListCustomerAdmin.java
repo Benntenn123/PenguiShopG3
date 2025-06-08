@@ -5,6 +5,7 @@
 package Controller.Admin.Customer;
 
 import Const.Account;
+import Const.Batch;
 import DAL.UserDAO;
 import Models.User;
 import Utils.StringConvert;
@@ -49,7 +50,7 @@ public class ListCustomerAdmin extends HttpServlet {
             if (data[0] != null && !data[0].trim().isEmpty()) {
                 page = Integer.parseInt(data[0]);
             }
-            int batch = 2; // pageSize
+            int batch = Batch.BATCH_SEARCH_CUSTOMER; // pageSize
             List<User> list = udao.getAllUser(page, batch, data[1], data[3], data[2], Account.ROLE_CUSTOMER);
             int totalResult = udao.getTotalUserRecords(Account.ROLE_CUSTOMER, data[1], data[3], data[2]);
 

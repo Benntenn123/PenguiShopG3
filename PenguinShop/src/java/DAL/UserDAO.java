@@ -5,8 +5,10 @@
 package DAL;
 
 import Const.Account;
+import Models.DeliveryInfo;
 import Models.GoogleAccount;
 import Models.Logs;
+import Models.Order;
 import Models.Role;
 import Utils.HashPassword;
 import Models.User;
@@ -80,13 +82,6 @@ public class UserDAO extends DBContext {
         return false;
     }
 
-    public static void main(String[] args) {
-        UserDAO udao = new UserDAO();
-        String[] info = new String[]{"Lương", "Nguyễn", "nguyenluongk2k4@gmail.com", "0936971273", "50f890eed24bfcd3ec4f2de7743fad1f8fadb9fc17665fada25f33a2c90acaee",
-            Account.AVATAR_DEFAULT_USER};
-
-        System.out.println(udao.addUser(info));
-    }
 
     public boolean updatePassword(int userID, String newPassword) {
         String sql = "UPDATE tbUsers SET password = ? WHERE userID = ?";
@@ -482,6 +477,121 @@ public class UserDAO extends DBContext {
         }
         return 0;
     }
+    public User getUserById(int userID) {
+        String sql = "SELECT u.userID, u.fullName, u.birthday, u.phone, u.email,"+
+                     " u.image_user, r.roleName ,u.status_account, u.created_at " +
+                     "FROM dbo.tbUsers u " +
+                     "INNER JOIN dbo.tbRoles r ON u.roleID = r.roleID " +
+                     "WHERE u.userID = ?";
+        
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, userID);
+            System.out.println(sql);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return new User(
+                        rs.getInt("userID"),
+                        rs.getString("fullName"),
+                        rs.getDate("birthday"),
+                        rs.getString("phone"),
+                        rs.getString("email"),
+                        rs.getString("image_user"),
+                        new Role(0, rs.getString("roleName")),
+                        rs.getInt("status_account"),
+                        rs.getString("created_at")
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
     
+    
+    public List<Logs> getLatestLogByUserId(int userID) {
+        String sql = "SELECT TOP 5 logID, userID, action, logDate " +
+                     "FROM dbo.tbLogs " +
+                     "WHERE userID = ? " +
+                     "ORDER BY logDate DESC";
+        List<Logs> list = new ArrayList<>();
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, userID);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Logs l = new Logs(
+                        rs.getInt("logID"),
+                        new User(rs.getInt("userID")),
+                        rs.getString("action"),
+                        rs.getString("logDate")
+                    );
+                    list.add(l);
+                }
+                return list;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    public List<Order> getRecentOrdersByUserId(int userID) {
+        List<Order> list = new ArrayList<>();
+        String sql = "SELECT TOP 5 orderID, orderDate, total, orderStatus, userID " +
+                     "FROM dbo.tbOrder " +
+                     "WHERE userID = ? " +
+                     "ORDER BY orderDate DESC";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, userID);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    User user = new User(rs.getInt("userID"));
+                    Order order = new Order(
+                        rs.getInt("orderID"),
+                        rs.getString("orderDate"), // Chuyển DATETIME thành String
+                        rs.getDouble("total"),
+                        user,
+                        rs.getInt("orderStatus")
+                    );
+                    list.add(order);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+    public List<DeliveryInfo> getDeliveryAddressesByUserId(int userID) {
+        List<DeliveryInfo> list = new ArrayList<>();
+        String sql = "SELECT deliveryInfoID, userID, addressDetail, city, fullName, phone, isDefault " +
+                     "FROM dbo.tbDeliveryInfo " +
+                     "WHERE userID = ? " +
+                     "ORDER BY isDefault DESC, deliveryInfoID ASC";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, userID);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    DeliveryInfo address = new DeliveryInfo(
+                        rs.getInt("deliveryInfoID"),
+                        new User(rs.getInt("userID")),
+                        rs.getString("fullName"),
+                        rs.getString("phone"),
+                        rs.getString("addressDetail"),
+                        rs.getString("city"),
+                        rs.getInt("isDefault")
+                    );
+                    list.add(address);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+    public static void main(String[] args) {
+        UserDAO udao = new UserDAO();
+        System.out.println(udao.getDeliveryAddressesByUserId(1).size());
+    }
 
 }

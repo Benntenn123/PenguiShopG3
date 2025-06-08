@@ -15,7 +15,8 @@ import java.util.Date;
     private String email;
     private String image_user;
     private Role role;
-
+    private int status_account;
+    private String created_at;
     public User(int userID, String fullName, Date birthday, String phone, String email, String image_user, Role role) {
         this.userID = userID;
         this.fullName = fullName;
@@ -89,6 +90,18 @@ import java.util.Date;
     // Default Constructor
     public User() {}
 
+    public User(int userID, String fullName, Date birthday, String phone, String email, String image_user, Role role, int status_account, String created_at) {
+        this.userID = userID;
+        this.fullName = fullName;
+        this.birthday = birthday;
+        this.phone = phone;
+        this.email = email;
+        this.image_user = image_user;
+        this.role = role;
+        this.status_account = status_account;
+        this.created_at = created_at;
+    }
+
     public User(int userID) {
         this.userID = userID;
     }
@@ -96,6 +109,22 @@ import java.util.Date;
     // Getters and Setters
     public int getUserID() {
         return userID;
+    }
+
+    public int getStatus_account() {
+        return status_account;
+    }
+
+    public void setStatus_account(int status_account) {
+        this.status_account = status_account;
+    }
+
+    public String getCreated_at() {
+        return created_at;
+    }
+
+    public void setCreated_at(String created_at) {
+        this.created_at = created_at;
     }
 
     public void setUserID(int userID) {

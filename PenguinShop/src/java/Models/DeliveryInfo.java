@@ -19,6 +19,16 @@ public class DeliveryInfo {
     private String created_at;
     private String updated_at;
 
+    public DeliveryInfo(int deliveryInfoID, User user, String fullName, String phone, String addessDetail, String city, int isDefault) {
+        this.deliveryInfoID = deliveryInfoID;
+        this.user = user;
+        this.fullName = fullName;
+        this.phone = phone;
+        this.addessDetail = addessDetail;
+        this.city = city;
+        this.isDefault = isDefault;
+    }
+
     public DeliveryInfo(User user, String fullName, String phone, String email, String addessDetail, String city, String created_at, String updated_at) {
         this.user = user;
         this.fullName = fullName;
