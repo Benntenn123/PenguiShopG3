@@ -16,6 +16,13 @@ public class ProductVariant {
         this.variantID = variantID;
     }
 
+    public ProductVariant(int variantID, Product product, Color color, Size size) {
+        this.variantID = variantID;
+        this.product = product;
+        this.color = color;
+        this.size = size;
+    }
+
     public ProductVariant(int variantID, int quantity, double price) {
         this.variantID = variantID;
         this.quantity = quantity;

@@ -142,6 +142,26 @@ public class StringConvert {
         cleaned = cleaned.replaceAll("\\s+", " ").trim();
         return cleaned;
     }
+    public static String standardizeAddress(String rawAddress) {
+        if (rawAddress == null || rawAddress.trim().isEmpty()) {
+            return "";
+        }
+
+        // Tách dựa trên dấu "-"
+        String[] parts = rawAddress.split("\\s*-\\s*");
+        // Lọc phần tử rỗng và ghép lại
+        StringBuilder standardized = new StringBuilder();
+        for (String part : parts) {
+            part = part.trim();
+            if (!part.isEmpty()) {
+                if (standardized.length() > 0) {
+                    standardized.append(", ");
+                }
+                standardized.append(part);
+            }
+        }
+        return standardized.toString();
+    }
     
 }
 

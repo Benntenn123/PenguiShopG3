@@ -16,7 +16,7 @@ import jakarta.servlet.http.HttpSession;
 
 @WebFilter(
     filterName = "FilterUser",
-    urlPatterns = {"/changepassword", "/userprofile", "/orderhistory", "/logout","/logUser","/deliveryinfo","/listCart"},
+    urlPatterns = {"/changepassword", "/userprofile", "/orderhistory", "/logout","/logUser","/deliveryinfo","/listCart","/checkout"},
     dispatcherTypes = {DispatcherType.REQUEST, DispatcherType.FORWARD}
 )
 public class FilterUser implements Filter {

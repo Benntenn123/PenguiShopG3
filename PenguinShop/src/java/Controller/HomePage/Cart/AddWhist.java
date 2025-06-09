@@ -4,6 +4,7 @@
  */
 package Controller.HomePage.Cart;
 
+import Models.Cart;
 import Models.CartSession;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -64,7 +65,9 @@ public class AddWhist extends HttpServlet {
             if ("add".equals(action)) {
                 int quantity = Integer.parseInt(request.getParameter("quantity"));
                 double totalAmount = Double.parseDouble(request.getParameter("total"));
-                selectedCartItems.put(cartID, new CartSession(cartID, quantity, totalAmount));
+                System.out.println("Quantity"+quantity);
+                System.out.println("TotalAmount"+totalAmount);
+                selectedCartItems.put(cartID, new CartSession(new Cart(cartID), quantity, totalAmount));
                 json.put("success", true);
                 json.put("message", "Đã thêm vào danh sách thanh toán!");
             } else if ("remove".equals(action)) {

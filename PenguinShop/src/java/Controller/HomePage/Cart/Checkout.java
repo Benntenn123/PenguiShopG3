@@ -5,6 +5,8 @@
 
 package Controller.HomePage.Cart;
 
+import DAL.CartDAO;
+import Models.CartSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -12,10 +14,12 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.List;
+import java.util.Map;
 
 @WebServlet(name="Checkout", urlPatterns={"/checkout"})
 public class Checkout extends HttpServlet {
-   
+    CartDAO cdao = new CartDAO();
    
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
@@ -37,6 +41,19 @@ public class Checkout extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
+        Map<Integer, CartSession> list = (Map<Integer, CartSession>) request.getSession().getAttribute("selectedCartItems");
+        Map<Integer, CartSession> cart = cdao.addInfoForCart(list);
+        for (Map.Entry<Integer, CartSession> entry : cart.entrySet()) {
+            System.out.println(entry.getKey());
+            System.out.println(entry.getValue().getCart().getVariant().getProduct().getProductName());
+            System.out.println(entry.getValue().getCart().getVariant().getProduct().getImageMainProduct());
+            System.out.println(entry.getValue().getCart().getVariant().getVariantID());
+            System.out.println(entry.getValue().getCart().getVariant().getColor().getColorName());
+            System.out.println(entry.getValue().getCart().getVariant().getSize().getSizeName());
+            System.out.println(entry.getValue().getQuantity());
+            System.out.println(entry.getValue().getTotalAmount());
+        }
+        request.setAttribute("selectedCartItems", cart);
         request.getRequestDispatcher("HomePage/Checkout.jsp").forward(request, response);
     } 
 

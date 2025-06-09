@@ -4,13 +4,18 @@
  */
 package Models;
 
-
 public class Cart {
+
     private int cartID;
     private User user;
     private ProductVariant variant;
     private int quantity;
     private Product product;
+
+    public Cart(int cartID, ProductVariant variant) {
+        this.cartID = cartID;
+        this.variant = variant;
+    }
 
     public Cart(int cartID, User user, ProductVariant variant, int quantity, Product product) {
         this.cartID = cartID;
@@ -18,6 +23,10 @@ public class Cart {
         this.variant = variant;
         this.quantity = quantity;
         this.product = product;
+    }
+
+    public Cart(int cartID) {
+        this.cartID = cartID;
     }
 
     public Cart(int cartID, ProductVariant variant, int quantity, Product product) {
@@ -33,7 +42,6 @@ public class Cart {
         this.quantity = quantity;
         this.product = product;
     }
-    
 
     public int getCartID() {
         return cartID;
@@ -74,5 +82,5 @@ public class Cart {
     public void setProduct(Product product) {
         this.product = product;
     }
-    
+
 }

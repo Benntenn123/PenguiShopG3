@@ -311,7 +311,7 @@
                                         <p>Giỏ hàng của bạn có <span class="inner-text" id="selected-count">0</span> sản phẩm được chọn</p>
                                     </div>
 
-                                    <form id="cart-form" action="processCart" method="post">
+<!--                                    <form id="cart-form" action="checkout" method="post">-->
                                         <div class="cart-section wishlist-section">
                                             <table>
                                                 <tbody>
@@ -434,11 +434,11 @@
                                                 <span>Tổng cộng:</span>
                                                 <span id="grand-total">$0.00</span>
                                             </div>
-                                            <button type="submit" class="checkout-btn" id="checkout-btn" disabled>
+                                            <button onclick="window.location.href = 'checkout'" class="checkout-btn" id="checkout-btn" disabled>
                                                 Thanh toán đơn hàng
                                             </button>
                                         </div>
-                                    </form>
+<!--                                    </form>-->
 
 
                                 </div>
@@ -512,7 +512,7 @@
                     const priceElement = row.find('.unit-price');
                     const price = parseFloat(priceElement.data('price')) || parsePriceFromText(priceElement.text());
                     const total = price * quantity;
-
+                    
                     // Validate quantity và total
                     if (quantity < 1 || isNaN(total)) {
                         toastr.error('Số lượng hoặc giá không hợp lệ!');

@@ -1,24 +1,26 @@
 package Models;
 
 public class CartSession {
-    private int cartID;
+    private Cart cart;
     private int quantity;
     private double totalAmount;
 
-    public CartSession(int cartID, int quantity, double totalAmount) {
-        this.cartID = cartID;
+    public CartSession(Cart cart, int quantity, double totalAmount) {
+        this.cart = cart;
         this.quantity = quantity;
         this.totalAmount = totalAmount;
     }
 
     // Getters và Setters
-    public int getCartID() {
-        return cartID;
+
+    public Cart getCart() {
+        return cart;
     }
 
-    public void setCartID(int cartID) {
-        this.cartID = cartID;
+    public void setCart(Cart cart) {
+        this.cart = cart;
     }
+    
 
     public int getQuantity() {
         return quantity;
