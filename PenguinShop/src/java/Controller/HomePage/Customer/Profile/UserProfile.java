@@ -124,15 +124,21 @@ public class UserProfile extends HttpServlet {
         return new User(user.getUserID(), fullName, address, birthday, phone, email, imageUser);
     }
 
+//    private boolean isImageFile(String fileName) {
+//        if (fileName == null) return false;
+//        String lowerCaseFileName = fileName.toLowerCase();
+//        return lowerCaseFileName.endsWith(".jpg") ||
+//               lowerCaseFileName.endsWith(".jpeg") ||
+//               lowerCaseFileName.endsWith(".png") ||
+//               lowerCaseFileName.endsWith(".gif") ||
+//               lowerCaseFileName.endsWith(".bmp") ||
+//               lowerCaseFileName.endsWith(".webp");
+//    }
     private boolean isImageFile(String fileName) {
         if (fileName == null) return false;
         String lowerCaseFileName = fileName.toLowerCase();
         return lowerCaseFileName.endsWith(".jpg") ||
-               lowerCaseFileName.endsWith(".jpeg") ||
-               lowerCaseFileName.endsWith(".png") ||
-               lowerCaseFileName.endsWith(".gif") ||
-               lowerCaseFileName.endsWith(".bmp") ||
-               lowerCaseFileName.endsWith(".webp");
+               lowerCaseFileName.endsWith(".png");
     }
 
     @Override
