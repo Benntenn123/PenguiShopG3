@@ -66,6 +66,7 @@ public class AddWhist extends HttpServlet {
                 int quantity = Integer.parseInt(request.getParameter("quantity"));
                 double totalAmount = Double.parseDouble(request.getParameter("total"));
                 System.out.println("Quantity"+quantity);
+                
                 System.out.println("TotalAmount"+totalAmount);
                 selectedCartItems.put(cartID, new CartSession(new Cart(cartID), quantity, totalAmount));
                 json.put("success", true);

@@ -4,6 +4,7 @@
  */
 package DAL;
 
+import Const.Delivery;
 import Models.DeliveryInfo;
 import Models.Size;
 import Models.User;
@@ -146,5 +147,31 @@ public class DeliveryDAO extends DBContext {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public List<DeliveryInfo> loadDefaultDelivery(int userID) {
+        List<DeliveryInfo> list = new ArrayList<>();
+        String sql = "SELECT * FROM dbo.tbDeliveryInfo \n"
+                + "WHERE userID = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, userID);
+            
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {                
+                DeliveryInfo di = new DeliveryInfo(rs.getInt("deliveryInfoID"),
+                        new User(rs.getInt("userID")),
+                        rs.getString("fullName"),
+                        rs.getString("phone"),
+                        rs.getString("addressDetail"),
+                        rs.getString("city"),
+                        rs.getInt("isDefault"));
+                list.add(di);
+                
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
     }
 }

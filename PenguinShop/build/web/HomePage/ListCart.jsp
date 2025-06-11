@@ -311,134 +311,138 @@
                                         <p>Giỏ hàng của bạn có <span class="inner-text" id="selected-count">0</span> sản phẩm được chọn</p>
                                     </div>
 
-<!--                                    <form id="cart-form" action="checkout" method="post">-->
-                                        <div class="cart-section wishlist-section">
-                                            <table>
-                                                <tbody>
-                                                    <tr class="table-row table-top-row">
+                                    <!--                                    <form id="cart-form" action="checkout" method="post">-->
+                                    <div class="cart-section wishlist-section">
+                                        <table>
+                                            <tbody>
+                                                <tr class="table-row table-top-row">
+                                                    <td class="table-wrapper wrapper-checkbox">
+                                                        <div class="table-wrapper-center">
+                                                            <input type="checkbox" id="select-all" class="product-checkbox">
+                                                        </div>
+                                                    </td>
+                                                    <td class="table-wrapper wrapper-product">
+                                                        <h5 class="table-heading">Sản Phẩm</h5>
+                                                    </td>
+                                                    <td class="table-wrapper wrapper-price">
+                                                        <div class="table-wrapper-center">
+                                                            <h5 class="table-heading">Giá</h5>
+                                                        </div>
+                                                    </td>
+                                                    <td class="table-wrapper wrapper-size">
+                                                        <div class="table-wrapper-center">
+                                                            <h5 class="table-heading">Loại</h5>
+                                                        </div>
+                                                    </td>
+                                                    <td class="table-wrapper wrapper-quantity">
+                                                        <div class="table-wrapper-center">
+                                                            <h5 class="table-heading">Số Lượng</h5>
+                                                        </div>
+                                                    </td>
+                                                    <td class="table-wrapper wrapper-total">
+                                                        <div class="table-wrapper-center">
+                                                            <h5 class="table-heading">Tổng</h5>
+                                                        </div>
+                                                    </td>
+                                                    <td class="table-wrapper wrapper-action">
+                                                        <div class="table-wrapper-center">
+                                                            <h5 class="table-heading">Hành Động</h5>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <c:forEach var="cart" items="${cart}">
+                                                    <!-- Product 1 -->
+                                                    <tr class="table-row ticket-row product-row" data-product-id="1" data-price="20.00">
                                                         <td class="table-wrapper wrapper-checkbox">
                                                             <div class="table-wrapper-center">
-                                                                <input type="checkbox" id="select-all" class="product-checkbox">
+                                                                <input type="checkbox" name="selectedProducts" value="${cart.cartID}" class="product-checkbox product-select">
+                                                                <input type="hidden" name="cart_${cart.cartID}_price" value="${cart.variant.price}" class="hidden-price">
+                                                                <input type="hidden" name="cart_${cart.cartID}_quantity" value="${cart.quantity}" class="hidden-quantity-input">
+                                                                <input type="hidden" name="cart_${cart.cartID}_total" value="${cart.variant.price * cart.quantity}" class="hidden-total">
                                                             </div>
                                                         </td>
                                                         <td class="table-wrapper wrapper-product">
-                                                            <h5 class="table-heading">Sản Phẩm</h5>
+                                                            <div class="wrapper">
+                                                                <div class="wrapper-img">
+                                                                    <img src="api/img/${cart.product.imageMainProduct}" alt="img">
+                                                                </div>
+                                                                <div class="wrapper-content">
+                                                                    <h5 style="width: 200px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;" class="heading">${cart.product.productName}</h5>
+                                                                    <p style="font-size: 12px; margin: 5px 0; font-weight: bold" 
+                                                                       class="${cart.variant.quantity > 0 ? 'in-stock' : 'out-of-stock'}">
+                                                                        <c:choose>
+                                                                            <c:when test="${cart.variant.quantity > 0}">
+                                                                                Còn hàng
+                                                                            </c:when>
+                                                                            <c:otherwise>
+                                                                                Hết hàng
+                                                                            </c:otherwise>
+                                                                        </c:choose>
+                                                                    </p>
+                                                                </div>
+                                                            </div>
                                                         </td>
                                                         <td class="table-wrapper wrapper-price">
                                                             <div class="table-wrapper-center">
-                                                                <h5 class="table-heading">Giá</h5>
+                                                                <h5 class="heading unit-price" data-price="${cart.variant.price}">${cart.variant.price} VND</h5>
                                                             </div>
                                                         </td>
                                                         <td class="table-wrapper wrapper-size">
                                                             <div class="table-wrapper-center">
-                                                                <h5 class="table-heading">Loại</h5>
+                                                                <button type="button" onclick="changeVariant()" style="padding: 10px; width: 80px;
+                                                                        font-size: 14px; border-radius: 6px; border: 1px solid #AE1C9A">${cart.variant.size.sizeName} - ${cart.variant.color.colorName}</button>
                                                             </div>
                                                         </td>
                                                         <td class="table-wrapper wrapper-quantity">
                                                             <div class="table-wrapper-center">
-                                                                <h5 class="table-heading">Số Lượng</h5>
+                                                                <div class="quantity-controls">
+                                                                    <input type="hidden" class="hidden-quantity" name="hidden_quantity_${cart.cartID}" value="${cart.quantity}">
+                                                                    <button type="button" class="quantity-btn minus-btn">-</button>
+                                                                    <input type="number" name="quantity_${cart.cartID}" value="${cart.quantity}" min="1" max="${cart.variant.quantity}" class="quantity-input">
+                                                                    <button type="button" class="quantity-btn plus-btn">+</button>
+                                                                </div>
                                                             </div>
                                                         </td>
                                                         <td class="table-wrapper wrapper-total">
                                                             <div class="table-wrapper-center">
-                                                                <h5 class="table-heading">Tổng</h5>
+                                                                <h5 class="heading total-price">${cart.variant.price * cart.quantity} VND</h5>
                                                             </div>
                                                         </td>
                                                         <td class="table-wrapper wrapper-action">
                                                             <div class="table-wrapper-center">
-                                                                <h5 class="table-heading">Hành Động</h5>
+                                                                <span class="remove-btn" style="cursor: pointer;" data-cart-id="${cart.cartID}">
+                                                                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                    <path d="M9.7 0.3C9.3 -0.1 8.7 -0.1 8.3 0.3L5 3.6L1.7 0.3C1.3 -0.1 0.7 -0.1 0.3 0.3C-0.1 0.7 -0.1 1.3 0.3 1.7L3.6 5L0.3 8.3C-0.1 8.7 -0.1 9.3 0.3 9.7C0.7 10.1 1.3 10.1 1.7 9.7L5 6.4L8.3 9.7C8.7 10.1 9.3 10.1 9.7 9.7C10.1 9.3 10.1 8.7 9.7 8.3L6.4 5L9.7 1.7C10.1 1.3 10.1 0.7 9.7 0.3Z" fill="#AAAAAA"></path>
+                                                                    </svg>
+                                                                </span>
                                                             </div>
                                                         </td>
-                                                    </tr>
-                                                    <c:forEach var="cart" items="${cart}">
-                                                        <!-- Product 1 -->
-                                                        <tr class="table-row ticket-row product-row" data-product-id="1" data-price="20.00">
-                                                            <td class="table-wrapper wrapper-checkbox">
-                                                                <div class="table-wrapper-center">
-                                                                    <input type="checkbox" name="selectedProducts" value="${cart.cartID}" class="product-checkbox product-select">
-                                                                </div>
-                                                            </td>
-                                                            <td class="table-wrapper wrapper-product">
-                                                                <div class="wrapper">
-                                                                    <div class="wrapper-img">
-                                                                        <img src="api/img/${cart.product.imageMainProduct}" alt="img">
-                                                                    </div>
-                                                                    <div class="wrapper-content">
-                                                                        <h5 style="width: 200px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;" class="heading">${cart.product.productName}</h5>
-                                                                        <p style="font-size: 12px; margin: 5px 0; font-weight: bold" 
-                                                                           class="${cart.variant.quantity > 0 ? 'in-stock' : 'out-of-stock'}">
-                                                                            <c:choose>
-                                                                                <c:when test="${cart.variant.quantity > 0}">
-                                                                                    Còn hàng
-                                                                                </c:when>
-                                                                                <c:otherwise>
-                                                                                    Hết hàng
-                                                                                </c:otherwise>
-                                                                            </c:choose>
-                                                                        </p>
-                                                                    </div>
-                                                                </div>
-                                                            </td>
-                                                            <td class="table-wrapper wrapper-price">
-                                                                <div class="table-wrapper-center">
-                                                                    <h5 class="heading unit-price" data-price="${cart.variant.price}">${cart.variant.price} VND</h5>
-                                                                </div>
-                                                            </td>
-                                                            <td class="table-wrapper wrapper-size">
-                                                                <div class="table-wrapper-center">
-                                                                    <button type="button" onclick="changeVariant()" style="padding: 10px; width: 80px;
-                                                                            font-size: 14px; border-radius: 6px; border: 1px solid #AE1C9A">${cart.variant.size.sizeName} - ${cart.variant.color.colorName}</button>
-                                                                </div>
-                                                            </td>
-                                                            <td class="table-wrapper wrapper-quantity">
-                                                                <div class="table-wrapper-center">
-                                                                    <div class="quantity-controls">
-                                                                        <button type="button" class="quantity-btn minus-btn">-</button>
-                                                                        <input type="number" name="quantity_${cart.cartID}" value="${cart.quantity}" min="1" max="${cart.variant.quantity}" class="quantity-input">
-                                                                        <button type="button" class="quantity-btn plus-btn">+</button>
-                                                                    </div>
-                                                                </div>
-                                                            </td>
-                                                            <td class="table-wrapper wrapper-total">
-                                                                <div class="table-wrapper-center">
-                                                                    <h5 class="heading total-price">${cart.variant.price * cart.quantity} VND</h5>
-                                                                </div>
-                                                            </td>
-                                                            <td class="table-wrapper wrapper-action">
-                                                                <div class="table-wrapper-center">
-                                                                    <span class="remove-btn" style="cursor: pointer;" data-cart-id="${cart.cartID}">
-                                                                        <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                        <path d="M9.7 0.3C9.3 -0.1 8.7 -0.1 8.3 0.3L5 3.6L1.7 0.3C1.3 -0.1 0.7 -0.1 0.3 0.3C-0.1 0.7 -0.1 1.3 0.3 1.7L3.6 5L0.3 8.3C-0.1 8.7 -0.1 9.3 0.3 9.7C0.7 10.1 1.3 10.1 1.7 9.7L5 6.4L8.3 9.7C8.7 10.1 9.3 10.1 9.7 9.7C10.1 9.3 10.1 8.7 9.7 8.3L6.4 5L9.7 1.7C10.1 1.3 10.1 0.7 9.7 0.3Z" fill="#AAAAAA"></path>
-                                                                        </svg>
-                                                                    </span>
-                                                                </div>
-                                                            </td>
-                                                        </tr> 
-                                                    </c:forEach>
-                                                </tbody>
-                                            </table>
-                                        </div>
+                                                    </tr> 
+                                                </c:forEach>
+                                            </tbody>
+                                        </table>
+                                    </div>
 
-                                        <!-- Cart Summary -->
-                                        <div class="cart-summary">
-                                            <h4>Tóm tắt đơn hàng</h4>
-                                            <div class="summary-row">
-                                                <span>Số sản phẩm đã chọn:</span>
-                                                <span id="summary-count">0</span>
-                                            </div>
-                                            <div class="summary-row">
-                                                <span>Tổng số lượng:</span>
-                                                <span id="summary-quantity">0</span>
-                                            </div>
-                                            <div class="summary-row grand-total">
-                                                <span>Tổng cộng:</span>
-                                                <span id="grand-total">$0.00</span>
-                                            </div>
-                                            <button onclick="window.location.href = 'checkout'" class="checkout-btn" id="checkout-btn" disabled>
-                                                Thanh toán đơn hàng
-                                            </button>
+                                    <!-- Cart Summary -->
+                                    <div class="cart-summary">
+                                        <h4>Tóm tắt đơn hàng</h4>
+                                        <div class="summary-row">
+                                            <span>Số sản phẩm đã chọn:</span>
+                                            <span id="summary-count">0</span>
                                         </div>
-<!--                                    </form>-->
+                                        <div class="summary-row">
+                                            <span>Tổng số lượng:</span>
+                                            <span id="summary-quantity">0</span>
+                                        </div>
+                                        <div class="summary-row grand-total">
+                                            <span>Tổng cộng:</span>
+                                            <span id="grand-total">$0.00</span>
+                                        </div>
+                                        <button onclick="window.location.href = 'checkout'" class="checkout-btn" id="checkout-btn" disabled>
+                                            Thanh toán đơn hàng
+                                        </button>
+                                    </div>
+                                    <!--                                    </form>-->
 
 
                                 </div>
@@ -469,17 +473,7 @@
                     return Math.round(price).toLocaleString('vi-VN') + ' VND';
                 }
 
-                // Update individual product total when quantity changes
-                function updateProductTotal(row) {
-                    const priceElement = row.find('.unit-price');
-                    const price = parseFloat(priceElement.data('price')) || parsePriceFromText(priceElement.text());
-                    const quantity = parseInt(row.find('.quantity-input').val()) || 1;
-                    const total = price * quantity;
-                    row.find('.total-price').text(formatPrice(total));
-                    updateCartSummary();
-                }
-
-                // Update cart summary
+                // Update cart summary - ĐẶT TRƯỚC để các function khác có thể gọi
                 function updateCartSummary() {
                     let selectedCount = 0;
                     let totalQuantity = 0;
@@ -505,68 +499,119 @@
                     $('#checkout-btn').prop('disabled', selectedCount === 0);
                 }
 
-                // Function to send wishlist update to backend
-                function updateWishlist(cartId, isSelected) {
-                    const row = $(`input[value="${cartId}"]`).closest('.product-row');
+                // Function to update hidden inputs
+                function updateHiddenInputs(row) {
+                    const cartId = row.find('.product-select').val();
                     const quantity = parseInt(row.find('.quantity-input').val()) || 1;
                     const priceElement = row.find('.unit-price');
                     const price = parseFloat(priceElement.data('price')) || parsePriceFromText(priceElement.text());
                     const total = price * quantity;
-                    
-                    // Validate quantity và total
-                    if (quantity < 1 || isNaN(total)) {
-                        toastr.error('Số lượng hoặc giá không hợp lệ!');
-                        $(`input[value="${cartId}"]`).prop('checked', !isSelected); // Revert checkbox
-                        updateCartSummary();
+
+                    // Validate quantity and total
+                    if (isNaN(quantity) || quantity < 1 || isNaN(total)) {
+                        console.error('Invalid quantity or total:', {quantity, total});
+                        return false;
+                    }
+
+                    // Update hidden inputs
+                    row.find(`input[name="cart_${cartId}_quantity"]`).val(quantity);
+                    row.find(`input[name="cart_${cartId}_total"]`).val(total);
+                    row.find(`input[name="hidden_quantity_${cartId}"]`).val(quantity); // Update the hidden quantity field
+
+                    console.log('Updated hidden inputs:', {cartId, quantity, total});
+                    return true;
+                }
+
+                // Update individual product total when quantity changes
+                function updateProductTotal(row) {
+                    const priceElement = row.find('.unit-price');
+                    const price = parseFloat(priceElement.data('price')) || parsePriceFromText(priceElement.text());
+                    const quantity = parseInt(row.find('.quantity-input').val()) || 1;
+                    const total = price * quantity;
+
+                    if (isNaN(total)) {
+                        console.error('Invalid total calculation:', {price, quantity});
                         return;
                     }
 
-                    $.ajax({
-                        url: 'addWhist',
-                        type: 'POST',
-                        data: {
-                            cartId: cartId,
-                            quantity: quantity,
-                            total: total,
-                            action: isSelected ? 'add' : 'remove'
-                        },
-                        beforeSend: function () {
-                            $('body').addClass('loading');
-                        },
-                        success: function (response) {
-                            try {
-                                const data = typeof response === 'string' ? JSON.parse(response) : response;
-                                if (data.success) {
-                                    toastr.success(data.message || 'Cập nhật danh sách thanh toán thành công!');
-                                } else {
-                                    toastr.error(data.message || 'Cập nhật danh sách thanh toán thất bại!');
-                                    // Revert checkbox state on error
-                                    const checkbox = $(`input[value="${cartId}"]`);
-                                    checkbox.prop('checked', !isSelected);
-                                    updateCartSummary();
-                                }
-                            } catch (e) {
-                                console.error('Error parsing response:', e);
-                                toastr.error('Lỗi xử lý phản hồi từ server!');
-                                // Revert checkbox state
-                                const checkbox = $(`input[value="${cartId}"]`);
-                                checkbox.prop('checked', !isSelected);
-                                updateCartSummary();
-                            }
-                        },
-                        error: function (xhr, status, error) {
-                            console.error('AJAX error:', status, error);
-                            toastr.error('Có lỗi xảy ra, vui lòng thử lại!');
-                            // Revert checkbox state
-                            const checkbox = $(`input[value="${cartId}"]`);
-                            checkbox.prop('checked', !isSelected);
-                            updateCartSummary();
-                        },
-                        complete: function () {
-                            $('body').removeClass('loading');
-                        }
-                    });
+                    row.find('.total-price').text(formatPrice(total));
+                    updateHiddenInputs(row); // Cập nhật hidden inputs
+                    updateCartSummary();
                 }
+
+                // Function to send wishlist update to backend
+                function updateWishlist(cartId, isSelected, row) {
+    if (!row || row.length === 0) {
+        toastr.error('Không tìm thấy sản phẩm tương ứng!');
+        return;
+    }
+
+    const checkbox = row.find(`.product-select[value="${cartId}"]`);
+    const quantityInput = row.find('.quantity-input');
+    const priceElement = row.find('.unit-price');
+
+    const quantity = parseInt(quantityInput.val()) || 1;
+    const price = parseFloat(priceElement.data('price')) || parsePriceFromText(priceElement.text());
+    const total = price * quantity;
+
+    // Nếu dữ liệu không hợp lệ
+    if (isNaN(quantity) || isNaN(price) || quantity <= 0 || price <= 0) {
+        toastr.error('Số lượng hoặc giá không hợp lệ!');
+        checkbox.prop('checked', !isSelected);
+        updateCartSummary();
+        return;
+    }
+
+    // Cập nhật các hidden input
+    row.find(`input[name="cart_${cartId}_quantity"]`).val(quantity);
+    row.find(`input[name="cart_${cartId}_total"]`).val(total);
+    row.find(`input[name="hidden_quantity_${cartId}"]`).val(quantity);
+
+    console.log('Sending data:', { cartId, quantity, total, price, action: isSelected ? 'add' : 'remove' });
+    console.log('Row HTML:', row.html());
+
+    $.ajax({
+        url: 'addWhist',
+        type: 'POST',
+        data: {
+            cartId,
+            quantity,
+            total,
+            price,
+            action: isSelected ? 'add' : 'remove'
+        },
+        beforeSend: function () {
+            $('body').addClass('loading');
+        },
+        success: function (response) {
+            try {
+                const data = typeof response === 'string' ? JSON.parse(response) : response;
+                if (data.success) {
+                    toastr.success(data.message || 'Cập nhật danh sách thanh toán thành công!');
+                } else {
+                    toastr.error(data.message || 'Cập nhật thất bại!');
+                    checkbox.prop('checked', !isSelected);
+                }
+            } catch (e) {
+                console.error('Error parsing response:', e);
+                toastr.error('Lỗi xử lý phản hồi từ server!');
+                checkbox.prop('checked', !isSelected);
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error('AJAX error:', status, error);
+            toastr.error('Có lỗi xảy ra, vui lòng thử lại!');
+            checkbox.prop('checked', !isSelected);
+        },
+        complete: function () {
+            updateCartSummary();
+            $('body').removeClass('loading');
+        }
+    });
+}
+
+
+
 
                 // Quantity button handlers
                 $('.plus-btn').click(function () {
@@ -607,17 +652,20 @@
                 });
 
                 // Product selection handler - with backend integration
-                $('.product-select').change(function () {
+                $(document).on('change', '.product-select', function () {
                     const cartId = $(this).val();
                     const isSelected = $(this).is(':checked');
 
-                    // Update UI immediately
+                    const row = $(this).closest('tr');
+                    console.log('Cart ID:', cartId);
+                    console.log('Row HTML:', row.html());
+
+                    // Cập nhật UI
                     updateCartSummary();
 
-                    // Send request to backend
-                    updateWishlist(cartId, isSelected);
+                    // Gửi dữ liệu lên server
+                    updateWishlist(cartId, isSelected, row);
                 });
-
                 // Select all handler
                 $('#select-all').change(function () {
                     const isChecked = $(this).is(':checked');
@@ -657,11 +705,10 @@
                                     const data = typeof response === 'string' ? JSON.parse(response) : response;
 
                                     if (data.status === 'success') {
-                                        row.remove(); // Xóa hàng chỉ khi thành công
-                                        updateCartSummary(); // Cập nhật giỏ hàng
+                                        row.remove();
+                                        updateCartSummary();
                                         toastr.success(data.message || 'Xóa sản phẩm thành công!', 'Thành công');
                                     } else {
-                                        // Xử lý các trạng thái lỗi từ backend
                                         toastr.error(data.message || 'Không thể xóa sản phẩm. Vui lòng thử lại.', 'Lỗi');
                                     }
                                 } catch (e) {
@@ -706,7 +753,7 @@
                 updateCartSummary();
             });
 
-            // Function for variant change (placeholder)
+// Function for variant change (placeholder)
             function changeVariant() {
                 // This function should handle variant changes
                 console.log('Change variant functionality to be implemented');

@@ -3,16 +3,13 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Models/CartSession.java</file>
             <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/DAL/CartDAO.java</file>
-            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Models/ProductVariant.java</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Controller/HomePage/Cart/Checkout.java</file>
             <file>file:/F:/Git/PenguiShopG3/PenguinShop/web/HomePage/Checkout.jsp</file>
-            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Const/Shop.java</file>
             <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Controller/HomePage/Cart/CalculateShippingFee.java</file>
-            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Models/Cart.java</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/DAL/DeliveryDAO.java</file>
             <file>file:/F:/Git/PenguiShopG3/PenguinShop/web/HomePage/ListCart.jsp</file>
-            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Filter/FilterUser.java</file>
-            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Controller/HomePage/Cart/AddWhist.java</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Models/DeliveryInfo.java</file>
         </group>
     </open-files>
 </project-private>
