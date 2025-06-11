@@ -1,4 +1,5 @@
 package Utils;
+
 import Utils.StringConvert;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -9,19 +10,20 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class DistanceCalculator {
+
     private static final double EARTH_RADIUS = 6371; // km
     private static final String NOMINATIM_URL = "https://nominatim.openstreetmap.org/search";
 
     // Lấy tọa độ từ địa chỉ (Nominatim)
     public static double[] getCoordinates(String address) throws Exception {
         String standardizedAddress = StringConvert.standardizeAddress(address);
-        String urlString = NOMINATIM_URL + "?q=" + URLEncoder.encode(standardizedAddress, "UTF-8") +
-                "&format=json&limit=1";
+        String urlString = NOMINATIM_URL + "?q=" + URLEncoder.encode(standardizedAddress, "UTF-8")
+                + "&format=json&limit=1";
 
         URL url = new URL(urlString);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("GET");
-        conn.setRequestProperty("User-Agent", "PenguinShop/1.0 (your.email@example.com)"); // Nominatim yêu cầu User-Agent
+        conn.setRequestProperty("User-Agent", "PenguinShop/1.0 (peguing6@gmail.com)");
 
         BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
         StringBuilder response = new StringBuilder();
@@ -30,6 +32,8 @@ public class DistanceCalculator {
             response.append(line);
         }
         in.close();
+
+        System.out.println("Response from Nominatim: " + response.toString()); // Log phản hồi
 
         JSONArray json = new JSONArray(response.toString());
         if (json.length() == 0) {
@@ -51,9 +55,9 @@ public class DistanceCalculator {
 
         double dLat = lat2 - lat1;
         double dLon = lon2 - lon1;
-        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                   Math.cos(lat1) * Math.cos(lat2) *
-                   Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
+                + Math.cos(lat1) * Math.cos(lat2)
+                * Math.sin(dLon / 2) * Math.sin(dLon / 2);
         double c = 2 * Math.asin(Math.sqrt(a));
         return EARTH_RADIUS * c;
     }
@@ -64,10 +68,24 @@ public class DistanceCalculator {
         double[] destCoords = getCoordinates(destination);
         return calculateDistance(originCoords[0], originCoords[1], destCoords[0], destCoords[1]);
     }
+
     // Hàm tính phí Ship
     public static double calculateShippingFee(double distance) {
-        if (distance < 15) return 20000; // Nội thành
-        if (distance < 50) return 40000; // Ngoại thành
+        if (distance < 15) {
+            return 20000; // Nội thành
+        }
+        if (distance < 50) {
+            return 40000; // Ngoại thành
+        }
         return 80000; // Liên tỉnh
+    }
+     public static String calculateDeliveryTime(double distance) {  
+        if (distance < 15) {
+            return "Thời gian nhận hàng: 1-2 ngày";
+        } else if (distance < 50) {
+            return "Thời gian nhận hàng: 2-3 ngày";
+        } else {
+            return "Thời gian nhận hàng: 3-5 ngày hoặc hơn";
+        }
     }
 }

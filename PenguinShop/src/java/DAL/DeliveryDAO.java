@@ -174,4 +174,21 @@ public class DeliveryDAO extends DBContext {
         }
         return list;
     }
+    
+    public String getDeliyFromID(int addressID){
+        String sql = "SELECT addressDetail FROM dbo.tbDeliveryInfo WHERE deliveryInfoID = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, addressID);
+            
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {                
+                return rs.getString(1);
+                
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

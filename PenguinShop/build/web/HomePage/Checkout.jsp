@@ -450,11 +450,11 @@
                     <svg class="icon" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4zM6 18.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm13.5-9l1.96 2.5H17V9.5h2.5zm-1.5 9c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/>
                     </svg>
-                    <h2>Phương thức vận chuyển</h2>
+                    <h2 style="font-size: 18px">Phương thức vận chuyển</h2>
                 </div>
                 <div class="shipping-option">
                     <div>
-                        <div style="font-weight: 500;">Giao hàng tiêu chuẩn</div>
+                        <div style="font-size: 16px;font-weight: 500;">Giao hàng tiêu chuẩn</div>
                         <div style="font-size: 14px; color: #666;">Nhận hàng vào 12 - 15 Th6</div>
                     </div>
                     <div class="shipping-price">₫30,000</div>
@@ -554,7 +554,9 @@
             <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
             </svg>
         </button>
-
+        <jsp:include page="Common/Footer.jsp"/>
+        <jsp:include page="Common/Js.jsp"/>
+        <jsp:include page="Common/Message.jsp"/>
 
         <script>
             // Parse the deli JSON string with proper unescaping
@@ -582,11 +584,6 @@
                 }
             }
             function selectAddress(addressId) {
-    // Cập nhật địa chỉ mặc định trong giao diện
-    updateDefaultAddress(addressId);
-}
-
-function updateDefaultAddress(addressId) {
     // Tìm địa chỉ đã chọn
     const selectedAddress = addresses.find(addr => addr.deliveryInfoID == addressId);
     if (!selectedAddress) {
@@ -616,29 +613,26 @@ function updateDefaultAddress(addressId) {
         addressCard.innerHTML = htmlContent;
 
         // Gọi AJAX để tính tiền ship
-        calculateShipping(addressId);
+        $.ajax({
+    url: 'calculateShippingFee',
+    method: 'POST',
+    data: { addressId: addressId },
+    success: function(response) {
+        console.log('Shipping cost response:', response);
+        if (response && response.shippingCost) {
+            console.log('Shipping cost:', response.shippingCost);
+            hideAddressModal(); // Ẩn modal sau khi tính xong
+            // Cập nhật giao diện để hiển thị giá tiền ship nếu cần
+        } else {
+            console.error('Shipping cost not found in response:', response);
+        }
+    },
+    error: function(error) {
+        console.error('Error calculating shipping:', error);
+    }
+});
     }
 }
-
-function calculateShipping(addressId) {
-    // Gửi AJAX để tính tiền ship
-    $.ajax({
-        url: 'calculateShippingFee',
-        method: 'POST',
-        data: { addressId: addressId },
-        success: function(response) {
-            // Xử lý phản hồi từ server
-            console.log('Shipping cost:', response.shippingCost);
-            hideAddressModal();
-            // Có thể cập nhật giao diện để hiển thị giá tiền ship
-        },
-        error: function(error) {
-            console.error('Error calculating shipping:', error);
-        }
-    });
-    
-}
-
             // Function to display the default address
             function displayDefaultAddress() {
                 const addressCard = document.getElementById('default-address');

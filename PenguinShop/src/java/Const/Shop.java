@@ -5,7 +5,7 @@
 package Const;
 
 public class Shop {
-    public static final String SHOP_ADDRESS = "FPT University, Hoa Lac Hi-Tech Park, Thach That, Hanoi, Vietnam";
+    public static final String SHOP_ADDRESS = "FPT University Ha Noi";
     public static final String SHOP_CONTACT = "peguing6@gmail.com";
     
         

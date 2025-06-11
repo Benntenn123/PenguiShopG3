@@ -6,6 +6,7 @@
 package Controller.HomePage.Cart;
 
 import Const.Shop;
+import DAL.DeliveryDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -18,6 +19,7 @@ import Utils.DistanceCalculator;
 
 @WebServlet(name="CalculateShippingFee", urlPatterns={"/calculateShippingFee"})
 public class CalculateShippingFee extends HttpServlet {
+    DeliveryDAO dao = new DeliveryDAO();
   
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
@@ -53,19 +55,22 @@ public class CalculateShippingFee extends HttpServlet {
         JSONObject json = new JSONObject();
 
         try {
-            String customerAddress = request.getParameter("address");
+            String customerAddress = request.getParameter("addressId");
+            int addID = Integer.parseInt(customerAddress);
+            System.out.println(customerAddress);
             if (customerAddress == null || customerAddress.trim().isEmpty()) {
                 throw new Exception("Địa chỉ không hợp lệ!");
             }
 
-            double distance = DistanceCalculator.getDistance(Shop.SHOP_ADDRESS, customerAddress);
+            double distance = DistanceCalculator.getDistance(Shop.SHOP_ADDRESS,dao.getDeliyFromID(addID));
             double shippingFee = DistanceCalculator.calculateShippingFee(distance);
-
+            String timeDeli = DistanceCalculator.calculateDeliveryTime(distance);
             // Lưu phí ship vào session
             request.getSession().setAttribute("shippingFee", shippingFee);
 
             json.put("success", true);
             json.put("shippingFee", shippingFee);
+            json.put("time", timeDeli);
             json.put("message", "Tính phí ship thành công!");
         } catch (Exception e) {
             e.printStackTrace();
