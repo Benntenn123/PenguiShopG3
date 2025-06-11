@@ -57,6 +57,7 @@ public class Login extends HttpServlet {
             if (user.getStatus_account() == Account.BAN_ACCOUNT) {
                 request.getSession().setAttribute("error", "Bạn đã bị BAN vui lòng liên hệ admin để được hỗ trợ");
                 response.sendRedirect("trangchu");
+                return;
             }
 
             if ("on".equals(rememberMe)) {
