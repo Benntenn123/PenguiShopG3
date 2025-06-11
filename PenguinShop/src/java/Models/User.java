@@ -26,6 +26,19 @@ import java.util.Date;
         this.image_user = image_user;
         this.role = role;
     }
+
+    public User(int userID, String fullName, int roleID, String address, Date birthday, String phone, String email, String image_user, int status_account, String created_at) {
+        this.userID = userID;
+        this.fullName = fullName;
+        this.roleID = roleID;
+        this.address = address;
+        this.birthday = birthday;
+        this.phone = phone;
+        this.email = email;
+        this.image_user = image_user;
+        this.status_account = status_account;
+        this.created_at = created_at;
+    }
     
 
     public User(int userID, String fullName, String password, int roleID, String address, Date birthday, String phone, String email, String image_user) {

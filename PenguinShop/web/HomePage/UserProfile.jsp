@@ -68,7 +68,11 @@
                                                             <input type="date" id="birthday" class="form-control"
                                                                    placeholder="Ngày sinh" name="birthday" value="${user.birthday}">
                                                         </div>
-
+                                                        <div class="review-form-name address-form">
+                                                            <label for="addres" class="form-label">Ngày tham gia</label>
+                                                            <input type="text" id="addres" class="form-control"
+                                                                   placeholder="Địa chỉ" readonly="" name="addres" value="${user.created_at}">
+                                                        </div>
                                                         <div class="submit-btn">
                                                             <a href="userprofile" class="shop-btn cancel-btn">Hủy bỏ</a>
                                                             <button type="submit" class="shop-btn update-btn">Thay đổi thông tin</button>
@@ -81,7 +85,7 @@
                                                 <div class="img-upload-section">
                                                     <div class="logo-wrapper">
                                                         <h5 class="comment-title">Ảnh đại diện</h5>
-                                                        <p class="paragraph">Định dạng jpg,webp,png,jpeg. Kích cỡ tối đa 5mb
+                                                        <p class="paragraph">Định dạng jpg,png. Kích cỡ tối đa 5mb
                                                         </p>
                                                         <div class="logo-upload">
                                                             <img src="api/img/${user.image_user}" alt="upload"
@@ -102,7 +106,7 @@
                                                                 </label>
                                                                 <input type="hidden" name="imageOld" value="${user.image_user}">
                                                                 <input type="file"
-                                                                       accept="image/jpeg, image/jpg, image/png, image/webp"
+                                                                       accept="image/jpg, image/png"
                                                                        id="input-file" name="input-file">
                                                             </div>
                                                         </div>

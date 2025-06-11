@@ -1,6 +1,7 @@
 package Controller.HomePage.Customer.Auth;
 
 import APIKey.Google;
+import Const.Account;
 import DAL.UserDAO;
 import Models.GoogleAccount;
 import Models.User;
@@ -65,8 +66,26 @@ public class LoginGoogle extends HttpServlet {
 
             } else {
                 User user = udao.loadUserInfoByEmail(gg.getEmail());
-                request.getSession().setAttribute("user", user);
+                if (user == null) {
+                    error = "Không tìm thấy thông tin người dùng!";
+                    session.setAttribute("error", error);
+                    response.sendRedirect("trangchu");
+                    return;
+                }
+
+                // Kiểm tra trạng thái tài khoản
+                if (user.getStatus_account() == Account.BAN_ACCOUNT) {
+                    LOGGER.info("Tài khoản {} bị BAN khi đăng nhập bằng Google", gg.getEmail());
+                    error = "Tài khoản của bạn đã bị khóa. Vui lòng liên hệ quản trị viên để được hỗ trợ.";
+                    session.setAttribute("error", error);
+                    response.sendRedirect("trangchu");
+                    return;
+                }
+
+                // Tài khoản hợp lệ, cho phép đăng nhập
+                session.setAttribute("user", user);
                 ms = "Đăng nhập thành công!";
+
             }
 
         } catch (ClientProtocolException e) {

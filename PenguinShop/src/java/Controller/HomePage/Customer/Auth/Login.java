@@ -4,6 +4,7 @@
  */
 package Controller.HomePage.Customer.Auth;
 
+import Const.Account;
 import Utils.HashPassword;
 import DAL.UserDAO;
 import Models.User;
@@ -18,21 +19,21 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import java.util.UUID;
 
-@WebServlet(name="Login", urlPatterns={"/login"})
+@WebServlet(name = "Login", urlPatterns = {"/login"})
 public class Login extends HttpServlet {
 
     private static final Logger LOGGER = LogManager.getLogger(Login.class);
 
-    @Override 
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         LOGGER.info("Accessing login page");
         request.getRequestDispatcher("HomePage/Login.jsp").forward(request, response);
-    } 
+    }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         LOGGER.info("Processing POST request for /login");
 
         String email = request.getParameter("email");
@@ -53,9 +54,13 @@ public class Login extends HttpServlet {
         if (isAuthenticated) {
             User user = userDAO.loadUserInfoByEmail(email);
             request.getSession().setAttribute("user", user);
+            if (user.getStatus_account() == Account.BAN_ACCOUNT) {
+                request.getSession().setAttribute("error", "Bạn đã bị BAN vui lòng liên hệ admin để được hỗ trợ");
+                response.sendRedirect("trangchu");
+            }
 
             if ("on".equals(rememberMe)) {
-                
+
                 jakarta.servlet.http.Cookie emailCookie = new jakarta.servlet.http.Cookie("userEmail", URLEncoder.encode(email, "UTF-8"));
                 jakarta.servlet.http.Cookie rememberMeCookie = new jakarta.servlet.http.Cookie("userPassword", URLEncoder.encode(password, "UTF-8"));
 
@@ -63,7 +68,7 @@ public class Login extends HttpServlet {
                 emailCookie.setPath("/");
                 emailCookie.setHttpOnly(true);
                 emailCookie.setSecure(request.isSecure());
-                
+
                 rememberMeCookie.setMaxAge(60 * 60 * 24 * 7);
                 rememberMeCookie.setPath("/");
                 rememberMeCookie.setHttpOnly(true);
@@ -71,7 +76,7 @@ public class Login extends HttpServlet {
 
                 response.addCookie(emailCookie);
                 response.addCookie(rememberMeCookie);
-                
+
             }
 
             LOGGER.info("User {} logged in successfully", email);
