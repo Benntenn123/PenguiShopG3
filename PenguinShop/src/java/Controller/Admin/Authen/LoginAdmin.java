@@ -57,6 +57,10 @@ public class LoginAdmin extends HttpServlet {
                 request.getSession().setAttribute("ms", "Login thành công!");
                 response.sendRedirect("dashboard");
             }
+            else{
+                request.getSession().setAttribute("error", "Đăng nhập thất bại!");
+                response.sendRedirect("loginAdmin");
+            }
         }
         
     }
