@@ -12,6 +12,7 @@ import Models.Order;
 import Models.Role;
 import Utils.HashPassword;
 import Models.User;
+import Utils.GetDateTime;
 import Utils.StringConvert;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -356,9 +357,9 @@ public class UserDAO extends DBContext {
 
     public boolean isertAccountGoogle(GoogleAccount gg) {
         String sql = "INSERT INTO dbo.tbUsers\n"
-                + "(fullName,password,roleID,email,image_user,status_account,google_id)\n"
+                + "(fullName,password,roleID,email,image_user,status_account,google_id,created_at)\n"
                 + "VALUES\n"
-                + "(?, ?, ?, ?, ?, ?, ?)";
+                + "(?, ?, ?, ?, ?, ?, ?,?)";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, gg.getName());
@@ -368,6 +369,7 @@ public class UserDAO extends DBContext {
             ps.setString(5, Account.AVATAR_DEFAULT_USER);
             ps.setInt(6, Account.ACTIVE_ACCOUNT);
             ps.setString(7, gg.getId());
+            ps.setString(8, GetDateTime.getCurrentTime());
             System.out.println(sql);
             int row = ps.executeUpdate();
             if (row > 0) {
