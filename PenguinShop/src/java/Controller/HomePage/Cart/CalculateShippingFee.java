@@ -71,7 +71,7 @@ public class CalculateShippingFee extends HttpServlet {
             json.put("success", true);
             json.put("shippingFee", shippingFee);
             json.put("time", timeDeli);
-            json.put("message", "Tính phí ship thành công!");
+            json.put("message", "Thay đổi địa chỉ thành công!");
         } catch (Exception e) {
             e.printStackTrace();
             json.put("success", false);

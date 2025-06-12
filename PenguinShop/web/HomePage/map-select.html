@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bản đồ Chính Xác - Mapbox + OpenStreetMap</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.2em;
+            font-weight: 300;
+        }
+        .api-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .api-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px;
+            border: 2px solid #e1e8ed;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .api-option:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+        .api-option.selected {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+        .search-panel {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        #addressInput {
+            padding: 15px 20px;
+            border: 2px solid #e1e8ed;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+        #addressInput:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        #searchBtn {
+            padding: 15px 30px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+        #searchBtn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+        #searchBtn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        #map {
+            width: 100%;
+            height: 600px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            margin-bottom: 25px;
+        }
+        .info-panel {
+            padding: 25px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .coordinates {
+            color: #666;
+            font-family: 'Courier New', monospace;
+            background: #f8f9fa;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+        .accuracy-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .high-accuracy { background: #d4edda; color: #155724; }
+        .medium-accuracy { background: #fff3cd; color: #856404; }
+        .low-accuracy { background: #f8d7da; color: #721c24; }
+        .status-message {
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            font-weight: 500;
+        }
+        .error { color: #e74c3c; background: #fadbd8; border: 1px solid #f1948a; }
+        .success { color: #27ae60; background: #d5f4e6; border: 1px solid #82e3aa; }
+        .info { color: #3498db; background: #d6eaf8; border: 1px solid #85c1e9; }
+        @media (max-width: 768px) {
+            .search-panel { grid-template-columns: 1fr; }
+            .api-selector { grid-template-columns: 1fr; }
+            #map { height: 400px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🗺️ Bản đồ Chính Xác - Không cần thẻ tín dụng</h1>
+        
+        <div class="api-selector">
+            <div class="api-option selected" data-api="nominatim">
+                <input type="radio" name="api" value="nominatim" checked>
+                <span>🌍 OpenStreetMap (Miễn phí)</span>
+            </div>
+            <div class="api-option" data-api="photon">
+                <input type="radio" name="api" value="photon">
+                <span>⚡ Photon (Nhanh hơn)</span>
+            </div>
+            <div class="api-option" data-api="locationiq">
+                <input type="radio" name="api" value="locationiq">
+                <span>🎯 LocationIQ (Chính xác hơn)</span>
+            </div>
+        </div>
+        
+        <div class="search-panel">
+            <input type="text" id="addressInput" placeholder="Tìm kiếm địa điểm (VD: 1 Điện Biên Phủ, Ba Đình, Hà Nội)" />
+            <button id="searchBtn" onclick="handleSearch()">🔍 Tìm kiếm</button>
+        </div>
+        
+        <div id="mapContainer">
+            <div id="map"></div>
+        </div>
+        
+        <div class="info-panel">
+            <div id="locationInfo">
+                <strong>📍 Hướng dẫn sử dụng:</strong><br>
+                • Chọn nguồn dữ liệu phía trên (LocationIQ chính xác nhất)<br>
+                • Nhấp vào bản đồ để chọn địa điểm<br>
+                • Tìm kiếm với địa chỉ chi tiết để có kết quả tốt hơn<br>
+                • Thử nhiều nguồn khác nhau nếu không tìm thấy
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+    <script>
+        // Biến toàn cục
+        let mapInstance = null;
+        let currentMarker = null;
+        let isInitialized = false;
+        let currentAPI = 'nominatim';
+
+        // Cấu hình APIs
+        const APIS = {
+            nominatim: {
+                name: 'OpenStreetMap Nominatim',
+                searchUrl: 'https://nominatim.openstreetmap.org/search',
+                reverseUrl: 'https://nominatim.openstreetmap.org/reverse',
+                accuracy: 'medium',
+                params: {
+                    format: 'json',
+                    'accept-language': 'vi',
+                    countrycodes: 'vn',
+                    limit: 5
+                }
+            },
+            photon: {
+                name: 'Photon (Komoot)',
+                searchUrl: 'https://photon.komoot.io/api',
+                reverseUrl: 'https://photon.komoot.io/reverse',
+                accuracy: 'medium',
+                params: {
+                    lang: 'vi',
+                    limit: 5
+                }
+            },
+            locationiq: {
+                name: 'LocationIQ',
+                searchUrl: 'https://us1.locationiq.com/v1/search.php',
+                reverseUrl: 'https://us1.locationiq.com/v1/reverse.php',
+                accuracy: 'high',
+                // Note: LocationIQ cần API key, nhưng có free tier không cần thẻ tín dụng
+                params: {
+                    format: 'json',
+                    'accept-language': 'vi',
+                    countrycodes: 'vn',
+                    limit: 5,
+                    // key: 'YOUR_FREE_API_KEY_HERE' // Cần đăng ký miễn phí
+                }
+            }
+        };
+
+        // Cấu hình mặc định
+        const DEFAULT_CENTER = [21.0285, 105.8542];
+        const DEFAULT_ZOOM = 13;
+        const SEARCH_ZOOM = 16;
+
+        // Khởi tạo ứng dụng
+        function initializeApp() {
+            if (isInitialized) return;
+
+            try {
+                if (typeof L === 'undefined') {
+                    throw new Error('Thư viện Leaflet chưa được tải');
+                }
+
+                createMap();
+                setupEventListeners();
+                isInitialized = true;
+                
+                showMessage('Bản đồ đã sẵn sàng! Thử các nguồn dữ liệu khác nhau để có kết quả tốt nhất 🎉', 'success');
+                
+            } catch (error) {
+                console.error('Lỗi khởi tạo:', error);
+                showMessage(`Lỗi khởi tạo: ${error.message}`, 'error');
+            }
+        }
+
+        // Tạo bản đồ với nhiều tile layers
+        function createMap() {
+            const mapElement = document.getElementById('map');
+            mapElement.innerHTML = '';
+            
+            mapInstance = L.map('map', {
+                center: DEFAULT_CENTER,
+                zoom: DEFAULT_ZOOM,
+                zoomControl: true
+            });
+
+            // Các tile layers khác nhau
+            const tileLayers = {
+                'OpenStreetMap': L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '© OpenStreetMap contributors'
+                }),
+                'CartoDB Positron': L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+                    attribution: '© OpenStreetMap contributors © CARTO'
+                }),
+                'OpenTopoMap': L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+                    attribution: '© OpenStreetMap contributors, SRTM | Map style: © OpenTopoMap'
+                })
+            };
+
+            // Thêm layer mặc định
+            tileLayers['OpenStreetMap'].addTo(mapInstance);
+            
+            // Thêm layer control
+            L.control.layers(tileLayers).addTo(mapInstance);
+
+            // Marker mặc định
+            addMarker(DEFAULT_CENTER, 'Hồ Gươm, Hà Nội');
+
+            // Sự kiện click
+            mapInstance.on('click', handleMapClick);
+        }
+
+        // Thiết lập sự kiện
+        function setupEventListeners() {
+            // API selector
+            document.querySelectorAll('.api-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    document.querySelectorAll('.api-option').forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
+                    this.querySelector('input').checked = true;
+                    currentAPI = this.dataset.api;
+                    updateAPIInfo();
+                });
+            });
+
+            // Search input
+            const input = document.getElementById('addressInput');
+            input.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    handleSearch();
+                }
+            });
+        }
+
+        // Cập nhật thông tin API
+        function updateAPIInfo() {
+            const api = APIS[currentAPI];
+            const accuracy = api.accuracy;
+            let badgeClass = 'medium-accuracy';
+            
+            if (accuracy === 'high') badgeClass = 'high-accuracy';
+            else if (accuracy === 'low') badgeClass = 'low-accuracy';
+            
+            showMessage(`Đã chuyển sang ${api.name} <span class="accuracy-badge ${badgeClass}">${accuracy.toUpperCase()}</span>`, 'info');
+        }
+
+        // Xử lý click bản đồ
+        function handleMapClick(e) {
+            const { lat, lng } = e.latlng;
+            addMarker([lat, lng], 'Đang tải thông tin...');
+            updateLocationInfo(lat, lng, 'Đang tải thông tin địa chỉ...');
+            reverseGeocode(lat, lng);
+        }
+
+        // Thêm marker
+        function addMarker(position, popupText) {
+            if (currentMarker) {
+                mapInstance.removeLayer(currentMarker);
+            }
+            currentMarker = L.marker(position)
+                .addTo(mapInstance)
+                .bindPopup(popupText)
+                .openPopup();
+        }
+
+        // Tìm kiếm địa chỉ
+        async function handleSearch() {
+            const query = document.getElementById('addressInput').value.trim();
+            const searchBtn = document.getElementById('searchBtn');
+            
+            if (!query) {
+                showMessage('Vui lòng nhập địa chỉ cần tìm!', 'error');
+                return;
+            }
+
+            const originalText = searchBtn.innerHTML;
+            searchBtn.innerHTML = '🔄 Đang tìm...';
+            searchBtn.disabled = true;
+
+            try {
+                const results = await geocodeAddress(query);
+                
+                if (results.length === 0) {
+                    showMessage('Không tìm thấy địa điểm. Thử API khác hoặc từ khóa chi tiết hơn!', 'error');
+                    return;
+                }
+
+                const result = results[0];
+                let lat, lng, address;
+
+                // Xử lý format khác nhau của các APIs
+                if (currentAPI === 'photon') {
+                    lat = result.geometry.coordinates[1];
+                    lng = result.geometry.coordinates[0];
+                    address = result.properties.name || result.properties.street || 'Địa điểm tìm thấy';
+                } else {
+                    lat = parseFloat(result.lat);
+                    lng = parseFloat(result.lon);
+                    address = result.display_name || result.name || 'Địa điểm tìm thấy';
+                }
+
+                mapInstance.setView([lat, lng], SEARCH_ZOOM);
+                addMarker([lat, lng], `🎯 ${address}`);
+                updateLocationInfo(lat, lng, address);
+                
+                document.getElementById('addressInput').value = '';
+                showMessage(`Tìm thấy bằng ${APIS[currentAPI].name}! 📍`, 'success');
+
+            } catch (error) {
+                console.error('Lỗi tìm kiếm:', error);
+                showMessage(`Lỗi với ${APIS[currentAPI].name}. Thử API khác!`, 'error');
+            } finally {
+                searchBtn.innerHTML = originalText;
+                searchBtn.disabled = false;
+            }
+        }
+
+        // Geocoding
+        async function geocodeAddress(address) {
+            const api = APIS[currentAPI];
+            let url = `${api.searchUrl}?`;
+            
+            const params = new URLSearchParams(api.params);
+            
+            if (currentAPI === 'photon') {
+                params.append('q', `${address}, Vietnam`);
+            } else {
+                params.append('q', `${address}, Vietnam`);
+            }
+            
+            url += params.toString();
+            
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Network error');
+            
+            const data = await response.json();
+            return currentAPI === 'photon' ? data.features : data;
+        }
+
+        // Reverse geocoding
+        async function reverseGeocode(lat, lng) {
+            try {
+                const api = APIS[currentAPI];
+                let url = `${api.reverseUrl}?`;
+                
+                const params = new URLSearchParams(api.params);
+                params.append('lat', lat.toString());
+                params.append('lon', lng.toString());
+                
+                url += params.toString();
+                
+                const response = await fetch(url);
+                if (!response.ok) throw new Error('Network error');
+                
+                const data = await response.json();
+                
+                let address;
+                if (currentAPI === 'photon' && data.features && data.features.length > 0) {
+                    const props = data.features[0].properties;
+                    address = props.name || props.street || props.city || 'Địa điểm không xác định';
+                } else if (data.display_name) {
+                    address = data.display_name;
+                } else {
+                    address = 'Không xác định được địa chỉ';
+                }
+                
+                currentMarker.setPopupContent(`📍 ${address}`);
+                updateLocationInfo(lat, lng, address);
+                
+            } catch (error) {
+                console.error('Lỗi reverse geocoding:', error);
+                currentMarker.setPopupContent('❌ Lỗi khi lấy thông tin');
+                updateLocationInfo(lat, lng, 'Lỗi khi lấy thông tin địa chỉ');
+            }
+        }
+
+        // Cập nhật thông tin địa điểm
+        function updateLocationInfo(lat, lng, address) {
+            const api = APIS[currentAPI];
+            const accuracy = api.accuracy;
+            let badgeClass = 'medium-accuracy';
+            
+            if (accuracy === 'high') badgeClass = 'high-accuracy';
+            else if (accuracy === 'low') badgeClass = 'low-accuracy';
+            
+            const infoDiv = document.getElementById('locationInfo');
+            infoDiv.innerHTML = `
+                <strong>📍 Thông tin địa điểm:</strong>
+                <span class="accuracy-badge ${badgeClass}">${accuracy.toUpperCase()}</span><br>
+                <strong>Địa chỉ:</strong> ${address}<br>
+                <strong>Vĩ độ:</strong> <span class="coordinates">${lat.toFixed(6)}</span><br>
+                <strong>Kinh độ:</strong> <span class="coordinates">${lng.toFixed(6)}</span><br>
+                <strong>Nguồn:</strong> ${api.name}<br>
+                <small style="color: #666;">💡 Thử các API khác để so sánh độ chính xác</small>
+            `;
+        }
+
+        // Hiển thị thông báo
+        function showMessage(message, type = 'info') {
+            const oldMessages = document.querySelectorAll('.status-message');
+            oldMessages.forEach(msg => msg.remove());
+
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `status-message ${type}`;
+            messageDiv.innerHTML = message;
+            
+            const container = document.querySelector('.container');
+            container.insertBefore(messageDiv, document.getElementById('mapContainer'));
+            
+            setTimeout(() => {
+                if (messageDiv.parentNode) {
+                    messageDiv.remove();
+                }
+            }, 5000);
+        }
+
+        // Khởi tạo
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof L !== 'undefined') {
+                initializeApp();
+            } else {
+                const checkLeaflet = setInterval(() => {
+                    if (typeof L !== 'undefined') {
+                        clearInterval(checkLeaflet);
+                        initializeApp();
+                    }
+                }, 100);
+                
+                setTimeout(() => {
+                    clearInterval(checkLeaflet);
+                    if (!isInitialized) {
+                        showMessage('Không thể tải thư viện bản đồ!', 'error');
+                    }
+                }, 10000);
+            }
+        });
+    </script>
+</body>
+</html>

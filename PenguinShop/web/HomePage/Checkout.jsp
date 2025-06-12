@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="vi">
@@ -400,6 +401,7 @@
         </div>
 
         <div class="container">
+            <fmt:setLocale value="vi_VN"/>
             <!-- Địa chỉ nhận hàng -->
             <div class="section">
                 <div style="font-size: 18px" class="section-header">
@@ -433,9 +435,7 @@
                                     Size ${cartsession.value.cart.variant.size.sizeName}
                                 </div>
                                 <div class="product-price-row">
-                                    <span style="font-size: 16px" class="product-price">
-                                        ${cartsession.value.totalAmount} VND
-                                    </span>
+                                    <span style="font-size: 16px" class="product-price"><fmt:formatNumber value="${cartsession.value.totalAmount}" type="currency" currencyCode="VND"/></span>
                                     <span style="font-size: 16px" class="product-quantity">x${cartsession.value.quantity}</span>
                                 </div>
                             </div>
@@ -455,9 +455,9 @@
                 <div class="shipping-option">
                     <div>
                         <div style="font-size: 16px;font-weight: 500;">Giao hàng tiêu chuẩn</div>
-                        <div style="font-size: 14px; color: #666;">Nhận hàng vào 12 - 15 Th6</div>
+                        <div style="font-size: 16px; color: #666;" id="shipping-time">${dateShip}</div>
                     </div>
-                    <div class="shipping-price">₫30,000</div>
+                    <div style="font-size: 16px" class="shipping-price" id="shipping-price"><fmt:formatNumber value="${shipfee}" type="currency" currencyCode="VND"/></div>
                 </div>
             </div>
 
@@ -467,9 +467,9 @@
                     <svg class="icon" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/>
                     </svg>
-                    <h2>Phương thức thanh toán</h2>
+                    <h2 style="font-size: 18px">Phương thức thanh toán</h2>
                 </div>
-                <div id="payment-methods">
+                <div style="font-size: 16px" id="payment-methods">
                     <div class="payment-option selected" onclick="selectPayment(this, 'cod')">
                         <div class="radio">
                             <div class="radio-dot"></div>
@@ -482,46 +482,46 @@
                             <div class="radio-dot"></div>
                         </div>
                         <span class="payment-icon">🅿️</span>
-                        <span>Ví MoMo</span>
+                        <span>Ví VNPAY</span>
                     </div>
-                    <div class="payment-option" onclick="selectPayment(this, 'bank')">
-                        <div class="radio">
-                            <div class="radio-dot"></div>
-                        </div>
-                        <span class="payment-icon">💳</span>
-                        <span>Thẻ ATM/Visa/Master</span>
-                    </div>
-                    <div class="payment-option" onclick="selectPayment(this, 'shopee_pay')">
-                        <div class="radio">
-                            <div class="radio-dot"></div>
-                        </div>
-                        <span class="payment-icon">🛒</span>
-                        <span>ShopeePay</span>
-                    </div>
+                    <!--                    <div class="payment-option" onclick="selectPayment(this, 'bank')">
+                                            <div class="radio">
+                                                <div class="radio-dot"></div>
+                                            </div>
+                                            <span class="payment-icon">💳</span>
+                                            <span>Thẻ ATM/Visa/Master</span>
+                                        </div>
+                                        <div class="payment-option" onclick="selectPayment(this, 'shopee_pay')">
+                                            <div class="radio">
+                                                <div class="radio-dot"></div>
+                                            </div>
+                                            <span class="payment-icon">🛒</span>
+                                            <span>ShopeePay</span>
+                                        </div>-->
                 </div>
             </div>
 
             <!-- Tổng cộng -->
             <div class="section">
-                <h2 style="margin-bottom: 16px;">Chi tiết thanh toán</h2>
-                <div class="summary-row">
+                <h2 style=" font-size: 18px;margin-bottom: 16px;">Chi tiết thanh toán</h2>
+                <div style="font-size: 16px;" class="summary-row">
                     <span>Tổng tiền hàng</span>
-                    <span id="subtotal">₫1,197,000</span>
+                    <span id="subtotal"><fmt:formatNumber value="${totalBill}" type="currency" currencyCode="VND"/></span>
                 </div>
-                <div class="summary-row">
+                <div style="font-size: 16px;" class="summary-row">
                     <span>Phí vận chuyển</span>
-                    <span>₫30,000</span>
+                    <span id="shipping-fee"><fmt:formatNumber value="${shipfee}" type="currency" currencyCode="VND"/></span>
                 </div>
                 <div class="summary-total">
                     <span>Tổng thanh toán</span>
-                    <span id="total">₫1,227,000</span>
+                    <span id="total"><fmt:formatNumber value="${totalBillShip}" type="currency" currencyCode="VND"/></span>
                 </div>
             </div>
 
             <!-- Nút đặt hàng -->
-            <div class="section">
+            <div  style="margin-bottom: 200px"  class="section">
                 <button class="btn-order" onclick="placeOrder()">Đặt hàng</button>
-                <p class="terms">Nhấn "Đặt hàng" đồng nghĩa với việc bạn đồng ý tuân theo Điều khoản Shopee</p>
+                <p class="terms">Nhấn "Đặt hàng" đồng nghĩa với việc bạn đồng ý tuân theo Điều khoản PenguinShop</p>
             </div>
         </div>
 
@@ -559,241 +559,247 @@
         <jsp:include page="Common/Message.jsp"/>
 
         <script>
-            // Parse the deli JSON string with proper unescaping
-            let deliRaw = '${deli}';
-            console.log('Raw deli data:', deliRaw);
-
-            let addresses = [];
-            try {
-                // Unescape the JSON string - thay thế \" thành "
-                let unescapedJson = deliRaw.replace(/\\"/g, '"');
-                console.log('Unescaped JSON:', unescapedJson);
-
-                addresses = unescapedJson ? JSON.parse(unescapedJson) : [];
-                console.log('Parsed addresses:', addresses);
-            } catch (error) {
-                console.error('Error parsing addresses JSON:', error);
-                console.log('Raw data was:', deliRaw);
-
-                // Fallback: thử parse trực tiếp nếu cách trên không work
-                try {
-                    addresses = JSON.parse(deliRaw);
-                } catch (error2) {
-                    console.error('Fallback parse also failed:', error2);
-                    addresses = [];
-                }
-            }
-            function selectAddress(addressId) {
-    // Tìm địa chỉ đã chọn
-    const selectedAddress = addresses.find(addr => addr.deliveryInfoID == addressId);
-    if (!selectedAddress) {
-        console.error('Address not found for ID:', addressId);
-        return;
+    // Parse JSON
+    let deliRaw = '${deli}';
+    let addresses = [];
+    try {
+        let unescapedJson = deliRaw.replace(/\\"/g, '"');
+        addresses = unescapedJson ? JSON.parse(unescapedJson) : [];
+    } catch (error) {
+        console.error('Error parsing addresses JSON:', error);
+        try {
+            addresses = JSON.parse(deliRaw);
+        } catch (error2) {
+            console.error('Fallback parse failed:', error2);
+            addresses = [];
+        }
     }
 
-    // Cập nhật địa chỉ mặc định trong giao diện
-    const addressCard = document.getElementById('default-address');
-    if (addressCard) {
-        const fullName = selectedAddress.fullName || '';
-        const phone = selectedAddress.phone || '';
-        const addressDetail = selectedAddress.addessDetail || '';
-        const city = selectedAddress.city || '';
+    // Hàm định dạng và phân tích giá
+    function formatPrice(amount) {
+        return  Math.round(amount).toLocaleString('vi-VN') + '₫';
+    }
 
-        // Tạo nội dung HTML mới
-        const htmlContent = '<div class="address-info">' +
-            '<div>' +
+    function parsePrice(text) {
+        const cleaned = text.replace(/[^\d]/g, '');
+        return parseInt(cleaned) || 0;
+    }
+
+    function selectAddress(addressId) {
+        const selectedAddress = addresses.find(addr => addr.deliveryInfoID == addressId);
+        if (!selectedAddress) {
+            console.error('Address not found for ID:', addressId);
+            return;
+        }
+
+        const addressCard = document.getElementById('default-address');
+        if (addressCard) {
+            const fullName = selectedAddress.fullName || '';
+            const phone = selectedAddress.phone || '';
+            const addressDetail = selectedAddress.addessDetail || '';
+            const city = selectedAddress.city || '';
+
+            const htmlContent = '<div class="address-info">' +
+                '<div>' +
                 '<div style="font-size: 16px" class="address-name">' + fullName + ' | ' + phone + '</div>' +
                 '<div style="font-size: 16px" class="address-text">' + addressDetail + ', ' + city + '</div>' +
                 '<span style="font-size: 16px" class="default-badge">Mặc định</span>' +
-            '</div>' +
-            '<button style="font-size: 16px" onclick="showAddressModal()" class="btn-change">Thay đổi</button>' +
-        '</div>';
+                '</div>' +
+                '<button style="font-size: 16px" onclick="showAddressModal()" class="btn-change">Thay đổi</button>' +
+                '</div>';
 
-        // Cập nhật nội dung mới vào card
-        addressCard.innerHTML = htmlContent;
+            addressCard.innerHTML = htmlContent;
 
-        // Gọi AJAX để tính tiền ship
-        $.ajax({
-    url: 'calculateShippingFee',
-    method: 'POST',
-    data: { addressId: addressId },
-    success: function(response) {
-        console.log('Shipping cost response:', response);
-        if (response && response.shippingCost) {
-            console.log('Shipping cost:', response.shippingCost);
-            hideAddressModal(); // Ẩn modal sau khi tính xong
-            // Cập nhật giao diện để hiển thị giá tiền ship nếu cần
-        } else {
-            console.error('Shipping cost not found in response:', response);
+            $.ajax({
+                url: 'calculateShippingFee',
+                method: 'POST',
+                data: { addressId: addressId },
+                success: function(response) {
+                    console.log('Shipping cost response:', response);
+                    if (response && response.success) {
+                        toastr.success(response.message);
+
+                        // Cập nhật phí vận chuyển
+                        const shippingPriceElement = document.getElementById('shipping-price');
+                        const shippingFeeElement = document.getElementById('shipping-fee');
+                        if (shippingPriceElement && shippingFeeElement) {
+                            const shippingFee = response.shippingFee || 0;
+                            shippingPriceElement.textContent = formatPrice(shippingFee);
+                            shippingFeeElement.textContent = formatPrice(shippingFee);
+                        } else {
+                            console.error('Shipping price or fee element not found');
+                        }
+
+                        // Cập nhật thời gian dự kiến
+                        const shippingTimeElement = document.getElementById('shipping-time');
+                        if (shippingTimeElement) {
+                            shippingTimeElement.textContent = response.time || '';
+                        } else {
+                            console.error('Shipping time element not found');
+                        }
+
+                        // Cập nhật tổng thanh toán
+                        const subtotalElement = document.getElementById('subtotal');
+                        if (subtotalElement) {
+                            const subtotal = parsePrice(subtotalElement.textContent);
+                            const total = subtotal + (response.shippingFee || 0);
+                            const totalElement = document.getElementById('total');
+                            if (totalElement) {
+                                totalElement.textContent = formatPrice(total);
+                            } else {
+                                console.error('Total element not found');
+                            }
+                        } else {
+                            console.error('Subtotal element not found');
+                        }
+
+                        hideAddressModal();
+                    } else {
+                        console.error('Shipping cost not found in response:', response);
+                        toastr.error('Lỗi khi tính phí vận chuyển!');
+                    }
+                },
+                error: function(error) {
+                    console.error('Error calculating shipping:', error);
+                    toastr.error('Đã xảy ra lỗi khi tính phí vận chuyển!');
+                }
+            });
         }
-    },
-    error: function(error) {
-        console.error('Error calculating shipping:', error);
     }
-});
+
+    function displayDefaultAddress() {
+        const addressCard = document.getElementById('default-address');
+        if (!addressCard) {
+            console.error('Address card element not found');
+            return;
+        }
+
+        let defaultAddress = addresses.find(addr => addr.isDefault === 1);
+        if (!defaultAddress && addresses.length > 0) {
+            defaultAddress = addresses[0];
+        }
+
+        if (defaultAddress) {
+            const fullName = defaultAddress.fullName || '';
+            const phone = defaultAddress.phone || '';
+            const addressDetail = defaultAddress.addessDetail || '';
+            const city = defaultAddress.city || '';
+
+            const htmlContent = '<div class="address-info">' +
+                '<div>' +
+                '<div style="font-size: 16px" class="address-name">' + fullName + ' | ' + phone + '</div>' +
+                '<div style="font-size: 16px" class="address-text">' + addressDetail + ', ' + city + '</div>' +
+                (defaultAddress.isDefault ? '<span style="font-size: 16px" class="default-badge">Mặc định</span>' : '') +
+                '</div>' +
+                '<button style="font-size: 16px" onclick="showAddressModal()" class="btn-change">Thay đổi</button>' +
+                '</div>';
+
+            addressCard.innerHTML = htmlContent;
+        } else {
+            addressCard.innerHTML = '<div class="address-info">' +
+                '<div style="font-size: 16px; color: #666;">Chưa có địa chỉ nào được chọn. Vui lòng thêm địa chỉ.</div>' +
+                '<button style="font-size: 16px" onclick="showAddressModal()" class="btn-change">Thêm địa chỉ</button>' +
+                '</div>';
+        }
     }
-}
-            // Function to display the default address
-            function displayDefaultAddress() {
-                const addressCard = document.getElementById('default-address');
-                if (!addressCard) {
-                    console.error('Address card element not found');
-                    return;
+
+    displayDefaultAddress();
+
+    let selectedPayment = 'cod';
+
+    function selectPayment(element, paymentId) {
+        document.querySelectorAll('.payment-option').forEach(option => {
+            option.classList.remove('selected');
+        });
+        element.classList.add('selected');
+        selectedPayment = paymentId;
+    }
+
+    function showAddressModal() {
+        const modal = document.getElementById('addressModal');
+        if (modal) {
+            modal.classList.add('show');
+        }
+    }
+
+    function hideAddressModal() {
+        const modal = document.getElementById('addressModal');
+        if (modal) {
+            modal.classList.remove('show');
+        }
+
+        const fields = ['newName', 'newPhone', 'newAddress'];
+        fields.forEach(fieldId => {
+            const field = document.getElementById(fieldId);
+            if (field) field.value = '';
+        });
+    }
+
+    function addAddress() {
+        const name = document.getElementById('newName')?.value?.trim() || '';
+        const phone = document.getElementById('newPhone')?.value?.trim() || '';
+        const address = document.getElementById('newAddress')?.value?.trim() || '';
+
+        if (!name || !phone || !address) {
+            alert('Vui lòng điền đầy đủ thông tin');
+            return;
+        }
+
+        const newAddress = {
+            deliveryInfoID: addresses.length + 1,
+            fullName: name,
+            phone: phone,
+            addessDetail: address,
+            city: '',
+            isDefault: addresses.length === 0 ? 1 : 0
+        };
+
+        addresses.push(newAddress);
+        hideAddressModal();
+        displayDefaultAddress();
+        alert('Thêm địa chỉ thành công!');
+        updateFloatingButton();
+    }
+
+    function placeOrder() {
+        const defaultAddress = addresses.find(addr => addr.isDefault === 1) || addresses[0];
+        if (!defaultAddress) {
+            alert('Vui lòng chọn địa chỉ giao hàng!');
+            return;
+        }
+
+        const totalElement = document.getElementById('total');
+        const total = totalElement ? totalElement.textContent : '₫0';
+
+        const paymentText = {
+            'cod': 'COD',
+            'momo': 'VNPAY',
+            'bank': 'Thẻ ngân hàng',
+            'shopee_pay': 'ShopeePay'
+        }[selectedPayment] || 'Không xác định';
+
+        const addressText = `${defaultAddress.fullName || ''}, ${defaultAddress.addessDetail || ''}, ${defaultAddress.city || ''}`;
+        alert(`Đặt hàng thành công!\nPhương thức thanh toán: ${paymentText}\nĐịa chỉ: ${addressText}\nTổng tiền: ${total}`);
+    }
+
+    function updateFloatingButton() {
+        const floatingBtn = document.querySelector('.floating-btn');
+        if (floatingBtn) {
+            floatingBtn.style.display = addresses.length > 1 ? 'block' : 'none';
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        updateFloatingButton();
+        const addressModal = document.getElementById('addressModal');
+        if (addressModal) {
+            addressModal.addEventListener('click', function (e) {
+                if (e.target === this) {
+                    hideAddressModal();
                 }
-
-                console.log('Displaying default address...');
-                console.log('Total addresses:', addresses.length);
-
-                let defaultAddress = addresses.find(addr => addr.isDefault === 1);
-                console.log('Found default address:', defaultAddress);
-
-                // Nếu không tìm thấy địa chỉ mặc định, sử dụng địa chỉ đầu tiên
-                if (!defaultAddress && addresses.length > 0) {
-                    defaultAddress = addresses[0];
-                    console.log('Using first address as default:', defaultAddress);
-                }
-
-                if (defaultAddress) {
-                    // Lấy các giá trị với giá trị mặc định
-                    const fullName = defaultAddress.fullName || '';
-                    const phone = defaultAddress.phone || '';
-                    const addressDetail = defaultAddress.addessDetail || '';
-                    const city = defaultAddress.city || '';
-
-                    // Tạo nội dung HTML bằng cách nối chuỗi
-                    const htmlContent = '<div class="address-info">' +
-                            '<div>' +
-                            '<div style="font-size: 16px" class="address-name">' + fullName + ' | ' + phone + '</div>' +
-                            '<div style="font-size: 16px" class="address-text">' + addressDetail + ', ' + city + '</div>' +
-                            (defaultAddress.isDefault ? '<span style="font-size: 16px" class="default-badge">Mặc định</span>' : '') +
-                            '</div>' +
-                            '<button style="font-size: 16px" onclick="showAddressModal()" class="btn-change">Thay đổi</button>' +
-                            '</div>';
-
-                    console.log('HTML Content generated successfully');
-                    addressCard.innerHTML = htmlContent;
-                } else {
-                    console.log('No address found, showing default message');
-                    addressCard.innerHTML = '<div class="address-info">' +
-                            '<div style="font-size: 16px; color: #666;">Chưa có địa chỉ nào được chọn. Vui lòng thêm địa chỉ.</div>' +
-                            '<button style="font-size: 16px" onclick="showAddressModal()" class="btn-change">Thêm địa chỉ</button>' +
-                            '</div>';
-                }
-            }
-
-            // Gọi hàm để hiển thị địa chỉ
-            displayDefaultAddress();
-
-            // Call the function to display the default address on page load
-            displayDefaultAddress();
-
-            let selectedPayment = 'cod';
-
-            function selectPayment(element, paymentId) {
-                document.querySelectorAll('.payment-option').forEach(option => {
-                    option.classList.remove('selected');
-                });
-                element.classList.add('selected');
-                selectedPayment = paymentId;
-            }
-
-            function showAddressModal() {
-                const modal = document.getElementById('addressModal');
-                if (modal) {
-                    modal.classList.add('show');
-                }
-            }
-
-            function hideAddressModal() {
-                const modal = document.getElementById('addressModal');
-                if (modal) {
-                    modal.classList.remove('show');
-                }
-
-                // Clear form fields safely
-                const fields = ['newName', 'newPhone', 'newAddress'];
-                fields.forEach(fieldId => {
-                    const field = document.getElementById(fieldId);
-                    if (field)
-                        field.value = '';
-                });
-            }
-
-            function addAddress() {
-                const name = document.getElementById('newName')?.value?.trim() || '';
-                const phone = document.getElementById('newPhone')?.value?.trim() || '';
-                const address = document.getElementById('newAddress')?.value?.trim() || '';
-
-                if (!name || !phone || !address) {
-                    alert('Vui lòng điền đầy đủ thông tin');
-                    return;
-                }
-
-                const newAddress = {
-                    deliveryInfoID: addresses.length + 1,
-                    fullName: name,
-                    phone: phone,
-                    addessDetail: address,
-                    city: '',
-                    isDefault: addresses.length === 0 ? 1 : 0
-                };
-
-                addresses.push(newAddress);
-                hideAddressModal();
-                displayDefaultAddress();
-                alert('Thêm địa chỉ thành công!');
-
-                // Update floating button visibility
-                updateFloatingButton();
-            }
-
-            function placeOrder() {
-                const defaultAddress = addresses.find(addr => addr.isDefault === 1) || addresses[0];
-
-                if (!defaultAddress) {
-                    alert('Vui lòng chọn địa chỉ giao hàng!');
-                    return;
-                }
-
-                const orderData = {
-                    payment: selectedPayment,
-                    address: defaultAddress,
-                    total: '₫1,227,000'
-                };
-
-                const paymentText = {
-                    'cod': 'COD',
-                    'momo': 'MoMo',
-                    'bank': 'Thẻ ngân hàng',
-                    'shopee_pay': 'ShopeePay'
-                }[selectedPayment] || 'Không xác định';
-
-                const addressText = `${defaultAddress.fullName || ''}, ${defaultAddress.addessDetail || ''}, ${defaultAddress.city || ''}`;
-
-                        alert(`Đặt hàng thành công!\nPhương thức thanh toán: ${paymentText}\nĐịa chỉ: ${addressText}\nTổng tiền: ${orderData.total}`);
-                    }
-
-                    function updateFloatingButton() {
-                        const floatingBtn = document.querySelector('.floating-btn');
-                        if (floatingBtn) {
-                            floatingBtn.style.display = addresses.length > 1 ? 'block' : 'none';
-                        }
-                    }
-
-                    // Initialize floating button and modal event listener
-                    document.addEventListener('DOMContentLoaded', function () {
-                        updateFloatingButton();
-
-                        // Close modal when clicking outside
-                        const addressModal = document.getElementById('addressModal');
-                        if (addressModal) {
-                            addressModal.addEventListener('click', function (e) {
-                                if (e.target === this) {
-                                    hideAddressModal();
-                                }
-                            });
-                        }
-                    });
-        </script>
+            });
+        }
+    });
+</script>
     </body>
 </html>

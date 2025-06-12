@@ -280,22 +280,46 @@
                 color: #dc3545;
             } /* Red for out of stock */
             @keyframes shake {
-    0% { transform: translateX(0); }
-    25% { transform: translateX(-5px); }
-    50% { transform: translateX(5px); }
-    75% { transform: translateX(-5px); }
-    100% { transform: translateX(0); }
-}
+                0% {
+                    transform: translateX(0);
+                }
+                25% {
+                    transform: translateX(-5px);
+                }
+                50% {
+                    transform: translateX(5px);
+                }
+                75% {
+                    transform: translateX(-5px);
+                }
+                100% {
+                    transform: translateX(0);
+                }
+            }
 
-.remove-btn:hover {
-    animation: shake 0.3s ease-in-out;
-    background: rgba(174, 28, 154, 0.1); /* Existing hover background */
-    transform: scale(1.2); /* Existing hover scale */
-}
+            .remove-btn:hover {
+                animation: shake 0.3s ease-in-out;
+                background: rgba(174, 28, 154, 0.1); /* Existing hover background */
+                transform: scale(1.2); /* Existing hover scale */
+            }
 
-.remove-btn:hover svg path {
-    fill: #AE1C9A; /* Existing hover SVG color change */
-}
+            .remove-btn:hover svg path {
+                fill: #AE1C9A; /* Existing hover SVG color change */
+            }
+            .quantity-btn:disabled {
+                background: #cccccc;
+                color: #666;
+                cursor: not-allowed;
+                border-color: #cccccc;
+                transform: none;
+            }
+
+            .quantity-input:disabled {
+                background: #f8f9fa;
+                color: #666;
+                border-color: #cccccc;
+                cursor: not-allowed;
+            }
         </style>
     </head>
     <body>
@@ -489,6 +513,12 @@
                 function formatPrice(price) {
                     return Math.round(price).toLocaleString('vi-VN') + ' VND';
                 }
+                // Function to toggle quantity controls
+                function toggleQuantityControls(row, disable) {
+                    row.find('.quantity-input').prop('disabled', disable);
+                    row.find('.plus-btn').prop('disabled', disable);
+                    row.find('.minus-btn').prop('disabled', disable);
+                }
 
                 // Update cart summary - ĐẶT TRƯỚC để các function khác có thể gọi
                 function updateCartSummary() {
@@ -557,75 +587,80 @@
                 }
 
                 // Function to send wishlist update to backend
-                function updateWishlist(cartId, isSelected, row) {
-                    if (!row || row.length === 0) {
-                        toastr.error('Không tìm thấy sản phẩm tương ứng!');
-                        return;
-                    }
+                // Function to send wishlist update to backend
+function updateWishlist(cartId, isSelected, row) {
+    if (!row || row.length === 0) {
+        toastr.error('Không tìm thấy sản phẩm tương ứng!');
+        return;
+    }
 
-                    const checkbox = row.find(`.product-select[value="${cartId}"]`);
-                    const quantityInput = row.find('.quantity-input');
-                    const priceElement = row.find('.unit-price');
+    const checkbox = row.find(`.product-select[value="${cartId}"]`);
+    const quantityInput = row.find('.quantity-input');
+    const priceElement = row.find('.unit-price');
 
-                    const quantity = parseInt(quantityInput.val()) || 1;
-                    const price = parseFloat(priceElement.data('price')) || parsePriceFromText(priceElement.text());
-                    const total = price * quantity;
+    const quantity = parseInt(quantityInput.val()) || 1;
+    const price = parseFloat(priceElement.data('price')) || parsePriceFromText(priceElement.text());
+    const total = price * quantity;
 
-                    // Nếu dữ liệu không hợp lệ
-                    if (isNaN(quantity) || isNaN(price) || quantity <= 0 || price <= 0) {
-                        toastr.error('Số lượng hoặc giá không hợp lệ!');
-                        checkbox.prop('checked', !isSelected);
-                        updateCartSummary();
-                        return;
-                    }
+    // Nếu dữ liệu không hợp lệ
+    if (isNaN(quantity) || isNaN(price) || quantity <= 0 || price <= 0) {
+        toastr.error('Số lượng hoặc giá không hợp lệ!');
+        checkbox.prop('checked', !isSelected);
+        toggleQuantityControls(row, isSelected); // Hoàn nguyên trạng thái
+        updateCartSummary();
+        return;
+    }
 
-                    // Cập nhật các hidden input
-                    row.find(`input[name="cart_${cartId}_quantity"]`).val(quantity);
-                    row.find(`input[name="cart_${cartId}_total"]`).val(total);
-                    row.find(`input[name="hidden_quantity_${cartId}"]`).val(quantity);
+    // Cập nhật các hidden input
+    row.find(`input[name="cart_${cartId}_quantity"]`).val(quantity);
+    row.find(`input[name="cart_${cartId}_total"]`).val(total);
+    row.find(`input[name="hidden_quantity_${cartId}"]`).val(quantity);
 
-                    console.log('Sending data:', {cartId, quantity, total, price, action: isSelected ? 'add' : 'remove'});
-                    console.log('Row HTML:', row.html());
+    console.log('Sending data:', {cartId, quantity, total, price, action: isSelected ? 'add' : 'remove'});
+    console.log('Row HTML:', row.html());
 
-                    $.ajax({
-                        url: 'addWhist',
-                        type: 'POST',
-                        data: {
-                            cartId,
-                            quantity,
-                            total,
-                            price,
-                            action: isSelected ? 'add' : 'remove'
-                        },
-                        beforeSend: function () {
-                            $('body').addClass('loading');
-                        },
-                        success: function (response) {
-                            try {
-                                const data = typeof response === 'string' ? JSON.parse(response) : response;
-                                if (data.success) {
-                                    toastr.success(data.message || 'Cập nhật danh sách thanh toán thành công!');
-                                } else {
-                                    toastr.error(data.message || 'Cập nhật thất bại!');
-                                    checkbox.prop('checked', !isSelected);
-                                }
-                            } catch (e) {
-                                console.error('Error parsing response:', e);
-                                toastr.error('Lỗi xử lý phản hồi từ server!');
-                                checkbox.prop('checked', !isSelected);
-                            }
-                        },
-                        error: function (xhr, status, error) {
-                            console.error('AJAX error:', status, error);
-                            toastr.error('Có lỗi xảy ra, vui lòng thử lại!');
-                            checkbox.prop('checked', !isSelected);
-                        },
-                        complete: function () {
-                            updateCartSummary();
-                            $('body').removeClass('loading');
-                        }
-                    });
+    $.ajax({
+        url: 'addWhist',
+        type: 'POST',
+        data: {
+            cartId,
+            quantity,
+            total,
+            price,
+            action: isSelected ? 'add' : 'remove'
+        },
+        beforeSend: function () {
+            $('body').addClass('loading');
+        },
+        success: function (response) {
+            try {
+                const data = typeof response === 'string' ? JSON.parse(response) : response;
+                if (data.success) {
+                    toastr.success(data.message || 'Cập nhật danh sách thanh toán thành công!');
+                } else {
+                    toastr.error(data.message || 'Cập nhật thất bại!');
+                    checkbox.prop('checked', !isSelected);
+                    toggleQuantityControls(row, isSelected); // Hoàn nguyên trạng thái
                 }
+            } catch (e) {
+                console.error('Error parsing response:', e);
+                toastr.error('Lỗi xử lý phản hồi từ server!');
+                checkbox.prop('checked', !isSelected);
+                toggleQuantityControls(row, isSelected);
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error('AJAX error:', status, error);
+            toastr.error('Có lỗi xảy ra, vui lòng thử lại!');
+            checkbox.prop('checked', !isSelected);
+            toggleQuantityControls(row, isSelected); // Hoàn nguyên trạng thái
+        },
+        complete: function () {
+            updateCartSummary();
+            $('body').removeClass('loading');
+        }
+    });
+}
 
 
 
@@ -670,40 +705,48 @@
 
                 // Product selection handler - with backend integration
                 $(document).on('change', '.product-select', function () {
-                    const cartId = $(this).val();
-                    const isSelected = $(this).is(':checked');
+    const cartId = $(this).val();
+    const isSelected = $(this).is(':checked');
+    const row = $(this).closest('tr');
 
-                    const row = $(this).closest('tr');
-                    console.log('Cart ID:', cartId);
-                    console.log('Row HTML:', row.html());
+    console.log('Cart ID:', cartId);
+    console.log('Row HTML:', row.html());
 
-                    // Cập nhật UI
-                    updateCartSummary();
+    // Cập nhật trạng thái các nút điều khiển số lượng
+    toggleQuantityControls(row, isSelected); // Vô hiệu hóa nếu check, kích hoạt nếu uncheck
 
-                    // Gửi dữ liệu lên server
-                    updateWishlist(cartId, isSelected, row);
-                });
-                // Select all handler
-                $('#select-all').change(function () {
-                    const isChecked = $(this).is(':checked');
+    // Cập nhật UI
+    updateCartSummary();
 
-                    $('.product-select').each(function () {
-                        const wasChecked = $(this).is(':checked');
-                        $(this).prop('checked', isChecked);
+    // Gửi dữ liệu lên server
+    updateWishlist(cartId, isSelected, row);
+});
 
-                        // Only send request if state actually changed
-                        if (wasChecked !== isChecked) {
-                            const cartId = $(this).val();
-                            updateWishlist(cartId, isChecked);
-                        }
-                    });
+// Select all handler
+$('#select-all').change(function () {
+    const isChecked = $(this).is(':checked');
 
-                    updateCartSummary();
-                });
+    $('.product-select').each(function () {
+        const wasChecked = $(this).is(':checked');
+        $(this).prop('checked', isChecked);
+        const row = $(this).closest('tr');
+
+        // Cập nhật trạng thái các nút điều khiển số lượng
+        toggleQuantityControls(row, isChecked); // Vô hiệu hóa nếu check, kích hoạt nếu uncheck
+
+        // Chỉ gửi yêu cầu nếu trạng thái thực sự thay đổi
+        if (wasChecked !== isChecked) {
+            const cartId = $(this).val();
+            updateWishlist(cartId, isChecked, row);
+        }
+    });
+
+    updateCartSummary();
+});
 
                 // Remove product handler
                 $('.remove-btn').click(function () {
-                   
+
                     if (confirm('Bạn có chắc chắn muốn xóa sản phẩm này khỏi giỏ hàng?')) {
                         const cartId = $(this).data('cart-id');
                         const row = $(this).closest('.product-row');
