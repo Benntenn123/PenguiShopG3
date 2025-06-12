@@ -44,6 +44,20 @@
 
                     </ul>
                 </li>
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow">
+                        <i data-feather="box"></i>
+                        <span data-key="t-apps">Sản phẩm</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li>
+                            <a href="listProductAdmin">
+                                <span data-key="t-calendar">Danh sách sản phẩm</span>
+                            </a>
+                        </li>
+
+                    </ul>
+                </li>
 <!--
                 <li>
                     <a href="javascript: void(0);" class="has-arrow">
