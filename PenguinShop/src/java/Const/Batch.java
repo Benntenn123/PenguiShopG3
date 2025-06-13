@@ -8,4 +8,5 @@ package Const;
 public class Batch {
     // customer list 
     public static final int BATCH_SEARCH_CUSTOMER = 12;
+    public static final int BATCH_SEARCH_PRODUCT = 10;
 }

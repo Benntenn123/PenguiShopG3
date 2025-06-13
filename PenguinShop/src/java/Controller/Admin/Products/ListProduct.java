@@ -4,6 +4,7 @@
  */
 package Controller.Admin.Products;
 
+import Const.Batch;
 import DAL.ProductDao;
 import Models.Product;
 import Models.ProductVariant;
@@ -52,7 +53,7 @@ public class ListProduct extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        int batch = 10;
+        int batch = Batch.BATCH_SEARCH_PRODUCT;
         String[] data = getData(request); // getData từ thanh request lưu vào mảng
         String page_raw = request.getParameter("page");
         int page = 1;
