@@ -7,6 +7,7 @@ package DAL;
 import Models.Brand;
 import Models.Color;
 import Models.Size;
+import Models.Type;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -41,6 +42,38 @@ public class MeterialDAO extends DBContext{
                 Color c = new Color(rs.getInt(1),
                         rs.getString(2));
                 list.add(c);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+    public List<Brand> getAllBrand() {
+        List<Brand> list = new ArrayList<>();
+        String sql = "SELECT * FROM dbo.tbBrand";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Brand br = new Brand(rs.getInt(1),
+                        rs.getString(2), rs.getString(3));
+                list.add(br);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+     public List<Type> getAllProductType() {
+        List<Type> list = new ArrayList<>();
+        String sql = "SELECT * FROM dbo.tbProductType";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Type t = new Type(rs.getInt(1),
+                        rs.getString(2));
+                list.add(t);
             }
         } catch (SQLException e) {
             e.printStackTrace();

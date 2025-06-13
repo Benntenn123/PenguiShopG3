@@ -2285,7 +2285,8 @@
 
                     if (response.status === 'success') {
                         $priceSpan.text(response.price || 'Liên hệ');
-                        $stockStatus.text(response.quantity > 0 ? 'Còn hàng' : 'Hết hàng');
+                        
+                        $stockStatus.text(response.statuspro === "1" ? 'Còn hàng' : 'Hết hàng');
                         $stockStatus.css('color', response.quantity > 0 ? '#28a745' : '#dc3545');
                         if (response.quantity > 0) {
                             $addToCartBtn.removeAttr('disabled').css({
@@ -2380,14 +2381,14 @@
                         if (response.status === 'success') {
                             wrapper.find('.new-price').text(response.variant.price.toFixed(2) + ' VND');
                             wrapper.find('.stock-status')
-                                .text(response.variant.quantity > 0 ? 'Còn hàng' : 'Hết hàng')
-                                .css('color', response.variant.quantity > 0 ? '#28a745' : '#dc3545');
+                                .text(response.variant.statuspro === "1" ? 'Còn hàng' : 'Hết hàng')
+                                .css('color', response.variant.statuspro === "1" ? '#28a745' : '#dc3545');
                             wrapper.find('.product-btn')
                                 .attr('data-variant-id', response.variant.variantID)
-                                .prop('disabled', response.variant.quantity === 0)
+                                .prop('disabled', response.variant.statuspro === "0")
                                 .css({
-                                    'pointer-events': response.variant.quantity === 0 ? 'none' : 'auto',
-                                    'opacity': response.variant.quantity === 0 ? 0.6 : 1
+                                    'pointer-events': response.variant.statuspro === "0" ? 'none' : 'auto',
+                                    'opacity': response.variant.statuspro === "0" ? 0.6 : 1
                                 });
                             wrapper.find('.product-details, .product-img a')
                                 .attr('href', 'productdetail?id=' + response.variant.variantID);

@@ -84,7 +84,8 @@ public class GetMaterial extends HttpServlet {
                         jsonResponse.put("variant", Map.of(
                             "variantID", variant.getVariantID(),
                             "price", variant.getPrice(),
-                            "quantity", variant.getQuantity()
+                            "quantity", variant.getQuantity(),
+                            "statuspro", variant.getStockStatus()
                         ));
                     } else {
                         jsonResponse.put("status", "error");

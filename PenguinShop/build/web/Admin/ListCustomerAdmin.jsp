@@ -123,7 +123,7 @@
                                             </th>
                                             <td>
                                                 <img src="../api/img/${list.image_user}" alt="" class="avatar-sm rounded-circle me-2">
-                                                <a href="#" class="text-body">${list.fullName}</a>
+                                                <a href="customer_details?userID=${list.userID}" class="text-body">${list.fullName}</a>
                                             </td>
                                             <td>${list.phone}</td>
                                             <td>${list.email}</td>

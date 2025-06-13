@@ -2,7 +2,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-
 package Controller.Admin.Customer;
 
 import DAL.UserDAO;
@@ -10,6 +9,7 @@ import Models.DeliveryInfo;
 import Models.Logs;
 import Models.Order;
 import Models.User;
+import Utils.StringConvert;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -19,59 +19,63 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 
-
-@WebServlet(name="CustomerDetailsAdmin", urlPatterns={"/admin/customer_details"})
+@WebServlet(name = "CustomerDetailsAdmin", urlPatterns = {"/admin/customer_details"})
 public class CustomerDetailsAdmin extends HttpServlet {
+
     private UserDAO udao = new UserDAO();
-    
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet CustomerDetailsAdmin</title>");  
+            out.println("<title>Servlet CustomerDetailsAdmin</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet CustomerDetailsAdmin at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet CustomerDetailsAdmin at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
-    } 
+    }
 
-    
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            int userID = Integer.parseInt(request.getParameter("userID"));
-            
-            User user = udao.getUserById(userID);
-            List<Logs> recentActivities = udao.getLatestLogByUserId(userID);
-            List<Order> recentOrders = udao.getRecentOrdersByUserId(userID);
-            List<DeliveryInfo> addresses = udao.getDeliveryAddressesByUserId(userID);
-            
-            request.setAttribute("customer", user);
-            request.setAttribute("addresses", addresses);
-            request.setAttribute("recentActivities", recentActivities);
-            request.setAttribute("recentOrders", recentOrders);
-        } catch (NumberFormatException e) {
-            System.err.println("Invalid userID: " + request.getParameter("userID"));
-            request.setAttribute("error", "Invalid user ID");
-        } catch (Exception e) {
-            System.err.println("Error loading customer details: " + e.getMessage());
-            request.setAttribute("error", "Error loading customer details");
+        if (StringConvert.isEmpty(request.getParameter("userID"))) {   // UserID null -> về lại trang list
+            request.getSession().setAttribute("error", "Đã có lỗi xảy ra. Vui lòng thử lại!");
+            response.sendRedirect("listCustomerAdmin");
+            return;
+        } else {
+            try {
+                int userID = Integer.parseInt(request.getParameter("userID"));  // chuyển thành Integer
+
+                User user = udao.getUserById(userID);   // load User từ id
+                List<Logs> recentActivities = udao.getLatestLogByUserId(userID);  // get ra 5 hoạt động gần nhất
+                List<Order> recentOrders = udao.getRecentOrdersByUserId(userID);  // get ra 5 cái order gần nhất 
+                List<DeliveryInfo> addresses = udao.getDeliveryAddressesByUserId(userID);  // get ra các địa chỉ nhận hàng
+
+                request.setAttribute("customer", user);
+                request.setAttribute("addresses", addresses);
+                request.setAttribute("recentActivities", recentActivities);
+                request.setAttribute("recentOrders", recentOrders);
+            } catch (NumberFormatException e) {
+                System.err.println("Invalid userID: " + request.getParameter("userID"));
+                request.setAttribute("error", "Invalid user ID");
+            } catch (Exception e) {
+                System.err.println("Error loading customer details: " + e.getMessage());
+                request.setAttribute("error", "Error loading customer details");
+            }
         }
 
         request.getRequestDispatcher("../Admin/CustomerDetailsAdmin.jsp").forward(request, response);
     }
 
-    
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         processRequest(request, response);
     }
 

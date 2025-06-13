@@ -54,8 +54,9 @@ public class StringConvert {
             result[i] = validIntegers.get(i);
         }
         return result;
-        
+
     }
+
     public static String maskPhoneNumber(String phone) {
         if (phone == null || phone.length() < 7) {
             return phone; // Không đủ dài để ẩn
@@ -82,7 +83,7 @@ public class StringConvert {
         String maskedMiddle = "*".repeat(Math.max(0, name.length() - 1));
         return start + maskedMiddle + "@" + domain;
     }
-    
+
     public static String generateRandom6DigitNumber() {
         Random random = new Random();
         StringBuilder sb = new StringBuilder();
@@ -91,7 +92,7 @@ public class StringConvert {
         }
         return sb.toString();
     }
-    
+
     public static String generateRandomString() {
         String upperCase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         String lowerCase = "abcdefghijklmnopqrstuvwxyz";
@@ -123,7 +124,7 @@ public class StringConvert {
 
         return sb.toString();
     }
-    
+
     public static boolean isAnyFieldEmpty(String... fields) {
         for (String field : fields) {
             if (field == null || field.trim().isEmpty()) {
@@ -132,6 +133,14 @@ public class StringConvert {
         }
         return false;
     }
+
+    public static boolean isEmpty(String field) {
+        if (field == null || field.trim().isEmpty()) {
+            return true;
+        }
+        return false;
+    }
+
     public static String cleanString(String input) {
         if (input == null) {
             return "";
@@ -142,6 +151,7 @@ public class StringConvert {
         cleaned = cleaned.replaceAll("\\s+", " ").trim();
         return cleaned;
     }
+
     public static String standardizeAddress(String rawAddress) {
         if (rawAddress == null || rawAddress.trim().isEmpty()) {
             return "";
@@ -162,6 +172,5 @@ public class StringConvert {
         }
         return standardized.toString();
     }
-    
-}
 
+}
