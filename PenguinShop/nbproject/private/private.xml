@@ -3,14 +3,17 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-<<<<<<< HEAD
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/web/Admin/Common/LeftSideBar.jsp</file>
             <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/DAL/ProductDao.java</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Const/StatusOrder.java</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/DAL/OrderDAO.java</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Models/Order.java</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/DAL/MeterialDAO.java</file>
             <file>file:/F:/Git/PenguiShopG3/PenguinShop/web/Admin/ListProductAdmin.jsp</file>
-            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Controller/Admin/Products/ListProduct.java</file>
-=======
-            <file>file:/C:/c/PenguiShopG3/PenguinShop/src/java/DAL/DBContext.java</file>
-            <file>file:/C:/c/PenguiShopG3/PenguinShop/src/java/Controller/Admin/Authen/LoginAdmin.java</file>
->>>>>>> 4ff3fbf27773a25594d1f137a24517f25a34032e
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/web/Admin/ListOrderAdmin.jsp</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Controller/HomePage/Product/ProductDetails.java</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/web/Admin/Common/Js.jsp</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Controller/Admin/Order/ListOrderAdmin.java</file>
         </group>
     </open-files>
 </project-private>

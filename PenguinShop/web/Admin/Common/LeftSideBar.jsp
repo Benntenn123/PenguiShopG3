@@ -37,7 +37,7 @@
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
                         <li>
-                            <a href="listCustomerAdmin">
+                            <a href="listRoleAdmin">
                                 <span data-key="t-calendar">Danh sách nhóm quyền</span>
                             </a>
                         </li>
@@ -53,6 +53,48 @@
                         <li>
                             <a href="listProductAdmin">
                                 <span data-key="t-calendar">Danh sách sản phẩm</span>
+                            </a>
+                        </li>
+
+                    </ul>
+                </li>
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow">
+                        <i data-feather="file"></i>
+                        <span data-key="t-apps">Hóa đơn</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li>
+                            <a href="listProductAdmin">
+                                <span data-key="t-calendar">Danh sách hóa đơn</span>
+                            </a>
+                        </li>
+
+                    </ul>
+                </li>
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow">
+                        <i data-feather="send"></i>
+                        <span data-key="t-apps">Yêu cầu người dùng</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li>
+                            <a href="listProductAdmin">
+                                <span data-key="t-calendar">Danh sách yêu cầu người dùng</span>
+                            </a>
+                        </li>
+
+                    </ul>
+                </li>
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow">
+                        <i data-feather="clock"></i>
+                        <span data-key="t-apps">Lịch sử</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li>
+                            <a href="listProductAdmin">
+                                <span data-key="t-calendar">Lịch sử họat động</span>
                             </a>
                         </li>
 

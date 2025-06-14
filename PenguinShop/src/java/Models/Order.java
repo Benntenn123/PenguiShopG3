@@ -18,6 +18,9 @@ public class Order {
     private boolean paymentStatus;
     private List<OrderDetail> orderDetails;
 
+    public Order() {
+    }
+
     public Order(int orderID, String orderDate, double total, User user, int orderStatus, String shippingAddress, PaymentMethod paymentMethod, boolean paymentStatus, List<OrderDetail> orderDetails) {
         this.orderID = orderID;
         this.orderDate = orderDate;
