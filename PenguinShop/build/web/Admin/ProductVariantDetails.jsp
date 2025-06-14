@@ -484,6 +484,14 @@
                     height: 60px;
                 }
             }
+            .stock-active {
+                color: #28a745;
+                font-weight: 500;
+            }
+            .stock-inactive {
+                color: #dc3545;
+                font-weight: 500;
+            }
         </style>
     </head>
     <body>
@@ -553,8 +561,19 @@
 
                                             <div class="product-detail-meta-item">
                                                 <span class="product-detail-meta-label">Tồn kho</span>
-                                                <span class="product-detail-meta-value">${pv.quantity}</span>
+                                                <span class="product-detail-meta-value">
+                                                    ${pv.quantity} - 
+                                                    <c:choose>
+                                                        <c:when test="${pv.stockStatus == 1}">
+                                                            <span class="stock-active">Đang kinh doanh</span>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <span class="stock-inactive">Đã ngừng kinh doanh</span>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </span>
                                             </div>
+
 
                                             <div class="product-detail-meta-item">
                                                 <span class="product-detail-meta-label">Danh mục</span>
@@ -562,6 +581,7 @@
                                                     <span class="product-detail-meta-value">${cate.categoryName}</span>
                                                 </c:forEach>
                                             </div>
+
                                         </div>
 
                                         <div class="product-detail-price"><fmt:formatNumber value="${pv.price}" type="currency" currencyCode="VND"/></div>
@@ -571,8 +591,9 @@
                                         </div>
 
                                         <div class="product-detail-actions">
-                                            <a href="#" class="product-detail-btn product-detail-btn-primary">Chỉnh sửa variant</a>
-                                            <a href="../productdetail?id=${pv.variantID}" class="product-detail-btn product-detail-btn-secondary">Xem trên shop</a>
+                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalChange"
+                                                    data-bs-whatever="@mdo">Chỉnh sửa</button>
+                                            <a href="../productdetail?id=${pv.variantID}" class="btn btn-primary" style="background-color: white; color: black">Xem trên shop</a>
                                         </div>
                                     </div>
                                 </div>
@@ -604,6 +625,7 @@
                                                             ${list.quantity == 0 ? 'Hết hàng' : 'Còn '.concat(list.quantity)}
                                                         </div>
                                                     </div>
+
                                                 </a>
                                             </div>
                                         </c:forEach>
@@ -617,11 +639,48 @@
                 </div>
             </div>
         </div>
+        <div class="modal fade" id="modalChange" tabindex="-1" aria-labelledby="exampleModalLabel">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Chỉnh sửa ${pv.product.productName}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="userForm" action="update_variant" method="post">
+                            <div class="mb-3">
+                                <label for="recipient-name" class="col-form-label">Tình trạng: </label>
+                                <select style="width: 380px; border-radius: 8px;
+                                        border: 0.3px solid #5156be; color: #5156be;
+                                        padding: 8px" id="select-all" name="stockStatus">
+                                    <option value="" ${pv.stockStatus == '' ? 'selected' : ''}>Chọn trạng thái</option>
+                                    <option value="1" ${pv.stockStatus == '1' ? 'selected' : ''}>Đang kinh doanh</option>
+                                    <option value="0" ${pv.stockStatus == '0' ? 'selected' : ''}>Dừng kinh doanh</option>
+                                </select>
+
+                            </div>
+                            <input type="hidden" name="variantID" value="${pv.variantID}"/>
+                            <div class="mb-3">
+                                <label for="message-text" class="col-form-label">Số lượng:</label>
+                                <textarea class="form-control" name="quantity" id="message-text">${pv.quantity}</textarea>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                        <button onclick="submitForm()" type="button" class="btn btn-primary">Thay đổi</button>
+                    </div>
+                </div>
+            </div>
+        </div>                            
 
         <jsp:include page="Common/RightSideBar.jsp"/>
         <jsp:include page="Common/Js.jsp"/>
         <jsp:include page="Common/Message.jsp"/>
         <script>
+            function submitForm() {
+                document.getElementById('userForm').submit();
+            }
             function changeMainImage(imagePath, index) {
                 const mainImage = document.querySelector('.product-detail-image');
                 if (imagePath.includes('http')) {

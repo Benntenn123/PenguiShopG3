@@ -847,6 +847,25 @@ public class ProductDao extends DBContext {
         return list;
     }
 
+    public boolean updateStatusVariant(String[] data) {
+        String sql = "UPDATE dbo.tbProductVariant SET stockStatus = ? , quantity = ? WHERE variantID = ?";
+        try {
+            int quantity = Integer.parseInt(data[1]);
+            int variantID = Integer.parseInt(data[2]);
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, data[0]);
+            ps.setInt(2, quantity);
+            ps.setInt(3, variantID);
+            int result = ps.executeUpdate();
+            if(result>0){
+                return true;
+            }
+
+        } catch (Exception e) {
+        }
+        return false;
+    }
+
     public static void main(String[] args) {
         ProductDao dao = new ProductDao();
         List<ProductVariant> pv = dao.getVariantProduct(1);
