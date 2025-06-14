@@ -14,6 +14,9 @@ public class Color {
         this.colorName = colorName;
     }
 
+    public Color() {
+    }
+
     public int getColorID() {
         return colorID;
     }

@@ -5,7 +5,7 @@
 <html>
     <head>
         <jsp:include page="Common/Css.jsp"/>
-
+    </head>
     <body>
         <div id="layout-wrapper">
             <fmt:setLocale value="vi_VN"/>
@@ -191,7 +191,7 @@
                                             </th>
                                             <td>
                                                 <img src="../api/img/${list.product.imageMainProduct}" alt="" class="avatar-sm rounded-circle me-2">
-                                                <a href="#" class="text-body">${list.product.productName}</a>
+                                                <a href="variant_details?variantID=${list.variantID}" class="text-body">${list.product.productName}</a>
                                             </td>
                                             <td>${list.size.sizeName}</td>
                                             <td>${list.color.colorName}</td>

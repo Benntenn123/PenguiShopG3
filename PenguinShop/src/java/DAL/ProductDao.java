@@ -483,8 +483,6 @@ public class ProductDao extends DBContext {
         return 0;
     }
 
-    
-
     public boolean isValidProductAndVariant(int variantID, int productID) {
         String sql = "SELECT COUNT(*) FROM dbo.tbProductVariant"
                 + " WHERE productID = ? AND variantID = ?";
@@ -522,9 +520,9 @@ public class ProductDao extends DBContext {
             ps.setInt(3, sizeId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                ProductVariant pv = new ProductVariant(rs.getInt(1)
-                        , rs.getInt(3),
-                        rs.getInt(2),rs.getString(4));
+                ProductVariant pv = new ProductVariant(rs.getInt(1),
+                        rs.getInt(3),
+                        rs.getInt(2), rs.getString(4));
                 return pv;
             }
 
@@ -532,216 +530,351 @@ public class ProductDao extends DBContext {
             e.printStackTrace();
         }
         return null;
-    
+
     }
+
     public List<ProductVariant> getProductVariants(String[] searchCriteria, int page, int pageSize) {
-    List<ProductVariant> list = new ArrayList<>();
-    StringBuilder sql = new StringBuilder(
-            "SELECT pv.variantID, pv.quantity, pv.price, pv.stockStatus, " +
-            "p.productID, p.productName, p.SKU, p.importDate, p.imageMainProduct, p.description, p.full_description, p.weight, " +
-            "c.colorID, c.colorName, s.sizeID, s.sizeName, " +
-            "b.brandID, b.brandName, pt.productTypeID, pt.productTypeName, " +
-            "STRING_AGG(cat.categoryName, ', ') AS categoryNames " +
-            "FROM tbProductVariant pv " +
-            "JOIN tbProduct p ON pv.productID = p.productID " +
-            "JOIN tbColor c ON pv.colorID = c.colorID " +
-            "JOIN tbSize s ON pv.sizeID = s.sizeID " +
-            "JOIN tbBrand b ON p.brandID = b.brandID " +
-            "JOIN tbProductType pt ON p.productTypeID = pt.productTypeID " +
-            "LEFT JOIN tbProductCategory pc ON p.productID = pc.productID " +
-            "LEFT JOIN tbCategory cat ON pc.categoryID = cat.categoryID " +
-            "WHERE 1=1"
-    );
+        List<ProductVariant> list = new ArrayList<>();
+        StringBuilder sql = new StringBuilder(
+                "SELECT pv.variantID, pv.quantity, pv.price, pv.stockStatus, "
+                + "p.productID, p.productName, p.SKU, p.importDate, p.imageMainProduct, p.description, p.full_description, p.weight, "
+                + "c.colorID, c.colorName, s.sizeID, s.sizeName, "
+                + "b.brandID, b.brandName, pt.productTypeID, pt.productTypeName, "
+                + "STRING_AGG(cat.categoryName, ', ') AS categoryNames "
+                + "FROM tbProductVariant pv "
+                + "JOIN tbProduct p ON pv.productID = p.productID "
+                + "JOIN tbColor c ON pv.colorID = c.colorID "
+                + "JOIN tbSize s ON pv.sizeID = s.sizeID "
+                + "JOIN tbBrand b ON p.brandID = b.brandID "
+                + "JOIN tbProductType pt ON p.productTypeID = pt.productTypeID "
+                + "LEFT JOIN tbProductCategory pc ON p.productID = pc.productID "
+                + "LEFT JOIN tbCategory cat ON pc.categoryID = cat.categoryID "
+                + "WHERE 1=1"
+        );
 
-    List<Object> params = new ArrayList<>();
-    int quantityValue = -1;
+        List<Object> params = new ArrayList<>();
+        int quantityValue = -1;
 
-    if (searchCriteria != null && searchCriteria.length > 0) {
-        if (searchCriteria.length > 0 && searchCriteria[0] != null && !searchCriteria[0].trim().isEmpty()) {
-            sql.append(" AND p.productName LIKE ?");
-            params.add("%" + searchCriteria[0].trim() + "%");
-        }
-        if (searchCriteria.length > 1 && searchCriteria[1] != null && !searchCriteria[1].trim().isEmpty()) {
-            sql.append(" AND c.colorName LIKE ?");
-            params.add("%" + searchCriteria[1].trim() + "%");
-        }
-        if (searchCriteria.length > 2 && searchCriteria[2] != null && !searchCriteria[2].trim().isEmpty()) {
-            sql.append(" AND s.sizeName LIKE ?");
-            params.add("%" + searchCriteria[2].trim() + "%");
-        }
-        if (searchCriteria.length > 3 && searchCriteria[3] != null && !searchCriteria[3].trim().isEmpty()) {
-            sql.append(" AND pv.stockStatus LIKE ?");
-            params.add("%" + searchCriteria[3].trim() + "%");
-        }
-        if (searchCriteria.length > 4 && searchCriteria[4] != null && !searchCriteria[4].trim().isEmpty()) {
-            try {
-                quantityValue = Integer.parseInt(searchCriteria[4].trim());
-                if (quantityValue >= 0) {
-                    sql.append(" AND pv.quantity >= ?");
-                    params.add(quantityValue);
+        if (searchCriteria != null && searchCriteria.length > 0) {
+            if (searchCriteria.length > 0 && searchCriteria[0] != null && !searchCriteria[0].trim().isEmpty()) {
+                sql.append(" AND p.productName LIKE ?");
+                params.add("%" + searchCriteria[0].trim() + "%");
+            }
+            if (searchCriteria.length > 1 && searchCriteria[1] != null && !searchCriteria[1].trim().isEmpty()) {
+                sql.append(" AND c.colorName LIKE ?");
+                params.add("%" + searchCriteria[1].trim() + "%");
+            }
+            if (searchCriteria.length > 2 && searchCriteria[2] != null && !searchCriteria[2].trim().isEmpty()) {
+                sql.append(" AND s.sizeName LIKE ?");
+                params.add("%" + searchCriteria[2].trim() + "%");
+            }
+            if (searchCriteria.length > 3 && searchCriteria[3] != null && !searchCriteria[3].trim().isEmpty()) {
+                sql.append(" AND pv.stockStatus LIKE ?");
+                params.add("%" + searchCriteria[3].trim() + "%");
+            }
+            if (searchCriteria.length > 4 && searchCriteria[4] != null && !searchCriteria[4].trim().isEmpty()) {
+                try {
+                    quantityValue = Integer.parseInt(searchCriteria[4].trim());
+                    if (quantityValue >= 0) {
+                        sql.append(" AND pv.quantity >= ?");
+                        params.add(quantityValue);
+                    }
+                } catch (NumberFormatException e) {
+                    // Bỏ qua nếu không parse được
                 }
-            } catch (NumberFormatException e) {
-                // Bỏ qua nếu không parse được
+            }
+            if (searchCriteria.length > 5 && searchCriteria[5] != null && !searchCriteria[5].trim().isEmpty()) {
+                sql.append(" AND pt.productTypeName LIKE ?");
+                params.add("%" + searchCriteria[5].trim() + "%");
+            }
+            if (searchCriteria.length > 6 && searchCriteria[6] != null && !searchCriteria[6].trim().isEmpty()) {
+                sql.append(" AND b.brandName LIKE ?");
+                params.add("%" + searchCriteria[6].trim() + "%");
+            }
+            if (searchCriteria.length > 7 && searchCriteria[7] != null && !searchCriteria[7].trim().isEmpty()) {
+                sql.append(" AND EXISTS (SELECT 1 FROM tbProductCategory pc2 "
+                        + "JOIN tbCategory cat2 ON pc2.categoryID = cat2.categoryID "
+                        + "WHERE pc2.productID = p.productID AND cat2.categoryName LIKE ?)");
+                params.add("%" + searchCriteria[7].trim() + "%");
             }
         }
-        if (searchCriteria.length > 5 && searchCriteria[5] != null && !searchCriteria[5].trim().isEmpty()) {
-            sql.append(" AND pt.productTypeName LIKE ?");
-            params.add("%" + searchCriteria[5].trim() + "%");
+
+        sql.append(" GROUP BY pv.variantID, pv.quantity, pv.price, pv.stockStatus, "
+                + "p.productID, p.productName, p.SKU, p.importDate, p.imageMainProduct, p.description, p.full_description, p.weight, "
+                + "c.colorID, c.colorName, s.sizeID, s.sizeName, b.brandID, b.brandName, pt.productTypeID, pt.productTypeName "
+                + "ORDER BY pv.variantID OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
+
+        try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i));
+            }
+            ps.setInt(params.size() + 1, (page - 1) * pageSize);
+            ps.setInt(params.size() + 2, pageSize);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Type type = new Type(rs.getInt("productTypeID"), rs.getString("productTypeName"));
+                    Brand brand = new Brand(rs.getString("brandName"));
+                    String categoryNames = rs.getString("categoryNames") != null ? rs.getString("categoryNames") : "Không có danh mục";
+                    Category category = new Category(0, categoryNames, null); // categoryID = 0 vì không có ID cụ thể
+                    Product product = new Product(
+                            rs.getInt("productID"), rs.getString("productName"), rs.getString("SKU"),
+                            type, category, rs.getString("importDate"), rs.getString("imageMainProduct"),
+                            rs.getString("description"), rs.getDouble("weight"),
+                            rs.getString("full_description"), brand
+                    );
+
+                    Color color = new Color(rs.getInt("colorID"), rs.getString("colorName"));
+                    Size size = new Size(rs.getInt("sizeID"), rs.getString("sizeName"));
+
+                    ProductVariant variant = new ProductVariant(
+                            rs.getInt("variantID"), rs.getInt("quantity"), product, color, size,
+                            rs.getDouble("price"), rs.getString("stockStatus")
+                    );
+                    list.add(variant);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error fetching product variants: " + e.getMessage(), e);
         }
-        if (searchCriteria.length > 6 && searchCriteria[6] != null && !searchCriteria[6].trim().isEmpty()) {
-            sql.append(" AND b.brandName LIKE ?");
-            params.add("%" + searchCriteria[6].trim() + "%");
-        }
-        if (searchCriteria.length > 7 && searchCriteria[7] != null && !searchCriteria[7].trim().isEmpty()) {
-            sql.append(" AND EXISTS (SELECT 1 FROM tbProductCategory pc2 " +
-                       "JOIN tbCategory cat2 ON pc2.categoryID = cat2.categoryID " +
-                       "WHERE pc2.productID = p.productID AND cat2.categoryName LIKE ?)");
-            params.add("%" + searchCriteria[7].trim() + "%");
-        }
+        return list;
     }
 
-    sql.append(" GROUP BY pv.variantID, pv.quantity, pv.price, pv.stockStatus, " +
-               "p.productID, p.productName, p.SKU, p.importDate, p.imageMainProduct, p.description, p.full_description, p.weight, " +
-               "c.colorID, c.colorName, s.sizeID, s.sizeName, b.brandID, b.brandName, pt.productTypeID, pt.productTypeName " +
-               "ORDER BY pv.variantID OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
+    public int getTotalRecords(String[] searchCriteria) {
+        List<Object> params = new ArrayList<>();
+        StringBuilder sql = new StringBuilder(
+                "SELECT COUNT(DISTINCT pv.variantID) AS total "
+                + "FROM tbProductVariant pv "
+                + "JOIN tbProduct p ON pv.productID = p.productID "
+                + "JOIN tbColor c ON pv.colorID = c.colorID "
+                + "JOIN tbSize s ON pv.sizeID = s.sizeID "
+                + "JOIN tbBrand b ON p.brandID = b.brandID "
+                + "JOIN tbProductType pt ON p.productTypeID = pt.productTypeID "
+                + "LEFT JOIN tbProductCategory pc ON p.productID = pc.productID "
+                + "LEFT JOIN tbCategory cat ON pc.categoryID = cat.categoryID "
+                + "WHERE 1=1"
+        );
 
-    try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
-        for (int i = 0; i < params.size(); i++) {
-            ps.setObject(i + 1, params.get(i));
+        int quantityValue = -1;
+
+        if (searchCriteria != null && searchCriteria.length > 0) {
+            if (searchCriteria.length > 0 && searchCriteria[0] != null && !searchCriteria[0].trim().isEmpty()) {
+                sql.append(" AND p.productName LIKE ?");
+                params.add("%" + searchCriteria[0].trim() + "%");
+            }
+            if (searchCriteria.length > 1 && searchCriteria[1] != null && !searchCriteria[1].trim().isEmpty()) {
+                sql.append(" AND c.colorName LIKE ?");
+                params.add("%" + searchCriteria[1].trim() + "%");
+            }
+            if (searchCriteria.length > 2 && searchCriteria[2] != null && !searchCriteria[2].trim().isEmpty()) {
+                sql.append(" AND s.sizeName LIKE ?");
+                params.add("%" + searchCriteria[2].trim() + "%");
+            }
+            if (searchCriteria.length > 3 && searchCriteria[3] != null && !searchCriteria[3].trim().isEmpty()) {
+                sql.append(" AND pv.stockStatus LIKE ?");
+                params.add("%" + searchCriteria[3].trim() + "%");
+            }
+            if (searchCriteria.length > 4 && searchCriteria[4] != null && !searchCriteria[4].trim().isEmpty()) {
+                try {
+                    quantityValue = Integer.parseInt(searchCriteria[4].trim());
+                    if (quantityValue >= 0) {
+                        sql.append(" AND pv.quantity >= ?");
+                        params.add(quantityValue);
+                    }
+                } catch (NumberFormatException e) {
+                    // Bỏ qua nếu không parse được
+                }
+            }
+            if (searchCriteria.length > 5 && searchCriteria[5] != null && !searchCriteria[5].trim().isEmpty()) {
+                sql.append(" AND pt.productTypeName LIKE ?");
+                params.add("%" + searchCriteria[5].trim() + "%");
+            }
+            if (searchCriteria.length > 6 && searchCriteria[6] != null && !searchCriteria[6].trim().isEmpty()) {
+                sql.append(" AND b.brandName LIKE ?");
+                params.add("%" + searchCriteria[6].trim() + "%");
+            }
+            if (searchCriteria.length > 7 && searchCriteria[7] != null && !searchCriteria[7].trim().isEmpty()) {
+                sql.append(" AND EXISTS (SELECT 1 FROM tbProductCategory pc2 "
+                        + "JOIN tbCategory cat2 ON pc2.categoryID = cat2.categoryID "
+                        + "WHERE pc2.productID = p.productID AND cat2.categoryName LIKE ?)");
+                params.add("%" + searchCriteria[7].trim() + "%");
+            }
         }
-        ps.setInt(params.size() + 1, (page - 1) * pageSize);
-        ps.setInt(params.size() + 2, pageSize);
 
-        try (ResultSet rs = ps.executeQuery()) {
+        try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i));
+            }
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("total");
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error counting product variants: " + e.getMessage(), e);
+        }
+        return 0;
+    }
+
+    public ProductVariant getProductVariantWithID(int variantID) {
+        String sql = "SELECT pv.variantID, pv.productID, pv.colorID, pv.sizeID, pv.price, pv.quantity, pv.stockStatus, "
+                + "p.productName, p.imageMainProduct, p.brandID, p.productTypeID, p.description,p.full_description,"
+                + "c.colorName, s.sizeName, b.brandName, t.productTypeName,b.logo, p.SKU "
+                + "FROM dbo.tbProductVariant pv "
+                + "JOIN dbo.tbProduct p ON p.productID = pv.productID "
+                + "JOIN dbo.tbColor c ON c.colorID = pv.colorID "
+                + "JOIN dbo.tbSize s ON s.sizeID = pv.sizeID "
+                + "JOIN dbo.tbBrand b ON b.brandID = p.brandID "
+                + "JOIN dbo.tbProductType t ON t.productTypeID = p.productTypeID "
+                + "WHERE pv.variantID = ?";
+
+        ProductVariant variant = null;
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, variantID);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                // Create related objects
+                Brand brand = new Brand();
+                brand.setBrandID(rs.getInt("brandID"));
+                brand.setBrandName(rs.getString("brandName"));
+                brand.setLogo(rs.getString("logo"));
+
+                Type productType = new Type();
+                productType.setTypeId(rs.getInt("productTypeID"));
+                productType.setTypeName(rs.getString("productTypeName"));
+
+                Product product = new Product();
+                product.setProductId(rs.getInt("productID"));
+                product.setProductName(rs.getString("productName"));
+                product.setType(productType);
+                product.setImageMainProduct(rs.getString("imageMainProduct"));
+                product.setDescription(rs.getString("description"));
+                product.setFull_description(rs.getString("full_description"));
+                product.setBrand(brand);
+                product.setSku(rs.getString("SKU"));
+
+                Color color = new Color();
+                color.setColorID(rs.getInt("colorID"));
+                color.setColorName(rs.getString("colorName"));
+
+                Size size = new Size();
+                size.setSizeID(rs.getInt("sizeID"));
+                size.setSizeName(rs.getString("sizeName"));
+
+                // Create ProductVariant
+                variant = new ProductVariant();
+                variant.setVariantID(rs.getInt("variantID"));
+                variant.setProduct(product);
+                variant.setColor(color);
+                variant.setSize(size);
+                variant.setPrice(rs.getDouble("price"));
+                variant.setQuantity(rs.getInt("quantity"));
+                variant.setStockStatus(rs.getString("stockStatus"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Replace with proper logging in production
+        }
+
+        return variant;
+    }
+
+    public List<ProductVariant> getVariantProduct(int productID) {
+        List<ProductVariant> list = new ArrayList<>();
+        String sql = "SELECT pv.variantID, pv.productID, pv.colorID, pv.sizeID, pv.price, pv.quantity, pv.stockStatus, "
+                + "p.productName, p.imageMainProduct, p.brandID, p.productTypeID, p.description,p.full_description,"
+                + "c.colorName, s.sizeName, b.brandName, t.productTypeName,b.logo, p.SKU "
+                + "FROM dbo.tbProductVariant pv "
+                + "JOIN dbo.tbProduct p ON p.productID = pv.productID "
+                + "JOIN dbo.tbColor c ON c.colorID = pv.colorID "
+                + "JOIN dbo.tbSize s ON s.sizeID = pv.sizeID "
+                + "JOIN dbo.tbBrand b ON b.brandID = p.brandID "
+                + "JOIN dbo.tbProductType t ON t.productTypeID = p.productTypeID "
+                + "WHERE pv.productID = ?";
+
+        ProductVariant variant = null;
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, productID);
+            ResultSet rs = ps.executeQuery();
+            System.out.println(sql);
+
             while (rs.next()) {
-                Type type = new Type(rs.getInt("productTypeID"), rs.getString("productTypeName"));
-                Brand brand = new Brand(rs.getString("brandName"));
-                String categoryNames = rs.getString("categoryNames") != null ? rs.getString("categoryNames") : "Không có danh mục";
-                Category category = new Category(0, categoryNames, null); // categoryID = 0 vì không có ID cụ thể
-                Product product = new Product(
-                    rs.getInt("productID"), rs.getString("productName"), rs.getString("SKU"),
-                    type, category, rs.getString("importDate"), rs.getString("imageMainProduct"),
-                    rs.getString("description"), rs.getDouble("weight"),
-                    rs.getString("full_description"), brand
-                );
+                // Create related objects
+                Brand brand = new Brand();
+                brand.setBrandID(rs.getInt("brandID"));
+                brand.setBrandName(rs.getString("brandName"));
+                brand.setLogo(rs.getString("logo"));
 
-                Color color = new Color(rs.getInt("colorID"), rs.getString("colorName"));
-                Size size = new Size(rs.getInt("sizeID"), rs.getString("sizeName"));
+                Type productType = new Type();
+                productType.setTypeId(rs.getInt("productTypeID"));
+                productType.setTypeName(rs.getString("productTypeName"));
 
-                ProductVariant variant = new ProductVariant(
-                    rs.getInt("variantID"), rs.getInt("quantity"), product, color, size,
-                    rs.getDouble("price"), rs.getString("stockStatus")
-                );
+                Product product = new Product();
+                product.setProductId(rs.getInt("productID"));
+                product.setProductName(rs.getString("productName"));
+                product.setType(productType);
+                product.setImageMainProduct(rs.getString("imageMainProduct"));
+                product.setDescription(rs.getString("description"));
+                product.setFull_description(rs.getString("full_description"));
+                product.setBrand(brand);
+                product.setSku(rs.getString("SKU"));
+
+                Color color = new Color();
+                color.setColorID(rs.getInt("colorID"));
+                color.setColorName(rs.getString("colorName"));
+
+                Size size = new Size();
+                size.setSizeID(rs.getInt("sizeID"));
+                size.setSizeName(rs.getString("sizeName"));
+
+                // Create ProductVariant
+                variant = new ProductVariant();
+                variant.setVariantID(rs.getInt("variantID"));
+                variant.setProduct(product);
+                variant.setColor(color);
+                variant.setSize(size);
+                variant.setPrice(rs.getDouble("price"));
+                variant.setQuantity(rs.getInt("quantity"));
+                variant.setStockStatus(rs.getString("stockStatus"));
                 list.add(variant);
             }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Replace with proper logging in production
         }
-    } catch (SQLException e) {
-        throw new RuntimeException("Error fetching product variants: " + e.getMessage(), e);
-    }
-    return list;
-}
-    public int getTotalRecords(String[] searchCriteria) {
-    List<Object> params = new ArrayList<>();
-    StringBuilder sql = new StringBuilder(
-            "SELECT COUNT(DISTINCT pv.variantID) AS total " +
-            "FROM tbProductVariant pv " +
-            "JOIN tbProduct p ON pv.productID = p.productID " +
-            "JOIN tbColor c ON pv.colorID = c.colorID " +
-            "JOIN tbSize s ON pv.sizeID = s.sizeID " +
-            "JOIN tbBrand b ON p.brandID = b.brandID " +
-            "JOIN tbProductType pt ON p.productTypeID = pt.productTypeID " +
-            "LEFT JOIN tbProductCategory pc ON p.productID = pc.productID " +
-            "LEFT JOIN tbCategory cat ON pc.categoryID = cat.categoryID " +
-            "WHERE 1=1"
-    );
 
-    int quantityValue = -1;
-
-    if (searchCriteria != null && searchCriteria.length > 0) {
-        if (searchCriteria.length > 0 && searchCriteria[0] != null && !searchCriteria[0].trim().isEmpty()) {
-            sql.append(" AND p.productName LIKE ?");
-            params.add("%" + searchCriteria[0].trim() + "%");
-        }
-        if (searchCriteria.length > 1 && searchCriteria[1] != null && !searchCriteria[1].trim().isEmpty()) {
-            sql.append(" AND c.colorName LIKE ?");
-            params.add("%" + searchCriteria[1].trim() + "%");
-        }
-        if (searchCriteria.length > 2 && searchCriteria[2] != null && !searchCriteria[2].trim().isEmpty()) {
-            sql.append(" AND s.sizeName LIKE ?");
-            params.add("%" + searchCriteria[2].trim() + "%");
-        }
-        if (searchCriteria.length > 3 && searchCriteria[3] != null && !searchCriteria[3].trim().isEmpty()) {
-            sql.append(" AND pv.stockStatus LIKE ?");
-            params.add("%" + searchCriteria[3].trim() + "%");
-        }
-        if (searchCriteria.length > 4 && searchCriteria[4] != null && !searchCriteria[4].trim().isEmpty()) {
-            try {
-                quantityValue = Integer.parseInt(searchCriteria[4].trim());
-                if (quantityValue >= 0) {
-                    sql.append(" AND pv.quantity >= ?");
-                    params.add(quantityValue);
-                }
-            } catch (NumberFormatException e) {
-                // Bỏ qua nếu không parse được
-            }
-        }
-        if (searchCriteria.length > 5 && searchCriteria[5] != null && !searchCriteria[5].trim().isEmpty()) {
-            sql.append(" AND pt.productTypeName LIKE ?");
-            params.add("%" + searchCriteria[5].trim() + "%");
-        }
-        if (searchCriteria.length > 6 && searchCriteria[6] != null && !searchCriteria[6].trim().isEmpty()) {
-            sql.append(" AND b.brandName LIKE ?");
-            params.add("%" + searchCriteria[6].trim() + "%");
-        }
-        if (searchCriteria.length > 7 && searchCriteria[7] != null && !searchCriteria[7].trim().isEmpty()) {
-            sql.append(" AND EXISTS (SELECT 1 FROM tbProductCategory pc2 " +
-                       "JOIN tbCategory cat2 ON pc2.categoryID = cat2.categoryID " +
-                       "WHERE pc2.productID = p.productID AND cat2.categoryName LIKE ?)");
-            params.add("%" + searchCriteria[7].trim() + "%");
-        }
+        return list;
     }
 
-    try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
-        for (int i = 0; i < params.size(); i++) {
-            ps.setObject(i + 1, params.get(i));
-        }
-        try (ResultSet rs = ps.executeQuery()) {
-            if (rs.next()) {
-                return rs.getInt("total");
-            }
-        }
-    } catch (SQLException e) {
-        throw new RuntimeException("Error counting product variants: " + e.getMessage(), e);
-    }
-    return 0;
-}
     public static void main(String[] args) {
         ProductDao dao = new ProductDao();
-        String[] searchCriteria = {
-            "giày", "", "", "1", "", "", "", ""
-        };
-        int page = 1;
-        int pageSize = 10;
-
-        List<ProductVariant> variants = dao.getProductVariants(searchCriteria, page, pageSize);
-        System.out.println("Found " + variants.size() + " variants:");
-        for (ProductVariant v : variants) {
-            System.out.println("Variant ID: " + v.getVariantID() +
-                    ", Product: " + v.getProduct().getProductName() +
-                    ", SKU: " + v.getProduct().getSku() +
-                    ", Brand: " + v.getProduct().getBrand().getBrandName() +
-                    ", Category: " + v.getProduct().getCategory().getCategoryName() +
-                    ", Type: " + v.getProduct().getType().getTypeName() +
-                    ", Color: " + v.getColor().getColorName() +
-                    ", Size: " + v.getSize().getSizeName() +
-                    ", Quantity: " + v.getQuantity() +
-                    ", Price: " + v.getPrice() +
-                    ", Stock Status: " + v.getStockStatus());
-        }
-
-        int totalRecords = dao.getTotalRecords(searchCriteria);
-        System.out.println("Total Records: " + totalRecords);
+        List<ProductVariant> pv = dao.getVariantProduct(1);
+        System.out.println(pv.size());
+//        String[] searchCriteria = {
+//            "giày", "", "", "1", "", "", "", ""
+//        };
+//        int page = 1;
+//        int pageSize = 10;
+//
+//        List<ProductVariant> variants = dao.getProductVariants(searchCriteria, page, pageSize);
+//        System.out.println("Found " + variants.size() + " variants:");
+//        for (ProductVariant v : variants) {
+//            System.out.println("Variant ID: " + v.getVariantID()
+//                    + ", Product: " + v.getProduct().getProductName()
+//                    + ", SKU: " + v.getProduct().getSku()
+//                    + ", Brand: " + v.getProduct().getBrand().getBrandName()
+//                    + ", Category: " + v.getProduct().getCategory().getCategoryName()
+//                    + ", Type: " + v.getProduct().getType().getTypeName()
+//                    + ", Color: " + v.getColor().getColorName()
+//                    + ", Size: " + v.getSize().getSizeName()
+//                    + ", Quantity: " + v.getQuantity()
+//                    + ", Price: " + v.getPrice()
+//                    + ", Stock Status: " + v.getStockStatus());
+//        }
+//
+//        int totalRecords = dao.getTotalRecords(searchCriteria);
+//        System.out.println("Total Records: " + totalRecords);
     }
 
-    
 }

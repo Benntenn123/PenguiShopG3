@@ -19,6 +19,9 @@ public class ProductVariant {
         this.stockStatus = stockStatus;
     }
 
+    public ProductVariant() {
+    }
+
     public ProductVariant(int variantID) {
         this.variantID = variantID;
     }
