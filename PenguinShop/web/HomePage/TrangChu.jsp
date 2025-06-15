@@ -2080,27 +2080,7 @@
                 });
 
                 // Handle form submission
-                supportForm.addEventListener('submit', (e) => {
-                    e.preventDefault();
-
-                    // Get form data
-                    const formData = new FormData(supportForm);
-                    const data = Object.fromEntries(formData);
-
-                    // Show success message
-                    successMessage.classList.add('show');
-
-                    // Reset form
-                    supportForm.reset();
-
-                    // Hide success message after 5 seconds
-                    setTimeout(() => {
-                        successMessage.classList.remove('show');
-                    }, 5000);
-
-                    // Log data (in real app, send to server)
-                    console.log('Support request:', data);
-                });
+                
 
                 // Hide success message when typing
                 const inputs = supportForm.querySelectorAll('input, select, textarea');

@@ -168,9 +168,9 @@ INSERT INTO tbCart (userID, variantID, quantity, productID) VALUES
 (1, 1, 2, 1);
 
 -- tbRequests
-INSERT INTO tbRequests (userID, requestType, description, requestStatus, requestDate) VALUES
-(2, N'Hỗ trợ đơn hàng', N'Cần kiểm tra trạng thái đơn hàng #123', 0, '2025-05-25 16:40:00'),
-(3, N'Báo lỗi', N'Hình ảnh sản phẩm không hiển thị đúng', 0, '2025-05-25 16:45:00');
+INSERT INTO tbRequests (email_request,phone_request,name_request, requestType, description, requestStatus, requestDate) VALUES
+('kn1802204@gmail.com','0936971273','Bùi Văn Sơn', N'Hỗ trợ đơn hàng', N'Cần kiểm tra trạng thái đơn hàng #123', 0, '2025-05-25 16:40:00'),
+('kn1802204@gmail.com','0936971273','Bùi Văn Sơn', N'Báo lỗi', N'Hình ảnh sản phẩm không hiển thị đúng', 0, '2025-05-25 16:45:00');
 
 -- tbPaymentMethod
 INSERT INTO tbPaymentMethod (paymentMethodName, description) VALUES

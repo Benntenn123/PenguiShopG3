@@ -297,14 +297,15 @@ CREATE TABLE tbOrderDetail (
 -- Bảng yêu cầu hỗ trợ
 CREATE TABLE tbRequests (
     requestID INT PRIMARY KEY IDENTITY(1,1),
-    userID INT,
+    email_request NVARCHAR(255),
+	phone_request NVARCHAR(255),
+	name_request NVARCHAR(255),
     requestType NVARCHAR(50) NOT NULL,
     description NVARCHAR(500) NOT NULL,
     requestStatus INT NOT NULL DEFAULT 0,
     requestDate DATETIME NOT NULL DEFAULT GETDATE(),
     response NVARCHAR(500),
     responseDate DATETIME,
-    FOREIGN KEY (userID) REFERENCES tbUsers(userID)
 );
 
 -- Bảng banner

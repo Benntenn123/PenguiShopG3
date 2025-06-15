@@ -582,12 +582,8 @@
                 </div>
 
                 <div class="partnership-chat-form">
-                    <div style="font-size: 16px !important;
-                         color: white" class="partnership-success-message" id="partnershipSuccessMessage">
-                        ✅ Cảm ơn bạn! Chúng tôi đã nhận được thông tin và sẽ liên hệ lại trong thời gian sớm nhất.
-                    </div>
 
-                    <form id="partnershipSupportForm">
+                    <form action="sendRequestSupport" method="post" id="partnershipSupportForm">
                         <div  class="partnership-form-group">
                             <label style="font-size: 16px !important;" for="partnershipFullName">Họ và tên *</label>
                             <input style="font-size: 16px !important;" type="text" id="partnershipFullName" name="fullName" required placeholder="Nhập họ tên của bạn">
@@ -607,13 +603,13 @@
                             <label style="font-size: 16px !important;" for="partnershipIssueType">Vấn đề gặp phải *</label>
                             <select style="font-size: 16px !important;" id="partnershipIssueType" name="issueType" required>
                                 <option value="">-- Chọn loại vấn đề --</option>
-                                <option value="account">Trạng thái tài khoản</option>
-                                <option value="purchase">Vấn đề mua hàng</option>
-                                <option value="payment">Vấn đề thanh toán</option>
-                                <option value="shipping">Vấn đề giao hàng</option>
-                                <option value="refund">Hoàn tiền/Đổi trả</option>
-                                <option value="technical">Lỗi kỹ thuật</option>
-                                <option value="other">Vấn đề khác</option>
+                                <option value="Trạng thái tài khoản">Trạng thái tài khoản</option>
+                                <option value="Vấn đề mua hàng">Vấn đề mua hàng</option>
+                                <option value="Vấn đề thanh toán">Vấn đề thanh toán</option>
+                                <option value="Vấn đề giao hàng">Vấn đề giao hàng</option>
+                                <option value="Hoàn tiền/Đổi trả">Hoàn tiền/Đổi trả</option>
+                                <option value="Lỗi kỹ thuật">Lỗi kỹ thuật</option>
+                                <option value="Vấn đề khác">Vấn đề khác</option>
                             </select>
                         </div>
 
