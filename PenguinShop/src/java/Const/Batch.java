@@ -11,4 +11,6 @@ public class Batch {
     public static final int BATCH_SEARCH_PRODUCT = 10;
     
     public static final int BATCH_SEARCH_ORDER= 10;
+    
+    public static final int BATCH_SEARCH_REQUESTS = 10;
 }

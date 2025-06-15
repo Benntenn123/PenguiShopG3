@@ -79,7 +79,7 @@
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
                         <li>
-                            <a href="listProductAdmin">
+                            <a href="listRequestSupport">
                                 <span data-key="t-calendar">Danh sách yêu cầu người dùng</span>
                             </a>
                         </li>

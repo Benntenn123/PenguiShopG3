@@ -435,4 +435,79 @@ public class SendMail {
             return false;
         }
     }
+    
+    public static boolean sendMailAsyncCamOn2(String email, String nameUser, String htmlContent) {
+        Thread thread = new Thread(() -> {
+            try {
+                SendMail.guiMailCamOn2(email, nameUser,htmlContent);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+        thread.start();
+
+        return true;
+    }
+    
+    public static boolean guiMailCamOn2(String email, String nameUser, String htmlContent) throws UnsupportedEncodingException, AddressException, MessagingException {
+    Properties props = new Properties();
+    props.put("mail.smtp.auth", "true");
+    props.put("mail.smtp.host", Gmail.HOST_NAME);
+    props.put("mail.smtp.starttls.enable", "true");
+    props.put("mail.smtp.port", Gmail.TSL_PORT);
+
+    Session session = Session.getInstance(props, new jakarta.mail.Authenticator() {
+        protected PasswordAuthentication getPasswordAuthentication() {
+            return new PasswordAuthentication(Gmail.APP_EMAIL, Gmail.APP_PASSWORD);
+        }
+    });
+
+    // Bật debug để kiểm tra chi tiết
+    session.setDebug(true);
+
+    try {
+        MimeMessage message = new MimeMessage(session);
+        message.setFrom(new InternetAddress(Gmail.APP_EMAIL));
+        message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
+
+        String subject = "Cảm ơn bạn đã báo cáo lỗi - PenguinShop";
+
+        // Sử dụng HTML content từ CKEditor
+        String emailContent = htmlContent;
+        
+        // Nếu cần thêm thông tin động vào content
+        if (emailContent.contains("{{nameUser}}")) {
+            emailContent = emailContent.replace("{{nameUser}}", nameUser);
+        }
+        if (emailContent.contains("{{email}}")) {
+            emailContent = emailContent.replace("{{email}}", email);
+        }
+        if (emailContent.contains("{{currentTime}}")) {
+            emailContent = emailContent.replace("{{currentTime}}", 
+                new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new java.util.Date()));
+        }
+
+        // Đặt tiêu đề với UTF-8
+        message.setSubject(MimeUtility.encodeText(subject, "UTF-8", "B"));
+
+        // Tạo MimeMultipart với subtype "alternative"
+        MimeMultipart multipart = new MimeMultipart("alternative");
+
+        // Tạo phần nội dung HTML
+        MimeBodyPart htmlPart = new MimeBodyPart();
+        htmlPart.setContent(emailContent, "text/html; charset=UTF-8");
+        multipart.addBodyPart(htmlPart);
+
+        // Gán multipart vào message
+        message.setContent(multipart);
+
+        // Gửi email
+        Transport.send(message);
+        System.out.println("Mail cảm ơn đã được gửi thành công tại: " + System.currentTimeMillis());
+        return true;
+    } catch (MessagingException e) {
+        e.printStackTrace();
+        return false;
+    }
+}
 }
