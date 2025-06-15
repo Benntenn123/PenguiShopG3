@@ -1,7 +1,6 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 <div class="rightbar-overlay"></div>
-<script src="../Admin/assets/js/submitForm.js"></script>
 <!-- JAVASCRIPT -->
 <script src="../Admin/assets/libs/jquery/jquery.min.js"></script>
 <script src="../Admin/assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>

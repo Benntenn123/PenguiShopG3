@@ -92,6 +92,11 @@ import java.util.Date;
         this.image_user = image_user;
     }
 
+    public User(int aInt, String string) {
+        this.userID = aInt;
+        this.fullName = string;
+    }
+
     public String getImage_user() {
         return image_user;
     }

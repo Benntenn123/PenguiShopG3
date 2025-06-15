@@ -10,6 +10,9 @@ public class PaymentMethod {
     private String paymentMethodName;
     private String description;
 
+    public PaymentMethod() {
+    }
+
     public PaymentMethod(int paymentMethodID, String paymentMethodName, String description) {
         this.paymentMethodID = paymentMethodID;
         this.paymentMethodName = paymentMethodName;

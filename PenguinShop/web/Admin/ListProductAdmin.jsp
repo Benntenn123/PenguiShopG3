@@ -119,7 +119,7 @@
                                                     </select>
                                                 </div>
                                                 <div class="col-md-3">
-                                                    
+
                                                     <label for="brand" class="form-label">Thương hiệu</label>
                                                     <select class="form-select" id="brand" name="brand">
                                                         <option value="">Tất cả thương hiệu</option>
@@ -134,7 +134,7 @@
                                                     <label for="cate" class="form-label">Danh mục</label>
                                                     <select class="form-select" id="cate" name="cate">
                                                         <option value="">Tất cả danh mục</option>
-                                                        
+
                                                         <c:forEach var="category" items="${categoryList}">
                                                             <option value="${category.categoryName}" ${param.cate == category.categoryName ? 'selected' : ''}>
                                                                 ${category.categoryName}
@@ -229,81 +229,81 @@
                                 </div>
                             </div>
                             <div class="col-sm-12 col-md-7">
-    <div class="dataTables_paginate paging_simple_numbers">
-        <ul class="pagination justify-content-end" id="pagination">
-            <!-- Previous Button -->
-            <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
-                <c:choose>
-                    <c:when test="${currentPage == 1}">
-                        <span class="page-link" tabindex="-1" aria-disabled="true">
-                            <i class="mdi mdi-chevron-left"></i>
-                        </span>
-                    </c:when>
-                    <c:otherwise>
-                        <a class="page-link" href="?page=${currentPage - 1}&productName=${param.productName}&color=${param.color}&size=${param.size}&status=${param.status}&quantity=${param.quantity}&type=${param.type}&brand=${param.brand}&cate=${param.cate}" tabindex="-1">
-                            <i class="mdi mdi-chevron-left"></i>
-                        </a>
-                    </c:otherwise>
-                </c:choose>
-            </li>
+                                <div class="dataTables_paginate paging_simple_numbers">
+                                    <ul class="pagination justify-content-end" id="pagination">
+                                        <!-- Previous Button -->
+                                        <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
+                                            <c:choose>
+                                                <c:when test="${currentPage == 1}">
+                                                    <span class="page-link" tabindex="-1" aria-disabled="true">
+                                                        <i class="mdi mdi-chevron-left"></i>
+                                                    </span>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <a class="page-link" href="?page=${currentPage - 1}&productName=${param.productName}&color=${param.color}&size=${param.size}&status=${param.status}&quantity=${param.quantity}&type=${param.type}&brand=${param.brand}&cate=${param.cate}" tabindex="-1">
+                                                        <i class="mdi mdi-chevron-left"></i>
+                                                    </a>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </li>
 
-            <!-- First page -->
-            <c:if test="${currentPage > 3}">
-                <li class="page-item">
-                    <a class="page-link" href="?page=1&productName=${param.productName}&color=${param.color}&size=${param.size}&status=${param.status}&quantity=${param.quantity}&type=${param.type}&brand=${param.brand}&cate=${param.cate}">1</a>
-                </li>
-                <c:if test="${currentPage > 4}">
-                    <li class="page-item disabled">
-                        <span class="page-link">...</span>
-                    </li>
-                </c:if>
-            </c:if>
+                                        <!-- First page -->
+                                        <c:if test="${currentPage > 3}">
+                                            <li class="page-item">
+                                                <a class="page-link" href="?page=1&productName=${param.productName}&color=${param.color}&size=${param.size}&status=${param.status}&quantity=${param.quantity}&type=${param.type}&brand=${param.brand}&cate=${param.cate}">1</a>
+                                            </li>
+                                            <c:if test="${currentPage > 4}">
+                                                <li class="page-item disabled">
+                                                    <span class="page-link">...</span>
+                                                </li>
+                                            </c:if>
+                                        </c:if>
 
-            <!-- Page Numbers around current page -->
-            <c:forEach var="i" begin="${currentPage - 2 < 1 ? 1 : currentPage - 2}" 
-                       end="${currentPage + 2 > totalPages ? totalPages : currentPage + 2}">
-                <li class="page-item ${i == currentPage ? 'active' : ''}">
-                    <c:choose>
-                        <c:when test="${i == currentPage}">
-                            <span class="page-link">${i}</span>
-                        </c:when>
-                        <c:otherwise>
-                            <a class="page-link" href="?page=${i}&productName=${param.productName}&color=${param.color}&size=${param.size}&status=${param.status}&quantity=${param.quantity}&type=${param.type}&brand=${param.brand}&cate=${param.cate}">${i}</a>
-                        </c:otherwise>
-                    </c:choose>
-                </li>
-            </c:forEach>
+                                        <!-- Page Numbers around current page -->
+                                        <c:forEach var="i" begin="${currentPage - 2 < 1 ? 1 : currentPage - 2}" 
+                                                   end="${currentPage + 2 > totalPages ? totalPages : currentPage + 2}">
+                                            <li class="page-item ${i == currentPage ? 'active' : ''}">
+                                                <c:choose>
+                                                    <c:when test="${i == currentPage}">
+                                                        <span class="page-link">${i}</span>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <a class="page-link" href="?page=${i}&productName=${param.productName}&color=${param.color}&size=${param.size}&status=${param.status}&quantity=${param.quantity}&type=${param.type}&brand=${param.brand}&cate=${param.cate}">${i}</a>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </li>
+                                        </c:forEach>
 
-            <!-- Last page -->
-            <c:if test="${currentPage < totalPages - 2}">
-                <c:if test="${currentPage < totalPages - 3}">
-                    <li class="page-item disabled">
-                        <span class="page-link">...</span>
-                    </li>
-                </c:if>
-                <li class="page-item">
-                    <a class="page-link" href="?page=${totalPages}&productName=${param.productName}&color=${param.color}&size=${param.size}&status=${param.status}&quantity=${param.quantity}&type=${param.type}&brand=${param.brand}&cate=${param.cate}">${totalPages}</a>
-                </li>
-            </c:if>
+                                        <!-- Last page -->
+                                        <c:if test="${currentPage < totalPages - 2}">
+                                            <c:if test="${currentPage < totalPages - 3}">
+                                                <li class="page-item disabled">
+                                                    <span class="page-link">...</span>
+                                                </li>
+                                            </c:if>
+                                            <li class="page-item">
+                                                <a class="page-link" href="?page=${totalPages}&productName=${param.productName}&color=${param.color}&size=${param.size}&status=${param.status}&quantity=${param.quantity}&type=${param.type}&brand=${param.brand}&cate=${param.cate}">${totalPages}</a>
+                                            </li>
+                                        </c:if>
 
-            <!-- Next Button -->
-            <li class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
-                <c:choose>
-                    <c:when test="${currentPage == totalPages}">
-                        <span class="page-link" aria-disabled="true">
-                            <i class="mdi mdi-chevron-right"></i>
-                        </span>
-                    </c:when>
-                    <c:otherwise>
-                        <a class="page-link" href="?page=${currentPage + 1}&productName=${param.productName}&color=${param.color}&size=${param.size}&status=${param.status}&quantity=${param.quantity}&type=${param.type}&brand=${param.brand}&cate=${param.cate}">
-                            <i class="mdi mdi-chevron-right"></i>
-                        </a>
-                    </c:otherwise>
-                </c:choose>
-            </li>
-        </ul>
-    </div>
-</div>
+                                        <!-- Next Button -->
+                                        <li class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
+                                            <c:choose>
+                                                <c:when test="${currentPage == totalPages}">
+                                                    <span class="page-link" aria-disabled="true">
+                                                        <i class="mdi mdi-chevron-right"></i>
+                                                    </span>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <a class="page-link" href="?page=${currentPage + 1}&productName=${param.productName}&color=${param.color}&size=${param.size}&status=${param.status}&quantity=${param.quantity}&type=${param.type}&brand=${param.brand}&cate=${param.cate}">
+                                                        <i class="mdi mdi-chevron-right"></i>
+                                                    </a>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
                         <!-- End Pagination -->
 
@@ -319,17 +319,18 @@
         <jsp:include page="Common/Js.jsp"/>
         <jsp:include page="Common/Message.jsp"/>
         <script>
-    function clearForm(){
-        document.getElementById('productName').value = '';
-        document.getElementById('color').value = '';
-        document.getElementById('size').value = '';
-        document.getElementById('quantity').value = '';
-        document.getElementById('type').value = '';
-        document.getElementById('brand').value = '';
-        document.getElementById('cate').value = '';
-        document.querySelector('form').submit();
-        
-    };
-</script>
+            function clearForm() {
+                document.getElementById('productName').value = '';
+                document.getElementById('color').value = '';
+                document.getElementById('size').value = '';
+                document.getElementById('quantity').value = '';
+                document.getElementById('type').value = '';
+                document.getElementById('brand').value = '';
+                document.getElementById('cate').value = '';
+                document.querySelector('form').submit();
+
+            }
+            ;
+        </script>
     </body>
 </html>

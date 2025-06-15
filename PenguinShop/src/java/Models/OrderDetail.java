@@ -18,6 +18,9 @@ public class OrderDetail {
         this.variant = variant;
     }
 
+    public OrderDetail() {
+    }
+
     public OrderDetail(int detailID, double aDouble, int aInt, ProductVariant variant) {
         this.detailID = detailID;
         this.price = aDouble;

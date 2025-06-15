@@ -4,11 +4,7 @@
  */
 package Const;
 
-
-public class Batch {
-    // customer list 
-    public static final int BATCH_SEARCH_CUSTOMER = 12;
-    public static final int BATCH_SEARCH_PRODUCT = 10;
-    
-    public static final int BATCH_SEARCH_ORDER= 10;
+public class PaymentStatus {
+    public static final int DA_THANH_TOAN = 1;
+    public static final int CHUA_THANH_TOAN = 0;
 }

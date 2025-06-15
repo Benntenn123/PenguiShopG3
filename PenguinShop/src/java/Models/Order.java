@@ -16,6 +16,10 @@ public class Order {
     private String shippingAddress;
     private PaymentMethod paymentMethod;
     private boolean paymentStatus;
+    private String emall_receiver;
+    private String phone_receiver;
+    private String name_receiver;
+    private double shipFee;
     private List<OrderDetail> orderDetails;
 
     public Order() {
@@ -50,6 +54,38 @@ public class Order {
         this.shippingAddress = shippingAddress;
         this.paymentMethod = paymentMethod;
         this.paymentStatus = paymentStatus;
+    }
+
+    public double getShipFee() {
+        return shipFee;
+    }
+
+    public void setShipFee(double shipFee) {
+        this.shipFee = shipFee;
+    }
+
+    public String getEmall_receiver() {
+        return emall_receiver;
+    }
+
+    public void setEmall_receiver(String emall_receiver) {
+        this.emall_receiver = emall_receiver;
+    }
+
+    public String getPhone_receiver() {
+        return phone_receiver;
+    }
+
+    public void setPhone_receiver(String phone_receiver) {
+        this.phone_receiver = phone_receiver;
+    }
+
+    public String getName_receiver() {
+        return name_receiver;
+    }
+
+    public void setName_receiver(String name_receiver) {
+        this.name_receiver = name_receiver;
     }
 
     public List<OrderDetail> getOrderDetails() {

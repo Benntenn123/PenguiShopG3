@@ -275,6 +275,10 @@ CREATE TABLE tbOrder (
     shippingAddress NVARCHAR(200),
     paymentMethod INT,
     paymentStatus BIT,
+	emall_receiver NVARCHAR(255),
+	phone_receiver NVARCHAR(255),
+	name_receiver NVARCHAR(255),
+	shipFee DECIMAL(10, 2),
     FOREIGN KEY (userID) REFERENCES tbUsers(userID),
     FOREIGN KEY (paymentMethod) REFERENCES tbPaymentMethod(paymentMethodID)
 );

@@ -174,18 +174,18 @@ INSERT INTO tbRequests (userID, requestType, description, requestStatus, request
 
 -- tbPaymentMethod
 INSERT INTO tbPaymentMethod (paymentMethodName, description) VALUES
-(N'Transfer', N'Thanh toán qua chuyển khoản'),
+(N'Chuyển khoản', N'Thanh toán qua chuyển khoản'),
 (N'COD', N'Thanh toán khi nhận hàng');
 
 -- tbOrder
-INSERT INTO tbOrder (orderDate, total, userID, orderStatus, shippingAddress, paymentMethod, paymentStatus) VALUES
-('2025-04-20 11:49:23.787', 698000.00, 1, 1, N'123 Đường Lê Lợi, Hà Nội', 1, 1),
-('2025-04-21 10:30:00.000', 299000.00, 2, 1, N'456 Đường Trần Hưng Đạo, TP.HCM', 2, 1),
-('2025-04-22 15:45:00.000', 399000.00, 2, 1, N'456 Đường Trần Hưng Đạo, TP.HCM', 1, 1),
-('2025-04-23 09:20:00.000', 598000.00, 3, 1, N'789 Đường Nguyễn Huệ, Đà Nẵng', 2, 1),
-('2025-04-24 14:10:00.000', 299000.00, 3, 1, N'789 Đường Nguyễn Huệ, Đà Nẵng', 1, 1),
-('2025-04-25 16:30:00.000', 499000.00, 4, 1, N'321 Đường Phạm Văn Đồng, Hải Phòng', 2, 1),
-('2025-04-26 12:00:00.000', 698000.00, 4, 1, N'321 Đường Phạm Văn Đồng, Hải Phòng', 1, 1);
+INSERT INTO tbOrder (orderDate, total, userID, orderStatus, shippingAddress, paymentMethod, paymentStatus,emall_receiver,phone_receiver,name_receiver,shipFee) VALUES
+('2025-04-20 11:49:23.787', 698000.00, 1, 1, N'123 Đường Lê Lợi, Hà Nội', 1, 1,'son1234@gmail.com','0936971273','Sơn',20000.00),
+('2025-04-21 10:30:00.000', 299000.00, 2, 1, N'456 Đường Trần Hưng Đạo, TP.HCM', 2, 1,'son1234@gmail.com','0936971273','Long',20000.00),
+('2025-04-22 15:45:00.000', 399000.00, 2, 1, N'456 Đường Trần Hưng Đạo, TP.HCM', 1, 1,'son1234@gmail.com','0936971273','Sơn',20000.00),
+('2025-04-23 09:20:00.000', 598000.00, 3, 1, N'789 Đường Nguyễn Huệ, Đà Nẵng', 2, 1,'son1234@gmail.com','0936971273','Sơn',20000.00),
+('2025-04-24 14:10:00.000', 299000.00, 3, 1, N'789 Đường Nguyễn Huệ, Đà Nẵng', 1, 1,'son1234@gmail.com','0936971273','Sơn',20000.00),
+('2025-04-25 16:30:00.000', 499000.00, 4, 1, N'321 Đường Phạm Văn Đồng, Hải Phòng', 2, 1,'son1234@gmail.com','0936971273','Sơn',20000.00),
+('2025-04-26 12:00:00.000', 698000.00, 4, 1, N'321 Đường Phạm Văn Đồng, Hải Phòng', 1, 1,'son1234@gmail.com','0936971273','Sơn',20000.00);
 
 -- tbOrderDetail
 INSERT INTO tbOrderDetail (price, quantity_product, orderID, variantID) VALUES
