@@ -1,4 +1,3 @@
-```html
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -440,11 +439,16 @@
                                     <h5 class="modal-title" id="addBrandModalLabel">Thêm Nhãn Hiệu</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
-                                <form action="/PenguinShop/admin/add-brand" method="post">
+                                <form action="add-brand" method="post" enctype="multipart/form-data">
                                     <div class="modal-body">
                                         <div class="mb-3">
                                             <label for="brandName" class="form-label">Tên Nhãn Hiệu</label>
                                             <input type="text" class="form-control" id="brandName" name="brandName" placeholder="VD: Nike, Adidas..." required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="brandLogo" class="form-label">Logo Nhãn Hiệu</label>
+                                            <input type="file" class="form-control" id="brandLogo" name="brandLogo" accept=".png,.jpg,.jpeg" required>
+                                            <img id="brandLogoPreview" class="image-preview" alt="Preview"/>
                                         </div>
                                     </div>
                                     <div class="modal-footer">
@@ -464,11 +468,20 @@
                                     <h5 class="modal-title" id="addCategoryModalLabel">Thêm Danh Mục</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
-                                <form action="/PenguinShop/admin/add-category" method="post">
+                                <form action="add-category" method="post" enctype="multipart/form-data">
                                     <div class="modal-body">
                                         <div class="mb-3">
                                             <label for="categoryName" class="form-label">Tên Danh Mục</label>
                                             <input type="text" class="form-control" id="categoryName" name="categoryName" placeholder="VD: Áo thun, Quần jean..." required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="sportType" class="form-label">Loại Thể Thao</label>
+                                            <input type="text" class="form-control" id="sportType" name="sportType" placeholder="VD: Bóng đá, Cầu lông..." required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="categoryImage" class="form-label">Hình Ảnh Danh Mục</label>
+                                            <input type="file" class="form-control" id="categoryImage" name="categoryImage" accept=".png,.jpg,.jpeg" required>
+                                            <img id="categoryImagePreview" class="image-preview" alt="Preview"/>
                                         </div>
                                     </div>
                                     <div class="modal-footer">
@@ -479,6 +492,7 @@
                             </div>
                         </div>
                     </div>
+
 
                     <!-- Add Product Type Modal -->
                     <div class="modal fade" id="addProductTypeModal" tabindex="-1" aria-labelledby="addProductTypeModalLabel" aria-hidden="true">
@@ -524,6 +538,28 @@
                 categories: [],
                 types: []
             };
+            document.getElementById('brandLogo')?.addEventListener('change', function(e) {
+                const preview = document.getElementById('brandLogoPreview');
+                const file = e.target.files[0];
+                if (file) {
+                    preview.src = URL.createObjectURL(file);
+                    preview.style.display = 'block';
+                } else {
+                    preview.style.display = 'none';
+                }
+            });
+
+            // Image preview for Category Image
+            document.getElementById('categoryImage')?.addEventListener('change', function(e) {
+                const preview = document.getElementById('categoryImagePreview');
+                const file = e.target.files[0];
+                if (file) {
+                    preview.src = URL.createObjectURL(file);
+                    preview.style.display = 'block';
+                } else {
+                    preview.style.display = 'none';
+                }
+            });
 
             // Add functions (to be synced with DB via API later)
             function addSize() {
@@ -605,4 +641,3 @@
         <jsp:include page="Common/Message.jsp"/>
 </body>
 </html>
-```

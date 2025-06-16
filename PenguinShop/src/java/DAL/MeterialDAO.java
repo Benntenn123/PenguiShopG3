@@ -102,4 +102,42 @@ public class MeterialDAO extends DBContext{
             return false;
         }
     }
+     
+     public boolean addBrand(String brandName, String logo) {
+        String sql = "INSERT INTO tbBrand (brandName, logo) VALUES (?, ?)";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, brandName);
+            stmt.setString(2, logo);
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println("Error adding brand: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+     public boolean addCategory(String categoryName, String imageCategory, String sportType) {
+        String sql = "INSERT INTO tbCategory (categoryName, imageCategory, sportType) VALUES (?, ?, ?)";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, categoryName);
+            stmt.setString(2, imageCategory);
+            stmt.setString(3, sportType);
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println("Error adding category: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean addProductType(String typeName) {
+        String sql = "INSERT INTO tbProductType (productTypeName) VALUES (?)";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, typeName);
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println("Error adding product type: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
 }
