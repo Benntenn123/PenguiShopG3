@@ -18,6 +18,7 @@
             border: 1px solid #ddd;
             border-radius: 5px;
             overflow: hidden;
+            cursor: pointer; /* Thêm cursor để báo hiệu có thể nhấn */
         }
         .gallery-item img {
             width: 100%;
@@ -39,6 +40,7 @@
             justify-content: center;
             cursor: pointer;
             font-size: 14px;
+            z-index: 10; /* Đảm bảo nút X nằm trên ảnh */
         }
         .delete-btn:hover {
             background: #c82333;
@@ -51,6 +53,16 @@
         }
         .add-image-container {
             margin-bottom: 20px;
+        }
+        /* Style cho modal ảnh */
+        #imageModal .modal-dialog {
+            max-width: 80vw;
+        }
+        #imageModal img {
+            width: 100%;
+            height: auto;
+            max-height: 80vh;
+            object-fit: contain;
         }
     </style>
 </head>
@@ -80,7 +92,7 @@
                         <div class="card">
                             <div class="card-header">
                                 <h4 class="card-title">Gallery Sản Phẩm: ${product.productName}</h4>
-                                <p class="card-title-desc">Thêm hoặc xóa ảnh trong gallery sản phẩm. Nhấn vào dấu X để xóa ảnh.</p>
+                                <p class="card-title-desc">Thêm hoặc xóa ảnh trong gallery sản phẩm. Nhấn vào dấu X để xóa ảnh, nhấn vào ảnh để xem lớn.</p>
                             </div>
                             <div class="card-body">
                                 <!-- Form thêm ảnh -->
@@ -99,7 +111,7 @@
                                 <!-- Danh sách ảnh -->
                                 <div class="gallery-container">
                                     <c:forEach var="image" items="${galleryImages}">
-                                        <div class="gallery-item">
+                                        <div class="gallery-item" data-bs-toggle="modal" data-bs-target="#imageModal" data-image-url="../api/img/${image}">
                                             <img src="../api/img/${image}" alt="Gallery Image"/>
                                             <button class="delete-btn" data-image-url="${image}" data-product-id="${product.productId}">X</button>
                                         </div>
@@ -111,7 +123,21 @@
                 </div>
             </div>
         </div>
-        
+    </div>
+
+    <!-- Modal xem ảnh -->
+    <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="imageModalLabel">Xem Ảnh</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <img id="modalImage" src="" alt="Large Image"/>
+                </div>
+            </div>
+        </div>
     </div>
 
     <jsp:include page="Common/RightSideBar.jsp"/>
@@ -123,12 +149,23 @@
             // Binding sự kiện xóa
             const deleteButtons = document.querySelectorAll('.delete-btn');
             deleteButtons.forEach(button => {
-                button.addEventListener('click', function() {
+                button.addEventListener('click', function(e) {
+                    e.stopPropagation(); // Ngăn sự kiện click lan lên gallery-item
                     const imageUrl = this.getAttribute('data-image-url');
                     const productID = this.getAttribute('data-product-id');
                     if (confirm('Bạn có chắc chắn muốn xóa ảnh này khỏi gallery?')) {
                         window.location.href = 'deleteGalleryImage?imageUrl=' + encodeURIComponent(imageUrl) + '&productID=' + productID;
                     }
+                });
+            });
+
+            // Binding sự kiện xem ảnh
+            const galleryItems = document.querySelectorAll('.gallery-item');
+            galleryItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const imageUrl = this.getAttribute('data-image-url');
+                    const modalImage = document.getElementById('modalImage');
+                    modalImage.src = imageUrl;
                 });
             });
 
@@ -147,7 +184,14 @@
                 }
             });
 
-           
+            // Xử lý response
+            <c:if test="${not empty ms}">
+                alert('${ms}');
+                window.location.reload();
+            </c:if>
+            <c:if test="${not empty error}">
+                alert('${error}');
+            </c:if>
         });
     </script>
 </body>

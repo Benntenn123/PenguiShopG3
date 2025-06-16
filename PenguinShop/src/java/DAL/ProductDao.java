@@ -1199,6 +1199,61 @@ public class ProductDao extends DBContext {
         }
         return false;
     }
+    public boolean checkImageExists(String imageUrl, int productID) throws SQLException {
+        String sql = "SELECT COUNT(*) AS count FROM tbImages WHERE imageURL = ? AND productID = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, imageUrl);
+            ps.setInt(2, productID);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("count") > 0;
+                }
+            }
+        }
+        return false;
+    }
+
+    // Xóa ảnh khỏi gallery dựa trên imageUrl và productID
+    public boolean deleteGalleryImage(String imageUrl, int productID) throws SQLException {
+        String sql = "DELETE FROM tbImages WHERE imageURL = ? AND productID = ?";
+        connection.setAutoCommit(false);
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, imageUrl);
+            ps.setInt(2, productID);
+            int rowsAffected = ps.executeUpdate();
+            if (rowsAffected > 0) {
+                connection.commit();
+                return true;
+            } else {
+                connection.rollback();
+                return false;
+            }
+        } catch (SQLException e) {
+            connection.rollback();
+            System.out.println("Lỗi khi xóa ảnh: " + e.getMessage());
+            throw e;
+        }
+    }
+    public boolean addGalleryImage(int productID, String imageUrl) throws SQLException {
+        String sql = "INSERT INTO tbImages (productID, imageURL) VALUES (?, ?)";
+        connection.setAutoCommit(false);
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, productID);
+            ps.setString(2, imageUrl);
+            int rowsAffected = ps.executeUpdate();
+            if (rowsAffected > 0) {
+                connection.commit();
+                return true;
+            } else {
+                connection.rollback();
+                return false;
+            }
+        } catch (SQLException e) {
+            connection.rollback();
+            System.out.println("Lỗi khi thêm ảnh: " + e.getMessage());
+            throw e;
+        }
+    }
 
     public static void main(String[] args) {
         ProductDao dao = new ProductDao();

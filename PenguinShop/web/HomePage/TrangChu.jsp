@@ -824,25 +824,25 @@
             <!--------------- arrival-section-end--------------->
 
             <!--------------- flash-section--------------->
-            <!--        <section class="product flash-sale">
+                    <section class="product flash-sale">
                         <div class="container">
                             <div class="section-title">
                                 <h5>Flash Sale</h5>
                                 <div class="countdown-section">
                                     <div class="countdown-items">
-                                        <span id="day" class="number" style="color: red;">0</span>
+                                        <span id="day" class="number" style="color: red;">10</span>
                                         <span class="text">Days</span>
                                     </div>
                                     <div class="countdown-items">
-                                        <span id="hour" class="number" style="color: skyblue;">0</span>
+                                        <span id="hour" class="number" style="color: skyblue;">30</span>
                                         <span class="text">Hours</span>
                                     </div>
                                     <div class="countdown-items">
-                                        <span id="minute" class="number" style="color: green;">0</span>
+                                        <span id="minute" class="number" style="color: green;">20</span>
                                         <span class="text">Minutes</span>
                                     </div>
                                     <div class="countdown-items">
-                                        <span id="second" class="number" style="color: red;">0</span>
+                                        <span id="second" class="number" style="color: red;">10</span>
                                         <span class="text">seconds</span>
                                     </div>
                                 </div>
@@ -1289,7 +1289,7 @@
                                 </div>
                             </div>
                         </div>
-                    </section>-->
+                    </section>
             <!--------------- flash-section-end--------------->
 
             <!--------------- top-sell-section--------------->
