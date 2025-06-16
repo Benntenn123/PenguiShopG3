@@ -57,6 +57,14 @@
                         </li>
 
                     </ul>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li>
+                            <a href="managevariant">
+                                <span data-key="t-calendar">Quản lí thuộc tính sản phẩm</span>
+                            </a>
+                        </li>
+
+                    </ul>
                 </li>
                 <li>
                     <a href="javascript: void(0);" class="has-arrow">

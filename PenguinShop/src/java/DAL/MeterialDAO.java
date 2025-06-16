@@ -80,4 +80,26 @@ public class MeterialDAO extends DBContext{
         }
         return list;
     }
+     public boolean addSize(String sizeName) {
+        String sql = "INSERT INTO tbSize (sizeName) VALUES (?)";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, sizeName);
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println("Error adding size: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+     public boolean addColor(String colorName) {
+        String sql = "INSERT INTO tbColor (colorName) VALUES (?)";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, colorName);
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println("Error adding color: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
 }
