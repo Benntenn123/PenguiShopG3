@@ -11,6 +11,15 @@ public class ProductVariant {
     private Size size;
     private double price;
     private String stockStatus;
+    private int StockSta;
+
+    public int getStockSta() {
+        return StockSta;
+    }
+
+    public void setStockSta(int StockSta) {
+        this.StockSta = StockSta;
+    }
 
     public ProductVariant(int variantID, int quantity, double price, String stockStatus) {
         this.variantID = variantID;

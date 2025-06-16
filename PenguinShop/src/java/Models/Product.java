@@ -4,6 +4,8 @@
  */
 package Models;
 
+import java.util.List;
+
 
 public class Product {
     private int productId;
@@ -17,6 +19,7 @@ public class Product {
     private double weight;
     private String full_description;
     private Brand brand;
+    private List<Category> categories;
 
     public Product(int productId, String productName, String sku, Type type, Category category, String importDate, String imageMainProduct, String description, double weight, String full_description, Brand brand) {
         this.productId = productId;
@@ -209,6 +212,14 @@ public class Product {
     @Override
     public String toString() {
         return "Product{" + "productId=" + productId + ", productName=" + productName + ", sku=" + sku + ", type=" + type + ", category=" + category + ", importDate=" + importDate + ", imageMainProduct=" + imageMainProduct + ", description=" + description + ", weight=" + weight + ", full_description=" + full_description + '}';
+    }
+
+    public List<Category> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(List<Category> categories) {
+        this.categories = categories;
     }
     
     

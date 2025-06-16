@@ -65,6 +65,14 @@
                         </li>
 
                     </ul>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li>
+                            <a href="listGroupProduct">
+                                <span data-key="t-calendar">Danh sách nhóm sản phẩm</span>
+                            </a>
+                        </li>
+
+                    </ul>
                 </li>
                 <li>
                     <a href="javascript: void(0);" class="has-arrow">

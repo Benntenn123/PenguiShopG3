@@ -14,12 +14,15 @@ import Models.Tag;
 import Models.Type;
 import Models.User;
 import Utils.StringConvert;
+import java.beans.Statement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ProductDao extends DBContext {
 
@@ -857,7 +860,7 @@ public class ProductDao extends DBContext {
             ps.setInt(2, quantity);
             ps.setInt(3, variantID);
             int result = ps.executeUpdate();
-            if(result>0){
+            if (result > 0) {
                 return true;
             }
 
@@ -866,10 +869,350 @@ public class ProductDao extends DBContext {
         return false;
     }
 
+    public List<Product> getProducts(String[] data, int page, int pageSize) throws SQLException {
+        List<Product> productList = new ArrayList<>();
+        Map<Integer, Product> productMap = new HashMap<>();
+
+        StringBuilder query = new StringBuilder(
+                "WITH PaginatedProducts AS ( "
+                + "SELECT DISTINCT p.productID, p.productName, p.SKU, p.imageMainProduct, p.weight, "
+                + "b.brandName, t.productTypeName "
+                + "FROM tbProduct p "
+                + "JOIN tbBrand b ON p.brandID = b.brandID "
+                + "JOIN tbProductType t ON p.productTypeID = t.productTypeID "
+                + "LEFT JOIN tbProductCategory pc ON p.productID = pc.productID "
+                + "LEFT JOIN tbCategory c ON pc.categoryID = c.categoryID "
+        );
+
+        List<Object> params = new ArrayList<>();
+        List<String> conditions = new ArrayList<>();
+
+        // Directly check data array
+        if (data != null && data.length == 4) {
+            // data[0]: productName
+            if (data[0] != null && !data[0].trim().isEmpty()) {
+                conditions.add("p.productName LIKE ?");
+                params.add("%" + data[0].trim() + "%");
+            }
+            // data[1]: brand
+            if (data[1] != null && !data[1].trim().isEmpty()) {
+                conditions.add("b.brandName = ?");
+                params.add(data[1].trim());
+            }
+            // data[2]: type
+            if (data[2] != null && !data[2].trim().isEmpty()) {
+                conditions.add("t.productTypeName = ?");
+                params.add(data[2].trim());
+            }
+            // data[3]: cate
+            if (data[3] != null && !data[3].trim().isEmpty()) {
+                conditions.add("c.categoryName = ?");
+                params.add(data[3].trim());
+            }
+        }
+
+        if (!conditions.isEmpty()) {
+            query.append("WHERE ").append(String.join(" AND ", conditions)).append(" ");
+        }
+
+        query.append(
+                "ORDER BY p.productID "
+                + "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY "
+                + ") "
+                + "SELECT pp.productID, pp.productName, pp.SKU, pp.imageMainProduct, pp.weight, "
+                + "pp.brandName, pp.productTypeName, c.categoryID, c.categoryName "
+                + "FROM PaginatedProducts pp "
+                + "LEFT JOIN tbProductCategory pc ON pp.productID = pc.productID "
+                + "LEFT JOIN tbCategory c ON pc.categoryID = c.categoryID "
+                + "ORDER BY pp.productID"
+        );
+
+        // Add offset and fetch parameters
+        int offset = (page - 1) * pageSize;
+        params.add(offset);       // OFFSET
+        params.add(pageSize);     // FETCH NEXT
+
+        try (PreparedStatement ps = connection.prepareStatement(query.toString())) {
+            for (int i = 0; i < params.size(); i++) {
+                Object param = params.get(i);
+                if (param instanceof String) {
+                    ps.setString(i + 1, (String) param);
+                } else if (param instanceof Integer) {
+                    ps.setInt(i + 1, (Integer) param);
+                }
+            }
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                int productID = rs.getInt("productID");
+                Product product = productMap.get(productID);
+
+                if (product == null) {
+                    product = new Product();
+                    product.setProductId(productID);
+                    product.setProductName(rs.getString("productName"));
+                    product.setSku(rs.getString("SKU"));
+                    product.setImageMainProduct(rs.getString("imageMainProduct"));
+                    product.setWeight(rs.getDouble("weight"));
+
+                    Brand brand = new Brand();
+                    brand.setBrandName(rs.getString("brandName"));
+                    product.setBrand(brand);
+
+                    Type type = new Type();
+                    type.setTypeName(rs.getString("productTypeName"));
+                    product.setType(type);
+
+                    product.setCategories(new ArrayList<>());
+                    productMap.put(productID, product);
+                    productList.add(product);
+                }
+
+                int categoryID = rs.getInt("categoryID");
+                if (!rs.wasNull()) {
+                    Category category = new Category();
+                    category.setCategoryId(categoryID);
+                    category.setCategoryName(rs.getString("categoryName"));
+                    if (!product.getCategories().contains(category)) {
+                        product.getCategories().add(category);
+                    }
+                }
+            }
+        }
+
+        return productList;
+    }
+
+    public int getTotalProducts(String[] data) throws SQLException {
+        StringBuilder query = new StringBuilder(
+                "SELECT COUNT(DISTINCT p.productID) "
+                + "FROM tbProduct p "
+                + "JOIN tbBrand b ON p.brandID = b.brandID "
+                + "JOIN tbProductType t ON p.productTypeID = t.productTypeID "
+                + "LEFT JOIN tbProductCategory pc ON p.productID = pc.productID "
+                + "LEFT JOIN tbCategory c ON pc.categoryID = c.categoryID "
+        );
+
+        List<Object> params = new ArrayList<>();
+        List<String> conditions = new ArrayList<>();
+
+        // Directly check data array
+        if (data != null && data.length == 4) {
+            // data[0]: productName
+            if (data[0] != null && !data[0].trim().isEmpty()) {
+                conditions.add("p.productName LIKE ?");
+                params.add("%" + data[0].trim() + "%");
+            }
+            // data[1]: brand
+            if (data[1] != null && !data[1].trim().isEmpty()) {
+                conditions.add("b.brandName = ?");
+                params.add(data[1].trim());
+            }
+            // data[2]: type
+            if (data[2] != null && !data[2].trim().isEmpty()) {
+                conditions.add("t.productTypeName = ?");
+                params.add(data[2].trim());
+            }
+            // data[3]: cate
+            if (data[3] != null && !data[3].trim().isEmpty()) {
+                conditions.add("c.categoryName = ?");
+                params.add(data[3].trim());
+            }
+        }
+
+        if (!conditions.isEmpty()) {
+            query.append("WHERE ").append(String.join(" AND ", conditions));
+        }
+
+        try (PreparedStatement ps = connection.prepareStatement(query.toString())) {
+            for (int i = 0; i < params.size(); i++) {
+                ps.setString(i + 1, (String) params.get(i)); // All params are strings here
+            }
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        }
+        return 0;
+    }
+
+    public int addProduct(Product product) throws SQLException {
+        String sqlInsert = "INSERT INTO tbProduct (productName, SKU, productTypeID, brandID, importDate, imageMainProduct, description, full_description, weight) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sqlSelect = "SELECT MAX(productID) AS productID FROM tbProduct";
+
+        connection.setAutoCommit(false); // Bắt đầu transaction
+        try (PreparedStatement psInsert = connection.prepareStatement(sqlInsert)) {
+            psInsert.setString(1, product.getProductName());
+            psInsert.setString(2, product.getSku());
+            psInsert.setInt(3,product.getType().getTypeId());
+            psInsert.setInt(4, product.getBrand().getBrandID());
+            psInsert.setDate(5, java.sql.Date.valueOf(product.getImportDate()));
+            psInsert.setString(6, product.getImageMainProduct());
+            psInsert.setString(7, product.getDescription());
+            psInsert.setString(8, product.getFull_description());
+            psInsert.setDouble(9, product.getWeight());
+
+            int rowsAffected = psInsert.executeUpdate();
+            if (rowsAffected == 0) {
+                connection.rollback();
+                return -1;
+            }
+        }
+
+        try (PreparedStatement psSelect = connection.prepareStatement(sqlSelect);
+             ResultSet rs = psSelect.executeQuery()) {
+            if (rs.next()) {
+                int productID = rs.getInt("productID");
+                connection.commit(); // Commit transaction
+                return productID;
+            } else {
+                connection.rollback();
+                return -1;
+            }
+        } catch (SQLException e) {
+            connection.rollback();
+            System.out.println("Lỗi khi thêm sản phẩm: " + e.getMessage());
+            throw e; // Ném lại để Servlet xử lý
+        }
+    }
+
+    // Hàm thêm danh mục vào tbProductCategory
+    public boolean addProductCategories(int productID, List<Category> categoryIDs) {
+        if (categoryIDs == null || categoryIDs.size() == 0) {
+            return true; // Không có danh mục thì coi như thành công
+        }
+
+        String sql = "INSERT INTO tbProductCategory (productID, categoryID) VALUES (?, ?)";
+
+        try {
+            connection.setAutoCommit(false); // Bắt đầu transaction
+            PreparedStatement ps = connection.prepareStatement(sql);
+
+            for (Category categoryID : categoryIDs) {
+                try {
+                    ps.setInt(1, productID);
+                    ps.setInt(2, categoryID.getCategoryId());
+                    ps.addBatch();
+                } catch (NumberFormatException e) {
+                    System.out.println("Lỗi định dạng categoryID: " + categoryID);
+                    continue;
+                }
+            }
+
+            int[] batchResults = ps.executeBatch();
+            for (int result : batchResults) {
+                if (result == 0) {
+                    connection.rollback();
+                    return false;
+                }
+            }
+
+            connection.commit(); // Commit transaction
+            return true;
+        } catch (SQLException e) {
+            System.out.println("Lỗi khi thêm danh mục: " + e.getMessage());
+            try {
+                if (connection != null) {
+                    connection.rollback();
+                }
+            } catch (SQLException rollbackEx) {
+                System.out.println("Lỗi rollback: " + rollbackEx.getMessage());
+            }
+            return false;
+        } finally {
+            try {
+
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                System.out.println("Lỗi đóng tài nguyên: " + e.getMessage());
+            }
+        }
+    }
+    public Product getProductFromID(int productID) throws SQLException {
+        String sql = "SELECT productID, productName, SKU, productTypeID, brandID, importDate, imageMainProduct, description, full_description, weight FROM tbProduct WHERE productID = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, productID);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Product product = new Product();
+                    product.setProductId(rs.getInt("productID"));
+                    product.setProductName(rs.getString("productName"));
+                    product.setSku(rs.getString("SKU"));
+                    
+                    Type t = new Type();
+                    t.setTypeId(rs.getInt("productTypeID"));
+                    product.setType(t);
+                    
+                    Brand b = new Brand();
+                    b.setBrandID(rs.getInt("brandID"));
+                    product.setBrand(b);
+                    
+                    product.setImportDate(rs.getString("importDate") != null ? rs.getString("importDate") : null);
+                    product.setImageMainProduct(rs.getString("imageMainProduct"));
+                    product.setDescription(rs.getString("description"));
+                    product.setFull_description(rs.getString("full_description"));
+                    product.setWeight(rs.getDouble("weight") != 0 ? rs.getDouble("weight") : null);
+                    return product;
+                }
+            }
+        }
+        return null; // Không tìm thấy sản phẩm
+    }
+    public boolean addProductAttribute(ProductVariant attribute) throws SQLException {
+        String sql = "INSERT INTO tbProductVariant (productID, colorID, sizeID, quantity, price, stockStatus) VALUES (?, ?, ?, ?, ?, ?)";
+        connection.setAutoCommit(false);
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, attribute.getProduct().getProductId());
+            ps.setInt(2, attribute.getColor().getColorID());
+            ps.setInt(3, attribute.getSize().getSizeID());
+            ps.setInt(4, attribute.getQuantity());
+            ps.setDouble(5, attribute.getPrice());
+            ps.setInt(6, attribute.getStockSta());
+
+            int rowsAffected = ps.executeUpdate();
+            if (rowsAffected > 0) {
+                connection.commit();
+                return true;
+            } else {
+                connection.rollback();
+                return false;
+            }
+        } catch (SQLException e) {
+            connection.rollback();
+            System.out.println("Lỗi khi thêm thuộc tính: " + e.getMessage());
+            throw e;
+        }
+    }
+    public boolean checkVariantExists(int productID, int colorID, int sizeID) throws SQLException {
+        String sql = "SELECT COUNT(*) AS count FROM tbProductVariant WHERE productID = ? AND colorID = ? AND sizeID = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, productID);
+            ps.setInt(2, colorID);
+            ps.setInt(3, sizeID);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("count") > 0;
+                }
+            }
+        }
+        return false;
+    }
+
     public static void main(String[] args) {
         ProductDao dao = new ProductDao();
-        List<ProductVariant> pv = dao.getVariantProduct(1);
-        System.out.println(pv.size());
+        try {
+            String[] data = new String[]{"", "", "", ""};
+            List<Product> list = dao.getProducts(data, 1, 10);
+            for (Product product : list) {
+                System.out.println(product.getFull_description());
+            }
+        } catch (Exception e) {
+        }
+
+//        List<ProductVariant> pv = dao.getVariantProduct(1);
+//        System.out.println(pv.size());
 //        String[] searchCriteria = {
 //            "giày", "", "", "1", "", "", "", ""
 //        };

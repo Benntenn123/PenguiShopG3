@@ -49,14 +49,6 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-6">
-                                <div class="d-flex flex-wrap align-items-center justify-content-end gap-2 mb-3">
-                                    <div>
-                                        <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#exampleModal"
-                                                data-bs-whatever="@mdo"><i class="bx bx-plus me-1"></i> Thêm loại sản phẩm mới</button>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                         <!-- end row -->
 
@@ -207,9 +199,9 @@
                                                         <i class="bx bx-dots-horizontal-rounded"></i>
                                                     </button>
                                                     <ul class="dropdown-menu dropdown-menu-end">
-                                                        <li><a class="dropdown-item" href="#">Action</a></li>
-                                                        <li><a class="dropdown-item" href="#">Another action</a></li>
-                                                        <li><a class="dropdown-item" href="#">Something else here</a></li>
+                                                        <li><a class="dropdown-item" href="variant_details?variantID=${list.variantID}">Xem chi tiết</a></li>
+                                                        <li><a class="dropdown-item" href="/PenguinShop/productdetail?id=${list.variantID}">Xem trên Shop</a></li>
+                                                        
                                                     </ul>
                                                 </div>
                                             </td>
