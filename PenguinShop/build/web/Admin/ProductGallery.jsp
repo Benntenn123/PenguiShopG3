@@ -86,13 +86,13 @@
                                 <!-- Form thêm ảnh -->
                                 <div class="add-image-container">
                                     <form id="add-image-form" method="post" action="addGalleryImage" enctype="multipart/form-data">
-                                        <input type="hidden" name="productID" value="${product.productID}"/>
+                                        <input type="hidden" name="productID" value="${product.productId}"/>
                                         <div class="mb-3">
                                             <label class="form-label" for="imageFile">Chọn Ảnh *</label>
                                             <input type="file" class="form-control" id="imageFile" name="imageFile" accept="image/*"/>
                                             <span id="imageFile-error" class="error-message" style="display: none;"></span>
                                         </div>
-                                        <button class="btn btn-primary" type="submit" onclick="return confirmAdd()">Thêm Ảnh</button>
+                                        <button class="btn btn-primary" type="submit">Thêm Ảnh</button>
                                     </form>
                                 </div>
 
@@ -100,8 +100,8 @@
                                 <div class="gallery-container">
                                     <c:forEach var="image" items="${galleryImages}">
                                         <div class="gallery-item">
-                                            <img src="${image.imageUrl}" alt="Gallery Image"/>
-                                            <button class="delete-btn" onclick="confirmDelete(${image.imageID}, ${product.productID})">X</button>
+                                            <img src="../api/img/${image}" alt="Gallery Image"/>
+                                            <button class="delete-btn" data-image-url="${image}" data-product-id="${product.productId}">X</button>
                                         </div>
                                     </c:forEach>
                                 </div>
@@ -111,7 +111,7 @@
                 </div>
             </div>
         </div>
-       
+        
     </div>
 
     <jsp:include page="Common/RightSideBar.jsp"/>
@@ -119,38 +119,35 @@
     <jsp:include page="Common/Message.jsp"/>
 
     <script>
-        function confirmAdd() {
-            return confirm('Bạn có chắc chắn muốn thêm ảnh này vào gallery?');
-        }
-
-        function confirmDelete(imageID, productID) {
-            if (confirm('Bạn có chắc chắn muốn xóa ảnh này khỏi gallery?')) {
-                window.location.href = 'deleteGalleryImage?imageID=' + imageID + '&productID=' + productID;
-            }
-        }
-
         document.addEventListener('DOMContentLoaded', function() {
-            const form = document.getElementById('add-image-form');
+            // Binding sự kiện xóa
+            const deleteButtons = document.querySelectorAll('.delete-btn');
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const imageUrl = this.getAttribute('data-image-url');
+                    const productID = this.getAttribute('data-product-id');
+                    if (confirm('Bạn có chắc chắn muốn xóa ảnh này khỏi gallery?')) {
+                        window.location.href = 'deleteGalleryImage?imageUrl=' + encodeURIComponent(imageUrl) + '&productID=' + productID;
+                    }
+                });
+            });
 
+            // Validate form thêm ảnh
+            const form = document.getElementById('add-image-form');
             form.addEventListener('submit', function(e) {
                 const imageFile = document.getElementById('imageFile').value;
                 if (!imageFile) {
                     e.preventDefault();
                     document.getElementById('imageFile-error').textContent = 'Vui lòng chọn một file ảnh!';
                     document.getElementById('imageFile-error').style.display = 'block';
+                } else if (!confirm('Bạn có chắc chắn muốn thêm ảnh này vào gallery?')) {
+                    e.preventDefault();
                 } else {
                     document.getElementById('imageFile-error').style.display = 'none';
                 }
             });
 
-            // Xử lý response từ addGalleryImage
-            <c:if test="${not empty ms}">
-                alert('${ms}');
-                window.location.reload(); // Refresh trang
-            </c:if>
-            <c:if test="${not empty error}">
-                alert('${error}');
-            </c:if>
+           
         });
     </script>
 </body>
