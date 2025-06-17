@@ -14,6 +14,10 @@ public class Role {
         this.roleName = roleName;
     }
 
+    public Role() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
     public int getRoleID() {
         return roleID;
     }

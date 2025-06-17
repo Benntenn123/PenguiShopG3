@@ -1,4 +1,4 @@
-```jsp
+
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -105,7 +105,7 @@
                                         <th scope="col">Tên quyền</th>
                                         <th scope="col">URL</th>
                                         <th scope="col">Vai trò sử dụng</th>
-                                        <th scope="col">Hành động</th>
+<!--                                        <th scope="col">Hành động</th>-->
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -119,13 +119,9 @@
                                             </th>
                                             <td>${perm.permissionID}</td>
                                             <td>${perm.permissionName}</td>
-                                            <td>${perm.urlPermission}</td>
-                                            <td>
-                                                <c:forEach var="rp" items="${perm.rolePermissions}">
-                                                    ${rp.roles.roleName}<c:if test="${!status.last}">,</c:if>
-                                                </c:forEach>
-                                            </td>
-                                            <td>
+                                            <td>${perm.url_permisson}</td>
+                                            <td>${roleNamesMap[perm.permissionID]}</td>
+<!--                                            <td>
                                                 <div class="dropdown">
                                                     <button class="btn btn-link font-size-16 shadow-none py-0 text-muted dropdown-toggle" 
                                                             type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -136,7 +132,7 @@
                                                         <li><a class="dropdown-item" href="edit_permission?permissionID=${perm.permissionID}">Sửa</a></li>
                                                     </ul>
                                                 </div>
-                                            </td>
+                                            </td>-->
                                         </tr>
                                     </c:forEach>
                                 </tbody>
@@ -249,4 +245,3 @@
         </script>
     </body>
 </html>
-```

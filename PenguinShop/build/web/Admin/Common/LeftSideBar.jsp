@@ -43,6 +43,14 @@
                         </li>
 
                     </ul>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li>
+                            <a href="listPermission">
+                                <span data-key="t-calendar">Danh sách quyền</span>
+                            </a>
+                        </li>
+
+                    </ul>
                 </li>
                 <li>
                     <a href="javascript: void(0);" class="has-arrow">
