@@ -76,6 +76,21 @@
                 </li>
                 <li>
                     <a href="javascript: void(0);" class="has-arrow">
+                        <i data-feather="tag"></i>
+                        <span data-key="t-apps">Khuyến Mãi</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li>
+                            <a href="listPromotion">
+                                <span data-key="t-calendar">Danh sách khuyến mãi</span>
+                            </a>
+                        </li>
+
+                    </ul>
+                    
+                </li>
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow">
                         <i data-feather="file"></i>
                         <span data-key="t-apps">Hóa đơn</span>
                     </a>

@@ -49,12 +49,21 @@ CREATE TABLE tbRoles (
     roleID INT PRIMARY KEY IDENTITY(1,1),
     roleName NVARCHAR(50) NOT NULL
 );
+CREATE TABLE tbModules (
+    moduleID INT PRIMARY KEY IDENTITY(1,1),
+    moduleName NVARCHAR(50) NOT NULL,
+    icon NVARCHAR(100) -- Lưu tên icon (ví dụ: 'fa-home', 'mdi-user')
+);
 
 -- Bảng quyền hạn
 CREATE TABLE tbPermissions (
     permissionID INT PRIMARY KEY IDENTITY(1,1),
     permissionName NVARCHAR(50) NOT NULL,
-    permissionDescription NVARCHAR(200)
+	url_permission NVARCHAR(100),
+	moduleID INT,
+	isHide INT,
+    permissionDescription NVARCHAR(200),
+	FOREIGN KEY(moduleID) REFERENCES dbo.tbModules(moduleID)
 );
 
 -- Bảng liên kết vai trò và quyền hạn
@@ -345,10 +354,7 @@ CREATE TABLE tbProductPromotion (
     FOREIGN KEY (promotionID) REFERENCES tbPromotion(promotionID),
     FOREIGN KEY (productID) REFERENCES tbProduct(productID),
     FOREIGN KEY (variantID) REFERENCES tbProductVariant(variantID),
-    CONSTRAINT CHK_OneProductReference CHECK (
-        (productID IS NOT NULL AND variantID IS NULL) OR 
-        (productID IS NULL AND variantID IS NOT NULL)
-    )
+    
 );
 
 CREATE TABLE OTPCode(
