@@ -303,100 +303,100 @@ public class OrderDAO extends DBContext {
     }
 
     public Order getOrderDetails(int orderID) throws SQLException {
-    Order order = null;
-    String sql = 
-            "SELECT o.orderID, o.orderDate, o.total, o.orderStatus, o.shippingAddress, o.paymentStatus, " +
-            "pm.paymentMethodID, pm.paymentMethodName, u.userID, u.fullName, u.email, u.phone, o.shippingAddress, " +
-            "od.detailID, od.variantID, od.quantity_product, od.price, o.emall_receiver, o.phone_receiver, o.name_receiver, o.shipFee, " +
-            "p.productID, p.productName, c.colorID, c.colorName, s.sizeID, s.sizeName " +
-            "FROM tbOrder o " +
-            "LEFT JOIN tbPaymentMethod pm ON o.paymentMethod = pm.paymentMethodID " +
-            "LEFT JOIN tbUsers u ON o.userID = u.userID " +
-            "LEFT JOIN tbOrderDetail od ON o.orderID = od.orderID " +
-            "LEFT JOIN tbProductVariant pv ON od.variantID = pv.variantID " +
-            "LEFT JOIN tbProduct p ON pv.productID = p.productID " +
-            "LEFT JOIN tbColor c ON pv.colorID = c.colorID " +
-            "LEFT JOIN tbSize s ON pv.sizeID = s.sizeID " +
-            "WHERE o.orderID = ?";
+        Order order = null;
+        String sql
+                = "SELECT o.orderID, o.orderDate, o.total, o.orderStatus, o.shippingAddress, o.paymentStatus, "
+                + "pm.paymentMethodID, pm.paymentMethodName, u.userID, u.fullName, u.email, u.phone, o.shippingAddress, "
+                + "od.detailID, od.variantID, od.quantity_product, od.price, o.emall_receiver, o.phone_receiver, o.name_receiver, o.shipFee, "
+                + "p.productID, p.productName, c.colorID, c.colorName, s.sizeID, s.sizeName "
+                + "FROM tbOrder o "
+                + "LEFT JOIN tbPaymentMethod pm ON o.paymentMethod = pm.paymentMethodID "
+                + "LEFT JOIN tbUsers u ON o.userID = u.userID "
+                + "LEFT JOIN tbOrderDetail od ON o.orderID = od.orderID "
+                + "LEFT JOIN tbProductVariant pv ON od.variantID = pv.variantID "
+                + "LEFT JOIN tbProduct p ON pv.productID = p.productID "
+                + "LEFT JOIN tbColor c ON pv.colorID = c.colorID "
+                + "LEFT JOIN tbSize s ON pv.sizeID = s.sizeID "
+                + "WHERE o.orderID = ?";
 
-    try (PreparedStatement ps = connection.prepareStatement(sql)) {
-        ps.setInt(1, orderID);
-        System.out.println(sql);
-        try (ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) {
-                // Initialize Order once
-                if (order == null) {
-                    order = new Order();
-                    order.setOrderID(rs.getInt("orderID"));
-                    order.setOrderDate(rs.getString("orderDate")); // DB format: yyyy-MM-dd HH:mm:ss
-                    order.setTotal(rs.getDouble("total"));
-                    order.setOrderStatus(rs.getInt("orderStatus"));
-                    order.setShippingAddress(rs.getString("shippingAddress"));
-                    order.setEmall_receiver(rs.getString("emall_receiver"));
-                    order.setPhone_receiver(rs.getString("phone_receiver"));
-                    order.setName_receiver(rs.getString("name_receiver"));
-                    order.setShipFee(rs.getDouble("shipFee"));
-                    order.setPaymentStatus(rs.getBoolean("paymentStatus"));
-                    order.setOrderDetails(new ArrayList<>());
-                    // Set User
-                    User user = new User();
-                    user.setUserID(rs.getInt("userID"));
-                    user.setFullName(rs.getString("fullName"));
-                    user.setEmail(rs.getString("email"));
-                    user.setPhone(rs.getString("phone"));
-                    user.setAddress(rs.getString("shippingAddress"));
-                    order.setUser(user);
-                    
-                    // Set PaymentMethod
-                    PaymentMethod paymentMethod = new PaymentMethod();
-                    paymentMethod.setPaymentMethodID(rs.getInt("paymentMethodID"));
-                    paymentMethod.setPaymentMethodName(rs.getString("paymentMethodName"));
-                    order.setPaymentMethod(paymentMethod);
-                }
-                // Add OrderDetail if exists
-                if (rs.getObject("detailID") != null) {
-                    OrderDetail detail = new OrderDetail();
-                    detail.setDetailID(rs.getInt("detailID"));
-                    detail.setQuantity_product(rs.getInt("quantity_product"));
-                    detail.setPrice(rs.getDouble("price"));
-                    
-                    // Set ProductVariant with additional details
-                    ProductVariant variant = new ProductVariant();
-                    variant.setVariantID(rs.getInt("variantID"));
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, orderID);
+            System.out.println(sql);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    // Initialize Order once
+                    if (order == null) {
+                        order = new Order();
+                        order.setOrderID(rs.getInt("orderID"));
+                        order.setOrderDate(rs.getString("orderDate")); // DB format: yyyy-MM-dd HH:mm:ss
+                        order.setTotal(rs.getDouble("total"));
+                        order.setOrderStatus(rs.getInt("orderStatus"));
+                        order.setShippingAddress(rs.getString("shippingAddress"));
+                        order.setEmall_receiver(rs.getString("emall_receiver"));
+                        order.setPhone_receiver(rs.getString("phone_receiver"));
+                        order.setName_receiver(rs.getString("name_receiver"));
+                        order.setShipFee(rs.getDouble("shipFee"));
+                        order.setPaymentStatus(rs.getBoolean("paymentStatus"));
+                        order.setOrderDetails(new ArrayList<>());
+                        // Set User
+                        User user = new User();
+                        user.setUserID(rs.getInt("userID"));
+                        user.setFullName(rs.getString("fullName"));
+                        user.setEmail(rs.getString("email"));
+                        user.setPhone(rs.getString("phone"));
+                        user.setAddress(rs.getString("shippingAddress"));
+                        order.setUser(user);
 
-                    // Set Product
-                    Product product = new Product();
-                    product.setProductId(rs.getInt("productID"));
-                    product.setProductName(rs.getString("productName"));
-                    variant.setProduct(product);
-                    // Set Color
-                    Color color = new Color();
-                    color.setColorID(rs.getInt("colorID"));
-                    color.setColorName(rs.getString("colorName"));
-                    variant.setColor(color);
-                    // Set Size
-                    Size size = new Size();
-                    size.setSizeID(rs.getInt("sizeID"));
-                    size.setSizeName(rs.getString("sizeName"));
-                    variant.setSize(size);
+                        // Set PaymentMethod
+                        PaymentMethod paymentMethod = new PaymentMethod();
+                        paymentMethod.setPaymentMethodID(rs.getInt("paymentMethodID"));
+                        paymentMethod.setPaymentMethodName(rs.getString("paymentMethodName"));
+                        order.setPaymentMethod(paymentMethod);
+                    }
+                    // Add OrderDetail if exists
+                    if (rs.getObject("detailID") != null) {
+                        OrderDetail detail = new OrderDetail();
+                        detail.setDetailID(rs.getInt("detailID"));
+                        detail.setQuantity_product(rs.getInt("quantity_product"));
+                        detail.setPrice(rs.getDouble("price"));
 
-                    detail.setVariant(variant);
-                    detail.setOrder(order);
-                    order.getOrderDetails().add(detail);
+                        // Set ProductVariant with additional details
+                        ProductVariant variant = new ProductVariant();
+                        variant.setVariantID(rs.getInt("variantID"));
+
+                        // Set Product
+                        Product product = new Product();
+                        product.setProductId(rs.getInt("productID"));
+                        product.setProductName(rs.getString("productName"));
+                        variant.setProduct(product);
+                        // Set Color
+                        Color color = new Color();
+                        color.setColorID(rs.getInt("colorID"));
+                        color.setColorName(rs.getString("colorName"));
+                        variant.setColor(color);
+                        // Set Size
+                        Size size = new Size();
+                        size.setSizeID(rs.getInt("sizeID"));
+                        size.setSizeName(rs.getString("sizeName"));
+                        variant.setSize(size);
+
+                        detail.setVariant(variant);
+                        detail.setOrder(order);
+                        order.getOrderDetails().add(detail);
+                    }
                 }
             }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error fetching order details: " + e.getMessage(), e);
         }
-    } catch (SQLException e) {
-        throw new RuntimeException("Error fetching order details: " + e.getMessage(), e);
+        return order != null ? order : new Order(); // Return empty Order if not found
     }
-    return order != null ? order : new Order(); // Return empty Order if not found
-}
 
     public boolean UpdateOrder(String[] data) {
         String sql = "UPDATE dbo.tbOrder SET shippingAddress = ?,emall_receiver = ?, phone_receiver = ?,\n"
                 + "name_receiver = ? ,orderStatus = ?\n"
                 + "WHERE orderID = ?;";
-        
+
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             int status = Integer.parseInt(data[4]);
             int orderID = Integer.parseInt(data[5]);
@@ -407,12 +407,25 @@ public class OrderDAO extends DBContext {
             ps.setInt(5, status);
             ps.setInt(6, orderID);
             int result = ps.executeUpdate();
-            if(result >0){
+            if (result > 0) {
                 return true;
             }
+        } catch (Exception e) {
         }
-        catch (Exception e) {
-        }    
+        return false;
+    }
+
+    public boolean addOrder(List<OrderDetail> order) {
+        String sql = "INSERT INTO dbo.tbOrder(orderDate,total,userID,orderStatus,shippingAddress,paymentMethod,paymentStatus,emall_receiver,phone_receiver,name_receiver,shipFee)\n"
+                + "VALUES(?,?,?,?,?,?,?,?,?,?,?)";
+        String sql2 = "INSERT INTO dbo.tbOrderDetail(price,quantity_product,orderID,variantID)\n"
+                + "VALUES(?,?,?,?)";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            
+        }
+        catch(Exception e){
+            
+        }
         return false;
     }
 

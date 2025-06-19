@@ -69,8 +69,6 @@ public class Checkout extends HttpServlet {
             double distance = DistanceCalculator.getDistance(Shop.SHOP_ADDRESS, defaultAddress);
             double shipfee = DistanceCalculator.calculateShippingFee(distance);
             String dateShip = DistanceCalculator.calculateDeliveryTime(distance);
-            System.out.println("SHIPFEE" + shipfee);
-            System.out.println("DATESHIP" + dateShip);
             request.setAttribute("shipfee", shipfee);
             request.setAttribute("dateShip", dateShip);
             request.setAttribute("totalBill", totalBill);

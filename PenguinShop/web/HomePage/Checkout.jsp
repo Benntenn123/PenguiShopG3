@@ -394,135 +394,123 @@
         </style>
     </head>
     <body>
-        <jsp:include page="Common/Header.jsp" />
-        <!-- Header -->
-        <div style="padding: 16px; text-align: center; margin-top: 30px" class="header">
-            <h1 style="color: #AE1C9A; font-size: 40px">Xác nhận đơn hàng</h1>
+    <jsp:include page="Common/Header.jsp" />
+    <div style="padding: 16px; text-align: center; margin-top: 30px" class="header">
+        <h1 style="color: #AE1C9A; font-size: 40px">Xác nhận đơn hàng</h1>
+    </div>
+
+    <div class="container">
+        <fmt:setLocale value="vi_VN"/>
+        <!-- Địa chỉ nhận hàng -->
+        <div class="section">
+            <div style="font-size: 18px" class="section-header">
+                <div style="margin-bottom: 0px !important" class="section-title">
+                    <svg class="icon" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                    </svg>
+                    <h2 style="margin-bottom: 0px !important">Địa chỉ nhận hàng</h2>
+                </div>
+                <a class="btn-add" href="deliveryinfo"> 
+                    <span>Quản lí địa chỉ người nhận</span>
+                </a>
+            </div>
+            <div class="address-card" id="default-address"></div>
         </div>
 
-        <div class="container">
-            <fmt:setLocale value="vi_VN"/>
-            <!-- Địa chỉ nhận hàng -->
-            <div class="section">
-                <div style="font-size: 18px" class="section-header">
-                    <div style="margin-bottom: 0px !important" class="section-title">
-                        <svg class="icon" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-                        </svg>
-                        <h2 style="margin-bottom: 0px !important">Địa chỉ nhận hàng</h2>
-                    </div>
-                    <a class="btn-add" href="deliveryinfo"> 
-                        <span>Quản lí địa chỉ người nhận</span>
-                    </a>
-                </div>
-
-                <div class="address-card" id="default-address">
-                    <!-- Address will be populated by JavaScript -->
-                </div>
-            </div>
-
-            <!-- Sản phẩm -->
-            <div class="section">
-                <h2 style="margin-bottom: 16px; font-size: 18px">Sản phẩm đã chọn</h2>
-                <div id="products-list">
-                    <c:forEach var="cartsession" items="${selectedCartItems}">
-                        <div class="product-item">
-                            <img src="api/img/${cartsession.value.cart.variant.product.imageMainProduct}" style="height: 100px; width: 100px" alt="" class="product-image">
-                            <div class="product-info">
-                                <div style="font-size: 16px" class="product-name">${cartsession.value.cart.variant.product.productName}</div>
-                                <div class="product-variant">
-                                    Màu ${cartsession.value.cart.variant.color.colorName}, 
-                                    Size ${cartsession.value.cart.variant.size.sizeName}
-                                </div>
-                                <div class="product-price-row">
-                                    <span style="font-size: 16px" class="product-price"><fmt:formatNumber value="${cartsession.value.totalAmount}" type="currency" currencyCode="VND"/></span>
-                                    <span style="font-size: 16px" class="product-quantity">x${cartsession.value.quantity}</span>
-                                </div>
+        <!-- Sản phẩm -->
+        <div class="section">
+            <h2 style="margin-bottom: 16px; font-size: 18px">Sản phẩm đã chọn</h2>
+            <div id="products-list">
+                <c:forEach var="cartsession" items="${selectedCartItems}">
+                    <div class="product-item">
+                        <img src="api/img/${cartsession.value.cart.variant.product.imageMainProduct}" style="height: 100px; width: 100px" alt="" class="product-image">
+                        <div class="product-info">
+                            <div style="font-size: 16px" class="product-name">${cartsession.value.cart.variant.product.productName}</div>
+                            <div class="product-variant">
+                                Màu ${cartsession.value.cart.variant.color.colorName}, 
+                                Size ${cartsession.value.cart.variant.size.sizeName}
+                            </div>
+                            <div class="product-price-row">
+                                <span style="font-size: 16px" class="product-price"><fmt:formatNumber value="${cartsession.value.totalAmount}" type="currency" currencyCode="VND"/></span>
+                                <span style="font-size: 16px" class="product-quantity">x${cartsession.value.quantity}</span>
                             </div>
                         </div>
-                    </c:forEach>
-                </div>
+                    </div>
+                </c:forEach>
             </div>
+        </div>
 
-            <!-- Phương thức vận chuyển -->
-            <div class="section">
-                <div class="section-title" style="margin-bottom: 16px;">
-                    <svg class="icon" fill="currentColor" viewBox="0 0 24 24">
+        <!-- Phương thức vận chuyển -->
+        <div class="section">
+            <div class="section-title" style="margin-bottom: 16px;">
+                <svg class="icon" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4zM6 18.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm13.5-9l1.96 2.5H17V9.5h2.5zm-1.5 9c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/>
-                    </svg>
-                    <h2 style="font-size: 18px">Phương thức vận chuyển</h2>
-                </div>
-                <div class="shipping-option">
-                    <div>
-                        <div style="font-size: 16px;font-weight: 500;">Giao hàng tiêu chuẩn</div>
-                        <div style="font-size: 16px; color: #666;" id="shipping-time">${dateShip}</div>
-                    </div>
-                    <div style="font-size: 16px" class="shipping-price" id="shipping-price"><fmt:formatNumber value="${shipfee}" type="currency" currencyCode="VND"/></div>
-                </div>
+                </svg>
+                <h2 style="font-size: 18px">Phương thức vận chuyển</h2>
             </div>
+            <div class="shipping-option">
+                <div>
+                    <div style="font-size: 16px;font-weight: 500;">Giao hàng tiêu chuẩn</div>
+                    <div style="font-size: 16px; color: #666;" id="shipping-time">${dateShip}</div>
+                </div>
+                <div style="font-size: 16px" class="shipping-price" id="shipping-price"><fmt:formatNumber value="${shipfee}" type="currency" currencyCode="VND"/></div>
+            </div>
+        </div>
 
-            <!-- Phương thức thanh toán -->
-            <div class="section">
-                <div class="section-title" style="margin-bottom: 16px;">
-                    <svg class="icon" fill="currentColor" viewBox="0 0 24 24">
+        <!-- Phương thức thanh toán -->
+        <div class="section">
+            <div class="section-title" style="margin-bottom: 16px;">
+                <svg class="icon" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/>
-                    </svg>
-                    <h2 style="font-size: 18px">Phương thức thanh toán</h2>
-                </div>
-                <div style="font-size: 16px" id="payment-methods">
-                    <div class="payment-option selected" onclick="selectPayment(this, 'cod')">
-                        <div class="radio">
-                            <div class="radio-dot"></div>
-                        </div>
-                        <span class="payment-icon">💵</span>
-                        <span>Thanh toán khi nhận hàng (COD)</span>
+                </svg>
+                <h2 style="font-size: 18px">Phương thức thanh toán</h2>
+            </div>
+            <div style="font-size: 16px" id="payment-methods">
+                <div class="payment-option selected" onclick="selectPayment(this, 'cod')">
+                    <div class="radio">
+                        <div class="radio-dot"></div>
                     </div>
-                    <div class="payment-option" onclick="selectPayment(this, 'momo')">
-                        <div class="radio">
-                            <div class="radio-dot"></div>
-                        </div>
-                        <span class="payment-icon">🅿️</span>
-                        <span>Ví VNPAY</span>
+                    <span class="payment-icon">💵</span>
+                    <span>Thanh toán khi nhận hàng (COD)</span>
+                </div>
+                <div class="payment-option" onclick="selectPayment(this, 'vnpay')">
+                    <div class="radio">
+                        <div class="radio-dot"></div>
                     </div>
-                    <!--                    <div class="payment-option" onclick="selectPayment(this, 'bank')">
-                                            <div class="radio">
-                                                <div class="radio-dot"></div>
-                                            </div>
-                                            <span class="payment-icon">💳</span>
-                                            <span>Thẻ ATM/Visa/Master</span>
-                                        </div>
-                                        <div class="payment-option" onclick="selectPayment(this, 'shopee_pay')">
-                                            <div class="radio">
-                                                <div class="radio-dot"></div>
-                                            </div>
-                                            <span class="payment-icon">🛒</span>
-                                            <span>ShopeePay</span>
-                                        </div>-->
+                    <span class="payment-icon">🅿️</span>
+                    <span>Ví VNPAY</span>
                 </div>
             </div>
+        </div>
 
-            <!-- Tổng cộng -->
-            <div class="section">
-                <h2 style=" font-size: 18px;margin-bottom: 16px;">Chi tiết thanh toán</h2>
-                <div style="font-size: 16px;" class="summary-row">
-                    <span>Tổng tiền hàng</span>
-                    <span id="subtotal"><fmt:formatNumber value="${totalBill}" type="currency" currencyCode="VND"/></span>
-                </div>
-                <div style="font-size: 16px;" class="summary-row">
-                    <span>Phí vận chuyển</span>
-                    <span id="shipping-fee"><fmt:formatNumber value="${shipfee}" type="currency" currencyCode="VND"/></span>
-                </div>
-                <div class="summary-total">
-                    <span>Tổng thanh toán</span>
-                    <span id="total"><fmt:formatNumber value="${totalBillShip}" type="currency" currencyCode="VND"/></span>
-                </div>
+        <!-- Tổng cộng -->
+        <div class="section">
+            <h2 style="font-size: 18px;margin-bottom: 16px;">Chi tiết thanh toán</h2>
+            <div style="font-size: 16px;" class="summary-row">
+                <span>Tổng tiền hàng</span>
+                <span id="subtotal"><fmt:formatNumber value="${totalBill}" type="currency" currencyCode="VND"/></span>
             </div>
+            <div style="font-size: 16px;" class="summary-row">
+                <span>Phí vận chuyển</span>
+                <span id="shipping-fee"><fmt:formatNumber value="${shipfee}" type="currency" currencyCode="VND"/></span>
+            </div>
+            <div class="summary-total">
+                <span>Tổng thanh toán</span>
+                <span id="total"><fmt:formatNumber value="${totalBillShip}" type="currency" currencyCode="VND"/></span>
+            </div>
+        </div>
 
-            <!-- Nút đặt hàng -->
-            <div  style="margin-bottom: 200px"  class="section">
-                <button class="btn-order" onclick="placeOrder()">Đặt hàng</button>
-                <p class="terms">Nhấn "Đặt hàng" đồng nghĩa với việc bạn đồng ý tuân theo Điều khoản PenguinShop</p>
-            </div>
+        <!-- Form gửi dữ liệu đến Servlet -->
+        <div style="margin-bottom: 200px" class="section">
+            <form id="orderForm" action="confirm-order" method="post">
+                <input type="hidden" name="paymentMethod" id="paymentMethod" value="cod">
+                <input type="hidden" name="addressId" id="addressId" value="">
+                <input type="hidden" name="totalBill" id="totalBill" value="${totalBill}">
+                <input type="hidden" name="shipfee" id="shipfee" value="${shipfee}">
+                <input type="hidden" name="totalBillShip" id="totalBillShip" value="${totalBillShip}">
+                <button type="submit" class="btn-order">Đặt hàng</button>
+            </form>
+            <p class="terms">Nhấn "Đặt hàng" đồng nghĩa với việc bạn đồng ý tuân theo Điều khoản PenguinShop</p>
         </div>
 
         <!-- Modal thêm địa chỉ -->
@@ -543,7 +531,7 @@
                     </c:forEach>
                 </div>
                 <div class="modal-actions">
-                    <button class="btn-cancel" onclick="hideAddressModal()" style="font-size: 16px;margin: 10px 20px !important;padding: 12px 10px; border-radius: 8px; background: #AE1C9A; color: white; border: none; cursor: pointer;">Hủy</button>
+                    <button class="btn-cancel" onclick="hideAddressModal()">Hủy</button>
                 </div>
             </div>
         </div>
@@ -551,7 +539,7 @@
         <!-- Floating button -->
         <button class="floating-btn" onclick="showAddressModal()">
             <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
             </svg>
         </button>
         <jsp:include page="Common/Footer.jsp"/>
@@ -559,247 +547,179 @@
         <jsp:include page="Common/Message.jsp"/>
 
         <script>
-    // Parse JSON
-    let deliRaw = '${deli}';
-    let addresses = [];
-    try {
-        let unescapedJson = deliRaw.replace(/\\"/g, '"');
-        addresses = unescapedJson ? JSON.parse(unescapedJson) : [];
-    } catch (error) {
-        console.error('Error parsing addresses JSON:', error);
-        try {
-            addresses = JSON.parse(deliRaw);
-        } catch (error2) {
-            console.error('Fallback parse failed:', error2);
-            addresses = [];
-        }
-    }
+            let deliRaw = '${deli}';
+            let addresses = [];
+            try {
+                let unescapedJson = deliRaw.replace(/\\"/g, '"');
+                addresses = unescapedJson ? JSON.parse(unescapedJson) : [];
+            } catch (error) {
+                console.error('Error parsing addresses JSON:', error);
+                try {
+                    addresses = JSON.parse(deliRaw);
+                } catch (error2) {
+                    console.error('Fallback parse failed:', error2);
+                    addresses = [];
+                }
+            }
 
-    // Hàm định dạng và phân tích giá
-    function formatPrice(amount) {
-        return  Math.round(amount).toLocaleString('vi-VN') + '₫';
-    }
+            function formatPrice(amount) {
+                return Math.round(amount).toLocaleString('vi-VN') + '₫';
+            }
 
-    function parsePrice(text) {
-        const cleaned = text.replace(/[^\d]/g, '');
-        return parseInt(cleaned) || 0;
-    }
+            function parsePrice(text) {
+                const cleaned = text.replace(/[^\d]/g, '');
+                return parseInt(cleaned) || 0;
+            }
 
-    function selectAddress(addressId) {
-        const selectedAddress = addresses.find(addr => addr.deliveryInfoID == addressId);
-        if (!selectedAddress) {
-            console.error('Address not found for ID:', addressId);
-            return;
-        }
+            function selectAddress(addressId) {
+                const selectedAddress = addresses.find(addr => addr.deliveryInfoID == addressId);
+                if (!selectedAddress) {
+                    console.error('Address not found for ID:', addressId);
+                    return;
+                }
 
-        const addressCard = document.getElementById('default-address');
-        if (addressCard) {
-            const fullName = selectedAddress.fullName || '';
-            const phone = selectedAddress.phone || '';
-            const addressDetail = selectedAddress.addessDetail || '';
-            const city = selectedAddress.city || '';
+                const addressCard = document.getElementById('default-address');
+                const addressIdInput = document.getElementById('addressId');
+                if (addressCard && addressIdInput) {
+                    const fullName = selectedAddress.fullName || '';
+                    const phone = selectedAddress.phone || '';
+                    const addressDetail = selectedAddress.addessDetail || '';
+                    const city = selectedAddress.city || '';
 
-            const htmlContent = '<div class="address-info">' +
-                '<div>' +
-                '<div style="font-size: 16px" class="address-name">' + fullName + ' | ' + phone + '</div>' +
-                '<div style="font-size: 16px" class="address-text">' + addressDetail + ', ' + city + '</div>' +
-                '<span style="font-size: 16px" class="default-badge">Mặc định</span>' +
-                '</div>' +
-                '<button style="font-size: 16px" onclick="showAddressModal()" class="btn-change">Thay đổi</button>' +
-                '</div>';
+                    const htmlContent = '<div class="address-info">' +
+                        '<div>' +
+                        '<div style="font-size: 16px" class="address-name">' + fullName + ' | ' + phone + '</div>' +
+                        '<div style="font-size: 16px" class="address-text">' + addressDetail + ', ' + city + '</div>' +
+                        '<span style="font-size: 16px" class="default-badge">Mặc định</span>' +
+                        '</div>' +
+                        '<button style="font-size: 16px" onclick="showAddressModal()" class="btn-change">Thay đổi</button>' +
+                        '</div>';
 
-            addressCard.innerHTML = htmlContent;
+                    addressCard.innerHTML = htmlContent;
+                    addressIdInput.value = addressId;
 
-            $.ajax({
-                url: 'calculateShippingFee',
-                method: 'POST',
-                data: { addressId: addressId },
-                success: function(response) {
-                    console.log('Shipping cost response:', response);
-                    if (response && response.success) {
-                        toastr.success(response.message);
+                    $.ajax({
+                        url: 'calculateShippingFee',
+                        method: 'POST',
+                        data: { addressId: addressId },
+                        success: function(response) {
+                            if (response && response.success) {
+                                toastr.success(response.message);
+                                const shippingPriceElement = document.getElementById('shipping-price');
+                                const shippingFeeElement = document.getElementById('shipping-fee');
+                                const shipfeeInput = document.getElementById('shipfee');
+                                if (shippingPriceElement && shippingFeeElement && shipfeeInput) {
+                                    const shippingFee = response.shippingFee || 0;
+                                    shippingPriceElement.textContent = formatPrice(shippingFee);
+                                    shippingFeeElement.textContent = formatPrice(shippingFee);
+                                    shipfeeInput.value = shippingFee;
+                                }
 
-                        // Cập nhật phí vận chuyển
-                        const shippingPriceElement = document.getElementById('shipping-price');
-                        const shippingFeeElement = document.getElementById('shipping-fee');
-                        if (shippingPriceElement && shippingFeeElement) {
-                            const shippingFee = response.shippingFee || 0;
-                            shippingPriceElement.textContent = formatPrice(shippingFee);
-                            shippingFeeElement.textContent = formatPrice(shippingFee);
-                        } else {
-                            console.error('Shipping price or fee element not found');
-                        }
+                                const shippingTimeElement = document.getElementById('shipping-time');
+                                if (shippingTimeElement) {
+                                    shippingTimeElement.textContent = response.time || '';
+                                }
 
-                        // Cập nhật thời gian dự kiến
-                        const shippingTimeElement = document.getElementById('shipping-time');
-                        if (shippingTimeElement) {
-                            shippingTimeElement.textContent = response.time || '';
-                        } else {
-                            console.error('Shipping time element not found');
-                        }
-
-                        // Cập nhật tổng thanh toán
-                        const subtotalElement = document.getElementById('subtotal');
-                        if (subtotalElement) {
-                            const subtotal = parsePrice(subtotalElement.textContent);
-                            const total = subtotal + (response.shippingFee || 0);
-                            const totalElement = document.getElementById('total');
-                            if (totalElement) {
-                                totalElement.textContent = formatPrice(total);
+                                const subtotalElement = document.getElementById('subtotal');
+                                if (subtotalElement) {
+                                    const subtotal = parsePrice(subtotalElement.textContent);
+                                    const total = subtotal + (response.shippingFee || 0);
+                                    const totalElement = document.getElementById('total');
+                                    const totalBillShipInput = document.getElementById('totalBillShip');
+                                    if (totalElement && totalBillShipInput) {
+                                        totalElement.textContent = formatPrice(total);
+                                        totalBillShipInput.value = total;
+                                    }
+                                }
+                                hideAddressModal();
                             } else {
-                                console.error('Total element not found');
+                                toastr.error('Lỗi khi tính phí vận chuyển!');
                             }
-                        } else {
-                            console.error('Subtotal element not found');
+                        },
+                        error: function(error) {
+                            console.error('Error calculating shipping:', error);
+                            toastr.error('Đã xảy ra lỗi khi tính phí vận chuyển!');
                         }
+                    });
+                }
+            }
 
-                        hideAddressModal();
-                    } else {
-                        console.error('Shipping cost not found in response:', response);
-                        toastr.error('Lỗi khi tính phí vận chuyển!');
-                    }
-                },
-                error: function(error) {
-                    console.error('Error calculating shipping:', error);
-                    toastr.error('Đã xảy ra lỗi khi tính phí vận chuyển!');
+            function displayDefaultAddress() {
+                const addressCard = document.getElementById('default-address');
+                const addressIdInput = document.getElementById('addressId');
+                if (!addressCard || !addressIdInput) return;
+
+                let defaultAddress = addresses.find(addr => addr.isDefault === 1);
+                if (!defaultAddress && addresses.length > 0) {
+                    defaultAddress = addresses[0];
+                }
+
+                if (defaultAddress) {
+                    const fullName = defaultAddress.fullName || '';
+                    const phone = defaultAddress.phone || '';
+                    const addressDetail = defaultAddress.addessDetail || '';
+                    const city = defaultAddress.city || '';
+
+                    const htmlContent = '<div class="address-info">' +
+                        '<div>' +
+                        '<div style="font-size: 16px" class="address-name">' + fullName + ' | ' + phone + '</div>' +
+                        '<div style="font-size: 16px" class="address-text">' + addressDetail + ', ' + city + '</div>' +
+                        (defaultAddress.isDefault ? '<span style="font-size: 16px" class="default-badge">Mặc định</span>' : '') +
+                        '</div>' +
+                        '<button style="font-size: 16px" onclick="showAddressModal()" class="btn-change">Thay đổi</button>' +
+                        '</div>';
+
+                    addressCard.innerHTML = htmlContent;
+                    addressIdInput.value = defaultAddress.deliveryInfoID;
+                } else {
+                    addressCard.innerHTML = '<div class="address-info">' +
+                        '<div style="font-size: 16px; color: #666;">Chưa có địa chỉ nào được chọn. Vui lòng thêm địa chỉ.</div>' +
+                        '<button style="font-size: 16px" onclick="showAddressModal()" class="btn-change">Thêm địa chỉ</button>' +
+                        '</div>';
+                }
+            }
+
+            displayDefaultAddress();
+
+            let selectedPayment = 'cod';
+
+            function selectPayment(element, paymentId) {
+                document.querySelectorAll('.payment-option').forEach(option => {
+                    option.classList.remove('selected');
+                });
+                element.classList.add('selected');
+                selectedPayment = paymentId;
+                document.getElementById('paymentMethod').value = paymentId;
+            }
+
+            function showAddressModal() {
+                const modal = document.getElementById('addressModal');
+                if (modal) modal.classList.add('show');
+            }
+
+            function hideAddressModal() {
+                const modal = document.getElementById('addressModal');
+                if (modal) modal.classList.remove('show');
+            }
+
+            function updateFloatingButton() {
+                const floatingBtn = document.querySelector('.floating-btn');
+                if (floatingBtn) {
+                    floatingBtn.style.display = addresses.length > 1 ? 'block' : 'none';
+                }
+            }
+
+            document.addEventListener('DOMContentLoaded', function () {
+                updateFloatingButton();
+                const addressModal = document.getElementById('addressModal');
+                if (addressModal) {
+                    addressModal.addEventListener('click', function (e) {
+                        if (e.target === this) {
+                            hideAddressModal();
+                        }
+                    });
                 }
             });
-        }
-    }
-
-    function displayDefaultAddress() {
-        const addressCard = document.getElementById('default-address');
-        if (!addressCard) {
-            console.error('Address card element not found');
-            return;
-        }
-
-        let defaultAddress = addresses.find(addr => addr.isDefault === 1);
-        if (!defaultAddress && addresses.length > 0) {
-            defaultAddress = addresses[0];
-        }
-
-        if (defaultAddress) {
-            const fullName = defaultAddress.fullName || '';
-            const phone = defaultAddress.phone || '';
-            const addressDetail = defaultAddress.addessDetail || '';
-            const city = defaultAddress.city || '';
-
-            const htmlContent = '<div class="address-info">' +
-                '<div>' +
-                '<div style="font-size: 16px" class="address-name">' + fullName + ' | ' + phone + '</div>' +
-                '<div style="font-size: 16px" class="address-text">' + addressDetail + ', ' + city + '</div>' +
-                (defaultAddress.isDefault ? '<span style="font-size: 16px" class="default-badge">Mặc định</span>' : '') +
-                '</div>' +
-                '<button style="font-size: 16px" onclick="showAddressModal()" class="btn-change">Thay đổi</button>' +
-                '</div>';
-
-            addressCard.innerHTML = htmlContent;
-        } else {
-            addressCard.innerHTML = '<div class="address-info">' +
-                '<div style="font-size: 16px; color: #666;">Chưa có địa chỉ nào được chọn. Vui lòng thêm địa chỉ.</div>' +
-                '<button style="font-size: 16px" onclick="showAddressModal()" class="btn-change">Thêm địa chỉ</button>' +
-                '</div>';
-        }
-    }
-
-    displayDefaultAddress();
-
-    let selectedPayment = 'cod';
-
-    function selectPayment(element, paymentId) {
-        document.querySelectorAll('.payment-option').forEach(option => {
-            option.classList.remove('selected');
-        });
-        element.classList.add('selected');
-        selectedPayment = paymentId;
-    }
-
-    function showAddressModal() {
-        const modal = document.getElementById('addressModal');
-        if (modal) {
-            modal.classList.add('show');
-        }
-    }
-
-    function hideAddressModal() {
-        const modal = document.getElementById('addressModal');
-        if (modal) {
-            modal.classList.remove('show');
-        }
-
-        const fields = ['newName', 'newPhone', 'newAddress'];
-        fields.forEach(fieldId => {
-            const field = document.getElementById(fieldId);
-            if (field) field.value = '';
-        });
-    }
-
-    function addAddress() {
-        const name = document.getElementById('newName')?.value?.trim() || '';
-        const phone = document.getElementById('newPhone')?.value?.trim() || '';
-        const address = document.getElementById('newAddress')?.value?.trim() || '';
-
-        if (!name || !phone || !address) {
-            alert('Vui lòng điền đầy đủ thông tin');
-            return;
-        }
-
-        const newAddress = {
-            deliveryInfoID: addresses.length + 1,
-            fullName: name,
-            phone: phone,
-            addessDetail: address,
-            city: '',
-            isDefault: addresses.length === 0 ? 1 : 0
-        };
-
-        addresses.push(newAddress);
-        hideAddressModal();
-        displayDefaultAddress();
-        alert('Thêm địa chỉ thành công!');
-        updateFloatingButton();
-    }
-
-    function placeOrder() {
-        const defaultAddress = addresses.find(addr => addr.isDefault === 1) || addresses[0];
-        if (!defaultAddress) {
-            alert('Vui lòng chọn địa chỉ giao hàng!');
-            return;
-        }
-
-        const totalElement = document.getElementById('total');
-        const total = totalElement ? totalElement.textContent : '₫0';
-
-        const paymentText = {
-            'cod': 'COD',
-            'momo': 'VNPAY',
-            'bank': 'Thẻ ngân hàng',
-            'shopee_pay': 'ShopeePay'
-        }[selectedPayment] || 'Không xác định';
-
-        const addressText = `${defaultAddress.fullName || ''}, ${defaultAddress.addessDetail || ''}, ${defaultAddress.city || ''}`;
-        alert(`Đặt hàng thành công!\nPhương thức thanh toán: ${paymentText}\nĐịa chỉ: ${addressText}\nTổng tiền: ${total}`);
-    }
-
-    function updateFloatingButton() {
-        const floatingBtn = document.querySelector('.floating-btn');
-        if (floatingBtn) {
-            floatingBtn.style.display = addresses.length > 1 ? 'block' : 'none';
-        }
-    }
-
-    document.addEventListener('DOMContentLoaded', function () {
-        updateFloatingButton();
-        const addressModal = document.getElementById('addressModal');
-        if (addressModal) {
-            addressModal.addEventListener('click', function (e) {
-                if (e.target === this) {
-                    hideAddressModal();
-                }
-            });
-        }
-    });
-</script>
+        </script>
     </body>
 </html>

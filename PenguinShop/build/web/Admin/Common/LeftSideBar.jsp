@@ -51,6 +51,14 @@
                         </li>
 
                     </ul>
+                     <ul class="sub-menu" aria-expanded="false">
+                        <li>
+                            <a href="manage_role_permissions">
+                                <span data-key="t-calendar">Quản lí quyền</span>
+                            </a>
+                        </li>
+
+                    </ul>
                 </li>
                 <li>
                     <a href="javascript: void(0);" class="has-arrow">
