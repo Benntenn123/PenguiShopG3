@@ -40,7 +40,7 @@ public class FilterAdmin implements Filter {
         System.out.println("Request URI: " + request.getRequestURI());
         System.out.println("Final Request Path: " + requestPath);
         
-        if (requestPath.equals("/admin/loginAdmin")) {
+        if (requestPath.equals("/admin/loginAdmin") || requestPath.equals("/admin/logoutAdmin")) {
             chain.doFilter(request, response);
             return;
         }
