@@ -16,6 +16,7 @@ INSERT INTO dbo.tbPermissions
 (N'Danh sách người dùng','/admin/listCustomerAdmin', 2 , 0 , NULL),
 (N'Danh sách quyền','/admin/listPermission',3,0,NULL),
 (N'Danh sách nhóm quyền','/admin/listRoleAdmin',3,0,NULL),
+(N'Quản lí quyền','/admin/manage_role_permissions',3,0,NULL),
 (N'Thêm sản phẩm thuộc tính','/admin/addAttributeProduct',4,1,NULL),
 (N'Thêm nhãn hàng','/admin/add-brand',4,1,NULL),
 (N'Thêm danh mục','/admin/add-category',4,1,NULL),
