@@ -4,8 +4,8 @@
  */
 package Models;
 
-
 public class Role {
+
     private int roleID;
     private String roleName;
 
@@ -15,7 +15,6 @@ public class Role {
     }
 
     public Role() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     public int getRoleID() {
@@ -33,5 +32,5 @@ public class Role {
     public void setRoleName(String roleName) {
         this.roleName = roleName;
     }
-    
+
 }

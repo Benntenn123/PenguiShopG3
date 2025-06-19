@@ -7,7 +7,7 @@
 (N'Hóa đơn','file'),
 (N'Yêu cầu người dùng','send'),
 (N'Lịch sử','clock'),
-(N'Nhân sự','users');
+(N'Nhân sự', 'users');
 
 INSERT INTO dbo.tbPermissions
 (permissionName,url_permission,moduleID,isHide,permissionDescription)VALUES
@@ -16,7 +16,6 @@ INSERT INTO dbo.tbPermissions
 (N'Danh sách người dùng','/admin/listCustomerAdmin', 2 , 0 , NULL),
 (N'Danh sách quyền','/admin/listPermission',3,0,NULL),
 (N'Danh sách nhóm quyền','/admin/listRoleAdmin',3,0,NULL),
-(N'Quản lí quyền truy cập','/admin/manage_role_permissions',3,0,NULL),
 (N'Thêm sản phẩm thuộc tính','/admin/addAttributeProduct',4,1,NULL),
 (N'Thêm nhãn hàng','/admin/add-brand',4,1,NULL),
 (N'Thêm danh mục','/admin/add-category',4,1,NULL),
@@ -41,9 +40,9 @@ INSERT INTO dbo.tbPermissions
 (N'Chi tiết request','/admin/requestDetails',7,1,NULL),
 (N'Phản hồi yêu cầu người dùng','/admin/responseSupport',7,1,NULL),
 (N'Chi tiết order','/admin/orderDetailsAdmin',7,1,NULL),
-(N'Danh sách nhân sự','/admin/listSales',9,1,NULL),
-(N'Thêm nhân sự','/admin/addSales',9,1,NULL),
-
+(N'Danh sách nhân sự','/admin/listSales',9,0,NULL),
+(N'Thêm nhân sự','/admin/addSales',9,0,NULL),
+(N'Chỉnh sửa thông tin sales','/admin/editProfileSales',9,1,NULL);
 
 -- Gán tất cả các quyền cho role admin (roleID = 1)
 INSERT INTO tbRolePermissions (roleID, permissionID)

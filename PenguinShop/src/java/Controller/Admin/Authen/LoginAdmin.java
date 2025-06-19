@@ -5,6 +5,7 @@
 package Controller.Admin.Authen;
 
 import DAL.UserDAO;
+import Models.User;
 import Utils.HashPassword;
 import Utils.StringConvert;
 import java.io.IOException;
@@ -54,6 +55,8 @@ public class LoginAdmin extends HttpServlet {
             response.sendRedirect("loginAdmin");
         } else {
             if (udao.authenticateUser(email, HashPassword.hashWithSHA256(password))) {
+                User uAdmin = udao.loadUserInfoByEmailAdmin(email);
+                request.getSession().setAttribute("uAdmin", uAdmin);
                 request.getSession().setAttribute("ms", "Login thành công!");
                 response.sendRedirect("dashboard");
             }

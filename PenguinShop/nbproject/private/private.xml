@@ -5,8 +5,10 @@
         <group>
             <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/DAL/PermissionDAO.java</file>
             <file>file:/F:/Git/PenguiShopG3/PenguinShop/web/Admin/ListPermissions.jsp</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/web/Admin/ManageRolePermissions.jsp</file>
             <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Models/Modules.java</file>
             <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Models/Permission.java</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Controller/Admin/Role/ManageRolePermissions.java</file>
             <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Controller/Admin/Role/ListPermissions.java</file>
             <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Controller/Admin/Role/ListRole.java</file>
         </group>
