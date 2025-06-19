@@ -138,9 +138,8 @@
                                                         <i class="bx bx-dots-horizontal-rounded"></i>
                                                     </button>
                                                     <ul class="dropdown-menu dropdown-menu-end">
-                                                        <li><a class="dropdown-item" href="#">Action</a></li>
-                                                        <li><a class="dropdown-item" href="#">Another action</a></li>
-                                                        <li><a class="dropdown-item" href="#">Something else here</a></li>
+                                                        <li><a class="dropdown-item" href="customer_details?userID=${list.userID}">Xem chi tiết</a></li>
+                                                        
                                                     </ul>
                                                 </div>
                                             </td>

@@ -61,7 +61,7 @@ public class ResetPassword extends HttpServlet {
             response.sendRedirect("reset_password");
         }
         if(!StringConvert.isValidPassword(password)){
-            request.getSession().setAttribute("error", "Password chưa đủ kí tự");
+            request.getSession().setAttribute("error", "Password chưa thỏa mãn điều kiện");
             response.sendRedirect("reset_password");
         }
         if(!password.equals(confirmPassword)){
