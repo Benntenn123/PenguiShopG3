@@ -169,7 +169,7 @@
                                                         <i class="bx bx-dots-horizontal-rounded"></i>
                                                     </button>
                                                     <ul class="dropdown-menu dropdown-menu-end">
-                                                        <li><a class="dropdown-item" href="responseSupport?requestID=${request.requestID}">Xem chi tiết</a></li>
+                                                        <li><a class="dropdown-item" href="requestDetails?requestID=${request.requestID}">Xem chi tiết</a></li>
                                                         <li><a class="dropdown-item" href="responseSupport?requestID=${request.requestID}">Phản Hồi</a></li>
                                                     </ul>
                                                 </div>
