@@ -147,6 +147,24 @@
 
                     </ul>
                 </li>
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow">
+                        <i data-feather="clock"></i>
+                        <span data-key="t-apps">Nhân sự</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li>
+                            <a href="listSales">
+                                <span data-key="t-calendar">Danh sách nhân sự</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="addSales">
+                                <span data-key="t-calendar">Thêm nhân sự</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
 <!--
                 <li>
                     <a href="javascript: void(0);" class="has-arrow">
