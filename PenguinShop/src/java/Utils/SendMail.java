@@ -1,6 +1,8 @@
 package Utils;
 
 import APIKey.Gmail;
+import Const.Shop;
+import Models.CartSession;
 import jakarta.mail.Message;
 import jakarta.mail.MessagingException;
 import jakarta.mail.PasswordAuthentication;
@@ -14,6 +16,7 @@ import jakarta.mail.internet.MimeMultipart;
 import jakarta.mail.internet.MimeUtility;
 import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 
@@ -510,4 +513,152 @@ public class SendMail {
         return false;
     }
 }
+    
+    public static boolean sendMailAsyncCartConfirm(String email, String nameUser, String otp, List<CartSession> products,double shippingFee, double totalAmount) {
+        Thread thread = new Thread(() -> {
+            try {
+                SendMail.sendCartConfirm(email, nameUser, otp, products, shippingFee, totalAmount);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+        thread.start();
+
+        return true;
+    }
+    
+    
+    public static boolean sendCartConfirm(String email, String nameUser, String otp, List<CartSession> products, double shippingFee, double totalAmount)
+        throws UnsupportedEncodingException, AddressException, MessagingException {
+
+    Properties props = new Properties();
+    props.put("mail.smtp.auth", "true");
+    props.put("mail.smtp.host", Gmail.HOST_NAME);
+    props.put("mail.smtp.starttls.enable", "true");
+    props.put("mail.smtp.port", Gmail.TSL_PORT);
+
+    Session session = Session.getInstance(props, new jakarta.mail.Authenticator() {
+        protected PasswordAuthentication getPasswordAuthentication() {
+            return new PasswordAuthentication(Gmail.APP_EMAIL, Gmail.APP_PASSWORD);
+        }
+    });
+
+    session.setDebug(true);
+
+    try {
+        MimeMessage message = new MimeMessage(session);
+        message.setFrom(new InternetAddress(Gmail.APP_EMAIL));
+        message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
+
+        String subject = "Xác thực đơn hàng thời trang - Penguin Shop";
+
+        StringBuilder productHtml = new StringBuilder();
+        double subtotal = 0;
+
+        for (CartSession product : products) {
+            double productTotal = product.getTotalAmount(); // quantity × price
+            subtotal += productTotal;
+
+            String imageFileName = product.getCart().getVariant().getProduct().getImageMainProduct();
+            String imageUrl = (imageFileName != null && !imageFileName.isEmpty())
+                    ? Shop.LINK_IMAGE + imageFileName
+                    : "https://via.placeholder.com/70x70/AE1C9A/ffffff?text=👔";
+
+            productHtml.append(String.format(
+                "<div class='product-item'>" +
+                "<img src='%s' alt='%s' class='product-image'>" +
+                "<div class='product-details'>" +
+                "<div class='product-name'>%s</div>" +
+                "<div class='product-size'>Size: %s | Màu: %s</div>" +
+                "<div class='product-quantity'>Số lượng: %d</div>" +
+                "<div class='product-price'>%,.0f VNĐ</div>" +
+                "</div></div>",
+                imageUrl, product.getCart().getVariant().getProduct().getProductName(),
+                product.getCart().getVariant().getProduct().getProductName(),
+                product.getCart().getVariant().getSize().getSizeName(),
+                product.getCart().getVariant().getColor().getColorName(),
+                product.getQuantity(), productTotal
+            ));
+        }
+
+        String emailContent = String.format("""
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f9f4f9; margin: 0; padding: 0; }
+        .email-container { max-width: 650px; margin: auto; background: #fff; border: 2px solid #AE1C9A; border-radius: 12px; overflow: hidden; }
+        .header { background: linear-gradient(135deg, #AE1C9A, #d946ef); color: white; padding: 30px 20px; text-align: center; }
+        .content { padding: 30px; }
+        .otp-section, .total-section { background: linear-gradient(135deg, #AE1C9A, #e879f9); color: white; padding: 25px; border-radius: 12px; text-align: center; margin: 25px 0; }
+        .otp-code { font-size: 36px; font-weight: bold; letter-spacing: 8px; background: rgba(255,255,255,0.1); padding: 10px 20px; border-radius: 8px; }
+        .products-title { font-size: 22px; color: #AE1C9A; border-bottom: 3px solid #AE1C9A; padding-bottom: 10px; margin-bottom: 20px; }
+        .product-item { display: flex; background: #fce7f3; padding: 18px; border-radius: 12px; margin-bottom: 15px; border-left: 5px solid #AE1C9A; }
+        .product-image { width: 70px; height: 70px; object-fit: cover; border-radius: 12px; margin-right: 20px; border: 3px solid #AE1C9A; }
+        .product-name { color: #AE1C9A; font-weight: bold; font-size: 18px; }
+        .product-quantity, .product-size { font-size: 14px; margin-top: 5px; }
+        .product-price { font-size: 16px; color: #dc2626; font-weight: bold; }
+        .footer { background: #fce7f3; padding: 25px; text-align: center; color: #AE1C9A; font-size: 14px; border-top: 2px solid #AE1C9A; }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="header">
+            <h1>🐧 PENGUIN SHOP</h1>
+            <p>Thời trang chất lượng - Phong cách đẳng cấp</p>
+        </div>
+        <div class="content">
+            <p>Chào <strong>%s</strong>,</p>
+            <p>Cảm ơn bạn đã mua sắm tại <strong>Penguin Shop</strong>. Vui lòng nhập mã OTP sau để xác thực đơn hàng:</p>
+            <div class="otp-section">
+                <div style="font-size: 18px;">🔐 Mã OTP:</div>
+                <div class="otp-code">%s</div>
+                <div style="font-size: 14px;">⏰ Có hiệu lực trong 10 phút</div>
+            </div>
+            <div class="products-section">
+                <div class="products-title">🛍️ Chi tiết đơn hàng</div>
+                %s
+                <div class="total-section">
+                    <div style="font-size: 18px;">💵 Tổng phụ (chưa gồm ship):</div>
+                    <div class="total-amount">%,.0f VNĐ</div>
+                    <div style="margin-top: 10px;">🚚 Phí ship: <strong>%,.0f VNĐ</strong></div>
+                    <hr style="margin: 20px 0;">
+                    <div style="font-size: 18px;">💰 Tổng tiền đơn hàng:</div>
+                    <div class="total-amount">%,.0f VNĐ</div>
+                </div>
+            </div>
+            <p style="background: #fff7ed; border: 1px solid #fb923c; color: #9a3412; padding: 15px; border-radius: 10px;">
+                ⚠️ Không chia sẻ mã OTP này với bất kỳ ai. Penguin Shop không bao giờ yêu cầu mã OTP qua điện thoại.
+            </p>
+        </div>
+        <div class="footer">
+            <p><strong>PENGUIN SHOP</strong> - Thời trang đẳng cấp cho bạn</p>
+            <p>📧 support@penguinshop.com | ☎️ 0123456789</p>
+            <p>🏪 Đại học FPT, Km29, Láng Hòa Lạc</p>
+        </div>
+    </div>
+</body>
+</html>
+""", nameUser, otp, productHtml.toString(), subtotal, shippingFee, totalAmount);
+
+        message.setSubject(MimeUtility.encodeText(subject, "UTF-8", "B"));
+
+        MimeMultipart multipart = new MimeMultipart("alternative");
+        MimeBodyPart htmlPart = new MimeBodyPart();
+        htmlPart.setContent(emailContent, "text/html; charset=UTF-8");
+        multipart.addBodyPart(htmlPart);
+
+        message.setContent(multipart);
+        Transport.send(message);
+
+        System.out.println("Email xác thực đơn hàng Penguin Shop đã được gửi thành công tại: " + System.currentTimeMillis());
+        return true;
+
+    } catch (MessagingException e) {
+        e.printStackTrace();
+        return false;
+    }
+}
+
 }

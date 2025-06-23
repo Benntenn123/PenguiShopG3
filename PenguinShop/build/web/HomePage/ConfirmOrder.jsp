@@ -143,7 +143,7 @@
         
         <div class="verification-info">
             <div>Mã được gửi qua: <span class="method">${verificationMethod}</span></div>
-            <div><strong>${sessionScope.verificationMethod == 'email' ? sessionScope.email : sessionScope.phone}</strong></div>
+            <div><strong>${sessionScope.deliveryInfo.email}</strong></div>
         </div>
         
         <c:if test="${not empty error}">
@@ -152,10 +152,9 @@
             </div>
         </c:if>
         
-        <form action="otpchecking" method="POST" id="otpForm">
+        <form action="confirm-order" method="POST" id="otpForm">
             <input type="hidden" name="step" value="3">
-            <input type="hidden" name="email" value="${sessionScope.email}">
-            <input type="hidden" name="verification_method" value="${sessionScope.verificationMethod}">
+            <input type="hidden" name="email" value="${sessionScope.deliveryInfo.email}">
             
             <div class="otp-container">
                 <input type="text" class="otp-input" id="otp1" name="otp1" maxlength="1" pattern="[0-9]">

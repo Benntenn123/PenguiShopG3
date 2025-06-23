@@ -502,7 +502,7 @@
 
         <!-- Form gửi dữ liệu đến Servlet -->
         <div style="margin-bottom: 200px" class="section">
-            <form id="orderForm" action="confirm-order" method="post">
+            <form id="orderFor" action="checkout" method="post">
                 <input type="hidden" name="paymentMethod" id="paymentMethod" value="cod">
                 <input type="hidden" name="addressId" id="addressId" value="">
                 <input type="hidden" name="totalBill" id="totalBill" value="${totalBill}">

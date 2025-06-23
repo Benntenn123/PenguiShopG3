@@ -6,6 +6,7 @@
 package Controller.HomePage.checkout;
 
 import DAL.DeliveryDAO;
+import Utils.StringConvert;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -18,7 +19,7 @@ import jakarta.servlet.http.HttpServletResponse;
 @WebServlet(name="ConfirmOrder", urlPatterns={"/confirm-order"})
 public class ConfirmOrder extends HttpServlet {
    
-    DeliveryDAO deli = new DeliveryDAO();
+    
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -47,18 +48,8 @@ public class ConfirmOrder extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        String method = request.getParameter("paymentMethod");
-        String addressId = request.getParameter("addressId");
-        String totalBill = request.getParameter("totalBill");
-        String shipfee = request.getParameter("shipfee");
-        String totalBillShip = request.getParameter("totalBillShip");
-        try {
-            int deliID = Integer.parseInt(addressId);
-            String address = deli.getDeliyFromID(deliID);
-            
-        } catch (Exception e) {
-            
-        }
+        String otp  = request.getParameter("otp");
+        
         
         
     }

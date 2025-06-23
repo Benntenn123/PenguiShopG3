@@ -191,4 +191,25 @@ public class DeliveryDAO extends DBContext {
         }
         return null;
     }
+    public DeliveryInfo getDeliyWithID(int addressID){
+        String sql = "SELECT * FROM dbo.tbDeliveryInfo WHERE deliveryInfoID = ?";
+        DeliveryInfo deli = new DeliveryInfo();
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, addressID);
+            
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {                
+                deli.setEmail(rs.getString("email"));
+                deli.setPhone(rs.getString("phone"));
+                deli.setAddessDetail(rs.getString("addressDetail"));
+                deli.setFullName(rs.getString("fullName"));
+                
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return deli;
+    }
+    
 }
