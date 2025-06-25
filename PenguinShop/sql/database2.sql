@@ -26,7 +26,7 @@ INSERT INTO dbo.tbPermissions
 (N'Thêm loại sản phẩm','/admin/add-product-type',4,1,NULL),
 (N'Thêm kích cỡ sản phẩm','/admin/add-size',4,1,NULL),
 (N'Xóa ảnh bộ sưu tập sản phẩm','/admin/deleteGalleryImage',4,1,NULL),
-(N'Danh sách ảnh bộ sưu tập sản phẩm','/admin/galleryProduct',4,0,NULL),
+(N'Danh sách ảnh bộ sưu tập sản phẩm','/admin/galleryProduct',4,1,NULL),
 (N'Danh sách nhóm sản phẩm','/admin/listGroupProduct',4,0,NULL),
 (N'Danh sách sản phẩm thuộc tính','/admin/listProductAdmin',4,0,NULL),
 (N'Quản lí chất liệu sản phẩm','/admin/managevariant',4,0,NULL),

@@ -5,11 +5,18 @@
 package Models;
 
 public class Modules {
+
     private int moduleID;
     private String moduleName;
     private String icon;
 
     public Modules() {
+    }
+
+    public Modules(int moduleID, String moduleName, String icon) {
+        this.moduleID = moduleID;
+        this.moduleName = moduleName;
+        this.icon = icon;
     }
 
     public int getModuleID() {
@@ -35,5 +42,22 @@ public class Modules {
     public void setIcon(String icon) {
         this.icon = icon;
     }
-    
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        Modules m = (Modules) obj;
+        return moduleID == m.moduleID;
+    }
+
+    @Override
+    public int hashCode() {
+        return Integer.hashCode(moduleID);
+    }
+
 }
