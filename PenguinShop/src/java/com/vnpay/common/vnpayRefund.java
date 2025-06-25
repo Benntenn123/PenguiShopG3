@@ -6,6 +6,7 @@
 package com.vnpay.common;
 
 
+import APIKey.VNPAY;
 import com.google.gson.JsonObject;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -37,7 +38,7 @@ public class vnpayRefund extends HttpServlet {
         String vnp_RequestId = Config.getRandomNumber(8);
         String vnp_Version = "2.1.0";
         String vnp_Command = "refund";
-        String vnp_TmnCode = Config.vnp_TmnCode;
+        String vnp_TmnCode = VNPAY.VNP_TMNCODE;
         String vnp_TransactionType = req.getParameter("trantype");
         String vnp_TxnRef = req.getParameter("order_id");
         long amount = Integer.parseInt(req.getParameter("amount"))*100;
@@ -78,11 +79,11 @@ public class vnpayRefund extends HttpServlet {
                 vnp_TransactionType, vnp_TxnRef, vnp_Amount, vnp_TransactionNo, vnp_TransactionDate, 
                 vnp_CreateBy, vnp_CreateDate, vnp_IpAddr, vnp_OrderInfo);
         
-        String vnp_SecureHash = Config.hmacSHA512(Config.secretKey, hash_Data.toString());
+        String vnp_SecureHash = Config.hmacSHA512(VNPAY.SECRETKEY, hash_Data.toString());
         
         vnp_Params.addProperty("vnp_SecureHash", vnp_SecureHash);
         
-        URL url = new URL (Config.vnp_ApiUrl);
+        URL url = new URL (VNPAY.VNP_APIURL);
         HttpURLConnection con = (HttpURLConnection)url.openConnection();
         con.setRequestMethod("POST");
         con.setRequestProperty("Content-Type", "application/json");

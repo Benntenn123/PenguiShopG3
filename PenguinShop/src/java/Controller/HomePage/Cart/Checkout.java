@@ -59,6 +59,7 @@ public class Checkout extends HttpServlet {
         request.getSession().removeAttribute("selectedCartItems");
         Map<Integer, CartSession> cart = cdao.addInfoForCart(list);
         request.getSession().setAttribute("selectedCartItems", cart);
+       
         double totalBill = 0;
         for (Map.Entry<Integer, CartSession> entry : cart.entrySet()) {
             totalBill += entry.getValue().getTotalAmount();
@@ -114,19 +115,19 @@ public class Checkout extends HttpServlet {
         }
         try {
             System.out.println("2");
-            if (map.size() == 0) {
+            if (map.size() == 0) { // check coi có bị chỉnh sửa submit form k
                 request.getSession().setAttribute("error", "Hóa đơn không thể trống");
                 response.sendRedirect("listCart");
                 return;
             }
             System.out.println("3");
-            if (!"cod".equals(method) && !"vnpay".equals(method)) {
+            if (!"cod".equals(method) && !"vnpay".equals(method)) {  // check coi có bị chỉnh sửa submit form k
                 request.getSession().setAttribute("error", "Phương thức thanh toán không hợp lệ!");
                 response.sendRedirect("listCart");
                 return;
             }
             System.out.println("4");
-            int totalBillCheck = 0;
+            double totalBillCheck = 0;  // check coi có bị chỉnh sửa submit form k
             for (Map.Entry<String, CartSession> entry : map.entrySet()) {
                 totalBillCheck += entry.getValue().getTotalAmount();
 
@@ -134,7 +135,7 @@ public class Checkout extends HttpServlet {
             System.out.println("5");
             System.out.println(totalBillCheck);
             System.out.println(totalBill);
-            if (totalBillCheck != (int) Double.parseDouble(totalBill)) {
+            if (totalBillCheck != Double.parseDouble(totalBill)) { // check coi có bị chỉnh sửa submit form k
                 request.getSession().setAttribute("error", "Số tiền sản phẩm không khớp vui lòng thử lại!");
                 request.getSession().removeAttribute("selectedCartItems");
                 response.sendRedirect("listCart");
@@ -142,14 +143,14 @@ public class Checkout extends HttpServlet {
             }
 
             System.out.println("6");
-            if (shipfeeCheck != Double.parseDouble(shipfee)) {
+            if (shipfeeCheck != Double.parseDouble(shipfee)) { // check coi có bị chỉnh sửa submit form k
                 request.getSession().setAttribute("error", "Tiền ship không chính xác!");
                 request.getSession().removeAttribute("selectedCartItems");
                 response.sendRedirect("listCart");
                 return;
             }
             System.out.println("7");
-            if (totalBillCheck + shipfeeCheck != Double.parseDouble(totalBillShip)) {
+            if (totalBillCheck + shipfeeCheck != Double.parseDouble(totalBillShip)) {  // check coi có bị chỉnh sửa submit form k
                 request.getSession().setAttribute("error", "Tiền hóa đơn không chính xác!");
                 request.getSession().removeAttribute("selectedCartItems");
                 response.sendRedirect("listCart");
@@ -157,15 +158,17 @@ public class Checkout extends HttpServlet {
             } else {
                 int deliID = Integer.parseInt(addressId);
                 DeliveryInfo deli = ddao.getDeliyWithID(deliID);
-                request.getSession().setAttribute("deliveryInfo", deli);
+                
                 String otp = StringConvert.generateRandom6DigitNumber();
-                List<CartSession> list = new ArrayList<>(); // khởi tạo list mới truyền vô còn gửi mail
-                for (Map.Entry<String, CartSession> entry : map.entrySet()) {
-                    list.add(entry.getValue());
-                }
+                List<CartSession> list = new ArrayList<>(map.values()); // tạo list cart sp còn gửi mail 
                 if (tdao.saveToken(user.getUserID(), otp, GetDateTime.getCurrentTime(), 0)) {
                     SendMail.sendMailAsyncCartConfirm(user.getEmail(),
                             user.getFullName(), otp, list, shipfeeCheck, totalBillCheck + shipfeeCheck);
+                    request.getSession().setAttribute("deliveryInfo", deli);
+                    request.getSession().setAttribute("totalBill", totalBillCheck);
+                    request.getSession().setAttribute("shipFee", shipfeeCheck);
+                    request.getSession().setAttribute("totalBillShip", totalBillCheck + shipfeeCheck);
+                    request.getSession().setAttribute("paymentMethod", method);
                     request.getSession().setAttribute("ms", "Gửi mã xác thực thành công. Vui lòng check email của bạn");
                     response.sendRedirect("confirm-order");
                 } else {

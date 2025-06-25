@@ -5,6 +5,7 @@
  */
 package com.vnpay.common;
 
+import APIKey.VNPAY;
 import com.google.gson.JsonObject;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -36,12 +37,12 @@ public class vnpayQuery extends HttpServlet {
         String vnp_RequestId = Config.getRandomNumber(8);
         String vnp_Version = "2.1.0";
         String vnp_Command = "querydr";
-        String vnp_TmnCode = Config.vnp_TmnCode;
+        String vnp_TmnCode = VNPAY.VNP_TMNCODE;
         String vnp_TxnRef = req.getParameter("order_id");
         String vnp_OrderInfo = "Kiem tra ket qua GD OrderId:" + vnp_TxnRef;
         //String vnp_TransactionNo = req.getParameter("transactionNo");
         String vnp_TransDate = req.getParameter("trans_date");
-        String appointment_id = req.getParameter("appointment_id");
+        String orderID = req.getParameter("orderID");
         Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
         String vnp_CreateDate = formatter.format(cld.getTime());
@@ -49,7 +50,7 @@ public class vnpayQuery extends HttpServlet {
         String vnp_IpAddr = Config.getIpAddress(req);
         
         JsonObject  vnp_Params = new JsonObject ();
-        vnp_Params.addProperty("appointment_id", appointment_id);
+        vnp_Params.addProperty("orderID", orderID);
         vnp_Params.addProperty("vnp_RequestId", vnp_RequestId);
         vnp_Params.addProperty("vnp_Version", vnp_Version);
         vnp_Params.addProperty("vnp_Command", vnp_Command);
@@ -61,12 +62,12 @@ public class vnpayQuery extends HttpServlet {
         vnp_Params.addProperty("vnp_CreateDate", vnp_CreateDate);
         vnp_Params.addProperty("vnp_IpAddr", vnp_IpAddr);
         
-        String hash_Data= String.join("|",appointment_id, vnp_RequestId, vnp_Version, vnp_Command, vnp_TmnCode, vnp_TxnRef, vnp_TransDate, vnp_CreateDate, vnp_IpAddr, vnp_OrderInfo);
-        String vnp_SecureHash = Config.hmacSHA512(Config.secretKey, hash_Data.toString());
+        String hash_Data= String.join("|",orderID, vnp_RequestId, vnp_Version, vnp_Command, vnp_TmnCode, vnp_TxnRef, vnp_TransDate, vnp_CreateDate, vnp_IpAddr, vnp_OrderInfo);
+        String vnp_SecureHash = Config.hmacSHA512(VNPAY.SECRETKEY, hash_Data.toString());
         
         vnp_Params.addProperty("vnp_SecureHash", vnp_SecureHash);
         
-        URL url = new URL (Config.vnp_ApiUrl);
+        URL url = new URL (VNPAY.VNP_APIURL);
         HttpURLConnection con = (HttpURLConnection)url.openConnection();
         con.setRequestMethod("POST");
         con.setRequestProperty("Content-Type", "application/json");

@@ -190,7 +190,7 @@ public class CartDAO extends DBContext {
     }
 
     public Map<Integer, CartSession> addInfoForCart(Map<Integer, CartSession> map) {
-        String sql = "SELECT p.productName,pv.variantID,co.colorName,s.sizeName, p.imageMainProduct \n"
+        String sql = "SELECT p.productName,pv.variantID,co.colorName,s.sizeName, pv.price, p.imageMainProduct \n"
                 + "FROM dbo.tbCart c JOIN dbo.tbProduct p ON p.productID = c.productID\n"
                 + "JOIN dbo.tbProductVariant pv ON pv.variantID = c.variantID\n"
                 + "JOIN dbo.tbColor co ON co.colorID = pv.colorID\n"
@@ -207,7 +207,7 @@ public class CartDAO extends DBContext {
                            new Product(rs.getString("productName"),
                                    rs.getString("imageMainProduct")),
                            new Color(0, rs.getString("colorName")),
-                           new Size(0, rs.getString("sizeName")));
+                           new Size(0, rs.getString("sizeName")), rs.getDouble("price"));
                    result.put(entry.getKey(), new CartSession(new Cart(entry.getKey(), pv),
                            entry.getValue().getQuantity(), entry.getValue().getTotalAmount()));
                 }

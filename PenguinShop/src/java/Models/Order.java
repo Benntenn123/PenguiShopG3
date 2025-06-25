@@ -163,13 +163,17 @@ public class Order {
     public String getStringOrderStatus() {
         switch (orderStatus) {
             case 0:
-                return "Đã hủy";
-            case 2:
-                return "Đang giao";
+                return "Đã Hủy";
             case 1:
-                return "Đã giao thành công";
+                return "Giao Hàng Thành công";
+            case 2:
+                return "Đang Giao";
             case 3:
                 return "Hoàn Hàng";
+            case 4:
+                return "Đang Chờ Xử Lí";
+            case 5:
+                return "Đã Xác Nhận";
             default:
                 return "Lỗi";
         }
