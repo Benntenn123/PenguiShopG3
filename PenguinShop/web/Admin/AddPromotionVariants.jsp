@@ -135,7 +135,7 @@
                         </nav>
 
                         <div class="text-end">
-                            <a href="${pageContext.request.contextPath}/promotion" class="btn btn-secondary">Quay Lại</a>
+                            <a href="listPromotion" class="btn btn-secondary">Quay Lại</a>
                         </div>
                     </div>
                 </div>
@@ -147,47 +147,38 @@
         <jsp:include page="Common/Message.jsp"/>
 
         <script>
-            // Đảm bảo jQuery được load trước khi dùng
-            jQuery(document).ready(function($) {
-                $('.variant-checkbox').on('change', function() {
-                    const variantID = $(this).data('variant-id');
-                    const promotionID = ${promotionID};
-                    const action = $(this).is(':checked') ? 'add' : 'remove';
-                    const $checkbox = $(this);
+    jQuery(document).ready(function($) {
+        $('.variant-checkbox').on('change', function() {
+            const variantID = $(this).data('variant-id');
+            const promotionID = ${promotionID}; // <- đảm bảo cái này là số
+            const action = $(this).is(':checked') ? 'add' : 'remove';
+            const $checkbox = $(this);
 
-                    $.ajax({
-                        url: '${pageContext.request.contextPath}/admin/promotionVariant',
-                        type: 'POST',
-                        data: {
-                            action: action,
-                            promotionID: promotionID,
-                            variantID: variantID
-                        },
-                        success: function(response) {
-                            if (typeof response === 'string') {
-                                try {
-                                    
-                                    response = JSON.parse(response);
-                                    toastr.success('Update variant cho promotion thành công!');
-                                } catch (e) {
-                                    toastr.error('Lỗi dữ liệu trả về từ server!');
-                                    $checkbox.prop('checked', !$checkbox.is(':checked'));
-                                    return;
-                                }
-                            }
-
-                            if (!response.success) {
-                                toastr.error('Lỗi: ' + (response.error || 'Không thể cập nhật liên kết variant.'));
-                                $checkbox.prop('checked', !$checkbox.is(':checked'));
-                            }
-                        },
-                        error: function(xhr, status, error) {
-                            toastr.error('Lỗi kết nối server: ' + error);
-                            $checkbox.prop('checked', !$checkbox.is(':checked'));
-                        }
-                    });
-                });
+            $.ajax({
+                url: 'promotionVariant',
+                type: 'POST',
+                dataType: 'json', // 👈 yêu cầu server trả về JSON
+                data: {
+                    action: action,
+                    promotionID: promotionID,
+                    variantID: variantID
+                },
+                success: function(response) {
+                    if (response.success) {
+                        toastr.success('Thao tác thành công.');
+                    } else {
+                        toastr.error('Lỗi: ' + (response.error || 'Không thể cập nhật liên kết variant.'));
+                        $checkbox.prop('checked', !$checkbox.is(':checked'));
+                    }
+                },
+                error: function(xhr, status, error) {
+                    toastr.error('Lỗi kết nối server: ' + error);
+                    $checkbox.prop('checked', !$checkbox.is(':checked'));
+                }
             });
-        </script>
+        });
+    });
+</script>
+
     </body>
 </html>

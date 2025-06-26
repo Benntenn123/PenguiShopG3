@@ -140,7 +140,7 @@
                                                         <li><a class="dropdown-item" href="javascript:void(0);" onclick="toggleStatus(${promotion.promotionID}, ${promotion.isActive})">
                                                                 ${promotion.isActive == 1 ? 'Ngưng' : 'Kích hoạt'}
                                                             </a></li>
-                                                            <li><a class="dropdown-item" href="javascript:void(0);">Thêm sản phẩm giảm giá</a></li>
+                                                            <li><a class="dropdown-item" href="promotionVariant?promotionID=${promotion.promotionID}">Thêm sản phẩm giảm giá</a></li>
                                                     </ul>
                                                 </div>
                                             </td>
