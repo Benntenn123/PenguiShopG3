@@ -798,7 +798,7 @@
                                             <!-- Nút Trang trước -->
                                             <c:if test="${currentPage > 1}">
                                                 <li>
-                                                    <a href="?page=${currentPage - 1}${not empty param.from ? '&from=' += param.from : ''}${not empty param.to ? '&to=' += param.to : ''}">
+                                                    <a href="?page=${currentPage - 1}${not empty param.from ? '&from=' + param.from : ''}${not empty param.to ? '&to=' + param.to : ''}">
                                                         <i class="fas fa-chevron-left"></i> 
                                                     </a>
                                                 </li>
@@ -806,30 +806,30 @@
 
                                             <%-- Hiển thị trang 1 và dấu ... nếu currentPage > 3 --%>
                                             <c:if test="${currentPage > 3}">
-                                                <li><a href="?page=1${not empty param.from ? '&from=' += param.from : ''}${not empty param.to ? '&to=' += param.to : ''}">1</a></li>
+                                                <li><a href="?page=1${not empty param.from ? '&from=' + param.from : ''}${not empty param.to ? '&to=' + param.to : ''}">1</a></li>
                                                 <li class="disabled"><span>...</span></li>
                                             </c:if>
 
                                             <c:forEach var="i" begin="${currentPage - 1}" end="${currentPage + 1}">
                                                 <c:if test="${i >= 1 && i <= totalPages}">
                                                     <c:if test="${i == currentPage}">
-                                                        <li class="active"><a href="?page=${i}${not empty param.from ? '&from=' += param.from : ''}${not empty param.to ? '&to=' += param.to : ''}">${i}</a></li>
+                                                        <li class="active"><a href="?page=${i}${not empty param.from ? '&from=' + param.from : ''}${not empty param.to ? '&to=' + param.to : ''}">${i}</a></li>
                                                     </c:if>
                                                     <c:if test="${i != currentPage}">
-                                                        <li><a href="?page=${i}${not empty param.from ? '&from=' += param.from : ''}${not empty param.to ? '&to=' += param.to : ''}">${i}</a></li>
+                                                        <li><a href="?page=${i}${not empty param.from ? '&from=' + param.from : ''}${not empty param.to ? '&to=' + param.to : ''}">${i}</a></li>
                                                     </c:if>
                                                 </c:if>
                                             </c:forEach>
 
                                             <c:if test="${currentPage + 2 < totalPages}">
                                                 <li class="disabled"><span>...</span></li>
-                                                <li><a href="?page=${totalPages}${not empty param.from ? '&from=' += param.from : ''}${not empty param.to ? '&to=' += param.to : ''}">${totalPages}</a></li>
+                                                <li><a href="?page=${totalPages}${not empty param.from ? '&from=' + param.from : ''}${not empty param.to ? '&to=' + param.to : ''}">${totalPages}</a></li>
                                             </c:if>
 
                                             <!-- Nút Trang sau -->
                                             <c:if test="${currentPage < totalPages}">
                                                 <li>
-                                                    <a href="?page=${currentPage + 1}${not empty param.from ? '&from=' += param.from : ''}${not empty param.to ? '&to=' += param.to : ''}">
+                                                    <a href="?page=${currentPage + 1}${not empty param.from ? '&from=' + param.from : ''}${not empty param.to ? '&to=' + param.to : ''}">
                                                          <i class="fas fa-chevron-right"></i>
                                                     </a>
                                                 </li>
