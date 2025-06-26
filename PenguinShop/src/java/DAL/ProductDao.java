@@ -1254,6 +1254,7 @@ public class ProductDao extends DBContext {
             throw e;
         }
     }
+    
 
     public static void main(String[] args) {
         ProductDao dao = new ProductDao();

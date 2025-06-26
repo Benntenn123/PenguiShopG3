@@ -147,38 +147,37 @@ public class PromotionDAO extends DBContext {
         }
         return variants;
     }
+
     public boolean updatePromotion(Promotion promotion) throws SQLException {
-    String sql = "UPDATE tbPromotion SET promotionName = ?, discountType = ?, discountValue = ?, " +
-                 "startDate = ?, endDate = ?, description = ?, isActive = ? WHERE promotionID = ?";
+        String sql = "UPDATE tbPromotion SET promotionName = ?, discountType = ?, discountValue = ?, "
+                + "startDate = ?, endDate = ?, description = ?, isActive = ? WHERE promotionID = ?";
 
-    try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-        stmt.setString(1, promotion.getPromotionName());
-        stmt.setString(2, promotion.getDiscountType());
-        stmt.setDouble(3, promotion.getDiscountValue());
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, promotion.getPromotionName());
+            stmt.setString(2, promotion.getDiscountType());
+            stmt.setDouble(3, promotion.getDiscountValue());
 
-        // Convert String → Timestamp (nếu không null hoặc rỗng)
-        Timestamp startTs = null;
-        Timestamp endTs = null;
+            // Convert String → Timestamp (nếu không null hoặc rỗng)
+            Timestamp startTs = null;
+            Timestamp endTs = null;
 
-        if (promotion.getStartDate() != null && !promotion.getStartDate().isEmpty()) {
-            startTs = Timestamp.valueOf(promotion.getStartDate().replace("T", " ") + ":00");
+            if (promotion.getStartDate() != null && !promotion.getStartDate().isEmpty()) {
+                startTs = Timestamp.valueOf(promotion.getStartDate().replace("T", " ") + ":00");
+            }
+            if (promotion.getEndDate() != null && !promotion.getEndDate().isEmpty()) {
+                endTs = Timestamp.valueOf(promotion.getEndDate().replace("T", " ") + ":00");
+            }
+
+            stmt.setTimestamp(4, startTs);
+            stmt.setTimestamp(5, endTs);
+            stmt.setString(6, promotion.getDescription());
+            stmt.setInt(7, promotion.getIsActive());
+            stmt.setInt(8, promotion.getPromotionID());
+
+            int rowsAffected = stmt.executeUpdate();
+            return rowsAffected > 0;
         }
-        if (promotion.getEndDate() != null && !promotion.getEndDate().isEmpty()) {
-            endTs = Timestamp.valueOf(promotion.getEndDate().replace("T", " ") + ":00");
-        }
-
-        stmt.setTimestamp(4, startTs);
-        stmt.setTimestamp(5, endTs);
-        stmt.setString(6, promotion.getDescription());
-        stmt.setInt(7, promotion.getIsActive());
-        stmt.setInt(8, promotion.getPromotionID());
-
-        int rowsAffected = stmt.executeUpdate();
-        return rowsAffected > 0;
     }
-}
-
-
 
     public boolean togglePromotionStatus(int promotionID, int isActive) throws SQLException {
         String sql = "UPDATE tbPromotion SET isActive = ? WHERE promotionID = ?";
@@ -188,6 +187,66 @@ public class PromotionDAO extends DBContext {
             int rowsAffected = stmt.executeUpdate();
             return rowsAffected > 0;
         }
+    }
+    // JDBC DAO Method: Load Promotion with 4 Products of Soon-Expiring Promotion
+
+    public Promotion getSoonExpiringPromotionWithProducts() throws SQLException {
+        Promotion promotion = null;
+        String sql = "SELECT TOP 4 "
+                + "    p.productID, p.productName, p.imageMainProduct, "
+                + "    pv.variantID, pv.price, pv.colorID, c.colorName, "
+                + "    pv.sizeID, s.sizeName, pv.quantity, "
+                + "    pr.promotionID, pr.promotionName, pr.discountType, pr.discountValue, pr.endDate "
+                + "FROM tbPromotion pr "
+                + "JOIN tbProductPromotion pp ON pr.promotionID = pp.promotionID "
+                + "JOIN tbProductVariant pv ON pp.variantID = pv.variantID "
+                + "JOIN tbProduct p ON pv.productID = p.productID "
+                + "LEFT JOIN tbColor c ON pv.colorID = c.colorID "
+                + "LEFT JOIN tbSize s ON pv.sizeID = s.sizeID "
+                + "WHERE pr.isActive = 1 AND GETDATE() BETWEEN pr.startDate AND pr.endDate "
+                + "AND pr.promotionID = (SELECT TOP 1 promotionID FROM tbPromotion WHERE isActive = 1 AND GETDATE() BETWEEN startDate AND endDate ORDER BY endDate ASC)";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            System.out.println(sql);
+            ResultSet rs = ps.executeQuery();
+            List<ProductVariant> variantList = new ArrayList<>();
+            
+            while (rs.next()) {
+                if (promotion == null) {
+                    promotion = new Promotion();
+                    promotion.setPromotionID(rs.getInt("promotionID"));
+                    promotion.setPromotionName(rs.getString("promotionName"));
+                    promotion.setDiscountType(rs.getString("discountType"));
+                    promotion.setDiscountValue(rs.getDouble("discountValue"));
+                    promotion.setEndDate(rs.getString("endDate"));
+                    promotion.setVariant(new ArrayList<>());
+                }
+
+                Product product = new Product();
+                product.setProductId(rs.getInt("productID"));
+                product.setProductName(rs.getString("productName"));
+                product.setImageMainProduct(rs.getString("imageMainProduct"));
+
+                ProductVariant variant = new ProductVariant();
+                variant.setVariantID(rs.getInt("variantID"));
+                variant.setPrice(rs.getDouble("price"));
+                variant.setQuantity(rs.getInt("quantity"));
+                variant.setProduct(product);
+
+                Color color = new Color();
+                color.setColorID(rs.getInt("colorID"));
+                color.setColorName(rs.getString("colorName"));
+                variant.setColor(color);
+
+                Size size = new Size();
+                size.setSizeID(rs.getInt("sizeID"));
+                size.setSizeName(rs.getString("sizeName"));
+                variant.setSize(size);
+
+                promotion.getVariant().add(variant);
+            }
+        }
+        return promotion;
     }
 
     public static void main(String[] args) {
