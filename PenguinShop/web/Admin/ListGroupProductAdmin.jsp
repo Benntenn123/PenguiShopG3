@@ -153,7 +153,7 @@
                                                     <ul class="dropdown-menu dropdown-menu-end">
                                                         <li><a class="dropdown-item" href="addAttributeProduct?productID=${product.productId}">Thêm thuộc tính</a></li>
                                                         <li><a class="dropdown-item" href="galleryProduct?productID=${product.productId}">Xem ảnh sản phẩm</a></li>
-                                                        <li><a class="dropdown-item" href="product_variants?productID=${product.productId}">Chỉnh sửa sản phẩm</a></li>
+                                                        <li><a class="dropdown-item" href="editGroupProduct?productId=${product.productId}">Chỉnh sửa sản phẩm</a></li>
                                                         <li><a class="dropdown-item" href="listProductAdmin?productName=${product.productName}">Xem list sản phẩm</a></li>
                                                     </ul>
                                                 </div>

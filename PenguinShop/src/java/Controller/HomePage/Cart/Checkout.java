@@ -162,8 +162,8 @@ public class Checkout extends HttpServlet {
                 String otp = StringConvert.generateRandom6DigitNumber();
                 List<CartSession> list = new ArrayList<>(map.values()); // tạo list cart sp còn gửi mail 
                 if (tdao.saveToken(user.getUserID(), otp, GetDateTime.getCurrentTime(), 0)) {
-                    SendMail.sendMailAsyncCartConfirm(user.getEmail(),
-                            user.getFullName(), otp, list, shipfeeCheck, totalBillCheck + shipfeeCheck);
+                    SendMail.sendMailAsyncCartConfirm(deli.getEmail(),
+                            deli.getFullName(), otp, list, shipfeeCheck, totalBillCheck + shipfeeCheck);
                     request.getSession().setAttribute("deliveryInfo", deli);
                     request.getSession().setAttribute("totalBill", totalBillCheck);
                     request.getSession().setAttribute("shipFee", shipfeeCheck);

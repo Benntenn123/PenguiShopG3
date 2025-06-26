@@ -1044,7 +1044,7 @@ public class ProductDao extends DBContext {
         try (PreparedStatement psInsert = connection.prepareStatement(sqlInsert)) {
             psInsert.setString(1, product.getProductName());
             psInsert.setString(2, product.getSku());
-            psInsert.setInt(3,product.getType().getTypeId());
+            psInsert.setInt(3, product.getType().getTypeId());
             psInsert.setInt(4, product.getBrand().getBrandID());
             psInsert.setDate(5, java.sql.Date.valueOf(product.getImportDate()));
             psInsert.setString(6, product.getImageMainProduct());
@@ -1059,8 +1059,7 @@ public class ProductDao extends DBContext {
             }
         }
 
-        try (PreparedStatement psSelect = connection.prepareStatement(sqlSelect);
-             ResultSet rs = psSelect.executeQuery()) {
+        try (PreparedStatement psSelect = connection.prepareStatement(sqlSelect); ResultSet rs = psSelect.executeQuery()) {
             if (rs.next()) {
                 int productID = rs.getInt("productID");
                 connection.commit(); // Commit transaction
@@ -1130,8 +1129,10 @@ public class ProductDao extends DBContext {
             }
         }
     }
+
     public Product getProductFromID(int productID) throws SQLException {
-        String sql = "SELECT productID, productName, SKU, productTypeID, brandID, importDate, imageMainProduct, description, full_description, weight FROM tbProduct WHERE productID = ?";
+        String sql = "SELECT productID, productName, SKU, productTypeID, brandID, importDate,"
+                + " imageMainProduct, description, full_description, weight FROM tbProduct WHERE productID = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, productID);
             try (ResultSet rs = ps.executeQuery()) {
@@ -1140,15 +1141,15 @@ public class ProductDao extends DBContext {
                     product.setProductId(rs.getInt("productID"));
                     product.setProductName(rs.getString("productName"));
                     product.setSku(rs.getString("SKU"));
-                    
+
                     Type t = new Type();
                     t.setTypeId(rs.getInt("productTypeID"));
                     product.setType(t);
-                    
+
                     Brand b = new Brand();
                     b.setBrandID(rs.getInt("brandID"));
                     product.setBrand(b);
-                    
+
                     product.setImportDate(rs.getString("importDate") != null ? rs.getString("importDate") : null);
                     product.setImageMainProduct(rs.getString("imageMainProduct"));
                     product.setDescription(rs.getString("description"));
@@ -1160,6 +1161,81 @@ public class ProductDao extends DBContext {
         }
         return null; // Không tìm thấy sản phẩm
     }
+
+    public Product getProductFromID2(int productID) throws SQLException {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        Product product = null;
+
+        try {
+            // Query to get product details
+            String sql = "SELECT p.productID, p.productName, p.SKU, p.productTypeID, pt.productTypeName, "
+                    + "p.brandID, b.brandName, b.logo, b.description, p.importDate, p.imageMainProduct, "
+                    + "p.description, p.full_description, p.weight "
+                    + "FROM tbProduct p "
+                    + "LEFT JOIN tbProductType pt ON p.productTypeID = pt.productTypeID "
+                    + "LEFT JOIN tbBrand b ON p.brandID = b.brandID "
+                    + "WHERE p.productID = ?";
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, productID);
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                product = new Product();
+                product.setProductId(rs.getInt("productID"));
+                product.setProductName(rs.getString("productName"));
+                product.setSku(rs.getString("SKU"));
+
+                Type type = new Type();
+                type.setTypeId(rs.getInt("productTypeID"));
+                type.setTypeName(rs.getString("productTypeName"));
+                product.setType(type);
+
+                Brand brand = new Brand();
+                brand.setBrandID(rs.getInt("brandID"));
+                brand.setBrandName(rs.getString("brandName"));
+                brand.setLogo(rs.getString("logo"));
+                brand.setDescription(rs.getString("description"));
+                product.setBrand(brand);
+
+                product.setImportDate(rs.getString("importDate"));
+                product.setImageMainProduct(rs.getString("imageMainProduct"));
+                product.setDescription(rs.getString("description"));
+                product.setFull_description(rs.getString("full_description"));
+                product.setWeight(rs.getDouble("weight"));
+
+                // Load categories
+                product.setCategories(getCategoriesByProductId(productID));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e;
+        }
+        return product;
+    }
+
+    private List<Category> getCategoriesByProductId(int productID) throws SQLException {
+        List<Category> categories = new ArrayList<>();
+        String sql = "SELECT c.categoryID, c.categoryName, c.sportType, c.imageCategory "
+                + "FROM tbCategory c "
+                + "JOIN tbProductCategory pc ON c.categoryID = pc.categoryID "
+                + "WHERE pc.productID = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, productID);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Category category = new Category();
+                    category.setCategoryId(rs.getInt("categoryID"));
+                    category.setCategoryName(rs.getString("categoryName"));
+                    category.setSportType(rs.getString("sportType"));
+                    category.setImageCategory(rs.getString("imageCategory"));
+                    categories.add(category);
+                }
+            }
+        }
+        return categories;
+    }
+
     public boolean addProductAttribute(ProductVariant attribute) throws SQLException {
         String sql = "INSERT INTO tbProductVariant (productID, colorID, sizeID, quantity, price, stockStatus) VALUES (?, ?, ?, ?, ?, ?)";
         connection.setAutoCommit(false);
@@ -1185,6 +1261,7 @@ public class ProductDao extends DBContext {
             throw e;
         }
     }
+
     public boolean checkVariantExists(int productID, int colorID, int sizeID) throws SQLException {
         String sql = "SELECT COUNT(*) AS count FROM tbProductVariant WHERE productID = ? AND colorID = ? AND sizeID = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -1199,6 +1276,7 @@ public class ProductDao extends DBContext {
         }
         return false;
     }
+
     public boolean checkImageExists(String imageUrl, int productID) throws SQLException {
         String sql = "SELECT COUNT(*) AS count FROM tbImages WHERE imageURL = ? AND productID = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -1234,6 +1312,7 @@ public class ProductDao extends DBContext {
             throw e;
         }
     }
+
     public boolean addGalleryImage(int productID, String imageUrl) throws SQLException {
         String sql = "INSERT INTO tbImages (productID, imageURL) VALUES (?, ?)";
         connection.setAutoCommit(false);
@@ -1254,7 +1333,67 @@ public class ProductDao extends DBContext {
             throw e;
         }
     }
-    
+
+    public boolean updateProduct(Product product, String[] categoryIds, String imagePublicId) {
+        PreparedStatement ps = null;
+        try {
+            connection.setAutoCommit(false);
+
+            // Update product
+            String updateProductSql = "UPDATE tbProduct SET productName = ?, productTypeID = ?, brandID = ?, "
+                    + "description = ?, full_description = ?, imageMainProduct = ? WHERE productID = ?";
+            ps = connection.prepareStatement(updateProductSql);
+            ps.setString(1, product.getProductName());
+            ps.setInt(2, product.getType().getTypeId());
+            ps.setInt(3, product.getBrand().getBrandID());
+            ps.setString(4, product.getDescription());
+            ps.setString(5, product.getFull_description());
+            ps.setString(6, imagePublicId != null ? imagePublicId : product.getImageMainProduct());
+            ps.setInt(7, product.getProductId());
+            int rowsUpdated = ps.executeUpdate();
+            ps.close();
+
+            // Delete old categories
+            String deleteCategoriesSql = "DELETE FROM tbProductCategory WHERE productID = ?";
+            ps = connection.prepareStatement(deleteCategoriesSql);
+            ps.setInt(1, product.getProductId());
+            ps.executeUpdate();
+            ps.close();
+
+            // Insert new categories
+            if (categoryIds != null && categoryIds.length > 0) {
+                String insertCategorySql = "INSERT INTO tbProductCategory (productID, categoryID) VALUES (?, ?)";
+                ps = connection.prepareStatement(insertCategorySql);
+                for (String categoryId : categoryIds) {
+                    ps.setInt(1, product.getProductId());
+                    ps.setInt(2, Integer.parseInt(categoryId));
+                    ps.executeUpdate();
+                }
+                ps.close();
+            }
+
+            connection.commit();
+            return rowsUpdated > 0; // Trả về true nếu cập nhật sản phẩm thành công
+        } catch (SQLException e) {
+            if (connection != null) {
+                try {
+                    connection.rollback();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+            e.printStackTrace();
+            throw new RuntimeException("Error updating product: " + e.getMessage());
+        } finally {
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 
     public static void main(String[] args) {
         ProductDao dao = new ProductDao();
