@@ -104,10 +104,9 @@
                                                         <i class="bx bx-dots-horizontal-rounded"></i>
                                                     </button>
                                                     <ul class="dropdown-menu dropdown-menu-end">
-                                                        <li><a class="dropdown-item" href="#"><i class="bx bx-edit me-2"></i>Chỉnh sửa</a></li>
-                                                        <li><a class="dropdown-item" href="#"><i class="bx bx-block me-2"></i>Khóa tài khoản</a></li>
-                                                        <li><hr class="dropdown-divider"></li>
-                                                        <li><a class="dropdown-item text-danger" href="#"><i class="bx bx-trash me-2"></i>Xóa</a></li>
+                                                        
+                                                        <li><a class="dropdown-item" href="banAccount?accountID=${customer.userID}"><i class="bx bx-block me-2"></i>Khóa tài khoản</a></li>
+                                                        
                                                     </ul>
                                                 </div>
                                             </div>

@@ -264,6 +264,39 @@ public class PromotionDAO extends DBContext {
             return rowsAffected > 0;
         }
     }
+    
+
+    public List<Integer> getVariantIDsByPromotion(int promotionID) throws SQLException {
+        List<Integer> variantIDs = new ArrayList<>();
+        String sql = "SELECT variantID FROM tbProductPromotion WHERE promotionID = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, promotionID);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    variantIDs.add(rs.getInt("variantID"));
+                }
+            }
+        }
+        return variantIDs;
+    }
+
+    public boolean addPromotionVariant(int promotionID, int variantID) throws SQLException {
+        String sql = "INSERT INTO tbProductPromotion (promotionID, variantID) VALUES (?, ?)";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, promotionID);
+            stmt.setInt(2, variantID);
+            return stmt.executeUpdate() > 0;
+        }
+    }
+
+    public boolean removePromotionVariant(int promotionID, int variantID) throws SQLException {
+        String sql = "DELETE FROM tbProductPromotion WHERE promotionID = ? AND variantID = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, promotionID);
+            stmt.setInt(2, variantID);
+            return stmt.executeUpdate() > 0;
+        }
+    }
 
     public static void main(String[] args) {
         PromotionDAO pdao = new PromotionDAO();

@@ -67,7 +67,7 @@
                             <div class="col-md-6">
                                 <div class="d-flex flex-wrap align-items-center justify-content-end gap-2 mb-3">
                                     <div>
-                                        <a type="button" class="btn btn-light" href="addPromotion.jsp">
+                                        <a type="button" class="btn btn-light" href="addPromotion">
                                             <i class="bx bx-plus me-1"></i> Thêm khuyến mãi mới
                                         </a>
                                     </div>
@@ -140,6 +140,7 @@
                                                         <li><a class="dropdown-item" href="javascript:void(0);" onclick="toggleStatus(${promotion.promotionID}, ${promotion.isActive})">
                                                                 ${promotion.isActive == 1 ? 'Ngưng' : 'Kích hoạt'}
                                                             </a></li>
+                                                            <li><a class="dropdown-item" href="javascript:void(0);">Thêm sản phẩm giảm giá</a></li>
                                                     </ul>
                                                 </div>
                                             </td>
