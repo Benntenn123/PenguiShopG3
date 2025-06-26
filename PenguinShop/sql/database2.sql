@@ -33,6 +33,7 @@ INSERT INTO dbo.tbPermissions
 (N'Chi tiết thuộc tính sản phẩm','/admin/variant_details',4,1,NULL),
 (N'UPDATE thuộc tính sản phẩm','/admin/update_variant',4,1,NULL),
 (N'Danh sách mã giảm giá','/admin/listPromotion',5,0,NULL),
+(N'Thêm mã giảm giá','/admin/addPromotion',5,0,NULL),
 (N'Chỉnh sửa mã giảm giá','/admin/promotion',5,1,NULL),
 (N'Danh sách ORDER ','/admin/listOrderAdmin',6,0,NULL),
 (N'Đổi thông tin order','/admin/changeInformationOrder',6,1,NULL),

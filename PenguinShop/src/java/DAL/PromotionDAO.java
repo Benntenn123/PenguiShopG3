@@ -248,6 +248,22 @@ public class PromotionDAO extends DBContext {
         }
         return promotion;
     }
+    public boolean addPromotion(Promotion promotion) throws SQLException {
+        String sql = "INSERT INTO tbPromotion (promotionName, discountType, discountValue, startDate, endDate, description, isActive) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?)";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, promotion.getPromotionName());
+            stmt.setString(2, promotion.getDiscountType());
+            stmt.setDouble(3, promotion.getDiscountValue());
+            stmt.setString(4, promotion.getStartDate());
+            stmt.setString(5, promotion.getEndDate());
+            stmt.setString(6, promotion.getDescription() != null ? promotion.getDescription() : "");
+            stmt.setInt(7, promotion.getIsActive());
+            
+            int rowsAffected = stmt.executeUpdate();
+            return rowsAffected > 0;
+        }
+    }
 
     public static void main(String[] args) {
         PromotionDAO pdao = new PromotionDAO();
