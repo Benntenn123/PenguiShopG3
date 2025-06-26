@@ -246,7 +246,7 @@
             .detail-info p {
                 margin: 4px 0;
                 color: #6c757d;
-                font personally: 14px;
+                font-size: 14px;
             }
 
             .detail-price {

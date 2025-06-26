@@ -136,7 +136,7 @@
                                             </th>
                                             <td>
                                                 <img src="../api/img/${product.imageMainProduct}" alt="" class="avatar-sm rounded-circle me-2">
-                                                <a href="product_details?productID=${product.productId}" class="text-body">${product.productName}</a>
+                                                <a class="text-body">${product.productName}</a>
                                             </td>
                                             <td>${product.sku}</td>
                                             <td>
