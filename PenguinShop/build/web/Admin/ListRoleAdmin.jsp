@@ -122,7 +122,7 @@
                                                     </button>
                                                     <ul class="dropdown-menu dropdown-menu-end">
                                                         <li><a class="dropdown-item edit-role" href="#" data-bs-toggle="modal" data-bs-target="#roleModal" 
-                                                               data-role-id="${role.roleID}" data-role-name="${role.roleName}">Sửa</a></li>
+                                                               data-role-id="${role.roleID}" data-role-name="${role.roleName}" data-bs-whatever="edit">Sửa</a></li>
                                                     </ul>
                                                 </div>
                                             </td>
@@ -237,8 +237,9 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form id="roleForm" action="roles" method="post">
+                        <form id="roleForm" action="listRoleAdmin" method="post">
                             <input type="hidden" id="roleId" name="roleId">
+                            <input type="hidden" id="action" name="action">
                             <div class="mb-3">
                                 <label for="roleName" class="col-form-label">Tên nhóm quyền:</label>
                                 <input type="text" class="form-control" id="roleName" name="roleName" required>
@@ -275,20 +276,21 @@
                     const modalTitle = roleModal.querySelector('.modal-title');
                     const roleIdInput = roleModal.querySelector('#roleId');
                     const roleNameInput = roleModal.querySelector('#roleName');
+                    const actionInput = roleModal.querySelector('#action');
                     const form = roleModal.querySelector('#roleForm');
 
                     if (action === 'add') {
                         modalTitle.textContent = 'Thêm nhóm quyền mới';
                         roleIdInput.value = '';
                         roleNameInput.value = '';
-                        form.action = 'roles?action=add';
+                        actionInput.value = 'add';
                     } else {
                         modalTitle.textContent = 'Sửa nhóm quyền';
                         const roleId = button.getAttribute('data-role-id');
                         const roleName = button.getAttribute('data-role-name');
                         roleIdInput.value = roleId;
                         roleNameInput.value = roleName;
-                        form.action = 'roles?action=edit';
+                        actionInput.value = 'edit';
                     }
                 });
             });

@@ -600,7 +600,7 @@ public class UserDAO extends DBContext {
         List<User> users = new ArrayList<>();
         StringBuilder sql = new StringBuilder(
                 "SELECT u.userID, u.fullName, u.email, u.phone, u.created_at, u.status_account, u.roleID, r.roleName "
-                + "FROM tbUsers u LEFT JOIN tbRoles r ON u.roleID = r.roleID WHERE u.roleID = 3"
+                + "FROM tbUsers u LEFT JOIN tbRoles r ON u.roleID = r.roleID WHERE u.roleID != 1 and u.roleID !=2"
         );
 
         if (fullName != null && !fullName.trim().isEmpty()) {

@@ -37,6 +37,41 @@ public class PermissionDAO extends DBContext {
         return list;
     }
 
+    public boolean insertRole(String roleName) {
+
+        String sql = "INSERT INTO dbo.tbRoles\n"
+                + "(roleName)\n"
+                + "VALUES\n"
+                + "(?)";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, roleName);
+            int row = ps.executeUpdate();
+            if(row>0){
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    public boolean updateRole(String roleName, int roleID) {
+
+        String sql = "UPDATE dbo.tbRoles SET roleName= ? where roleID = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, roleName);
+            ps.setInt(2, roleID);
+            int row = ps.executeUpdate();
+            if(row>0){
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     public static void main(String[] args) {
         PermissionDAO pdao = new PermissionDAO();
         try {

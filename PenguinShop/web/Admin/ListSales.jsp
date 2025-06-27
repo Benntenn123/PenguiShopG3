@@ -68,9 +68,9 @@
                         <!-- Add Sales Button -->
                         <div class="row mb-3">
                             <div class="col-12">
-                                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addSalesModal">
+                                <a class="btn btn-primary" href="addSales">
                                     <i class="bx bx-plus me-1"></i>Thêm Sales
-                                </button>
+                                </a>
                             </div>
                         </div>
 
