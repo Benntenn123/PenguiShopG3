@@ -4,6 +4,7 @@
  */
 package Controller.Admin.Role;
 
+import Const.Batch;
 import DAL.PermissionDAO;
 import Models.Role;
 import Utils.StringConvert;
@@ -41,9 +42,39 @@ public class ListRole extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        List<Role> role = pdao.getAllRole();
-        request.setAttribute("totalRole", role.size());
-        request.setAttribute("role", role);
+        String pageStr = request.getParameter("page");
+        String roleName = request.getParameter("roleName");
+        int currentPage = 1;
+        try {
+            if (pageStr != null && !pageStr.isEmpty()) {
+                currentPage = Integer.parseInt(pageStr);
+                if (currentPage < 1) {
+                    currentPage = 1;
+                }
+            }
+        } catch (NumberFormatException e) {
+            System.err.println("NumberFormatException in page parameter: " + e.getMessage());
+            currentPage = 1;
+        }
+        int startIndex = (currentPage - 1) * Batch.BATCH_SEARCH_ORDER;
+        List<Role> roles = pdao.getRoles(startIndex, Batch.BATCH_SEARCH_ORDER, roleName);
+            // Lấy tổng số bản ghi
+            int totalRecords = pdao.getTotalRoleCount(roleName);
+            // Tính tổng số trang
+            int totalPages = (int) Math.ceil((double) totalRecords / Batch.BATCH_SEARCH_ORDER);
+            // Tính startRecord và endRecord
+            int startRecord = totalRecords > 0 ? startIndex + 1 : 0;
+            int endRecord = Math.min(startIndex + Batch.BATCH_SEARCH_ORDER, totalRecords);
+
+            // Đặt các thuộc tính vào request
+            request.setAttribute("role", roles);
+            request.setAttribute("totalRole", totalRecords);
+            request.setAttribute("totalRecords", totalRecords);
+            request.setAttribute("startRecord", startRecord);
+            request.setAttribute("endRecord", endRecord);
+            request.setAttribute("currentPage", currentPage);
+            request.setAttribute("totalPages", totalPages);
+        
         request.getRequestDispatcher("../Admin/ListRoleAdmin.jsp").forward(request, response);
     }
 

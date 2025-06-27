@@ -36,6 +36,68 @@ public class PermissionDAO extends DBContext {
         }
         return list;
     }
+    public List<Role> getRoles(int startIndex, int pageSize, String roleName) {
+        List<Role> roles = new ArrayList<>();
+        String sql = "SELECT roleID, roleName FROM dbo.tbRoles WHERE roleName LIKE ? " +
+                     "ORDER BY roleID OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            String searchPattern = roleName == null || roleName.trim().isEmpty() ? "%" : "%" + roleName.trim() + "%";
+            ps.setString(1, searchPattern);
+            ps.setInt(2, startIndex);
+            ps.setInt(3, pageSize);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Role role = new Role();
+                    role.setRoleID(rs.getInt("roleID"));
+                    role.setRoleName(rs.getString("roleName"));
+                    roles.add(role);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("SQLException in getRoles: " + e.getMessage());
+        }
+        return roles;
+    }
+
+    public int getTotalRoleCount(String roleName) {
+        String sql = "SELECT COUNT(*) FROM dbo.tbRoles WHERE roleName LIKE ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            String searchPattern = roleName == null || roleName.trim().isEmpty() ? "%" : "%" + roleName.trim() + "%";
+            ps.setString(1, searchPattern);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("SQLException in getTotalRoleCount: " + e.getMessage());
+        }
+        return 0;
+    }
+
+    public List<Role> getAllRoleWithName(String roleName) {
+        List<Role> list = new ArrayList<>();
+        String sql = "SELECT * FROM dbo.tbRoles where 1=1 ";
+        if (roleName != null && !roleName.isEmpty()) {
+            sql += "and roleName=?";
+        }
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            if (roleName != null && !roleName.isEmpty()) {
+                ps.setString(1, sql);
+            }
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Role r = new Role(rs.getInt(1),
+                        rs.getString(2));
+                list.add(r);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
 
     public boolean insertRole(String roleName) {
 
@@ -47,7 +109,7 @@ public class PermissionDAO extends DBContext {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, roleName);
             int row = ps.executeUpdate();
-            if(row>0){
+            if (row > 0) {
                 return true;
             }
         } catch (SQLException e) {
@@ -55,6 +117,7 @@ public class PermissionDAO extends DBContext {
         }
         return false;
     }
+
     public boolean updateRole(String roleName, int roleID) {
 
         String sql = "UPDATE dbo.tbRoles SET roleName= ? where roleID = ?";
@@ -63,7 +126,7 @@ public class PermissionDAO extends DBContext {
             ps.setString(1, roleName);
             ps.setInt(2, roleID);
             int row = ps.executeUpdate();
-            if(row>0){
+            if (row > 0) {
                 return true;
             }
         } catch (SQLException e) {

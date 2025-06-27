@@ -3,23 +3,21 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/F:/Git/PenguiShopG3/PenguinShop/web/Admin/Common/LeftSideBar.jsp</file>
-            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Controller/HomePage/DashBoard/TrangChu.java</file>
-            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Const/StatusOrder.java</file>
-            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Models/Order.java</file>
-            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Models/Promotion.java</file>
-            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/DAL/PromotionDAO.java</file>
-            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Controller/Admin/Products/Promotion/ListPromotion.java</file>
-            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Models/Product.java</file>
-            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Controller/Admin/Authen/LoginAdmin.java</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Controller/Admin/Role/AddSales.java</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/DAL/UserDAO.java</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/web/Admin/ListGroupProductAdmin.jsp</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Controller/Admin/Products/EditGroupProduct.java</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Controller/Admin/Role/ListSales.java</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Controller/Admin/Role/ListRole.java</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/web/Admin/AddSales.jsp</file>
             <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/DAL/PermissionDAO.java</file>
-            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Models/ProductVariant.java</file>
-            <file>file:/F:/Git/PenguiShopG3/PenguinShop/web/HomePage/TrangChu.jsp</file>
             <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/DAL/ProductDao.java</file>
-            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Models/Permission.java</file>
-            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Models/Modules.java</file>
-            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Controller/HomePage/Customer/Profile/OrderHistory.java</file>
-            <file>file:/F:/Git/PenguiShopG3/PenguinShop/web/HomePage/OrderHistory.jsp</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/web/Admin/ManageRolePermissions.jsp</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Models/Type.java</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/web/Admin/EditGroupProduct.jsp</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/web/Admin/ListRoleAdmin.jsp</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Controller/Admin/Role/ManageRolePermissions.java</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/web/Admin/ListSales.jsp</file>
         </group>
     </open-files>
 </project-private>
