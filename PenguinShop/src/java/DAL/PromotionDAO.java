@@ -12,9 +12,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import Models.Promotion;
 import Models.Size;
+import Utils.StringConvert;
 import java.util.ArrayList;
 import java.util.List;
 import java.sql.Timestamp;
+import java.util.HashMap;
+import java.util.Map;
 
 public class PromotionDAO extends DBContext {
 
@@ -188,8 +191,7 @@ public class PromotionDAO extends DBContext {
             return rowsAffected > 0;
         }
     }
-    // JDBC DAO Method: Load Promotion with 4 Products of Soon-Expiring Promotion
-
+    
     public Promotion getSoonExpiringPromotionWithProducts() throws SQLException {
         Promotion promotion = null;
         String sql = "SELECT TOP 4 "
@@ -296,6 +298,53 @@ public class PromotionDAO extends DBContext {
             stmt.setInt(2, variantID);
             return stmt.executeUpdate() > 0;
         }
+    }
+    public Map<Integer, List<Promotion>> getPromotionsByVariantIds(List<Integer> variantIds) {
+        Map<Integer, List<Promotion>> promotionsByVariant = new HashMap<>();
+        if (variantIds == null || variantIds.isEmpty()) {
+            return promotionsByVariant;
+        }
+
+        // Khởi tạo danh sách rỗng cho mỗi variantID
+        for (Integer variantId : variantIds) {
+            promotionsByVariant.put(variantId, new ArrayList<>());
+        }
+
+        String sql = "SELECT pp.variantID, p.promotionID, p.promotionName, p.discountType, p.discountValue, " +
+                     "p.startDate, p.endDate, p.description, p.isActive " +
+                     "FROM tbProductPromotion pp " +
+                     "JOIN tbPromotion p ON pp.promotionID = p.promotionID " +
+                     "WHERE pp.variantID IN (" + StringConvert.generatePlaceholders(variantIds.size()) + ") " +
+                     "AND p.isActive = 1 " +
+                     "AND p.startDate <= GETDATE() AND p.endDate >= GETDATE()";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            // Gán các variantID vào PreparedStatement
+            for (int i = 0; i < variantIds.size(); i++) {
+                ps.setInt(i + 1, variantIds.get(i));
+            }
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    int variantId = rs.getInt("variantID");
+                    Promotion promotion = new Promotion();
+                    promotion.setPromotionID(rs.getInt("promotionID"));
+                    promotion.setPromotionName(rs.getString("promotionName"));
+                    promotion.setDiscountType(rs.getString("discountType"));
+                    promotion.setDiscountValue(rs.getDouble("discountValue"));
+                    promotion.setStartDate(rs.getString("startDate"));
+                    promotion.setEndDate(rs.getString("endDate"));
+                    promotion.setDescription(rs.getString("description"));
+                    promotion.setIsActive(rs.getInt("isActive"));
+
+                    // Thêm promotion vào danh sách của variantID tương ứng
+                    promotionsByVariant.get(variantId).add(promotion);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return promotionsByVariant;
     }
 
     public static void main(String[] args) {

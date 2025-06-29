@@ -181,5 +181,15 @@ public class StringConvert {
         String regex = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[^A-Za-z\\d]).{8,}$";
         return password.matches(regex);
     }
+    public static String generatePlaceholders(int count) {
+        StringBuilder placeholders = new StringBuilder();
+        for (int i = 0; i < count; i++) {
+            placeholders.append("?");
+            if (i < count - 1) {
+                placeholders.append(",");
+            }
+        }
+        return placeholders.toString();
+    }
 
 }

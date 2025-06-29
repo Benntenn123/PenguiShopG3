@@ -5,6 +5,7 @@
 package DAL;
 
 import Models.Brand;
+import Models.CartSession;
 import Models.Category;
 import Models.Color;
 import Models.Product;
@@ -1394,6 +1395,54 @@ public class ProductDao extends DBContext {
             }
         }
     }
+    public boolean updateQuantityProduct(List<CartSession> cart) {
+    String sql = "UPDATE dbo.tbProductVariant SET quantity = quantity - ? WHERE variantID = ?";
+    PreparedStatement pstmt = null;
+
+    try {
+        connection.setAutoCommit(false); // Bắt đầu transaction
+        pstmt = connection.prepareStatement(sql);
+
+        for (CartSession cs : cart) {
+            int variantID = cs.getCart().getVariant().getVariantID();
+            int quantity = cs.getQuantity();
+
+            pstmt.setInt(1, quantity);
+            pstmt.setInt(2, variantID);
+            pstmt.addBatch();
+        }
+
+        int[] results = pstmt.executeBatch();
+        connection.commit();
+        
+        // Kiểm tra xem có bản ghi nào bị lỗi không
+        for (int res : results) {
+            if (res == PreparedStatement.EXECUTE_FAILED) {
+                connection.rollback();
+                return false;
+            }
+        }
+
+        return true;
+
+    } catch (Exception e) {
+        e.printStackTrace();
+        try {
+            connection.rollback();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return false;
+    } finally {
+        try {
+            if (pstmt != null) pstmt.close();
+            connection.setAutoCommit(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+
 
     public static void main(String[] args) {
         ProductDao dao = new ProductDao();
