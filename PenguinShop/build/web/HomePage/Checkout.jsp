@@ -422,125 +422,125 @@
         <div class="container">
             <fmt:setLocale value="vi_VN"/>
             <form id="orderForm" action="checkout" method="post">
-            <!-- Địa chỉ nhận hàng -->
-            <div class="section">
-                <div style="font-size: 18px" class="section-header">
-                    <div style="margin-bottom: 0px !important" class="section-title">
-                        <svg class="icon" fill="currentColor" viewBox="0 0 24 24">
+                <!-- Địa chỉ nhận hàng -->
+                <div class="section">
+                    <div style="font-size: 18px" class="section-header">
+                        <div style="margin-bottom: 0px !important" class="section-title">
+                            <svg class="icon" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-                        </svg>
-                        <h2 style="margin-bottom: 0px !important">Địa chỉ nhận hàng</h2>
+                            </svg>
+                            <h2 style="margin-bottom: 0px !important">Địa chỉ nhận hàng</h2>
+                        </div>
+                        <a class="btn-add" href="deliveryinfo"> 
+                            <span>Quản lí địa chỉ người nhận</span>
+                        </a>
                     </div>
-                    <a class="btn-add" href="deliveryinfo"> 
-                        <span>Quản lí địa chỉ người nhận</span>
-                    </a>
+                    <div class="address-card" id="default-address"></div>
                 </div>
-                <div class="address-card" id="default-address"></div>
-            </div>
 
-            <!-- Sản phẩm -->
-            <div class="section">
-                <h2 style="margin-bottom: 16px; font-size: 18px">Sản phẩm đã chọn</h2>
-                <div id="products-list">
-                    <c:forEach var="cartsession" items="${selectedCartItems}">
-                        <div class="product-item" data-variant-id="${cartsession.value.cart.variant.variantID}">
-                            <img src="api/img/${cartsession.value.cart.variant.product.imageMainProduct}" style="height: 100px; width: 100px" alt="" class="product-image">
-                            <div class="product-info">
-                                <div style="font-size: 16px" class="product-name">${cartsession.value.cart.variant.product.productName}</div>
-                                <div class="product-variant">
-                                    Màu ${cartsession.value.cart.variant.color.colorName}, 
-                                    Size ${cartsession.value.cart.variant.size.sizeName}
-                                </div>
-                                <div class="product-price-row">
-                                    <div>
-                                        <span style="font-size: 16px" class="product-price-original"><fmt:formatNumber value="${cartsession.value.cart.variant.price}" type="currency" currencyCode="VND"/></span>
-                                        <span style="font-size: 16px" class="product-price" data-unit-price="${cartsession.value.cart.variant.price}" data-quantity="${cartsession.value.quantity}"></span>
+                <!-- Sản phẩm -->
+                <div class="section">
+                    <h2 style="margin-bottom: 16px; font-size: 18px">Sản phẩm đã chọn</h2>
+                    <div id="products-list">
+                        <c:forEach var="cartsession" items="${selectedCartItems}">
+                            <div class="product-item" data-variant-id="${cartsession.value.cart.variant.variantID}">
+                                <img src="api/img/${cartsession.value.cart.variant.product.imageMainProduct}" style="height: 100px; width: 100px" alt="" class="product-image">
+                                <div class="product-info">
+                                    <div style="font-size: 16px" class="product-name">${cartsession.value.cart.variant.product.productName}</div>
+                                    <div class="product-variant">
+                                        Màu ${cartsession.value.cart.variant.color.colorName}, 
+                                        Size ${cartsession.value.cart.variant.size.sizeName}
                                     </div>
-                                    <span style="font-size: 16px" class="product-quantity">x${cartsession.value.quantity}</span>
+                                    <div class="product-price-row">
+                                        <div>
+                                            <span style="font-size: 16px" class="product-price-original"><fmt:formatNumber value="${cartsession.value.cart.variant.price}" type="currency" currencyCode="VND"/></span>
+                                            <span style="font-size: 16px" class="product-price" data-unit-price="${cartsession.value.cart.variant.price}" data-quantity="${cartsession.value.quantity}"></span>
+                                        </div>
+                                        <span style="font-size: 16px" class="product-quantity">x${cartsession.value.quantity}</span>
+                                    </div>
+                                    <select class="promotion-select" onchange="updatePromotion(this, '${cartsession.value.cart.variant.variantID}')">
+                                        <option value="">Không áp dụng khuyến mãi</option>
+                                    </select>
+                                    <input type="hidden" name="promotion_${cartsession.value.cart.variant.variantID}" class="promotion-input" value="">
                                 </div>
-                                <select class="promotion-select" onchange="updatePromotion(this, '${cartsession.value.cart.variant.variantID}')">
-                                    <option value="">Không áp dụng khuyến mãi</option>
-                                </select>
-                                <input type="hidden" name="promotion_${cartsession.value.cart.variant.variantID}" class="promotion-input" value="">
                             </div>
-                        </div>
-                    </c:forEach>
+                        </c:forEach>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Phương thức vận chuyển -->
-            <div class="section">
-                <div class="section-title" style="margin-bottom: 16px;">
-                    <svg class="icon" fill="currentColor" viewBox="0 0 24 24">
+                <!-- Phương thức vận chuyển -->
+                <div class="section">
+                    <div class="section-title" style="margin-bottom: 16px;">
+                        <svg class="icon" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4zM6 18.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm13.5-9l1.96 2.5H17V9.5h2.5zm-1.5 9c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/>
-                    </svg>
-                    <h2 style="font-size: 18px">Phương thức vận chuyển</h2>
-                </div>
-                <div class="shipping-option">
-                    <div>
-                        <div style="font-size: 16px;font-weight: 500;">Giao hàng tiêu chuẩn</div>
-                        <div style="font-size: 16px; color: #666;" id="shipping-time">${dateShip}</div>
+                        </svg>
+                        <h2 style="font-size: 18px">Phương thức vận chuyển</h2>
                     </div>
-                    <div style="font-size: 16px" class="shipping-price" id="shipping-price"><fmt:formatNumber value="${shipfee}" type="currency" currencyCode="VND"/></div>
+                    <div class="shipping-option">
+                        <div>
+                            <div style="font-size: 16px;font-weight: 500;">Giao hàng tiêu chuẩn</div>
+                            <div style="font-size: 16px; color: #666;" id="shipping-time">${dateShip}</div>
+                        </div>
+                        <div style="font-size: 16px" class="shipping-price" id="shipping-price"><fmt:formatNumber value="${shipfee}" type="currency" currencyCode="VND"/></div>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Phương thức thanh toán -->
-            <div class="section">
-                <div class="section-title" style="margin-bottom: 16px;">
-                    <svg class="icon" fill="currentColor" viewBox="0 0 24 24">
+                <!-- Phương thức thanh toán -->
+                <div class="section">
+                    <div class="section-title" style="margin-bottom: 16px;">
+                        <svg class="icon" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/>
-                    </svg>
-                    <h2 style="font-size: 18px">Phương thức thanh toán</h2>
-                </div>
-                <div style="font-size: 16px" id="payment-methods">
-                    <div class="payment-option selected" onclick="selectPayment(this, 'cod')">
-                        <div class="radio">
-                            <div class="radio-dot"></div>
-                        </div>
-                        <span class="payment-icon">💵</span>
-                        <span>Thanh toán khi nhận hàng (COD)</span>
+                        </svg>
+                        <h2 style="font-size: 18px">Phương thức thanh toán</h2>
                     </div>
-                    <div class="payment-option" onclick="selectPayment(this, 'vnpay')">
-                        <div class="radio">
-                            <div class="radio-dot"></div>
+                    <div style="font-size: 16px" id="payment-methods">
+                        <div class="payment-option selected" onclick="selectPayment(this, 'cod')">
+                            <div class="radio">
+                                <div class="radio-dot"></div>
+                            </div>
+                            <span class="payment-icon">💵</span>
+                            <span>Thanh toán khi nhận hàng (COD)</span>
                         </div>
-                        <span class="payment-icon">🅿️</span>
-                        <span>Ví VNPAY</span>
+                        <div class="payment-option" onclick="selectPayment(this, 'vnpay')">
+                            <div class="radio">
+                                <div class="radio-dot"></div>
+                            </div>
+                            <span class="payment-icon">🅿️</span>
+                            <span>Ví VNPAY</span>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Tổng cộng -->
-            <div class="section">
-                <h2 style="font-size: 18px;margin-bottom: 16px;">Chi tiết thanh toán</h2>
-                <div style="font-size: 16px;" class="summary-row">
-                    <span>Tổng tiền hàng</span>
-                    <span id="subtotal"><fmt:formatNumber value="${totalBill}" type="currency" currencyCode="VND"/></span>
+                <!-- Tổng cộng -->
+                <div class="section">
+                    <h2 style="font-size: 18px;margin-bottom: 16px;">Chi tiết thanh toán</h2>
+                    <div style="font-size: 16px;" class="summary-row">
+                        <span>Tổng tiền hàng</span>
+                        <span id="subtotal"><fmt:formatNumber value="${totalBill}" type="currency" currencyCode="VND"/></span>
+                    </div>
+                    <div style="font-size: 16px;" class="summary-row">
+                        <span>Phí vận chuyển</span>
+                        <span id="shipping-fee"><fmt:formatNumber value="${shipfee}" type="currency" currencyCode="VND"/></span>
+                    </div>
+                    <div class="summary-total">
+                        <span>Tổng thanh toán</span>
+                        <span id="total"><fmt:formatNumber value="${totalBillShip}" type="currency" currencyCode="VND"/></span>
+                    </div>
                 </div>
-                <div style="font-size: 16px;" class="summary-row">
-                    <span>Phí vận chuyển</span>
-                    <span id="shipping-fee"><fmt:formatNumber value="${shipfee}" type="currency" currencyCode="VND"/></span>
-                </div>
-                <div class="summary-total">
-                    <span>Tổng thanh toán</span>
-                    <span id="total"><fmt:formatNumber value="${totalBillShip}" type="currency" currencyCode="VND"/></span>
-                </div>
-            </div>
 
-            <!-- Form gửi dữ liệu đến Servlet -->
-            <div style="margin-bottom: 200px" class="section">
-                
+                <!-- Form gửi dữ liệu đến Servlet -->
+                <div style="margin-bottom: 200px" class="section">
+
                     <input type="hidden" name="paymentMethod" id="paymentMethod" value="cod">
                     <input type="hidden" name="addressId" id="addressId" value="">
                     <input type="hidden" name="totalBill" id="totalBill" value="${totalBill}">
                     <input type="hidden" name="shipfee" id="shipfee" value="${shipfee}">
                     <input type="hidden" name="totalBillShip" id="totalBillShip" value="${totalBillShip}">
                     <button type="submit" class="btn-order">Đặt hàng</button>
-                
-                <p class="terms">Nhấn "Đặt hàng" đồng nghĩa với việc bạn đồng ý tuân theo Điều khoản PenguinShop</p>
-            </div>
 
+                    <p class="terms">Nhấn "Đặt hàng" đồng nghĩa với việc bạn đồng ý tuân theo Điều khoản PenguinShop</p>
+                </div>
+            </form>            
             <!-- Modal thêm địa chỉ -->
             <div class="modal" id="addressModal">
                 <div class="modal-content">
@@ -567,7 +567,7 @@
             <!-- Floating button -->
             <button class="floating-btn" onclick="showAddressModal()">
                 <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
                 </svg>
             </button>
             <jsp:include page="Common/Footer.jsp"/>
@@ -618,14 +618,13 @@
                     console.log('updatePromotion called for variant:', variantId, 'with promotion:', selectElement.value);
 
                     const promotionId = selectElement.value;
-                    console.log('PromotionID',promotionId);
+                    console.log('PromotionID', promotionId);
                     const productItem = selectElement.closest('.product-item');
                     const priceElement = productItem.querySelector('.product-price');
                     const originalPriceElement = productItem.querySelector('.product-price-original');
                     const unitPrice = parseFloat(priceElement.getAttribute('data-unit-price'));
                     const quantity = parseInt(priceElement.getAttribute('data-quantity'));
                     const promotionInput = productItem.querySelector('.promotion-input');
-                    const promotionIDForm = document.getElementById('promotionId');
 
                     let discountedUnitPrice = unitPrice;
                     if (promotionId && promotionsData[variantId]) {
@@ -650,8 +649,7 @@
                     priceElement.setAttribute('data-discounted-unit-price', discountedUnitPrice);
                     promotionInput.value = promotionId || '';
                     console.log(promotionInput);
-                    promotionIDForm.value = promotionId || '';
-                    console.log(promotionIDForm);
+                    
                     console.log(`Variant ${variantId}: Original=${unitPrice}, Discounted=${discountedUnitPrice}, Quantity=${quantity}`);
 
                     updateTotal();
@@ -684,18 +682,18 @@
                         url: 'getPromotionsByVariant',
                         method: 'POST',
                         contentType: 'application/json',
-                        data: JSON.stringify({ variantIds: variantIds }),
+                        data: JSON.stringify({variantIds: variantIds}),
                         success: function (response) {
                             console.log('API Response:', response);
                             if (response && response.success) {
                                 promotionsData = {};
                                 response.data.forEach(item => {
                                     promotionsData[item.variantID] = item.promotions.map(p => ({
-                                        promotionID: p.promotionID.toString(),
-                                        promotionName: p.promotionName,
-                                        discountType: p.discountType,
-                                        discountValue: p.discountValue
-                                    }));
+                                            promotionID: p.promotionID.toString(),
+                                            promotionName: p.promotionName,
+                                            discountType: p.discountType,
+                                            discountValue: p.discountValue
+                                        }));
                                 });
                                 console.log('Processed promotionsData:', promotionsData);
 
@@ -777,7 +775,7 @@
                         $.ajax({
                             url: 'calculateShippingFee',
                             method: 'POST',
-                            data: { addressId: addressId },
+                            data: {addressId: addressId},
                             success: function (response) {
                                 if (response && response.success) {
                                     toastr.success(response.message);

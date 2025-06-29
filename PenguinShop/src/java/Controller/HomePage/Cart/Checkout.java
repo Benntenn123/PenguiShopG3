@@ -155,6 +155,7 @@ public class Checkout extends HttpServlet {
                 }
                 
             }
+            System.out.println(promotions.size() + "hẹ hẹ");
             System.out.println("Các khuyến mãi được chọn từ form: " + promotions);
 
             // Fetch promotion data using PromotionDAO
@@ -189,12 +190,12 @@ public class Checkout extends HttpServlet {
                             .orElse(null);
                     if (selectedPromo != null) {
                         discountedPrice = calculateDiscountedPrice(unitPrice, selectedPromo);
-                        String promoDesc = selectedPromo.getDescription();
-                        String promoName = selectedPromo.getPromotionName();
-                        promotionText = promoDesc != null ? promoDesc : promoName;
-                        promotionDetails.put(variantId, promotionText);
-                        System.out.println("Đã áp dụng khuyến mãi: " + promotionText + " cho variant " + variantId + 
-                                          " (Giá gốc: " + unitPrice + ", Giá sau giảm: " + discountedPrice + ")");
+                        for (Map.Entry<Integer, CartSession> entry1 : map.entrySet()) {
+                            if(entry1.getValue().getCart().getVariant().getVariantID() == variantId){
+                                entry1.getValue().getCart().getVariant().setPrice(discountedPrice);
+                            }
+                            
+                        }
                     } else {
                         System.out.println("Không tìm thấy khuyến mãi với promotionId=" + promotionId + " cho variant " + variantId);
                     }
