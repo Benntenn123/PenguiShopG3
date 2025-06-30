@@ -8,6 +8,7 @@ public class Role {
 
     private int roleID;
     private String roleName;
+    private String roleDescription;
 
     public Role(int roleID, String roleName) {
         this.roleID = roleID;
@@ -31,6 +32,14 @@ public class Role {
 
     public void setRoleName(String roleName) {
         this.roleName = roleName;
+    }
+
+    public String getRoleDescription() {
+        return roleDescription;
+    }
+
+    public void setRoleDescription(String roleDescription) {
+        this.roleDescription = roleDescription;
     }
 
 }

@@ -84,6 +84,7 @@ public class ListRole extends HttpServlet {
         String roleName = request.getParameter("roleName");
         String action = request.getParameter("action");
         String roleID = request.getParameter("roleId");
+        String roleDescription = request.getParameter("roleDescription");
         try {
 
             if (StringConvert.isEmpty(action)) {
@@ -95,17 +96,17 @@ public class ListRole extends HttpServlet {
                 response.sendRedirect("listRoleAdmin");
             } else {
                 if (action.equals("add")) {
-                    if (pdao.insertRole(roleName)) {
+                    if (pdao.insertRole(roleName,roleDescription)) {
                         request.getSession().setAttribute("ms", "Thêm nhóm quyền thành công");
                         response.sendRedirect("listRoleAdmin");
                     } else {
-                        request.getSession().setAttribute("errpr", "Thêm nhóm quyền không thành công");
+                        request.getSession().setAttribute("error", "Thêm nhóm quyền không thành công");
                         response.sendRedirect("listRoleAdmin");
                     }
                 }
-                if (action.equals("edit")) {
+                else if (action.equals("edit")) {
                     int roleId = Integer.parseInt(roleID);
-                    if (pdao.updateRole(roleName,roleId)) {
+                    if (pdao.updateRole(roleName,roleId, roleDescription)) {
                         request.getSession().setAttribute("ms", "Sửa nhóm quyền thành công");
                         response.sendRedirect("listRoleAdmin");
                     } else {

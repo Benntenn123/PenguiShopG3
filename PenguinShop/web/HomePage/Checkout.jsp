@@ -395,6 +395,147 @@
             .floating-btn:hover {
                 opacity: 0.9;
             }
+            /* Style cho select promotion giống Shopee */
+            .promotion-select {
+                width: 100%;
+                padding: 12px 16px;
+                border: 1px solid #AE1C9A;
+                border-radius: 6px;
+                font-size: 14px;
+                color: #333;
+                background-color: white;
+                background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+                background-repeat: no-repeat;
+                background-position: right 12px center;
+                background-size: 16px;
+                appearance: none;
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            }
+
+            .promotion-select:hover {
+                border-color: #AE1C9A;
+                box-shadow: 0 0 0 2px rgba(238, 77, 45, 0.1);
+            }
+
+            .promotion-select:focus {
+                outline: none;
+                border-color: #AE1C9A;
+                box-shadow: 0 0 0 3px rgba(238, 77, 45, 0.2);
+            }
+
+            .promotion-select:disabled {
+                background-color: #f5f5f5;
+                color: #999;
+                cursor: not-allowed;
+                border-color: #e0e0e0;
+            }
+
+            /* Style cho option trong select */
+            .promotion-select option {
+                padding: 10px;
+                color: #333;
+                background-color: white;
+            }
+
+            .promotion-select option:hover {
+                background-color: #AE1C9A;
+                color: #ee4d2d;
+            }
+
+            /* Container cho select với label */
+            .promotion-wrapper {
+                margin: 12px 0;
+                position: relative;
+            }
+
+            .promotion-label {
+                display: block;
+                font-size: 14px;
+                color: #555;
+                margin-bottom: 8px;
+                font-weight: 500;
+            }
+
+            /* Style cho price section */
+            .price-section {
+                margin-top: 12px;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                flex-wrap: wrap;
+            }
+
+            .product-price {
+                font-size: 18px;
+                font-weight: 600;
+                color: #AE1C9A;
+            }
+
+            .product-price-original {
+                font-size: 14px;
+                color: #999;
+                text-decoration: line-through;
+            }
+
+            .discount-badge {
+                background: #AE1C9A;
+                color: white;
+                font-size: 11px;
+                padding: 2px 6px;
+                border-radius: 3px;
+                font-weight: 500;
+            }
+
+            /* Style cho product item container */
+            .product-item {
+                background: white;
+                border-radius: 8px;
+                padding: 16px;
+                margin-bottom: 16px;
+                box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+                border: 1px solid #f0f0f0;
+            }
+
+            /* Responsive cho mobile */
+            @media (max-width: 768px) {
+                .promotion-select {
+                    padding: 10px 14px;
+                    font-size: 13px;
+                }
+
+                .product-price {
+                    font-size: 16px;
+                }
+
+                .product-item {
+                    padding: 12px;
+                }
+            }
+
+            /* Animation cho select khi thay đổi */
+            .promotion-select.updating {
+                border-color: #AE1C9A;
+                box-shadow: 0 0 0 2px rgba(238, 77, 45, 0.2);
+            }
+
+            /* Style cho loading state */
+            .promotion-select.loading {
+                background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ee4d2d' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpath d='M21 12a9 9 0 11-6.219-8.56'/%3e%3c/svg%3e");
+                animation: spin 1s linear infinite;
+            }
+
+            @keyframes spin {
+                from {
+                    transform: rotate(0deg);
+                }
+                to {
+                    transform: rotate(360deg);
+                }
+            }
 
             @media (max-width: 768px) {
                 .container {
@@ -458,9 +599,13 @@
                                         </div>
                                         <span style="font-size: 16px" class="product-quantity">x${cartsession.value.quantity}</span>
                                     </div>
-                                    <select class="promotion-select" onchange="updatePromotion(this, '${cartsession.value.cart.variant.variantID}')">
-                                        <option value="">Không áp dụng khuyến mãi</option>
-                                    </select>
+                                    <div class="promotion-wrapper">
+                                        <label class="promotion-label">Chọn khuyến mãi</label>
+                                        <select class="promotion-select" onchange="updatePromotion(this, '${cartsession.value.cart.variant.variantID}')">
+                                            <option value="">Không áp dụng khuyến mãi</option>
+                                        </select>
+                                    </div>
+
                                     <input type="hidden" name="promotion_${cartsession.value.cart.variant.variantID}" class="promotion-input" value="">
                                 </div>
                             </div>
@@ -649,7 +794,7 @@
                     priceElement.setAttribute('data-discounted-unit-price', discountedUnitPrice);
                     promotionInput.value = promotionId || '';
                     console.log(promotionInput);
-                    
+
                     console.log(`Variant ${variantId}: Original=${unitPrice}, Discounted=${discountedUnitPrice}, Quantity=${quantity}`);
 
                     updateTotal();
@@ -676,74 +821,94 @@
                 }
 
                 function loadPromotions() {
-                    const variantIds = Array.from(document.querySelectorAll('.product-item')).map(item => item.getAttribute('data-variant-id'));
-                    console.log('Loading promotions for variants:', variantIds);
-                    $.ajax({
-                        url: 'getPromotionsByVariant',
-                        method: 'POST',
-                        contentType: 'application/json',
-                        data: JSON.stringify({variantIds: variantIds}),
-                        success: function (response) {
-                            console.log('API Response:', response);
-                            if (response && response.success) {
-                                promotionsData = {};
-                                response.data.forEach(item => {
-                                    promotionsData[item.variantID] = item.promotions.map(p => ({
-                                            promotionID: p.promotionID.toString(),
-                                            promotionName: p.promotionName,
-                                            discountType: p.discountType,
-                                            discountValue: p.discountValue
-                                        }));
-                                });
-                                console.log('Processed promotionsData:', promotionsData);
+    const variantIds = Array.from(document.querySelectorAll('.product-item')).map(item => item.getAttribute('data-variant-id'));
+    console.log('Loading promotions for variants:', variantIds);
+    
+    // Add loading class to all selects
+    document.querySelectorAll('.promotion-select').forEach(select => {
+        select.classList.add('loading');
+        select.disabled = true;
+    });
+    
+    $.ajax({
+        url: 'getPromotionsByVariant',
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({variantIds: variantIds}),
+        success: function (response) {
+            console.log('API Response:', response);
+            if (response && response.success) {
+                promotionsData = {};
+                response.data.forEach(item => {
+                    promotionsData[item.variantID] = item.promotions.map(p => ({
+                        promotionID: p.promotionID.toString(),
+                        promotionName: p.promotionName,
+                        discountType: p.discountType,
+                        discountValue: p.discountValue
+                    }));
+                });
+                console.log('Processed promotionsData:', promotionsData);
 
-                                document.querySelectorAll('.product-item').forEach(item => {
-                                    const variantId = item.getAttribute('data-variant-id');
-                                    const select = item.querySelector('.promotion-select');
-                                    const priceElement = item.querySelector('.product-price');
-                                    const originalPriceElement = item.querySelector('.product-price-original');
-                                    const unitPrice = parseFloat(priceElement.getAttribute('data-unit-price'));
-                                    const quantity = parseInt(priceElement.getAttribute('data-quantity'));
-                                    const promotionInput = item.querySelector('.promotion-input');
-                                    const promotions = promotionsData[variantId] || [];
+                document.querySelectorAll('.product-item').forEach(item => {
+                    const variantId = item.getAttribute('data-variant-id');
+                    const select = item.querySelector('.promotion-select');
+                    const priceElement = item.querySelector('.product-price');
+                    const originalPriceElement = item.querySelector('.product-price-original');
+                    const unitPrice = parseFloat(priceElement.getAttribute('data-unit-price'));
+                    const quantity = parseInt(priceElement.getAttribute('data-quantity'));
+                    const promotionInput = item.querySelector('.promotion-input');
+                    const promotions = promotionsData[variantId] || [];
 
-                                    console.log(`Populating promotions for variant ${variantId}:`, promotions);
+                    console.log(`Populating promotions for variant ${variantId}:`, promotions);
 
-                                    select.innerHTML = '<option value="">Không áp dụng khuyến mãi</option>';
-                                    promotions.forEach(p => {
-                                        const option = document.createElement('option');
-                                        option.value = p.promotionID;
-                                        option.textContent = p.promotionName;
-                                        select.appendChild(option);
-                                    });
-
-                                    if (promotions.length === 0) {
-                                        select.disabled = true;
-                                        select.innerHTML = '<option value="">Không có khuyến mãi</option>';
-                                    } else {
-                                        select.disabled = false;
-                                    }
-
-                                    priceElement.textContent = formatPrice(unitPrice);
-                                    priceElement.setAttribute('data-discounted-unit-price', unitPrice);
-                                    originalPriceElement.style.display = 'none';
-                                    promotionInput.value = '';
-
-                                    console.log(`Initialized Variant ${variantId}: Unit Price=${unitPrice}, Quantity=${quantity}`);
-                                });
-
-                                updateTotal();
-                            } else {
-                                console.error('API response failed:', response);
-                                toastr.error('Lỗi khi tải danh sách khuyến mãi!');
-                            }
-                        },
-                        error: function (error) {
-                            console.error('Error loading promotions:', error);
-                            toastr.error('Đã xảy ra lỗi khi tải khuyến mãi!');
-                        }
+                    // Remove loading class
+                    select.classList.remove('loading');
+                    
+                    select.innerHTML = '<option value="">Không áp dụng khuyến mãi</option>';
+                    promotions.forEach(p => {
+                        const option = document.createElement('option');
+                        option.value = p.promotionID;
+                        option.textContent = p.promotionName;
+                        select.appendChild(option);
                     });
-                }
+
+                    if (promotions.length === 0) {
+                        select.disabled = true;
+                        select.innerHTML = '<option value="">Không có khuyến mãi</option>';
+                    } else {
+                        select.disabled = false;
+                    }
+
+                    priceElement.textContent = formatPrice(unitPrice);
+                    priceElement.setAttribute('data-discounted-unit-price', unitPrice);
+                    originalPriceElement.style.display = 'none';
+                    promotionInput.value = '';
+
+                    console.log(`Initialized Variant ${variantId}: Unit Price=${unitPrice}, Quantity=${quantity}`);
+                });
+
+                updateTotal();
+            } else {
+                console.error('API response failed:', response);
+                toastr.error('Lỗi khi tải danh sách khuyến mãi!');
+                // Remove loading class on error
+                document.querySelectorAll('.promotion-select').forEach(select => {
+                    select.classList.remove('loading');
+                    select.disabled = false;
+                });
+            }
+        },
+        error: function (error) {
+            console.error('Error loading promotions:', error);
+            toastr.error('Đã xảy ra lỗi khi tải khuyến mãi!');
+            // Remove loading class on error
+            document.querySelectorAll('.promotion-select').forEach(select => {
+                select.classList.remove('loading');
+                select.disabled = false;
+            });
+        }
+    });
+}
 
                 function selectAddress(addressId) {
                     const selectedAddress = addresses.find(addr => addr.deliveryInfoID == addressId);

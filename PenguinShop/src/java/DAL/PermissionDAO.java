@@ -38,7 +38,7 @@ public class PermissionDAO extends DBContext {
     }
     public List<Role> getRoles(int startIndex, int pageSize, String roleName) {
         List<Role> roles = new ArrayList<>();
-        String sql = "SELECT roleID, roleName FROM dbo.tbRoles WHERE roleName LIKE ? " +
+        String sql = "SELECT roleID, roleName,roleDescription FROM dbo.tbRoles WHERE roleName LIKE ? " +
                      "ORDER BY roleID OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -51,6 +51,7 @@ public class PermissionDAO extends DBContext {
                     Role role = new Role();
                     role.setRoleID(rs.getInt("roleID"));
                     role.setRoleName(rs.getString("roleName"));
+                    role.setRoleDescription(rs.getString("roleDescription"));
                     roles.add(role);
                 }
             }
@@ -99,15 +100,16 @@ public class PermissionDAO extends DBContext {
         return list;
     }
 
-    public boolean insertRole(String roleName) {
+    public boolean insertRole(String roleName, String roleDescription) {
 
         String sql = "INSERT INTO dbo.tbRoles\n"
-                + "(roleName)\n"
+                + "(roleName,roleDescription)\n"
                 + "VALUES\n"
-                + "(?)";
+                + "(?,?)";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, roleName);
+            ps.setString(2, roleDescription);
             int row = ps.executeUpdate();
             if (row > 0) {
                 return true;
@@ -118,13 +120,14 @@ public class PermissionDAO extends DBContext {
         return false;
     }
 
-    public boolean updateRole(String roleName, int roleID) {
+    public boolean updateRole(String roleName, int roleID, String roleDescription) {
 
-        String sql = "UPDATE dbo.tbRoles SET roleName= ? where roleID = ?";
+        String sql = "UPDATE dbo.tbRoles SET roleName= ?, roleDescription=? where roleID = ?";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, roleName);
-            ps.setInt(2, roleID);
+            ps.setString(2, roleDescription);
+            ps.setInt(3, roleID);
             int row = ps.executeUpdate();
             if (row > 0) {
                 return true;

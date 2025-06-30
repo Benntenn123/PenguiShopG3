@@ -97,6 +97,7 @@
                                         </th>
                                         <th scope="col">ID</th>
                                         <th scope="col">Tên nhóm quyền</th>
+                                        <th>Mô tả</th>
                                         <th style="width: 80px; min-width: 80px;">Hành Động</th>
                                     </tr>
                                 </thead>
@@ -112,19 +113,15 @@
                                             <td>${role.roleID}</td>
                                             <td>
                                                 <div class="d-flex gap-2">
-                                                    <a style="font-size: 16px" href="#" class="badge bg-primary-subtle text-primary">${role.roleName}</a>
+                                                    <a style="font-size: 16px; color: black" href="#" class="badge">${role.roleName}</a>
                                                 </div>
-                                            </td>
+                                            </td>   
+                                            <td>${role.roleDescription}</td>
                                             <td>
-                                                <div class="dropdown">
-                                                    <button class="btn btn-link font-size-16 shadow-none py-0 text-muted dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                        <i class="bx bx-dots-horizontal-rounded"></i>
-                                                    </button>
-                                                    <ul class="dropdown-menu dropdown-menu-end">
-                                                        <li><a class="dropdown-item edit-role" href="#" data-bs-toggle="modal" data-bs-target="#roleModal" 
-                                                               data-role-id="${role.roleID}" data-role-name="${role.roleName}" data-bs-whatever="edit">Sửa</a></li>
-                                                    </ul>
-                                                </div>
+
+                                                <a class="dropdown-item edit-role" href="#" data-bs-toggle="modal" data-bs-target="#roleModal" 
+                                                   data-role-id="${role.roleID}" style="font-size: 20px" data-role-name="${role.roleName}" data-bs-whatever="edit"><i class="bx bx-edit"></i></a>
+
                                             </td>
                                         </tr>
                                     </c:forEach>
@@ -159,7 +156,7 @@
                                                 </c:otherwise>
                                             </c:choose>
                                         </li>
-                                        
+
                                         <!-- First page -->
                                         <c:if test="${currentPage > 3}">
                                             <li class="page-item">
@@ -171,7 +168,7 @@
                                                 </li>
                                             </c:if>
                                         </c:if>
-                                        
+
                                         <!-- Page Numbers around current page -->
                                         <c:forEach var="i" begin="${currentPage - 2 < 1 ? 1 : currentPage - 2}" 
                                                    end="${currentPage + 2 > totalPages ? totalPages : currentPage + 2}">
@@ -186,7 +183,7 @@
                                                 </c:choose>
                                             </li>
                                         </c:forEach>
-                                        
+
                                         <!-- Last page -->
                                         <c:if test="${currentPage < totalPages - 2}">
                                             <c:if test="${currentPage < totalPages - 3}">
@@ -198,7 +195,7 @@
                                                 <a class="page-link" href="?page=${totalPages}&roleName=${param.roleName}">${totalPages}</a>
                                             </li>
                                         </c:if>
-                                        
+
                                         <!-- Next Button -->
                                         <li class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
                                             <c:choose>
@@ -227,7 +224,7 @@
             <!-- end main content-->
         </div>
         <!-- END layout-wrapper -->
-        
+
         <!-- Role Modal for Add/Edit -->
         <div class="modal fade" id="roleModal" tabindex="-1" aria-labelledby="roleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -244,6 +241,10 @@
                                 <label for="roleName" class="col-form-label">Tên nhóm quyền:</label>
                                 <input type="text" class="form-control" id="roleName" name="roleName" required>
                             </div>
+                            <div class="mb-3">
+                                <label for="roleName" class="col-form-label">Mô tả nhóm quyền:</label>
+                                <input type="text" class="form-control" id="roleName" name="roleDescription" required>
+                            </div>
                         </form>
                     </div>
                     <div class="modal-footer">
@@ -253,22 +254,22 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Right Sidebar -->
         <jsp:include page="Common/RightSideBar.jsp"/>
 
         <jsp:include page="Common/Js.jsp"/>
         <jsp:include page="Common/Message.jsp"/>
-        
+
         <script>
             // Clear search form
-            document.getElementById('clearSearch').addEventListener('click', function() {
+            document.getElementById('clearSearch').addEventListener('click', function () {
                 document.getElementById('searchName').value = '';
                 window.location.href = window.location.pathname;
             });
 
             // Handle modal for add/edit
-            document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('DOMContentLoaded', function () {
                 const roleModal = document.getElementById('roleModal');
                 roleModal.addEventListener('show.bs.modal', function (event) {
                     const button = event.relatedTarget;
