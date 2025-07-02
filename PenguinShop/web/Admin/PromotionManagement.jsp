@@ -294,13 +294,13 @@
                                     <div class="mb-3">
                                         <label for="startDate${promotion.promotionID}" class="form-label">Ngày Bắt Đầu</label>
                                         <input type="datetime-local" class="form-control" id="startDate${promotion.promotionID}" name="startDate" 
-                                               value="${fn:replace(fn:substring(promotion.startDate, 0, 16), ' ', 'T')}" required>
+                                               value="${fn:replace(fn:substring(promotion.startDate, 0, 16), ' ', 'T')}" readonly="">
                                     </div>
 
                                     <div class="mb-3">
                                         <label for="endDate${promotion.promotionID}" class="form-label">Ngày Kết Thúc</label>
                                         <input type="datetime-local" class="form-control" id="endDate${promotion.promotionID}" name="endDate" 
-                                               value="${fn:replace(fn:substring(promotion.endDate, 0, 16), ' ', 'T')}" required>
+                                               value="${fn:replace(fn:substring(promotion.endDate, 0, 16), ' ', 'T')}" readonly="">
                                     </div>
 
                                     <div class="mb-3">

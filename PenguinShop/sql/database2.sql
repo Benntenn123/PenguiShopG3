@@ -1,4 +1,7 @@
-﻿INSERT INTO dbo.tbModules(moduleName,icon)VALUES
+﻿USE PenguinShop
+GO
+
+INSERT INTO dbo.tbModules(moduleName,icon)VALUES
 (N'Trang Chủ','home'),
 (N'Người dùng','user'),
 (N'Quyền truy cập','shield'),
