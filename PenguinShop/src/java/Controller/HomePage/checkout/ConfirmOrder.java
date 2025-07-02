@@ -100,9 +100,9 @@ public class ConfirmOrder extends HttpServlet {
         }
 
         boolean isUsed = "1".equals(isUsedStr);
-        boolean isWithinTenMinutes = createdAtStr != null && GetDateTime.isWithinThreeMinutes(createdAtStr);
+        boolean isWithinThreeMinutes = createdAtStr != null && GetDateTime.isWithinThreeMinutes(createdAtStr);
 
-        if (isUsed || !isWithinTenMinutes) {
+        if (isUsed || !isWithinThreeMinutes) {
             session.setAttribute("error", "Mã OTP không hợp lệ hoặc đã hết hạn.");
             response.sendRedirect("confirm-order");
             return;
@@ -118,7 +118,7 @@ public class ConfirmOrder extends HttpServlet {
         try {
             tdao.markOTPAsUsed(user.getUserID(), storedOtp);
 
-            int orderID = odao.createOrder(
+            int orderID = odao.createOrder(   // tạo order là trừ quantity luôn
                     user.getUserID(),
                     cartItems,
                     totalBill,
@@ -128,6 +128,7 @@ public class ConfirmOrder extends HttpServlet {
                     paymentMethod,
                     GetDateTime.getCurrentTime()
             );
+            
 
             if (orderID != 0) {
                 // Lưu thông tin cần hiển thị
@@ -152,6 +153,7 @@ public class ConfirmOrder extends HttpServlet {
                     int total = totalBill.intValue(); // hoặc (int) Math.floor(totalBill)
                     response.sendRedirect("vnpay?orderID=" + orderID +"&amount="+total);  // chỉ truyền đc int k hàm bên vnpay chuyển số lỗi
                 } else {
+                    request.getSession().setAttribute("error", "Vui lòng chọn 1 cổng thanh toán");
                     response.sendRedirect("payment-gateway?orderID=" + orderID); // fallback cho các phương thức khác
                 }
 

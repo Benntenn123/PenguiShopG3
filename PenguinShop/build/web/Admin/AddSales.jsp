@@ -81,8 +81,20 @@
                                                         <option value="0" ${param.status_account == '0' ? 'selected' : ''}>Không hoạt động</option>
                                                     </select>
                                                 </div>
+                                                <div class="col-md-6">
+                                                    <label for="roleID" class="form-label">Chọn quyền <span class="text-danger">*</span></label>
+                                                    <select class="form-select" id="roleID" name="roleID" required>
+                                                        <option value="">Chọn vai trò...</option>
+                                                        <c:forEach var="role" items="${roles}">
+                                                            <c:if test="${role.roleID != 1 && role.roleID != 2}">
+                                                                <option value="${role.roleID}">${role.roleName}</option>
+                                                            </c:if>
+                                                        </c:forEach>
+                                                    </select>
+
+                                                </div>
                                             </div>
-                                            <input type="hidden" name="roleID" value="3">
+                                            <!--                                            <input type="hidden" name="roleID" value="3">-->
                                             <div class="mt-4">
                                                 <button type="submit" class="btn btn-primary">Thêm Sales</button>
                                                 <a href="listSales" class="btn btn-secondary">Hủy</a>
@@ -105,7 +117,7 @@
         <jsp:include page="Common/Message.jsp"/>
         <script>
             // Client-side validation
-            document.getElementById('addSalesForm').addEventListener('submit', function(e) {
+            document.getElementById('addSalesForm').addEventListener('submit', function (e) {
                 let phone = document.getElementById('phone').value;
                 let password = document.getElementById('password').value;
                 if (!/^[0-9]{10,15}$/.test(phone)) {

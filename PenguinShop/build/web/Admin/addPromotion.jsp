@@ -1,3 +1,4 @@
+
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -18,10 +19,14 @@
             color: red;
             font-size: 0.9em;
         }
+        .is-invalid ~ .error-message {
+            display: block;
+        }
     </style>
 </head>
 <body>
     <div id="layout-wrapper">
+        <fmt:setLocale value="vi_VN"/>
         <jsp:include page="Common/Header.jsp"/>
         <jsp:include page="Common/LeftSideBar.jsp"/>
 
@@ -71,6 +76,7 @@
                             <div class="mb-3">
                                 <label for="discountValue" class="form-label">Giá Trị Giảm</label>
                                 <input type="number" step="0.01" class="form-control" id="discountValue" name="discountValue" required>
+                                <span class="error-message" id="discountValueError" style="display: none;">Giá trị giảm phải lớn hơn 0.</span>
                                 <c:if test="${not empty errors.discountValue}">
                                     <span class="error-message">${errors.discountValue}</span>
                                 </c:if>
@@ -79,6 +85,7 @@
                             <div class="mb-3">
                                 <label for="startDate" class="form-label">Ngày Bắt Đầu</label>
                                 <input type="datetime-local" class="form-control" id="startDate" name="startDate" required>
+                                <span class="error-message" id="startDateError" style="display: none;">Ngày bắt đầu phải là ngày hiện tại hoặc trong tương lai.</span>
                                 <c:if test="${not empty errors.startDate}">
                                     <span class="error-message">${errors.startDate}</span>
                                 </c:if>
@@ -90,6 +97,7 @@
                             <div class="mb-3">
                                 <label for="endDate" class="form-label">Ngày Kết Thúc</label>
                                 <input type="datetime-local" class="form-control" id="endDate" name="endDate" required>
+                                <span class="error-message" id="endDateError" style="display: none;">Ngày kết thúc phải sau ngày bắt đầu ít nhất 1 phút.</span>
                                 <c:if test="${not empty errors.endDate}">
                                     <span class="error-message">${errors.endDate}</span>
                                 </c:if>
@@ -109,7 +117,7 @@
                             </div>
 
                             <div class="text-end">
-                                <button type="submit" class="btn btn-primary">Thêm Khuyến Mãi</button>
+                                <button type="submit" class="btn btn-primary" id="submitBtn">Thêm Khuyến Mãi</button>
                                 <a href="promotion" class="btn btn-secondary">Hủy</a>
                             </div>
                         </form>
@@ -123,20 +131,156 @@
         <jsp:include page="Common/Message.jsp"/>
 
         <script>
-            document.getElementById('addPromotionForm').addEventListener('submit', function(e) {
-                const startDate = new Date(document.getElementById('startDate').value);
-                const endDate = new Date(document.getElementById('endDate').value);
-                const discountValue = parseFloat(document.getElementById('discountValue').value);
+            // Hàm để lấy ngày giờ hiện tại theo định dạng datetime-local (UTC+7 cho Việt Nam)
+            function getCurrentDateTime() {
+                const now = new Date();
+                const vietnamTime = new Date(now.getTime() + (7 * 60 * 60 * 1000));
+                const year = vietnamTime.getUTCFullYear();
+                const month = String(vietnamTime.getUTCMonth() + 1).padStart(2, '0');
+                const day = String(vietnamTime.getUTCDate()).padStart(2, '0');
+                const hours = String(vietnamTime.getUTCHours()).padStart(2, '0');
+                const minutes = String(vietnamTime.getUTCMinutes()).padStart(2, '0');
+                return `${year}-${month}-${day}T${hours}:${minutes}`;
+            }
 
-                if (endDate <= startDate) {
-                    e.preventDefault();
-                    alert('Ngày kết thúc phải lớn hơn ngày bắt đầu.');
+            // Hàm để set min attribute cho các input datetime-local
+            function setMinDateTime() {
+                const currentDateTime = getCurrentDateTime();
+                const startDateInput = document.getElementById('startDate');
+                const endDateInput = document.getElementById('endDate');
+                if (startDateInput) startDateInput.setAttribute('min', currentDateTime);
+                if (endDateInput) endDateInput.setAttribute('min', currentDateTime);
+            }
+
+            // Hàm validate ngày bắt đầu
+            function validateStartDate() {
+                const startDateInput = document.getElementById('startDate');
+                const endDateInput = document.getElementById('endDate');
+                const startDateError = document.getElementById('startDateError');
+                const submitBtn = document.getElementById('submitBtn');
+
+                if (!startDateInput || !startDateError || !submitBtn) {
+                    console.error('Required elements not found');
+                    return false;
                 }
 
-                if (discountValue <= 0) {
-                    e.preventDefault();
-                    alert('Giá trị giảm phải lớn hơn 0.');
+                if (!startDateInput.value) {
+                    startDateInput.classList.add('is-invalid');
+                    startDateError.style.display = 'block';
+                    submitBtn.disabled = true;
+                    return false;
                 }
+
+                const now = new Date();
+                const vietnamNow = new Date(now.getTime() + (7 * 60 * 60 * 1000));
+                const selectedStartDate = new Date(startDateInput.value);
+
+                if (selectedStartDate <= vietnamNow) {
+                    startDateInput.classList.add('is-invalid');
+                    startDateError.style.display = 'block';
+                    submitBtn.disabled = true;
+                    return false;
+                } else {
+                    startDateInput.classList.remove('is-invalid');
+                    startDateError.style.display = 'none';
+                    submitBtn.disabled = false;
+
+                    if (endDateInput && endDateInput.value) {
+                        validateEndDate();
+                    }
+                    return true;
+                }
+            }
+
+            // Hàm validate ngày kết thúc
+            function validateEndDate() {
+                const startDateInput = document.getElementById('startDate');
+                const endDateInput = document.getElementById('endDate');
+                const endDateError = document.getElementById('endDateError');
+                const submitBtn = document.getElementById('submitBtn');
+
+                if (!startDateInput || !endDateInput || !endDateError || !submitBtn) {
+                    console.error('Required elements not found');
+                    return false;
+                }
+
+                if (!startDateInput.value || !endDateInput.value) {
+                    endDateInput.classList.add('is-invalid');
+                    endDateError.style.display = 'block';
+                    submitBtn.disabled = true;
+                    return false;
+                }
+
+                const selectedStartDate = new Date(startDateInput.value);
+                const selectedEndDate = new Date(endDateInput.value);
+
+                if (selectedEndDate <= selectedStartDate) {
+                    endDateInput.classList.add('is-invalid');
+                    endDateError.style.display = 'block';
+                    submitBtn.disabled = true;
+                    return false;
+                } else {
+                    endDateInput.classList.remove('is-invalid');
+                    endDateError.style.display = 'none';
+                    submitBtn.disabled = false;
+                    return true;
+                }
+            }
+
+            // Hàm validate giá trị giảm
+            function validateDiscountValue() {
+                const discountValueInput = document.getElementById('discountValue');
+                const discountValueError = document.getElementById('discountValueError');
+                const submitBtn = document.getElementById('submitBtn');
+
+                if (!discountValueInput || !discountValueError || !submitBtn) {
+                    console.error('Required elements not found');
+                    return false;
+                }
+
+                const discountValue = parseFloat(discountValueInput.value);
+                if (isNaN(discountValue) || discountValue <= 0) {
+                    discountValueInput.classList.add('is-invalid');
+                    discountValueError.style.display = 'block';
+                    submitBtn.disabled = true;
+                    return false;
+                } else {
+                    discountValueInput.classList.remove('is-invalid');
+                    discountValueError.style.display = 'none';
+                    submitBtn.disabled = false;
+                    return true;
+                }
+            }
+
+            // Chạy khi trang được load
+            document.addEventListener('DOMContentLoaded', function() {
+                setMinDateTime();
+
+                const startDateInput = document.getElementById('startDate');
+                const endDateInput = document.getElementById('endDate');
+                const discountValueInput = document.getElementById('discountValue');
+
+                if (startDateInput) {
+                    startDateInput.addEventListener('change', validateStartDate);
+                }
+                if (endDateInput) {
+                    endDateInput.addEventListener('change', validateEndDate);
+                }
+                if (discountValueInput) {
+                    discountValueInput.addEventListener('change', validateDiscountValue);
+                }
+
+                // Validate form on submit
+                document.getElementById('addPromotionForm').addEventListener('submit', function(e) {
+                    const isStartDateValid = validateStartDate();
+                    const isEndDateValid = validateEndDate();
+                    const isDiscountValueValid = validateDiscountValue();
+
+                    if (!isStartDateValid || !isEndDateValid || !isDiscountValueValid) {
+                        e.preventDefault();
+                        alert('Vui lòng kiểm tra lại thông tin: ngày bắt đầu, ngày kết thúc, và giá trị giảm.');
+                    }
+                });
             });
         </script>
     </body>

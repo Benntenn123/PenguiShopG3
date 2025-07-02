@@ -67,7 +67,7 @@
                             <div class="col-md-6">
                                 <div class="d-flex flex-wrap align-items-center justify-content-end gap-2 mb-3">
                                     <div>
-                                        <a type="button" class="btn btn-light" href="addPromotion.jsp">
+                                        <a type="button" class="btn btn-light" href="addPromotion">
                                             <i class="bx bx-plus me-1"></i> Thêm khuyến mãi mới
                                         </a>
                                     </div>
@@ -140,6 +140,7 @@
                                                         <li><a class="dropdown-item" href="javascript:void(0);" onclick="toggleStatus(${promotion.promotionID}, ${promotion.isActive})">
                                                                 ${promotion.isActive == 1 ? 'Ngưng' : 'Kích hoạt'}
                                                             </a></li>
+                                                            <li><a class="dropdown-item" href="promotionVariant?promotionID=${promotion.promotionID}">Thêm sản phẩm giảm giá</a></li>
                                                     </ul>
                                                 </div>
                                             </td>
@@ -293,13 +294,13 @@
                                     <div class="mb-3">
                                         <label for="startDate${promotion.promotionID}" class="form-label">Ngày Bắt Đầu</label>
                                         <input type="datetime-local" class="form-control" id="startDate${promotion.promotionID}" name="startDate" 
-                                               value="${fn:replace(fn:substring(promotion.startDate, 0, 16), ' ', 'T')}" required>
+                                               value="${fn:replace(fn:substring(promotion.startDate, 0, 16), ' ', 'T')}" readonly="">
                                     </div>
 
                                     <div class="mb-3">
                                         <label for="endDate${promotion.promotionID}" class="form-label">Ngày Kết Thúc</label>
                                         <input type="datetime-local" class="form-control" id="endDate${promotion.promotionID}" name="endDate" 
-                                               value="${fn:replace(fn:substring(promotion.endDate, 0, 16), ' ', 'T')}" required>
+                                               value="${fn:replace(fn:substring(promotion.endDate, 0, 16), ' ', 'T')}" readonly="">
                                     </div>
 
                                     <div class="mb-3">

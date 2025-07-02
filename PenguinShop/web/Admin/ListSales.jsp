@@ -38,7 +38,7 @@
                                 <div class="card">
                                     <div class="card-body">
                                         <h5 class="card-title mb-3">Tìm kiếm Sales</h5>
-                                        <form method="get" action="sales_list">
+                                        <form method="get" action="listSales">
                                             <div class="row g-3">
                                                 <div class="col-md-3">
                                                     <label for="fullName" class="form-label">Họ tên</label>
@@ -56,7 +56,7 @@
                                                     <button type="submit" class="btn btn-primary me-2">
                                                         <i class="bx bx-search me-1"></i>Tìm kiếm
                                                     </button>
-                                                    <a href="sales_list" class="btn btn-secondary">Xóa bộ lọc</a>
+                                                    <a href="listSales" class="btn btn-secondary">Xóa bộ lọc</a>
                                                 </div>
                                             </div>
                                         </form>
@@ -68,9 +68,9 @@
                         <!-- Add Sales Button -->
                         <div class="row mb-3">
                             <div class="col-12">
-                                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addSalesModal">
+                                <a class="btn btn-primary" href="addSales">
                                     <i class="bx bx-plus me-1"></i>Thêm Sales
-                                </button>
+                                </a>
                             </div>
                         </div>
 
