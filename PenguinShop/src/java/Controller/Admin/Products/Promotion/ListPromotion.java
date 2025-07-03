@@ -46,47 +46,57 @@ public class ListPromotion extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        try {
-            int PAGE_SIZE = Batch.BATCH_SEARCH_PRODUCT;
-            // Lấy tham số trang
-            int page = 1;
-            String pageParam = request.getParameter("page");
-            if (pageParam != null && !pageParam.isEmpty()) {
-                try {
-                    page = Integer.parseInt(pageParam);
-                } catch (NumberFormatException e) {
-                    page = 1;
-                }
+protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    try {
+        int PAGE_SIZE = Batch.BATCH_SEARCH_PRODUCT;
+
+        // Lấy tham số trang
+        int page = 1;
+        String pageParam = request.getParameter("page");
+        if (pageParam != null && !pageParam.isEmpty()) {
+            try {
+                page = Integer.parseInt(pageParam);
+            } catch (NumberFormatException e) {
+                page = 1;
             }
-
-            // Tính toán phân trang
-            int totalPromotions = promotionDAO.getTotalPromotions();
-            int totalPages = (int) Math.ceil((double) totalPromotions / PAGE_SIZE);
-            int startRecord = (page - 1) * PAGE_SIZE + 1;
-            int endRecord = Math.min(page * PAGE_SIZE, totalPromotions);
-
-            // Lấy danh sách khuyến mãi cho trang hiện tại
-            List<Promotion> promotions = promotionDAO.getPromotionsByPage(page, PAGE_SIZE);
-            request.setAttribute("promotions", promotions);
-            request.setAttribute("totalPromotions", totalPromotions);
-            request.setAttribute("currentPage", page);
-            request.setAttribute("totalPages", totalPages);
-            request.setAttribute("startRecord", startRecord);
-            request.setAttribute("endRecord", endRecord);
-            request.setAttribute("totalRecords", totalPromotions);
-
-            // Chuyển danh sách promotions sang JSON
-            Gson gson = new Gson();
-            String promotionsJson = gson.toJson(promotions);
-            request.setAttribute("promotionsJson", promotionsJson);
-
-            request.getRequestDispatcher("../Admin/PromotionManagement.jsp").forward(request, response);
-        } catch (SQLException e) {
-            throw new ServletException("Lỗi truy vấn cơ sở dữ liệu", e);
         }
-    }
 
+        // Lấy tham số tìm kiếm
+        String searchName = request.getParameter("searchName");
+        String searchStatus = request.getParameter("searchStatus");
+        String searchType = request.getParameter("searchType");
+
+        // Tính toán phân trang và danh sách khuyến mãi
+        int totalPromotions = promotionDAO.getTotalPromotions(searchName, searchStatus, searchType);
+        int totalPages = (int) Math.ceil((double) totalPromotions / PAGE_SIZE);
+        int startRecord = (page - 1) * PAGE_SIZE + 1;
+        int endRecord = Math.min(page * PAGE_SIZE, totalPromotions);
+
+        // Lấy danh sách khuyến mãi với bộ lọc tìm kiếm
+        List<Promotion> promotions = promotionDAO.getPromotionsByPage(page, PAGE_SIZE, searchName, searchStatus, searchType);
+        request.setAttribute("promotions", promotions);
+        request.setAttribute("totalPromotions", totalPromotions);
+        request.setAttribute("currentPage", page);
+        request.setAttribute("totalPages", totalPages);
+        request.setAttribute("startRecord", startRecord);
+        request.setAttribute("endRecord", endRecord);
+        request.setAttribute("totalRecords", totalPromotions);
+
+        // Lưu các tham số tìm kiếm để hiển thị lại trên form
+        request.setAttribute("searchName", searchName);
+        request.setAttribute("searchStatus", searchStatus);
+        request.setAttribute("searchType", searchType);
+
+        // Chuyển danh sách promotions sang JSON
+        Gson gson = new Gson();
+        String promotionsJson = gson.toJson(promotions);
+        request.setAttribute("promotionsJson", promotionsJson);
+
+        request.getRequestDispatcher("../Admin/PromotionManagement.jsp").forward(request, response);
+    } catch (Exception e) {
+        throw new ServletException("Lỗi truy vấn cơ sở dữ liệu", e);
+    }
+}
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

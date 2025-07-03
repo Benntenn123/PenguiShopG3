@@ -50,62 +50,117 @@ public class PromotionDAO extends DBContext {
         return promotions;
     }
 
-    public int getTotalPromotions() throws SQLException {
-        String sql = "SELECT COUNT(*) FROM tbPromotion";
-        try (PreparedStatement stmt = connection.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
+    public int getTotalPromotions(String searchName, String searchStatus, String searchType) throws SQLException {
+    StringBuilder sql = new StringBuilder(
+        "SELECT COUNT(DISTINCT p.promotionID) AS total " +
+        "FROM tbPromotion p " +
+        "LEFT JOIN tbProductPromotion pp ON p.promotionID = pp.promotionID " +
+        "WHERE 1=1 "
+    );
+
+    // Thêm các điều kiện tìm kiếm
+    List<Object> params = new ArrayList<>();
+    if (searchName != null && !searchName.trim().isEmpty()) {
+        sql.append("AND p.promotionName LIKE ? ");
+        params.add("%" + searchName.trim() + "%");
+    }
+    if (searchStatus != null && !searchStatus.trim().isEmpty()) {
+        sql.append("AND p.isActive = ? ");
+        params.add(Integer.parseInt(searchStatus));
+    }
+    if (searchType != null && !searchType.trim().isEmpty()) {
+        sql.append("AND p.discountType = ? ");
+        params.add(searchType);
+    }
+
+    try (PreparedStatement stmt = connection.prepareStatement(sql.toString())) {
+        // Gán tham số
+        int paramIndex = 1;
+        for (Object param : params) {
+            stmt.setObject(paramIndex++, param);
+        }
+
+        try (ResultSet rs = stmt.executeQuery()) {
             if (rs.next()) {
-                return rs.getInt(1);
+                return rs.getInt("total");
             }
         }
-        return 0;
+    } catch (SQLException e) {
+        System.err.println("SQL error in getTotalPromotions: " + e.getMessage());
+        throw e;
+    }
+    return 0;
+}
+
+    public List<Promotion> getPromotionsByPage(int page, int pageSize, String searchName, String searchStatus, String searchType) throws SQLException {
+    List<Promotion> promotions = new ArrayList<>();
+    StringBuilder sql = new StringBuilder(
+        "SELECT p.promotionID, p.promotionName, p.discountType, p.discountValue, " +
+        "p.startDate, p.endDate, p.description, p.isActive, " +
+        "COUNT(DISTINCT pp.variantID) AS totalCount " +
+        "FROM tbPromotion p " +
+        "LEFT JOIN tbProductPromotion pp ON p.promotionID = pp.promotionID " +
+        "WHERE 1=1 "
+    );
+
+    // Thêm các điều kiện tìm kiếm
+    List<Object> params = new ArrayList<>();
+    if (searchName != null && !searchName.trim().isEmpty()) {
+        sql.append("AND p.promotionName LIKE ? ");
+        params.add("%" + searchName.trim() + "%");
+    }
+    if (searchStatus != null && !searchStatus.trim().isEmpty()) {
+        sql.append("AND p.isActive = ? ");
+        params.add(Integer.parseInt(searchStatus));
+    }
+    if (searchType != null && !searchType.trim().isEmpty()) {
+        sql.append("AND p.discountType = ? ");
+        params.add(searchType);
     }
 
-    public List<Promotion> getPromotionsByPage(int page, int pageSize) throws SQLException {
-        List<Promotion> promotions = new ArrayList<>();
+    sql.append(
+        "GROUP BY p.promotionID, p.promotionName, p.discountType, p.discountValue, " +
+        "p.startDate, p.endDate, p.description, p.isActive " +
+        "ORDER BY p.promotionID " +
+        "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY"
+    );
 
-        String sql = "SELECT "
-                + "p.promotionID, p.promotionName, p.discountType, p.discountValue, "
-                + "p.startDate, p.endDate, p.description, p.isActive, "
-                + "COUNT(DISTINCT pp.variantID) AS totalCount "
-                + "FROM tbPromotion p "
-                + "LEFT JOIN tbProductPromotion pp ON p.promotionID = pp.promotionID "
-                + "GROUP BY p.promotionID, p.promotionName, p.discountType, p.discountValue, "
-                + "p.startDate, p.endDate, p.description, p.isActive "
-                + "ORDER BY p.promotionID "
-                + "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
-
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setInt(1, (page - 1) * pageSize); // OFFSET
-            stmt.setInt(2, pageSize);              // FETCH NEXT
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    Promotion promotion = new Promotion();
-                    promotion.setPromotionID(rs.getInt("promotionID"));
-                    promotion.setPromotionName(rs.getString("promotionName"));
-                    promotion.setDiscountType(rs.getString("discountType"));
-                    promotion.setDiscountValue(rs.getDouble("discountValue"));
-                    promotion.setStartDate(rs.getString("startDate"));
-                    promotion.setEndDate(rs.getString("endDate"));
-                    promotion.setDescription(rs.getString("description"));
-                    promotion.setIsActive(rs.getInt("isActive"));
-                    promotion.setTotalCount(rs.getInt("totalCount"));
-
-                    // Lấy danh sách variant áp dụng cho promotion
-                    List<ProductVariant> variants = getVariantsForPromotion(promotion.getPromotionID());
-                    promotion.setVariant(variants);
-
-                    promotions.add(promotion);
-                }
-            }
-        } catch (SQLException e) {
-            System.err.println("SQL error in getPromotionsByPage: " + e.getMessage());
-            throw e; // ném tiếp để xử lý bên trên nếu cần
+    try (PreparedStatement stmt = connection.prepareStatement(sql.toString())) {
+        // Gán tham số cho câu query
+        int paramIndex = 1;
+        for (Object param : params) {
+            stmt.setObject(paramIndex++, param);
         }
+        stmt.setInt(paramIndex++, (page - 1) * pageSize); // OFFSET
+        stmt.setInt(paramIndex, pageSize);              // FETCH NEXT
 
-        return promotions;
+        try (ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                Promotion promotion = new Promotion();
+                promotion.setPromotionID(rs.getInt("promotionID"));
+                promotion.setPromotionName(rs.getString("promotionName"));
+                promotion.setDiscountType(rs.getString("discountType"));
+                promotion.setDiscountValue(rs.getDouble("discountValue"));
+                promotion.setStartDate(rs.getString("startDate"));
+                promotion.setEndDate(rs.getString("endDate"));
+                promotion.setDescription(rs.getString("description"));
+                promotion.setIsActive(rs.getInt("isActive"));
+                promotion.setTotalCount(rs.getInt("totalCount"));
+
+                // Lấy danh sách variant áp dụng cho promotion
+                List<ProductVariant> variants = getVariantsForPromotion(promotion.getPromotionID());
+                promotion.setVariant(variants);
+
+                promotions.add(promotion);
+            }
+        }
+    } catch (SQLException e) {
+        System.err.println("SQL error in getPromotionsByPage: " + e.getMessage());
+        throw e;
     }
 
+    return promotions;
+}
     private List<ProductVariant> getVariantsForPromotion(int promotionID) throws SQLException {
         List<ProductVariant> variants = new ArrayList<>();
         System.out.println("1");
@@ -350,10 +405,10 @@ public class PromotionDAO extends DBContext {
     public static void main(String[] args) {
         PromotionDAO pdao = new PromotionDAO();
         try {
-            List<Promotion> list = pdao.getPromotionsByPage(1, 10);
-            for (Promotion promotion : list) {
-                System.out.println(promotion.getVariant().size());
-            }
+//            List<Promotion> list = pdao.getPromotionsByPage(1, 10);
+//            for (Promotion promotion : list) {
+//                System.out.println(promotion.getVariant().size());
+//            }
 //                List<ProductVariant> list = pdao.getVariantsForPromotion(1);
 //                System.out.println(list.size());
         } catch (Exception e) {
