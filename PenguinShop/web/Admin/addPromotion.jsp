@@ -154,43 +154,47 @@
 
             // Hàm validate ngày bắt đầu
             function validateStartDate() {
-                const startDateInput = document.getElementById('startDate');
-                const endDateInput = document.getElementById('endDate');
-                const startDateError = document.getElementById('startDateError');
-                const submitBtn = document.getElementById('submitBtn');
+    const startDateInput = document.getElementById('startDate');
+    const endDateInput = document.getElementById('endDate');
+    const startDateError = document.getElementById('startDateError');
+    const submitBtn = document.getElementById('submitBtn');
 
-                if (!startDateInput || !startDateError || !submitBtn) {
-                    console.error('Required elements not found');
-                    return false;
-                }
+    if (!startDateInput || !startDateError || !submitBtn) {
+        console.error('Required elements not found');
+        return false;
+    }
 
-                if (!startDateInput.value) {
-                    startDateInput.classList.add('is-invalid');
-                    startDateError.style.display = 'block';
-                    submitBtn.disabled = true;
-                    return false;
-                }
+    if (!startDateInput.value) {
+        startDateInput.classList.add('is-invalid');
+        startDateError.style.display = 'block';
+        submitBtn.disabled = true;
+        return false;
+    }
 
-                const now = new Date();
-                const vietnamNow = new Date(now.getTime() + (7 * 60 * 60 * 1000));
-                const selectedStartDate = new Date(startDateInput.value);
+    // Lấy thời gian hiện tại theo múi giờ Việt Nam (UTC+7)
+    const now = new Date();
+    const vietnamNow = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Ho_Chi_Minh' }));
 
-                if (selectedStartDate <= vietnamNow) {
-                    startDateInput.classList.add('is-invalid');
-                    startDateError.style.display = 'block';
-                    submitBtn.disabled = true;
-                    return false;
-                } else {
-                    startDateInput.classList.remove('is-invalid');
-                    startDateError.style.display = 'none';
-                    submitBtn.disabled = false;
+    // Chuyển đổi giá trị input sang thời gian Việt Nam
+    const selectedStartDate = new Date(startDateInput.value);
 
-                    if (endDateInput && endDateInput.value) {
-                        validateEndDate();
-                    }
-                    return true;
-                }
-            }
+    // So sánh thời gian (bỏ qua mili-giây để tránh lỗi nhỏ)
+    if (selectedStartDate.getTime() <= vietnamNow.getTime()) {
+        startDateInput.classList.add('is-invalid');
+        startDateError.style.display = 'block';
+        submitBtn.disabled = true;
+        return false;
+    } else {
+        startDateInput.classList.remove('is-invalid');
+        startDateError.style.display = 'none';
+        submitBtn.disabled = false;
+
+        if (endDateInput && endDateInput.value) {
+            validateEndDate();
+        }
+        return true;
+    }
+}
 
             // Hàm validate ngày kết thúc
             function validateEndDate() {
