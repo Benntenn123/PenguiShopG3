@@ -108,13 +108,13 @@
                                                         <i class="bx bx-dots-horizontal-rounded"></i>
                                                     </button>
                                                     <ul class="dropdown-menu dropdown-menu-end">
-                                                        <li><a class="dropdown-item" href="#" data-bs-toggle="modal" 
+                                                        <li><a class="dropdown-item" href="editSales?" data-bs-toggle="modal" 
                                                                data-bs-target="#viewSalesModal" 
                                                                onclick="viewSales(${user.userID})">Xem chi tiết</a></li>
-                                                        <li><a class="dropdown-item" href="#" data-bs-toggle="modal" 
-                                                               data-bs-target="#editSalesModal" 
+                                                        <li><a class="dropdown-item" href="" data-bs-toggle="modal" 
+                                                               
                                                                onclick="editSales(${user.userID})">Sửa thông tin</a></li>
-                                                        <li><a class="dropdown-item" href="permission_list?roleId=${user.roleID}">Xem quyền</a></li>
+                                                        <li><a class="dropdown-item" href="manage_role_permissions?roleId=${user.roleID}">Quản lí quyền</a></li>
                                                     </ul>
                                                 </div>
                                             </td>

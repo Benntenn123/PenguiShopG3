@@ -169,7 +169,7 @@ public class AddSales extends HttpServlet {
             usersDAO.addSales(user);
 
             // Chuyển về danh sách với thông báo
-            request.getSession().setAttribute("success", "Thêm Sales thành công!");
+            request.getSession().setAttribute("ms", "Thêm Sales thành công!");
             response.sendRedirect("listSales");
         } catch (Exception e) {
             e.printStackTrace();
