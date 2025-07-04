@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
 package Controller.HomePage.Cart;
 
 import Const.Delivery;
@@ -105,12 +101,14 @@ public class Checkout extends HttpServlet {
         String discountType = promotion.getDiscountType();
         double discountValue = promotion.getDiscountValue();
         double discountedPrice = originalPrice;
+        System.out.println("DiscountType cho" + originalPrice);
         if ("PERCENTAGE".equalsIgnoreCase(discountType)) {
             discountedPrice = originalPrice * (1 - discountValue / 100);
         } else if ("FIXED".equalsIgnoreCase(discountType)) {
+            System.out.println("Sản phẩm áp dụng" + originalPrice);
             discountedPrice = Math.max(0, originalPrice - discountValue);
         }
-        return Math.round(discountedPrice);
+        return Math.round(discountedPrice * 100.0) / 100.0; // Làm tròn đến 2 chữ số thập phân
     }
 
     @Override
@@ -150,21 +148,20 @@ public class Checkout extends HttpServlet {
             Map<Integer, String> promotions = new HashMap<>();
             for (Map.Entry<Integer, CartSession> entry : map.entrySet()) {
                 String promotionId = request.getParameter("promotion_" + entry.getValue().getCart().getVariant().getVariantID());
+                System.out.println("Received promotion for variant " + entry.getValue().getCart().getVariant().getVariantID() + ": " + promotionId);
                 if (promotionId != null && !promotionId.isEmpty()) {
                     promotions.put(entry.getValue().getCart().getVariant().getVariantID(), promotionId);
                 }
-                
             }
-            System.out.println(promotions.size() + "hẹ hẹ");
-            System.out.println("Các khuyến mãi được chọn từ form: " + promotions);
+            System.out.println("Promotions from form: " + promotions);
 
             // Fetch promotion data using PromotionDAO
             List<Integer> variantIds = new ArrayList<>(map.keySet());
             Map<Integer, List<Promotion>> promotionsByVariant = pdao.getPromotionsByVariantIds(variantIds);
-            System.out.println("Dữ liệu khuyến mãi từ PromotionDAO: " + promotionsByVariant);
+            System.out.println("Promotions from DAO: " + promotionsByVariant);
             Map<Integer, String> promotionDetails = new HashMap<>(); // Lưu mô tả khuyến mãi
 
-            // Calculate total with promotions and build promotion details
+            // Calculate total with promotions
             double totalBillCheck = 0;
             for (Map.Entry<Integer, CartSession> entry : map.entrySet()) {
                 int variantId = entry.getValue().getCart().getVariant().getVariantID();
@@ -173,44 +170,37 @@ public class Checkout extends HttpServlet {
                 String promotionId = promotions.get(variantId);
                 double discountedPrice = unitPrice;
                 String promotionText = "Không áp dụng khuyến mãi";
-                System.out.println("Sản phẩm abc" + variantId);
-                for (Map.Entry<Integer, List<Promotion>> entry1 : promotionsByVariant.entrySet()) {
-                    System.out.println("Sản phẩm" + entry1.getKey());
-                    System.out.println("Số lượng giảm giá" + entry1.getValue());
-                    
-                }
-                System.out.println("Khuyến mãi được chọn là"+promotionsByVariant.size());
-                System.out.println("Khuyến mãi được chọn là" + promotionId);
+
+                System.out.println("Processing variant " + variantId + ": Original Price=" + unitPrice + ", Quantity=" + quantity +", mã giảm giá"+promotionId);
                 
-                if (promotionId != null && promotionsByVariant.containsKey(variantId)) {
+                if (promotionId != null && !promotionId.isEmpty() && promotionsByVariant.containsKey(variantId)) {
+                    System.out.println("hhhhhhhhhh1");
                     List<Promotion> promos = promotionsByVariant.get(variantId);
                     Promotion selectedPromo = promos.stream()
                             .filter(p -> String.valueOf(p.getPromotionID()).equals(promotionId))
                             .findFirst()
                             .orElse(null);
+                    System.out.println("hhhhhhhhhhhh2");
                     if (selectedPromo != null) {
+                        System.out.println("hhhhhhhhhh3");
                         discountedPrice = calculateDiscountedPrice(unitPrice, selectedPromo);
-                        for (Map.Entry<Integer, CartSession> entry1 : map.entrySet()) {
-                            if(entry1.getValue().getCart().getVariant().getVariantID() == variantId){
-                                entry1.getValue().getCart().getVariant().setPrice(discountedPrice);
-                            }
-                            
-                        }
+                        promotionText = selectedPromo.getPromotionName();
+                        System.out.println(discountedPrice);
+                        System.out.println("Applied promotion: ID=" + promotionId + ", Name=" + promotionText + ", Discounted Price=" + discountedPrice);
                     } else {
-                        System.out.println("Không tìm thấy khuyến mãi với promotionId=" + promotionId + " cho variant " + variantId);
+                        System.out.println("No matching promotion found for ID=" + promotionId + " in variant " + variantId);
                     }
                 } else {
-                    System.out.println("Không áp dụng khuyến mãi cho variant " + variantId + 
-                                      " (promotionId=" + promotionId + ", promos=" + promotionsByVariant.get(variantId) + ")");
+                    System.out.println("No promotion applied for variant " + variantId + " (promotionId=" + promotionId + ")");
                 }
                 totalBillCheck += discountedPrice * quantity;
-                System.out.println("Sản phẩm variant " + variantId + ": Giá đơn vị=" + unitPrice + 
-                                  ", Giá sau giảm=" + discountedPrice + ", Số lượng=" + quantity + 
-                                  ", Tổng=" + (discountedPrice * quantity));
+                promotionDetails.put(variantId, promotionText);
+                System.out.println("Variant " + variantId + ": Discounted Price=" + discountedPrice + ", Total for item=" + (discountedPrice * quantity));
             }
+            System.out.println("Calculated totalBillCheck=" + totalBillCheck + ", Received totalBill=" + totalBill);
 
             double shipfeeCheck = (Double) request.getSession().getAttribute("shipfee");
-            if (Math.abs(totalBillCheck - Double.parseDouble(totalBill)) > 0.1) {
+            if (Math.abs(totalBillCheck - Double.parseDouble(totalBill)) > 1.0) {
                 System.out.println("Tổng tiền hàng không khớp: Tính toán=" + totalBillCheck + ", Nhận được=" + totalBill);
                 request.getSession().setAttribute("error", "Tổng tiền hàng không khớp. Vui lòng thử lại!");
                 request.getSession().removeAttribute("selectedCartItems");
@@ -218,7 +208,7 @@ public class Checkout extends HttpServlet {
                 return;
             }
 
-            if (Math.abs(shipfeeCheck - Double.parseDouble(shipfee)) > 0.1) {
+            if (Math.abs(shipfeeCheck - Double.parseDouble(shipfee)) > 1.0) {
                 System.out.println("Phí vận chuyển không khớp: Tính toán=" + shipfeeCheck + ", Nhận được=" + shipfee);
                 request.getSession().setAttribute("error", "Phí vận chuyển không chính xác!");
                 request.getSession().removeAttribute("selectedCartItems");
@@ -226,7 +216,7 @@ public class Checkout extends HttpServlet {
                 return;
             }
 
-            if (Math.abs(totalBillCheck + shipfeeCheck - Double.parseDouble(totalBillShip)) > 0.1) {
+            if (Math.abs(totalBillCheck + shipfeeCheck - Double.parseDouble(totalBillShip)) > 1.0) {
                 System.out.println("Tổng tiền thanh toán không khớp: Tính toán=" + (totalBillCheck + shipfeeCheck) + 
                                   ", Nhận được=" + totalBillShip);
                 request.getSession().setAttribute("error", "Tổng tiền thanh toán không chính xác!");
@@ -251,7 +241,6 @@ public class Checkout extends HttpServlet {
             String otp = StringConvert.generateRandom6DigitNumber();
             List<CartSession> list = new ArrayList<>(map.values());
             if (tdao.saveToken(user.getUserID(), otp, GetDateTime.getCurrentTime(), 0)) {
-                // Send email with promotion details
                 SendMail.sendMailAsyncCartConfirm(deli.getEmail(),
                         deli.getFullName(), otp, list, shipfeeCheck, totalBillCheck + shipfeeCheck);
                 request.getSession().setAttribute("deliveryInfo", deli);

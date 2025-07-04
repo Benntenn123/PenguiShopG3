@@ -41,11 +41,12 @@ public class DeliveryInfo extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         List<String> provinces = ReadFile.loadAllProvinces(request);
-        request.setAttribute("provinces", provinces);
+        request.setAttribute("provinces", provinces);   // load ra các tỉnh
         
-        User user = (User) request.getSession().getAttribute("user");
+        User user = (User) request.getSession().getAttribute("user");  // lấy ra thông tin đăng nhập của ai, userId là gì
+                
         
-        List<Models.DeliveryInfo> deInfo = deli.getAllDeliveryInfo(user.getUserID());
+        List<Models.DeliveryInfo> deInfo = deli.getAllDeliveryInfo(user.getUserID());  // get hết cái địa chỉ nhận của thg user đấy
         request.setAttribute("deInfo", deInfo);
         
         request.getRequestDispatcher("HomePage/DeliveryList.jsp").forward(request, response);
@@ -59,13 +60,13 @@ public class DeliveryInfo extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
         Gson gson = new Gson();
 
-        if ("getDistricts".equals(method)) {
-            String province = request.getParameter("province");
-            List<String> districts = ReadFile.loadDistrictsByProvince(request,province);
+        if ("getDistricts".equals(method)) {     // lấy ra action ví dụ load tỉnh huyện xã
+            String province = request.getParameter("province");   // lấy ra tên tỉnh 
+            List<String> districts = ReadFile.loadDistrictsByProvince(request,province);  // trả 1 list huyện
             response.getWriter().write(gson.toJson(districts));
-        } else if ("getWards".equals(method)) {
+        } else if ("getWards".equals(method)) {  // lấy cái tên huyện 
             String district = request.getParameter("district");
-            List<String> wards = ReadFile.loadWardsByDistrict(request,district);
+            List<String> wards = ReadFile.loadWardsByDistrict(request,district);  // trả 1 list xã
             response.getWriter().write(gson.toJson(wards));
         } else {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);

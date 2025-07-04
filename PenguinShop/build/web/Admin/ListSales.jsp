@@ -102,6 +102,10 @@
                                                 </span>
                                             </td>
                                             <td>
+                                                <a class="dropdown-item" href="manage_role_permissions?roleId=${user.roleID}"><i class="fa fa-shield-alt"></i></a>
+                                               
+                                            </td>
+<!--                                            <td>
                                                 <div class="dropdown">
                                                     <button class="btn btn-link font-size-16 shadow-none py-0 text-muted dropdown-toggle" 
                                                             type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -117,7 +121,7 @@
                                                         <li><a class="dropdown-item" href="manage_role_permissions?roleId=${user.roleID}">Quản lí quyền</a></li>
                                                     </ul>
                                                 </div>
-                                            </td>
+                                            </td>-->
                                         </tr>
                                     </c:forEach>
                                 </tbody>
