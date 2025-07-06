@@ -2,6 +2,15 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Controller/HomePage/Customer/Delivery/DeliveryInfo.java</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/web/Admin/ListOrderAdmin.jsp</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/web/HomePage/DeliveryList.jsp</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/DAL/UserDAO.java</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Controller/Admin/Order/ListOrderAdmin.java</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/APIKey/Capcha.java</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Controller/Admin/Role/ListSales.java</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/web/Admin/ListSales.jsp</file>
+        </group>
     </open-files>
 </project-private>

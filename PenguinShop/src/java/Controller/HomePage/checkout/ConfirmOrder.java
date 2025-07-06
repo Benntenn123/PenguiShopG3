@@ -60,7 +60,7 @@ public class ConfirmOrder extends HttpServlet {
         String otp = request.getParameter("otp");
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
-        Map<Integer, CartSession> cartItems = (Map<Integer, CartSession>) session.getAttribute("selectedCartItems");
+        Map<Integer, CartSession> cartItems = (Map<Integer, CartSession>) session.getAttribute("cartDiscount");
         Double totalBill = (Double) session.getAttribute("totalBill");
         Double shipFee = (Double) session.getAttribute("shipFee");
         Double totalBillShip = (Double) session.getAttribute("totalBillShip");
