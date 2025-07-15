@@ -41,6 +41,7 @@ public class DeliveryInfo extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         List<String> provinces = ReadFile.loadAllProvinces(request);
+        System.out.println("Tổng số tỉnh là" + provinces.size());
         request.setAttribute("provinces", provinces);   // load ra các tỉnh
         
         User user = (User) request.getSession().getAttribute("user");  // lấy ra thông tin đăng nhập của ai, userId là gì
