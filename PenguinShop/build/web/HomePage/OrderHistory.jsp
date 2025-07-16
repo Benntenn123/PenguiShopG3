@@ -148,11 +148,6 @@
                 color: white;
             }
 
-            .btn-primary:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 4px 12px rgba(174, 28, 154, 0.3);
-            }
-
             .btn-success {
                 background: linear-gradient(135deg, #00b894 0%, #00a085 100%);
                 color: white;
@@ -412,7 +407,7 @@
                 padding: 30px;
                 border-radius: 12px;
                 width: 90%;
-                max-width: 800px;
+                max-width: 800px; /* Increased modal width */
                 box-shadow: 0 10px 30px rgba(0,0,0,0.3);
                 animation: modalSlideIn 0.3s ease-out;
             }
@@ -513,6 +508,11 @@
             }
 
             /* Enhanced button hover effects */
+            .btn {
+                position: relative;
+                overflow: hidden;
+            }
+
             .btn::before {
                 content: '';
                 position: absolute;
@@ -600,44 +600,6 @@
                 transform: scale(1.1);
             }
 
-            /* Additional styles for multi-product review modal */
-            .product-review {
-                border-bottom: 1px solid #e9ecef;
-                padding: 20px 0;
-            }
-
-            .product-review:last-child {
-                border-bottom: none;
-            }
-
-            .product-review-header {
-                display: flex;
-                align-items: center;
-                gap: 15px;
-                margin-bottom: 15px;
-            }
-
-            .product-review-header img {
-                width: 60px;
-                height: 60px;
-                object-fit: cover;
-                border-radius: 6px;
-                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            }
-
-            .product-review-header h6 {
-                margin: 0;
-                font-size: 16px;
-                color: #2c3e50;
-                font-weight: bold;
-            }
-
-            .product-review-header p {
-                margin: 4px 0 0 0;
-                font-size: 14px;
-                color: #6c757d;
-            }
-
             @media (max-width: 768px) {
                 .order-summary {
                     grid-template-columns: 1fr;
@@ -704,20 +666,6 @@
                         <div class="nav-content" id="v-pills-tabContent" style="flex: 1 0%;">
                             <div class="tab-pane orders-container" id="v-pills-review" role="tabpanel" aria-labelledby="v-pills-review-tab" tabindex="0">
 
-                                <!-- Display Success/Error Messages -->
-                                <c:if test="${not empty successMessage}">
-                                    <div class="alert alert-success">
-                                        <i class="fas fa-check-circle"></i> ${successMessage}
-                                    </div>
-                                    <c:remove var="successMessage" scope="session"/>
-                                </c:if>
-                                <c:if test="${not empty errorMessage}">
-                                    <div class="alert alert-error">
-                                        <i class="fas fa-exclamation-circle"></i> ${errorMessage}
-                                    </div>
-                                    <c:remove var="errorMessage" scope="session"/>
-                                </c:if>
-
                                 <!-- Search Form -->
                                 <div class="search-form">
                                     <h5 style="font-size: 20px"><i class="fas fa-search"></i> Tìm kiếm đơn hàng</h5>
@@ -766,44 +714,44 @@
                                                     </div>
                                                     <div style="font-size: 16px" class="order-actions">
                                                         <c:set var="cssClass" value="status-Loi" />
-                                                        <c:if test="${order.orderStatus == 0}">
+                                                        <c:if test="${order.stringOrderStatus == 'Đã Hủy'}">
                                                             <c:set var="cssClass" value="status-DaHuy" />
                                                         </c:if>
-                                                        <c:if test="${order.orderStatus == 3}">
+                                                        <c:if test="${order.stringOrderStatus == 'Giao Hàng Thành công'}">
                                                             <c:set var="cssClass" value="status-GiaoHangThanhCong" />
                                                         </c:if>
-                                                        <c:if test="${order.orderStatus == 2}">
+                                                        <c:if test="${order.stringOrderStatus == 'Đang Giao'}">
                                                             <c:set var="cssClass" value="status-DangGiao" />
                                                         </c:if>
-                                                        <c:if test="${order.orderStatus == 4}">
+                                                        <c:if test="${order.stringOrderStatus == 'Hoàn Hàng'}">
                                                             <c:set var="cssClass" value="status-HoanHang" />
                                                         </c:if>
-                                                        <c:if test="${order.orderStatus == 1}">
+                                                        <c:if test="${order.stringOrderStatus == 'Đang Chờ Xử Lí'}">
                                                             <c:set var="cssClass" value="status-DangChoXuLi" />
                                                         </c:if>
-                                                        <c:if test="${order.orderStatus == 5}">
+                                                        <c:if test="${order.stringOrderStatus == 'Đã Xác Nhận'}">
                                                             <c:set var="cssClass" value="status-DaXacNhan" />
                                                         </c:if>
                                                         <span class="order-status ${cssClass}">
-                                                            <c:if test="${order.orderStatus == 0}">
+                                                            <c:if test="${order.stringOrderStatus == 'Đã Hủy'}">
                                                                 <i class="fas fa-times-circle"></i> Đã Hủy
                                                             </c:if>
-                                                            <c:if test="${order.orderStatus == 3}">
+                                                            <c:if test="${order.stringOrderStatus == 'Giao Hàng Thành công'}">
                                                                 <i class="fas fa-check-circle"></i> Giao Hàng Thành công
                                                             </c:if>
-                                                            <c:if test="${order.orderStatus == 2}">
+                                                            <c:if test="${order.stringOrderStatus == 'Đang Giao'}">
                                                                 <i class="fas fa-truck"></i> Đang Giao
                                                             </c:if>
-                                                            <c:if test="${order.orderStatus == 4}">
+                                                            <c:if test="${order.stringOrderStatus == 'Hoàn Hàng'}">
                                                                 <i class="fas fa-undo"></i> Hoàn Hàng
                                                             </c:if>
-                                                            <c:if test="${order.orderStatus == 1}">
+                                                            <c:if test="${order.stringOrderStatus == 'Đang Chờ Xử Lí'}">
                                                                 <i class="fas fa-clock"></i> Đang Chờ Xử Lí
                                                             </c:if>
-                                                            <c:if test="${order.orderStatus == 5}">
+                                                            <c:if test="${order.stringOrderStatus == 'Đã Xác Nhận'}">
                                                                 <i class="fas fa-cog fa-spin"></i> Đã Xác Nhận
                                                             </c:if>
-                                                            <c:if test="${order.orderStatus != 0 && order.orderStatus != 3 && order.orderStatus != 2 && order.orderStatus != 4 && order.orderStatus != 1 && order.orderStatus != 5}">
+                                                            <c:if test="${order.stringOrderStatus != 'Đã Hủy' && order.stringOrderStatus != 'Giao Hàng Thành công' && order.stringOrderStatus != 'Đang Giao' && order.stringOrderStatus != 'Hoàn Hàng' && order.stringOrderStatus != 'Đang Chờ Xử Lí' && order.stringOrderStatus != 'Đã Xác Nhận'}">
                                                                 <i class="fas fa-exclamation-circle"></i> Lỗi
                                                             </c:if>
                                                         </span>
@@ -837,19 +785,13 @@
                                                             <i class="fas fa-eye"></i> Xem chi tiết
                                                         </button>
 
-                                                        <c:if test="${order.orderStatus == 3}">
-                                                            <button class="btn btn-warning" onclick="openReviewModal(${order.orderID})">
-                                                                <i class="fas fa-star"></i> Đánh giá
-                                                            </button>
-                                                        </c:if>
-
-                                                        <c:if test="${order.orderStatus == 1 || order.orderStatus == 5}">
+                                                        <c:if test="${order.stringOrderStatus == 'Đang Chờ Xử Lí' || order.stringOrderStatus == 'Đã Xác Nhận'}">
                                                             <button class="btn btn-danger" onclick="cancelOrder(${order.orderID})">
                                                                 <i class="fas fa-times"></i> Hủy đơn hàng
                                                             </button>
                                                         </c:if>
 
-                                                        <c:if test="${order.orderStatus == 2}">
+                                                        <c:if test="${order.stringOrderStatus == 'Đang Giao'}">
                                                             <button class="btn btn-success" onclick="trackOrder(${order.orderID})">
                                                                 <i class="fas fa-map-marked-alt"></i> Theo dõi đơn hàng
                                                             </button>
@@ -877,6 +819,11 @@
                                                                     <p><i class="fas fa-cubes"></i> <strong>Số lượng:</strong> ${detail.quantity_product}</p>
                                                                     <p><i class="fas fa-tag"></i> <strong>Giá:</strong> <span class="detail-price">${detail.price} VND</span></p>
                                                                 </div>
+                                                                <c:if test="${order.stringOrderStatus == 'Giao Hàng Thành công'}">
+                                                            <button class="btn btn-warning" onclick="openReviewModal(${order.orderID},${detail.variant.product.productId},${detail.variant.variantID})">
+                                                                <i class="fas fa-star"></i> Đánh giá
+                                                            </button>
+                                                        </c:if>
                                                             </div>
                                                         </c:forEach>
                                                     </div>
@@ -890,6 +837,7 @@
                                 <c:if test="${totalPages > 1}">
                                     <div class="pagination-container">
                                         <ul class="pagination">
+                                            <!-- Nút Trang trước -->
                                             <c:if test="${currentPage > 1}">
                                                 <li>
                                                     <a href="?page=${currentPage - 1}${not empty param.from ? '&from=' + param.from : ''}${not empty param.to ? '&to=' + param.to : ''}">
@@ -898,6 +846,7 @@
                                                 </li>
                                             </c:if>
 
+                                            <%-- Hiển thị trang 1 và dấu ... nếu currentPage > 3 --%>
                                             <c:if test="${currentPage > 3}">
                                                 <li><a href="?page=1${not empty param.from ? '&from=' + param.from : ''}${not empty param.to ? '&to=' + param.to : ''}">1</a></li>
                                                 <li class="disabled"><span>...</span></li>
@@ -919,16 +868,18 @@
                                                 <li><a href="?page=${totalPages}${not empty param.from ? '&from=' + param.from : ''}${not empty param.to ? '&to=' + param.to : ''}">${totalPages}</a></li>
                                             </c:if>
 
+                                            <!-- Nút Trang sau -->
                                             <c:if test="${currentPage < totalPages}">
                                                 <li>
                                                     <a href="?page=${currentPage + 1}${not empty param.from ? '&from=' + param.from : ''}${not empty param.to ? '&to=' + param.to : ''}">
-                                                        <i class="fas fa-chevron-right"></i>
+                                                         <i class="fas fa-chevron-right"></i>
                                                     </a>
                                                 </li>
                                             </c:if>
                                         </ul>
                                     </div>
                                 </c:if>
+
                             </div>
                         </div>
                     </div>
@@ -944,12 +895,35 @@
                     <button class="close" onclick="closeReviewModal()">×</button>
                 </div>
                 <div class="modal-body">
-                    <form id="reviewForm" enctype="multipart/form-data">
-                        <input type="hidden" name="orderId" id="orderId">
-                        <div id="productReviews"></div>
+                    <form id="reviewForm" action="feedback" method="post" enctype="multipart/form-data">
+                        <input id="productIDFeedBack" type="hidden" name="productIDFeedBack"/>
+                        <input id="variantIDFeedBack" type="hidden" name="variantIDFeedBack"/>
+                        <input type="hidden" name="orderId" id="orderIdInput"/>
+                        <input type="hidden" name="action" value="submitReview"/>
+                        <input type="hidden" name="rating" id="ratingInput"/>
+                        <div class="form-group">
+                            <label style="font-size: 18px">Đánh giá:</label>
+                            <div class="star-rating">
+                                <i class="far fa-star" data-rating="1"></i>
+                                <i class="far fa-star" data-rating="2"></i>
+                                <i class="far fa-star" data-rating="3"></i>
+                                <i class="far fa-star" data-rating="4"></i>
+                                <i class="far fa-star" data-rating="5"></i>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label style="font-size: 18px" for="reviewComment">Nhận xét:</label>
+                            <textarea id="reviewComment" name="comment" rows="4" placeholder="Chia sẻ trải nghiệm của bạn về sản phẩm..."></textarea>
+                        </div>
+                        <div class="form-group image-upload-container">
+                            <label style="font-size: 18px" for="reviewImages">Hình ảnh (tối đa 5 ảnh):</label>
+                            <input type="file" id="reviewImages" name="images" accept="image/*" multiple>
+                            <div id="imagePreview" class="image-preview"></div>
+                        </div>
+                        <div id="imageUrlsContainer" style="display: none;"></div>
                         <div class="action-buttons" style="margin-top: 20px; padding-top: 0; border-top: none;">
                             <button type="button" class="btn btn-primary" onclick="submitReview()">
-                                <i class="fas fa-paper-plane"></i> Gửi tất cả đánh giá
+                                <i class="fas fa-paper-plane"></i> Gửi đánh giá
                             </button>
                             <button type="button" class="btn btn-outline" onclick="closeReviewModal()">
                                 <i class="fas fa-times"></i> Hủy bỏ
@@ -966,8 +940,7 @@
         <jsp:include page="Common/Message.jsp" />
 
         <script>
-            let selectedImages = {}; // Store images per variantId
-            let selectedRatings = {}; // Store ratings per variantId
+            let selectedImages = [];
 
             function toggleOrderDetails(index) {
                 const detailsDiv = document.getElementById('orderDetails_' + index);
@@ -1002,205 +975,89 @@
                 alert('Chức năng theo dõi đơn hàng sẽ được phát triển trong phiên bản tiếp theo!');
             }
 
-            async function openReviewModal(orderId) {
+            let currentOrderId = null;
+            let selectedRating = 0;
+
+            function openReviewModal(orderID, productId, variantId) {
+                currentOrderId = orderID;
                 document.getElementById('reviewModal').style.display = 'block';
-                document.getElementById('orderId').value = orderId;
-                selectedImages = {};
-                selectedRatings = {};
-                const productReviewsDiv = document.getElementById('productReviews');
-                productReviewsDiv.innerHTML = '<div class="loading">Đang tải sản phẩm...</div>';
-
-                try {
-                    // Fetch order details
-                    const response = await fetch(`/PenguinShop/api/order-details?orderId=${orderId}`);
-                    const orderDetails = await response.json();
-
-                    if (!orderDetails || orderDetails.length === 0) {
-                        productReviewsDiv.innerHTML = '<p>Không có sản phẩm để đánh giá.</p>';
-                        return;
-                    }
-
-                    productReviewsDiv.innerHTML = '';
-                    orderDetails.forEach((detail, index) => {
-                        const productReview = document.createElement('div');
-                        productReview.className = 'product-review';
-                        productReview.innerHTML = `
-                            <div class="product-review-header">
-                                <img src="api/img/${detail.imageMainProduct}" alt="${detail.productName}">
-                                <div>
-                                    <h6>${detail.productName}</h6>
-                                    <p>Kích cỡ: ${detail.sizeName}, Màu: ${detail.colorName}</p>
-                                </div>
-                            </div>
-                            <input type="hidden" name="variantId[]" value="${detail.variantId}">
-                            <div class="form-group">
-                                <label style="font-size: 18px">Đánh giá:</label>
-                                <div class="star-rating" data-variant-id="${detail.variantId}">
-                                    <i class="far fa-star" data-rating="1"></i>
-                                    <i class="far fa-star" data-rating="2"></i>
-                                    <i class="far fa-star" data-rating="3"></i>
-                                    <i class="far fa-star" data-rating="4"></i>
-                                    <i class="far fa-star" data-rating="5"></i>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label style="font-size: 18px" for="comment_${detail.variantId}">Nhận xét:</label>
-                                <textarea id="comment_${detail.variantId}" name="comment[]" rows="4" placeholder="Chia sẻ trải nghiệm của bạn..."></textarea>
-                            </div>
-                            <div class="form-group image-upload-container">
-                                <label style="font-size: 18px" for="images_${detail.variantId}">Hình ảnh (tối đa 5 ảnh):</label>
-                                <input type="file" id="images_${detail.variantId}" name="images_${detail.variantId}[]" accept="image/*" multiple>
-                                <div id="imagePreview_${detail.variantId}" class="image-preview"></div>
-                            </div>
-                        `;
-                        productReviewsDiv.appendChild(productReview);
-
-                        // Initialize star rating for this product
-                        const starRatingDiv = productReview.querySelector('.star-rating');
-                        starRatingDiv.querySelectorAll('i').forEach((star, starIndex) => {
-                            star.addEventListener('click', () => {
-                                selectedRatings[detail.variantId] = starIndex + 1;
-                                updateStarDisplay(detail.variantId);
-                            });
-                            star.addEventListener('mouseover', () => {
-                                highlightStars(detail.variantId, starIndex + 1);
-                            });
-                        });
-                        starRatingDiv.addEventListener('mouseleave', () => {
-                            updateStarDisplay(detail.variantId);
-                        });
-
-                        // Handle image upload for this product
-                        const imageInput = productReview.querySelector(`#images_${detail.variantId}`);
-                        imageInput.addEventListener('change', function () {
-                            const files = Array.from(this.files);
-                            const previewContainer = document.getElementById(`imagePreview_${detail.variantId}`);
-
-                            if (!selectedImages[detail.variantId]) {
-                                selectedImages[detail.variantId] = [];
-                            }
-
-                            if (selectedImages[detail.variantId].length + files.length > 5) {
-                                alert('Chỉ được tải lên tối đa 5 ảnh cho mỗi sản phẩm!');
-                                this.value = '';
-                                return;
-                            }
-
-                            files.forEach(file => {
-                                if (!file.type.startsWith('image/')) {
-                                    alert('Vui lòng chỉ tải lên file ảnh!');
-                                    this.value = '';
-                                    return;
-                                }
-                                selectedImages[detail.variantId].push(file);
-                            });
-
-                            // Update previews
-                            previewContainer.innerHTML = '';
-                            selectedImages[detail.variantId].forEach((file, fileIndex) => {
-                                const reader = new FileReader();
-                                reader.onload = function (e) {
-                                    const imgContainer = document.createElement('div');
-                                    imgContainer.style.position = 'relative';
-                                    const img = document.createElement('img');
-                                    img.src = e.target.result;
-                                    img.className = 'preview-image';
-                                    imgContainer.appendChild(img);
-
-                                    const removeBtn = document.createElement('button');
-                                    removeBtn.className = 'remove-image';
-                                    removeBtn.innerHTML = '×';
-                                    removeBtn.onclick = () => {
-                                        selectedImages[detail.variantId].splice(fileIndex, 1);
-                                        imgContainer.remove();
-                                        const dataTransfer = new DataTransfer();
-                                        selectedImages[detail.variantId].forEach(f => dataTransfer.items.add(f));
-                                        imageInput.files = dataTransfer.files;
-                                    };
-                                    imgContainer.appendChild(removeBtn);
-
-                                    previewContainer.appendChild(imgContainer);
-                                };
-                                reader.readAsDataURL(file);
-                            });
-                        });
-                    });
-                } catch (err) {
-                    console.error('Error fetching order details:', err);
-                    productReviewsDiv.innerHTML = '<p>Lỗi khi tải danh sách sản phẩm.</p>';
-                }
+                selectedRating = 0;
+                selectedImages = [];
+                document.getElementById('productIDFeedBack').value = productId;
+                document.getElementById('variantIDFeedBack').value = variantId;
+                document.getElementById('reviewComment').value = '';
+                document.getElementById('reviewImages').value = '';
+                document.getElementById('imagePreview').innerHTML = '';
+                document.getElementById('imageUrlsContainer').innerHTML = '';
+                updateStarDisplay();
             }
 
             function closeReviewModal() {
                 document.getElementById('reviewModal').style.display = 'none';
-                selectedImages = {};
-                selectedRatings = {};
-                document.getElementById('productReviews').innerHTML = '';
-                document.getElementById('reviewForm').reset();
+                selectedRating = 0;
+                selectedImages = [];
+                document.getElementById('reviewComment').value = '';
+                document.getElementById('reviewImages').value = '';
+                document.getElementById('imagePreview').innerHTML = '';
+                document.getElementById('imageUrlsContainer').innerHTML = '';
+                updateStarDisplay();
             }
 
-            async function submitReview() {
-                const orderId = document.getElementById('orderId').value;
-                const variantIds = Array.from(document.querySelectorAll('input[name="variantId[]"]')).map(input => input.value);
-                const ratings = Array.from(document.querySelectorAll('.star-rating')).map((div, index) => selectedRatings[variantIds[index]] || 0);
-                const comments = Array.from(document.querySelectorAll('textarea[name="comment[]"]')).map(textarea => textarea.value);
-
-                // Validate inputs
-                for (let i = 0; i < variantIds.length; i++) {
-                    if (ratings[i] === 0) {
-                        alert(`Vui lòng chọn số sao đánh giá cho sản phẩm ${i + 1}!`);
-                        return;
-                    }
-                    if (!comments[i].trim()) {
-                        alert(`Vui lòng nhập nhận xét cho sản phẩm ${i + 1}!`);
-                        return;
-                    }
+            function submitReview(event) {
+                if (!event) event = window.event;
+                event.preventDefault();
+                
+                if (selectedRating === 0) {
+                    alert('Vui lòng chọn số sao đánh giá!');
+                    return false;
                 }
 
-                const submitBtn = event.target;
-                const originalText = submitBtn.innerHTML;
-                submitBtn.innerHTML = '<div class="loading"></div> Đang gửi...';
-                submitBtn.disabled = true;
-
-                try {
-                    const formData = new FormData();
-                    formData.append('orderId', orderId);
-                    variantIds.forEach((variantId, index) => {
-                        formData.append('variantId[]', variantId);
-                        formData.append('rating[]', ratings[index]);
-                        formData.append('comment[]', comments[index]);
-                        if (selectedImages[variantId]) {
-                            selectedImages[variantId].forEach(file => {
-                                formData.append(`images_${variantId}[]`, file);
-                            });
-                        }
-                    });
-
-                    const response = await fetch('/PenguinShop/api/submit-review', {
-                        method: 'POST',
-                        body: formData
-                    });
-
-                    if (!response.ok) {
-                        throw new Error('Failed to submit reviews');
-                    }
-
-                    setTimeout(() => {
-                        alert('Cảm ơn bạn đã đánh giá sản phẩm!');
-                        closeReviewModal();
-                        location.reload();
-                    }, 1000);
-                } catch (err) {
-                    console.error('Submission error:', err);
-                    alert('Có lỗi xảy ra khi gửi đánh giá. Vui lòng thử lại.');
-                    submitBtn.innerHTML = originalText;
-                    submitBtn.disabled = false;
+                const comment = document.getElementById('reviewComment').value;
+                if (!comment.trim()) {
+                    alert('Vui lòng nhập nhận xét!');
+                    return false;
                 }
+
+                const fileInput = document.getElementById('reviewImages');
+                if (fileInput.files.length > 5) {
+                    alert('Bạn chỉ có thể tải lên tối đa 5 ảnh!');
+                    return false;
+                }
+
+                // Add rating to form
+                document.getElementById('ratingInput').value = selectedRating;
+                document.getElementById('orderIdInput').value = currentOrderId;
+
+                // Update button state
+                const submitBtn = event.submitter || document.querySelector('#reviewForm .btn-primary');
+                if (submitBtn) {
+                    submitBtn.innerHTML = '<div class="loading"></div> Đang gửi...';
+                    submitBtn.disabled = true;
+                }
+
+                // Submit form
+                document.getElementById('reviewForm').submit();
+                return false;
             }
 
-            function updateStarDisplay(variantId) {
-                document.querySelectorAll(`.star-rating[data-variant-id="${variantId}"] i`).forEach((star, index) => {
-                    if (index < selectedRatings[variantId]) {
+            document.querySelectorAll('.star-rating i').forEach((star, index) => {
+                star.addEventListener('click', () => {
+                    selectedRating = index + 1;
+                    updateStarDisplay();
+                });
+
+                star.addEventListener('mouseover', () => {
+                    highlightStars(index + 1);
+                });
+            });
+
+            document.querySelector('.star-rating').addEventListener('mouseleave', () => {
+                updateStarDisplay();
+            });
+
+            function updateStarDisplay() {
+                document.querySelectorAll('.star-rating i').forEach((star, index) => {
+                    if (index < selectedRating) {
                         star.className = 'fas fa-star';
                         star.style.color = '#ffc107';
                     } else {
@@ -1210,8 +1067,8 @@
                 });
             }
 
-            function highlightStars(variantId, rating) {
-                document.querySelectorAll(`.star-rating[data-variant-id="${variantId}"] i`).forEach((star, index) => {
+            function highlightStars(rating) {
+                document.querySelectorAll('.star-rating i').forEach((star, index) => {
                     if (index < rating) {
                         star.className = 'fas fa-star';
                         star.style.color = '#ffc107';
@@ -1221,6 +1078,61 @@
                     }
                 });
             }
+
+            // Handle image upload and preview
+            document.getElementById('reviewImages').addEventListener('change', function () {
+                const files = Array.from(this.files);
+                const previewContainer = document.getElementById('imagePreview');
+
+                if (selectedImages.length + files.length > 5) {
+                    alert('Bạn chỉ có thể tải lên tối đa 5 ảnh!');
+                    this.value = '';
+                    return;
+                }
+
+                files.forEach(file => {
+                    if (!file.type.startsWith('image/')) {
+                        alert('Vui lòng chỉ tải lên file ảnh!');
+                        this.value = '';
+                        return;
+                    }
+                    selectedImages.push(file);
+                });
+
+                // Clear current previews and re-render all selected images
+                previewContainer.innerHTML = '';
+                selectedImages.forEach((file, index) => {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        const imgContainer = document.createElement('div');
+                        imgContainer.style.position = 'relative';
+                        const img = document.createElement('img');
+                        img.src = e.target.result;
+                        img.className = 'preview-image';
+                        imgContainer.appendChild(img);
+
+                        const removeBtn = document.createElement('button');
+                        removeBtn.className = 'remove-image';
+                        removeBtn.innerHTML = '×';
+                        removeBtn.onclick = () => {
+                            selectedImages.splice(index, 1);
+                            imgContainer.remove();
+                            const dataTransfer = new DataTransfer();
+                            selectedImages.forEach(f => dataTransfer.items.add(f));
+                            document.getElementById('reviewImages').files = dataTransfer.files;
+                        };
+                        imgContainer.appendChild(removeBtn);
+
+                        previewContainer.appendChild(imgContainer);
+                    };
+                    reader.readAsDataURL(file);
+                });
+
+                // Update file input to reflect current selectedImages
+                const dataTransfer = new DataTransfer();
+                selectedImages.forEach(f => dataTransfer.items.add(f));
+                this.files = dataTransfer.files;
+            });
 
             window.addEventListener('click', function (event) {
                 const modal = document.getElementById('reviewModal');

@@ -8,11 +8,13 @@ package Controller.HomePage.Product;
 import Controller.HomePage.Customer.Auth.Login;
 import DAL.CategoriesDAO;
 import DAL.ProductDao;
+import DAL.FeedbackDAO;
 import Models.Category;
 import Models.Color;
 import Models.ProductVariant;
 import Models.Size;
 import Models.Tag;
+import Models.Feedback;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -30,6 +32,8 @@ import org.apache.logging.log4j.Logger;
 public class ProductDetails extends HttpServlet {
     ProductDao pdao = new ProductDao();
     CategoriesDAO cdao = new CategoriesDAO();
+    // Add FeedbackDAO
+    FeedbackDAO feedbackDAO = new FeedbackDAO();
     private static final Logger LOGGER = LogManager.getLogger(Login.class);
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
@@ -64,6 +68,16 @@ public class ProductDetails extends HttpServlet {
             ProductVariant pv = pdao.loadProductWithID(variant); // load detail sp
             request.setAttribute("pv", pv);
             
+            // Load feedback data
+            List<Feedback> feedbacks = feedbackDAO.getFeedbacksByVariantID(variant);
+            request.setAttribute("feedbacks", feedbacks);
+            
+            // Get average rating and total feedback count
+            double averageRating = feedbackDAO.getAverageRating(variant);
+            int totalFeedbacks = feedbackDAO.getTotalFeedbacks(variant);
+            request.setAttribute("averageRating", averageRating);
+            request.setAttribute("totalFeedbacks", totalFeedbacks);
+            
             List<String> image = pdao.loadImageProductWithID(pv.getProduct().getProductId()); // load ảnh sản phẩm
             request.setAttribute("image", image);
             
@@ -90,6 +104,7 @@ public class ProductDetails extends HttpServlet {
             
             
         } catch (Exception e) {
+            e.printStackTrace();
             request.getSession().setAttribute("error", "Link không đúng vui lòng thử lại");
             response.sendRedirect("trangchu");
             return;

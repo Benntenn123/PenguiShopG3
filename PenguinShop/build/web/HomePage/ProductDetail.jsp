@@ -22,7 +22,24 @@
 
             .color-item input[type="checkbox"] {
                 margin-right: 8px;
-                accent-color: #ff5733; /* Màu checkbox khi chọn: cam */
+                accent-color: #ff57                function loadFeedbacks(resetPage = false) {
+                    if (resetPage) {
+                        currentPage = 1;
+                        canLoadMore = true;
+                        const reviewWrapper = document.querySelector('.review-wrapper');
+                        const loadMoreBtn = reviewWrapper.querySelector('.load-more-btn');
+                        reviewWrapper.innerHTML = '';
+                        if (loadMoreBtn) {
+                            reviewWrapper.appendChild(loadMoreBtn);
+                        }
+                    }
+
+                    if (!canLoadMore) return;
+
+                    const loadMoreBtn = document.querySelector('.load-more-btn');
+                    if (loadMoreBtn) loadMoreBtn.classList.add('loading');
+
+                    fetch(`api/feedback?action=getFeedbacks&variantId=${variantId}&page=${currentPage}&pageSize=${pageSize}&rating=${currentRating}`)Màu checkbox khi chọn: cam */
                 width: 18px;
                 height: 18px;
                 cursor: pointer;
@@ -40,6 +57,252 @@
                 font-weight: bold; /* Nhãn đậm khi checkbox được chọn */
                 color: #ff5733; /* Màu nhãn khi chọn: cam */
             }
+
+            /* Review styles */
+            .review-summary {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 30px;
+                padding: 20px;
+                background: #f8f9fa;
+                border-radius: 8px;
+            }
+
+            .average-rating {
+                text-align: center;
+            }
+
+            .average-rating h2 {
+                color: #AE1C9A;
+                font-size: 36px;
+                margin-bottom: 5px;
+            }
+
+            .average-rating .fa-star {
+                color: #ffc107;
+            }
+
+            .review-wrapper {
+                margin-top: 20px;
+            }
+
+            .review-item {
+                border-bottom: 1px solid #e9ecef;
+                padding: 20px 0;
+                opacity: 0;
+                transform: translateY(20px);
+                transition: opacity 0.3s ease, transform 0.3s ease;
+            }
+
+            .review-item.visible {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            .reviewer-info {
+                display: flex;
+                align-items: center;
+                margin-bottom: 15px;
+            }
+
+            .reviewer-avatar {
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                margin-right: 15px;
+                object-fit: cover;
+            }
+
+            .reviewer-details h6 {
+                margin: 0;
+                color: #333;
+                font-size: 16px;
+            }
+
+            .rating {
+                color: #ffc107;
+                margin: 5px 0;
+            }
+
+            .review-date {
+                color: #6c757d;
+                font-size: 14px;
+            }
+
+            .review-content p {
+                margin-bottom: 15px;
+            }
+
+            .review-images {
+                display: flex;
+                gap: 10px;
+                flex-wrap: wrap;
+            }
+
+            .review-image {
+                width: 100px;
+                height: 100px;
+                object-fit: cover;
+                border-radius: 4px;
+                cursor: pointer;
+                transition: transform 0.3s ease;
+            }
+
+            .review-image:hover {
+                transform: scale(1.05);
+            }
+
+            .no-reviews {
+                text-align: center;
+                padding: 40px;
+                color: #6c757d;
+            }
+
+            /* Rating distribution styles */
+            .rating-overview {
+                display: flex;
+                gap: 30px;
+                padding: 20px;
+                background: #f8f9fa;
+                border-radius: 8px;
+            }
+
+            .rating-bars {
+                flex-grow: 1;
+                padding: 10px 0;
+            }
+
+            .rating-bar-item {
+                display: flex;
+                align-items: center;
+                margin-bottom: 10px;
+                gap: 10px;
+            }
+
+            .rating-bar-item .stars {
+                min-width: 60px;
+                color: #666;
+            }
+
+            .rating-bar-item .fa-star {
+                color: #ffc107;
+            }
+
+            .progress {
+                flex-grow: 1;
+                height: 8px;
+                background-color: #e9ecef;
+                border-radius: 4px;
+                overflow: hidden;
+            }
+
+            .progress-bar {
+                background: linear-gradient(45deg, #AE1C9A, #e83e8c);
+                transition: width 0.6s ease;
+            }
+
+            .rating-bar-item .count {
+                min-width: 40px;
+                text-align: right;
+                color: #666;
+            }
+
+            .review-wrapper {
+                margin-top: 30px;
+            }
+
+            .review-item {
+                border-bottom: 1px solid #e9ecef;
+                padding: 20px 0;
+                opacity: 0;
+                transform: translateY(20px);
+                transition: opacity 0.3s ease, transform 0.3s ease;
+            }
+
+            .review-item.visible {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            .load-more-btn {
+                display: block;
+                margin: 20px auto;
+                padding: 10px 30px;
+                background: #AE1C9A;
+                color: white;
+                border: none;
+                border-radius: 25px;
+                cursor: pointer;
+                transition: background-color 0.3s;
+            }
+
+            .load-more-btn:hover {
+                background: #8e1680;
+            }
+
+            .load-more-btn.loading {
+                pointer-events: none;
+                opacity: 0.7;
+            }
+
+            /* Review filter styles */
+            .review-filter {
+                margin: 20px 0;
+                border-bottom: 1px solid #e9ecef;
+                padding-bottom: 15px;
+            }
+
+            .filter-options {
+                display: flex;
+                gap: 10px;
+                flex-wrap: wrap;
+            }
+
+            .filter-btn {
+                padding: 8px 16px;
+                border: 1px solid #dee2e6;
+                border-radius: 20px;
+                background: white;
+                color: #666;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                font-size: 14px;
+                display: flex;
+                align-items: center;
+                gap: 5px;
+            }
+
+            .filter-btn .count {
+                color: #999;
+            }
+
+            .filter-btn:hover {
+                border-color: #AE1C9A;
+                color: #AE1C9A;
+            }
+
+            .filter-btn.active {
+                background: #AE1C9A;
+                color: white;
+                border-color: #AE1C9A;
+            }
+
+            .filter-btn.active .count {
+                color: rgba(255, 255, 255, 0.8);
+            }
+
+            @media (max-width: 768px) {
+                .filter-options {
+                    gap: 8px;
+                }
+                
+                .filter-btn {
+                    padding: 6px 12px;
+                    font-size: 13px;
+                }
+            }
+            
+            /* ...existing styles... */
         </style>
         <jsp:include page="Common/Css.jsp"/>
     </head>
@@ -248,11 +511,9 @@
                             <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab"
                                     data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home"
                                     aria-selected="true">Mô tả sản phẩm</button>
-                            <!--                            <button class="nav-link" id="nav-review-tab" data-bs-toggle="tab" data-bs-target="#nav-review"
-                                                                type="button" role="tab" aria-controls="nav-review" aria-selected="false">Reviews</button>
-                                                        <button class="nav-link" id="nav-seller-tab" data-bs-toggle="tab" data-bs-target="#nav-seller"
-                                                                type="button" role="tab" aria-controls="nav-seller" aria-selected="false">Seller
-                                                            Info</button>-->
+                            <button class="nav-link" id="nav-review-tab" data-bs-toggle="tab" data-bs-target="#nav-review"
+                                    type="button" role="tab" aria-controls="nav-review" aria-selected="false">Đánh giá (${totalFeedbacks})</button>
+                                                                
 
                         </div>
                     </nav>
@@ -271,54 +532,121 @@
                         <div class="tab-pane fade" id="nav-review" role="tabpanel" aria-labelledby="nav-review-tab"
                              tabindex="0">
                             <div class="product-review-section" data-aos="fade-up">
-                                <h5 class="intro-heading">Reviews</h5>
-
-                                <div class="review-wrapper">
-                                    <div class="wrapper">
-                                        <div class="wrapper-aurthor">
-                                            <div class="wrapper-info">
-                                                <div class="aurthor-img">
-                                                    <img src="./assets/images/homepage-one/aurthor-img-1.webp"
-                                                         alt="aurthor-img">
-                                                </div>
-                                                <div class="author-details">
-                                                    <h5>Sajjad Hossain</h5>
-                                                    <p>London, UK</p>
-                                                </div>
-                                            </div>
-                                            <div class="ratings">
-                                                <span>
-                                                    <svg width="75" height="15" viewBox="0 0 75 15" fill="none"
-                                                         xmlns="http://www.w3.org/2000/svg">
-                                                    <path
-                                                        d="M7.5 0L9.18386 5.18237H14.6329L10.2245 8.38525L11.9084 13.5676L7.5 10.3647L3.09161 13.5676L4.77547 8.38525L0.367076 5.18237H5.81614L7.5 0Z"
-                                                        fill="#FFA800" />
-                                                    <path
-                                                        d="M22.5 0L24.1839 5.18237H29.6329L25.2245 8.38525L26.9084 13.5676L22.5 10.3647L18.0916 13.5676L19.7755 8.38525L15.3671 5.18237H20.8161L22.5 0Z"
-                                                        fill="#FFA800" />
-                                                    <path
-                                                        d="M37.5 0L39.1839 5.18237H44.6329L40.2245 8.38525L41.9084 13.5676L37.5 10.3647L33.0916 13.5676L34.7755 8.38525L30.3671 5.18237H35.8161L37.5 0Z"
-                                                        fill="#FFA800" />
-                                                    <path
-                                                        d="M52.5 0L54.1839 5.18237H59.6329L55.2245 8.38525L56.9084 13.5676L52.5 10.3647L48.0916 13.5676L49.7755 8.38525L45.3671 5.18237H50.8161L52.5 0Z"
-                                                        fill="#FFA800" />
-                                                    <path
-                                                        d="M67.5 0L69.1839 5.18237H74.6329L70.2245 8.38525L71.9084 13.5676L67.5 10.3647L63.0916 13.5676L64.7755 8.38525L60.3671 5.18237H65.8161L67.5 0Z"
-                                                        fill="#FFA800" />
-                                                    </svg>
-                                                </span>
-                                                <span>(5.0)</span>
+                                <h5 class="intro-heading">Đánh giá sản phẩm</h5>
+                                
+                                <div class="review-summary">
+                                    <div class="rating-overview">
+                                        <div class="average-rating text-center">
+                                            <h2>${averageRating}/5 <i class="fas fa-star"></i></h2>
+                                            <p>${totalFeedbacks} đánh giá</p>
+                                        </div>
+                                        <div class="review-filter">
+                                            <div class="filter-options">
+                                                <button class="filter-btn active" data-rating="0">
+                                                    Tất cả
+                                                    <span class="count">(${totalFeedbacks})</span>
+                                                </button>
+                                                <button class="filter-btn" data-rating="5">
+                                                    5 Sao
+                                                    <span class="count">(0)</span>
+                                                </button>
+                                                <button class="filter-btn" data-rating="4">
+                                                    4 Sao
+                                                    <span class="count">(0)</span>
+                                                </button>
+                                                <button class="filter-btn" data-rating="3">
+                                                    3 Sao
+                                                    <span class="count">(0)</span>
+                                                </button>
+                                                <button class="filter-btn" data-rating="2">
+                                                    2 Sao
+                                                    <span class="count">(0)</span>
+                                                </button>
+                                                <button class="filter-btn" data-rating="1">
+                                                    1 Sao
+                                                    <span class="count">(0)</span>
+                                                </button>
                                             </div>
                                         </div>
-                                        <div class="wrapper-description">
-                                            <p class="wrapper-details">Lorem Ipsum is simply dummy text of the printing and
-                                                typesetting industry. Lorem Ipsum has been the industry's standard dummy
-                                                text ever since the redi 1500s, when an unknown printer took a galley of
-                                                type and scrambled it to make a type specimen book. It has survived not only
-                                                five centuries but also the on leap into electronic typesetting, remaining
-                                            </p>
+                                        <div class="rating-bars">
+                                            <div class="rating-bar-item" data-rating="5">
+                                                <span class="stars">5 <i class="fas fa-star"></i></span>
+                                                <div class="progress">
+                                                    <div class="progress-bar" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                                </div>
+                                                <span class="count">0</span>
+                                            </div>
+                                            <div class="rating-bar-item" data-rating="4">
+                                                <span class="stars">4 <i class="fas fa-star"></i></span>
+                                                <div class="progress">
+                                                    <div class="progress-bar" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                                </div>
+                                                <span class="count">0</span>
+                                            </div>
+                                            <div class="rating-bar-item" data-rating="3">
+                                                <span class="stars">3 <i class="fas fa-star"></i></span>
+                                                <div class="progress">
+                                                    <div class="progress-bar" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                                </div>
+                                                <span class="count">0</span>
+                                            </div>
+                                            <div class="rating-bar-item" data-rating="2">
+                                                <span class="stars">2 <i class="fas fa-star"></i></span>
+                                                <div class="progress">
+                                                    <div class="progress-bar" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                                </div>
+                                                <span class="count">0</span>
+                                            </div>
+                                            <div class="rating-bar-item" data-rating="1">
+                                                <span class="stars">1 <i class="fas fa-star"></i></span>
+                                                <div class="progress">
+                                                    <div class="progress-bar" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                                </div>
+                                                <span class="count">0</span>
+                                            </div>
                                         </div>
                                     </div>
+                                </div>
+
+                                <div class="review-wrapper">
+                                    <c:choose>
+                                        <c:when test="${empty feedbacks}">
+                                            <div class="no-reviews">
+                                                <p>Chưa có đánh giá nào cho sản phẩm này.</p>
+                                            </div>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <c:forEach var="feedback" items="${feedbacks}">
+                                                <div class="review-item">
+                                                    <div class="reviewer-info">
+                                                        <img src="Images/${feedback.user.image_user}" alt="User Avatar" class="reviewer-avatar">
+                                                        <div class="reviewer-details">
+                                                            <h6>${feedback.user.fullName}</h6>
+                                                            <div class="rating">
+                                                                <c:forEach begin="1" end="${feedback.rating}">
+                                                                    <i class="fas fa-star"></i>
+                                                                </c:forEach>
+                                                                <c:forEach begin="${feedback.rating + 1}" end="5">
+                                                                    <i class="far fa-star"></i>
+                                                                </c:forEach>
+                                                            </div>
+                                                            <span class="review-date">${feedback.feedbackDate}</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="review-content">
+                                                        <p>${feedback.comment}</p>
+                                                        <c:if test="${not empty feedback.images}">
+                                                            <div class="review-images">
+                                                                <c:forEach var="image" items="${feedback.images}">
+                                                                    <img src="Images/${image}" alt="Review Image" class="review-image">
+                                                                </c:forEach>
+                                                            </div>
+                                                        </c:if>
+                                                    </div>
+                                                </div>
+                                            </c:forEach>
+                                        </c:otherwise>
+                                    </c:choose>
                                 </div>
                             </div>
                         </div>
@@ -395,7 +723,138 @@
         <jsp:include page="Common/Js.jsp"/>
         <jsp:include page="Common/Message.jsp"/>
 
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const variantId = ${pv.variantID};
+                let currentPage = 1;
+                const pageSize = 5;
+                let canLoadMore = true;
+                let currentRating = 0; // 0 means all ratings
 
+                // Load initial rating distribution
+                loadRatingDistribution();
 
+                // Load initial feedbacks
+                loadFeedbacks();
+
+                // Xử lý filter buttons
+                document.querySelectorAll('.filter-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        if (btn.classList.contains('active')) return;
+                        
+                        // Update active state
+                        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+                        
+                        // Update current rating and reload feedbacks
+                        currentRating = parseInt(btn.dataset.rating);
+                        loadFeedbacks(true);
+                    });
+                });
+
+                // Cập nhật số lượng đánh giá cho mỗi filter
+                function updateFilterCounts(distribution) {
+                    document.querySelectorAll('.filter-btn').forEach(btn => {
+                        const rating = parseInt(btn.dataset.rating);
+                        const count = rating === 0 ? distribution.total : distribution.distribution[rating - 1];
+                        btn.querySelector('.count').textContent = `(${count})`;
+                    });
+                }
+
+                // Update original loadRatingDistribution function
+                function loadRatingDistribution() {
+                    fetch(`api/feedback?action=getRatingDistribution&variantId=${variantId}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            const total = data.total;
+                            data.distribution.forEach((count, index) => {
+                                const rating = 5 - index;
+                                const percentage = total > 0 ? (count / total * 100) : 0;
+                                const barItem = document.querySelector(`.rating-bar-item[data-rating="${rating}"]`);
+                                const progressBar = barItem.querySelector('.progress-bar');
+                                const countSpan = barItem.querySelector('.count');
+                                
+                                progressBar.style.width = `${percentage}%`;
+                                progressBar.setAttribute('aria-valuenow', percentage);
+                                countSpan.textContent = count;
+                            });
+                            
+                            // Update filter counts
+                            updateFilterCounts({
+                                distribution: data.distribution,
+                                total: data.total
+                            });
+                        });
+                }
+
+                function loadFeedbacks() {
+                    if (!canLoadMore) return;
+
+                    const loadMoreBtn = document.querySelector('.load-more-btn');
+                    if (loadMoreBtn) loadMoreBtn.classList.add('loading');
+
+                    fetch(\`api/feedback?action=getFeedbacks&variantId=\${variantId}&page=\${currentPage}&pageSize=\${pageSize}\`)
+                        .then(response => response.json())
+                        .then data => {
+                            const feedbacksContainer = document.querySelector('.review-wrapper');
+                            const total = data.total;
+                            
+                            data.feedbacks.forEach(feedback => {
+                                const reviewDiv = createReviewElement(feedback);
+                                feedbacksContainer.insertBefore(reviewDiv, loadMoreBtn);
+                                setTimeout(() => reviewDiv.classList.add('visible'), 100);
+                            });
+
+                            if (currentPage * pageSize >= total) {
+                                canLoadMore = false;
+                                if (loadMoreBtn) loadMoreBtn.style.display = 'none';
+                            }
+
+                            if (loadMoreBtn) loadMoreBtn.classList.remove('loading');
+                            currentPage++;
+                        });
+                }
+
+                function createReviewElement(feedback) {
+                    const div = document.createElement('div');
+                    div.className = 'review-item';
+                    div.innerHTML = \`
+                        <div class="reviewer-info">
+                            <img src="Images/\${feedback.user.image_user}" alt="User Avatar" class="reviewer-avatar">
+                            <div class="reviewer-details">
+                                <h6>\${feedback.user.fullName}</h6>
+                                <div class="rating">
+                                    \${[...Array(5)].map((_, i) => 
+                                        \`<i class="fa\${i < feedback.rating ? 's' : 'r'} fa-star"></i>\`
+                                    ).join('')}
+                                </div>
+                                <span class="review-date">\${new Date(feedback.feedbackDate).toLocaleDateString('vi-VN')}</span>
+                            </div>
+                        </div>
+                        <div class="review-content">
+                            <p>\${feedback.comment}</p>
+                            \${feedback.images && feedback.images.length > 0 ? \`
+                                <div class="review-images">
+                                    \${feedback.images.map(image => \`
+                                        <img src="Images/\${image}" alt="Review Image" class="review-image">
+                                    \`).join('')}
+                                </div>
+                            \` : ''}
+                        </div>
+                    \`;
+                    return div;
+                }
+
+                // Add load more button if needed
+                const reviewWrapper = document.querySelector('.review-wrapper');
+                if (${totalFeedbacks} > pageSize) {
+                    const loadMoreBtn = document.createElement('button');
+                    loadMoreBtn.className = 'load-more-btn';
+                    loadMoreBtn.innerHTML = 'Xem thêm đánh giá';
+                    loadMoreBtn.addEventListener('click', loadFeedbacks);
+                    reviewWrapper.appendChild(loadMoreBtn);
+                }
+            });
+        </script>
     </body>
 </html>
