@@ -1,1 +1,0 @@
-checkout.vnpay_pay
