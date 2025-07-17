@@ -58,7 +58,7 @@
                                 <td>${fb.rating}</td>
                                 <td>
                                     <a class="btn btn-info btn-sm" href="feedbackDetail?feedbackID=${fb.feedbackID}">Xem chi tiết</a>
-                                    <button class="btn btn-primary btn-sm" onclick="messageSeller('${fb.productID}')">Nhắn tin cho người bán</button>
+                                   
                                 </td>
                             </tr>
                         </c:forEach>
