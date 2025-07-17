@@ -23,6 +23,126 @@ import java.util.List;
 
 public class UserDAO extends DBContext {
 
+    // Thống kê số user mới theo tháng
+    public List<Models.MonthValue> getMonthlyNewUsers(int year) {
+        List<Models.MonthValue> list = new ArrayList<>();
+        String sql = "SELECT MONTH(created_at) as month, COUNT(*) as count FROM tbUsers WHERE YEAR(created_at) = ? GROUP BY MONTH(created_at) ORDER BY month";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, year);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    list.add(new Models.MonthValue(rs.getInt("month"), rs.getInt("count")));
+                }
+            }
+        } catch (Exception e) { e.printStackTrace(); }
+        return list;
+    }
+
+    /**
+     * Tìm kiếm logs, join user, filter theo tên, email, phone, thời gian, phân trang
+     */
+    public List<Logs> searchLogs(String fullName, String email, String phone, String from, String to, int page, int pageSize) {
+        List<Logs> logs = new ArrayList<>();
+        StringBuilder sql = new StringBuilder(
+                "SELECT l.logID, l.userID, l.action, l.description, l.logDate, u.fullName, u.email, u.phone " +
+                "FROM tbLogs l INNER JOIN tbUsers u ON l.userID = u.userID WHERE 1=1 "
+        );
+        List<Object> params = new ArrayList<>();
+        if (fullName != null && !fullName.trim().isEmpty()) {
+            sql.append(" AND u.fullName LIKE ?");
+            params.add("%" + fullName.trim() + "%");
+        }
+        if (email != null && !email.trim().isEmpty()) {
+            sql.append(" AND u.email LIKE ?");
+            params.add("%" + email.trim() + "%");
+        }
+        if (phone != null && !phone.trim().isEmpty()) {
+            sql.append(" AND u.phone LIKE ?");
+            params.add("%" + phone.trim() + "%");
+        }
+        if (from != null && !from.isEmpty()) {
+            sql.append(" AND l.logDate >= CAST(? AS DATE)");
+            params.add(from);
+        }
+        if (to != null && !to.isEmpty()) {
+            sql.append(" AND l.logDate < DATEADD(DAY, 1, CAST(? AS DATE))");
+            params.add(to);
+        }
+        sql.append(" ORDER BY l.logDate DESC");
+        sql.append(" OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
+        int offset = (page - 1) * pageSize;
+        params.add(offset);
+        params.add(pageSize);
+        try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i));
+            }
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    User user = new User();
+                    user.setUserID(rs.getInt("userID"));
+                    user.setFullName(rs.getString("fullName"));
+                    user.setEmail(rs.getString("email"));
+                    user.setPhone(rs.getString("phone"));
+                    Logs log = new Logs(
+                            rs.getInt("logID"),
+                            user,
+                            rs.getString("action"),
+                            rs.getString("description"),
+                            rs.getString("logDate")
+                    );
+                    logs.add(log);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return logs;
+    }
+
+    /**
+     * Đếm tổng số logs theo filter
+     */
+    public int countSearchLogs(String fullName, String email, String phone, String from, String to) {
+        StringBuilder sql = new StringBuilder(
+                "SELECT COUNT(*) FROM tbLogs l INNER JOIN tbUsers u ON l.userID = u.userID WHERE 1=1 "
+        );
+        List<Object> params = new ArrayList<>();
+        if (fullName != null && !fullName.trim().isEmpty()) {
+            sql.append(" AND u.fullName LIKE ?");
+            params.add("%" + fullName.trim() + "%");
+        }
+        if (email != null && !email.trim().isEmpty()) {
+            sql.append(" AND u.email LIKE ?");
+            params.add("%" + email.trim() + "%");
+        }
+        if (phone != null && !phone.trim().isEmpty()) {
+            sql.append(" AND u.phone LIKE ?");
+            params.add("%" + phone.trim() + "%");
+        }
+        if (from != null && !from.isEmpty()) {
+            sql.append(" AND l.logDate >= CAST(? AS DATE)");
+            params.add(from);
+        }
+        if (to != null && !to.isEmpty()) {
+            sql.append(" AND l.logDate < DATEADD(DAY, 1, CAST(? AS DATE))");
+            params.add(to);
+        }
+        try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i));
+            }
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
     public boolean authenticateUser(String email, String password) {
         String sql = "SELECT * FROM tbUsers WHERE email = ? AND password = ?";
         try {

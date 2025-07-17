@@ -55,13 +55,13 @@
                                     <c:when test="${not empty logs}">
                                         <c:forEach var="log" items="${logs}" varStatus="loop">
                                             <tr>
-                                                <td>${loop.index + 1}</td>
+                                                <td>${log.logID}</td>
                                                 <td>${log.user.fullName}</td>
                                                 <td>${log.user.email}</td>
                                                 <td>${log.user.phone}</td>
                                                 <td>${log.action}</td>
                                                 <td>${log.description}</td>
-                                                <td><fmt:formatDate value="${log.logDate}" pattern="dd/MM/yyyy HH:mm:ss"/></td>
+                                                <td>${log.logDate}</td>
                                             </tr>
                                         </c:forEach>
                                     </c:when>
@@ -72,6 +72,24 @@
                                 </tbody>
                             </table>
                         </div>
+                        <!-- Pagination -->
+                        <c:if test="${totalPages > 0}">
+                            <nav aria-label="Log pagination">
+                                <ul class="pagination justify-content-center mt-3">
+                                    <li class="page-item <c:if test='${currentPage == 1}'>disabled</c:if>'">
+                                        <a class="page-link" href="?fullName=${param.fullName}&email=${param.email}&phone=${param.phone}&from=${param.from}&to=${param.to}&page=${currentPage - 1}" tabindex="-1">&laquo;</a>
+                                    </li>
+                                    <c:forEach var="i" begin="1" end="${totalPages}">
+                                        <li class="page-item <c:if test='${i == currentPage}'>active</c:if>'">
+                                            <a class="page-link" href="?fullName=${param.fullName}&email=${param.email}&phone=${param.phone}&from=${param.from}&to=${param.to}&page=${i}">${i}</a>
+                                        </li>
+                                    </c:forEach>
+                                    <li class="page-item <c:if test='${currentPage == totalPages}'>disabled</c:if>'">
+                                        <a class="page-link" href="?fullName=${param.fullName}&email=${param.email}&phone=${param.phone}&from=${param.from}&to=${param.to}&page=${currentPage + 1}">&raquo;</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </c:if>
                     </div>
                 </div>
             </div>

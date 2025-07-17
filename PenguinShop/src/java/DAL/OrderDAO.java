@@ -1,3 +1,4 @@
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
@@ -26,7 +27,35 @@ import java.util.List;
 import java.util.Map;
 
 public class OrderDAO extends DBContext {
+        // Thống kê doanh thu theo tháng
+    public List<Models.MonthValue> getMonthlyRevenue(int year) {
+        List<Models.MonthValue> list = new ArrayList<>();
+        String sql = "SELECT MONTH(orderDate) as month, SUM(total) as revenue FROM tbOrder WHERE YEAR(orderDate) = ? AND paymentStatus = 1 GROUP BY MONTH(orderDate) ORDER BY month";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, year);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    list.add(new Models.MonthValue(rs.getInt("month"), rs.getDouble("revenue")));
+                }
+            }
+        } catch (Exception e) { e.printStackTrace(); }
+        return list;
+    }
 
+    // Thống kê số đơn hàng theo tháng
+    public List<Models.MonthValue> getMonthlyOrderCount(int year) {
+        List<Models.MonthValue> list = new ArrayList<>();
+        String sql = "SELECT MONTH(orderDate) as month, COUNT(*) as count FROM tbOrder WHERE YEAR(orderDate) = ? AND paymentStatus = 1 GROUP BY MONTH(orderDate) ORDER BY month";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, year);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    list.add(new Models.MonthValue(rs.getInt("month"), rs.getInt("count")));
+                }
+            }
+        } catch (Exception e) { e.printStackTrace(); }
+        return list;
+    }
     public List<Order> getOrder(int userID, String[] info) {
         List<Order> orders = new ArrayList<>();
         int limit = 2;

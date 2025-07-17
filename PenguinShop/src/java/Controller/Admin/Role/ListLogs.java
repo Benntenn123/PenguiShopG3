@@ -1,5 +1,6 @@
 package Controller.Admin.Role;
 
+import Const.Batch;
 import DAL.UserDAO;
 import Models.Logs;
 import Models.User;
@@ -20,22 +21,27 @@ public class ListLogs extends HttpServlet {
         String fullName = request.getParameter("fullName");
         String email = request.getParameter("email");
         String phone = request.getParameter("phone");
+        String from = request.getParameter("from");
+        String to = request.getParameter("to");
+
+        int page = 1;
+        int pageSize = Batch.BATCH_SEARCH_CUSTOMER;
+        try {
+            page = Integer.parseInt(request.getParameter("page"));
+            if (page < 1) page = 1;
+        } catch (Exception e) {}
 
         UserDAO userDAO = new UserDAO();
-        List<Logs> logs = new ArrayList<>();
+        // Lấy logs trực tiếp từ bảng logs, join user, filter theo user info và thời gian
+        List<Logs> logs = userDAO.searchLogs(fullName, email, phone, from, to, page, pageSize);
+        int totalLogs = userDAO.countSearchLogs(fullName, email, phone, from, to);
+        System.out.println(totalLogs);
+        int totalPages = (int) Math.ceil((double) totalLogs / pageSize);
 
-        // Lấy danh sách user theo filter
-        List<User> users = userDAO.getAllUser(1, 1000, fullName, email, phone, 0); // 0: lấy tất cả role
-        for (User user : users) {
-            List<Logs> userLogs = userDAO.getLatestLogByUserId(user.getUserID());
-            if (userLogs != null) {
-                for (Logs log : userLogs) {
-                    log.setUser(user);
-                    logs.add(log);
-                }
-            }
-        }
         request.setAttribute("logs", logs);
+        request.setAttribute("currentPage", page);
+        request.setAttribute("totalPages", totalPages);
+        request.setAttribute("totalLogs", totalLogs);
         request.getRequestDispatcher("/Admin/ListLogs.jsp").forward(request, response);
     }
 }

@@ -5,7 +5,10 @@
 
 package Controller.Admin.DashBoard;
 
+import DAL.FeedbackDAO;
+import DAL.OrderDAO;
 import DAL.UserDAO;
+import Models.MonthValue;
 import Models.User;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -14,6 +17,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.time.Year;
 import java.util.List;
 
 
@@ -42,9 +46,26 @@ public class DashBoard extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        
-        
-        request.getRequestDispatcher("../Admin/TrangChu.jsp").forward(request, response);
+        int year = Year.now().getValue();
+        try {
+            year = Integer.parseInt(request.getParameter("year"));
+        } catch (Exception e) {}
+
+        OrderDAO orderDAO = new OrderDAO();
+        UserDAO userDAO = new UserDAO();
+        FeedbackDAO feedbackDAO = new FeedbackDAO();
+
+        List<MonthValue> revenueList = orderDAO.getMonthlyRevenue(year);
+        List<MonthValue> orderList = orderDAO.getMonthlyOrderCount(year);
+        List<MonthValue> userList = userDAO.getMonthlyNewUsers(year);
+        List<MonthValue> feedbackList = feedbackDAO.getMonthlyFeedbacks(year);
+
+        request.setAttribute("revenueList", revenueList);
+        request.setAttribute("orderList", orderList);
+        request.setAttribute("userList", userList);
+        request.setAttribute("feedbackList", feedbackList);
+        request.setAttribute("year", year);
+        request.getRequestDispatcher("/Admin/TrangChu.jsp").forward(request, response);
     } 
     
     

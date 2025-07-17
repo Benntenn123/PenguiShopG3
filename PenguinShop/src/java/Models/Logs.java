@@ -8,6 +8,14 @@ public class Logs {
      private String description;
      private String logDate;
 
+    public Logs(int logID, User user, String action, String description, String logDate) {
+        this.logID = logID;
+        this.user = user;
+        this.action = action;
+        this.description = description;
+        this.logDate = logDate;
+    }
+
     public Logs(int logID, User user, String action, String logDate) {
         this.logID = logID;
         this.user = user;

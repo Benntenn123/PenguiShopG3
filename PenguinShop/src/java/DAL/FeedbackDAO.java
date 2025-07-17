@@ -10,7 +10,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FeedbackDAO extends DBContext {
-    
+        // Thống kê số feedback theo tháng
+    public List<Models.MonthValue> getMonthlyFeedbacks(int year) {
+        List<Models.MonthValue> list = new ArrayList<>();
+        String sql = "SELECT MONTH(feedbackDate) as month, COUNT(*) as count FROM tbFeedback WHERE YEAR(feedbackDate) = ? GROUP BY MONTH(feedbackDate) ORDER BY month";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, year);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    list.add(new Models.MonthValue(rs.getInt("month"), rs.getInt("count")));
+                }
+            }
+        } catch (Exception e) { e.printStackTrace(); }
+        return list;
+    }
+
     public boolean addFeedback(Feedback feedback) {
         String sql = "INSERT INTO tbFeedback (productID, variantID, userID, rating, comment, feedbackDate) "
                 + "VALUES (?, ?, ?, ?, ?, GETDATE())";
