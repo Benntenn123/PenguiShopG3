@@ -173,4 +173,23 @@ public class StringConvert {
         return standardized.toString();
     }
 
+    public static boolean isValidPassword(String password) {
+        if (password == null) {
+            return false;
+        }
+        // At least 8 characters, 1 uppercase, 1 lowercase, 1 digit, 1 special character
+        String regex = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[^A-Za-z\\d]).{8,}$";
+        return password.matches(regex);
+    }
+    public static String generatePlaceholders(int count) {
+        StringBuilder placeholders = new StringBuilder();
+        for (int i = 0; i < count; i++) {
+            placeholders.append("?");
+            if (i < count - 1) {
+                placeholders.append(",");
+            }
+        }
+        return placeholders.toString();
+    }
+
 }

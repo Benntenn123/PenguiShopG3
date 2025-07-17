@@ -5,40 +5,252 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <style>
+            /* Product color selector */
             .product-color-selector {
                 margin: 20px 0;
                 max-width: 300px;
             }
-
             .product-color-selector p {
                 font-weight: bold;
                 margin-bottom: 10px;
                 color: #333;
             }
-
-            .color-item {
+            .color-item, .size-item {
                 margin-bottom: 8px;
             }
-
-            .color-item input[type="checkbox"] {
+            .color-item input[type="checkbox"], .size-item input[type="checkbox"] {
                 margin-right: 8px;
-                accent-color: #ff5733; /* Màu checkbox khi chọn: cam */
+                accent-color: #AE1C9A;
                 width: 18px;
                 height: 18px;
                 cursor: pointer;
                 vertical-align: middle;
             }
-
-            .color-item label {
+            .color-item label, .size-item label {
                 font-size: 16px;
                 color: #444;
                 cursor: pointer;
                 vertical-align: middle;
             }
+            .color-item input[type="checkbox"]:checked + label, 
+            .size-item input[type="checkbox"]:checked + label {
+                font-weight: bold;
+                color: #AE1C9A;
+            }
 
-            .color-item input[type="checkbox"]:checked + label {
-                font-weight: bold; /* Nhãn đậm khi checkbox được chọn */
-                color: #ff5733; /* Màu nhãn khi chọn: cam */
+            /* Review styles */
+            .review-summary {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 30px;
+                padding: 20px;
+                background: #f8f9fa;
+                border-radius: 8px;
+            }
+            .average-rating {
+                text-align: center;
+            }
+            .average-rating h2 {
+                color: #AE1C9A;
+                font-size: 36px;
+                margin-bottom: 5px;
+            }
+            .average-rating .fa-star {
+                color: #ffc107;
+            }
+            .review-wrapper {
+                margin-top: 20px;
+            }
+            .review-item {
+                border-bottom: 1px solid #e9ecef;
+                padding: 20px 0;
+                opacity: 1;
+                transform: none;
+            }
+            .review-item.new-item {
+                opacity: 0;
+                transform: translateY(20px);
+                transition: opacity 0.3s ease, transform 0.3s ease;
+            }
+            .review-item.new-item.visible {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            .reviewer-info {
+                display: flex;
+                align-items: center;
+                margin-bottom: 15px;
+            }
+            .reviewer-avatar {
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                margin-right: 15px;
+                object-fit: cover;
+            }
+            .reviewer-details h6 {
+                margin: 0;
+                color: #333;
+                font-size: 16px;
+            }
+            .rating {
+                color: #ffc107;
+                margin: 5px 0;
+            }
+            .review-date {
+                color: #6c757d;
+                font-size: 14px;
+            }
+            .review-content p {
+                margin-bottom: 15px;
+            }
+            .review-images {
+                display: flex;
+                gap: 10px;
+                flex-wrap: wrap;
+            }
+            .review-image {
+                width: 100px;
+                height: 100px;
+                object-fit: cover;
+                border-radius: 4px;
+                cursor: pointer;
+                transition: transform 0.3s ease;
+            }
+            .review-image:hover {
+                transform: scale(1.05);
+            }
+            .no-reviews {
+                text-align: center;
+                padding: 40px;
+                color: #6c757d;
+            }
+            .rating-overview {
+                display: flex;
+                gap: 30px;
+                padding: 20px;
+                background: #f8f9fa;
+                border-radius: 8px;
+            }
+            .rating-bars {
+                flex-grow: 1;
+                padding: 10px 0;
+            }
+            .rating-bar-item {
+                display: flex;
+                align-items: center;
+                margin-bottom: 10px;
+                gap: 10px;
+            }
+            .rating-bar-item .stars {
+                min-width: 60px;
+                color: #666;
+            }
+            .rating-bar-item .fa-star {
+                color: #ffc107;
+            }
+            .progress {
+                flex-grow: 1;
+                height: 8px;
+                background-color: #e9ecef;
+                border-radius: 4px;
+                overflow: hidden;
+            }
+            .progress-bar {
+                background: linear-gradient(45deg, #AE1C9A, #e83e8c);
+                transition: width 0.6s ease;
+            }
+            .rating-bar-item .count {
+                min-width: 40px;
+                text-align: right;
+                color: #666;
+            }
+            .load-more-btn {
+                display: block;
+                margin: 20px auto;
+                padding: 10px 30px;
+                background: #AE1C9A;
+                color: white;
+                border: none;
+                border-radius: 25px;
+                cursor: pointer;
+                transition: background-color 0.3s;
+            }
+            .load-more-btn:hover {
+                background: #8e1680;
+            }
+            .load-more-btn.loading {
+                pointer-events: none;
+                opacity: 0.7;
+            }
+            .review-filter {
+                margin: 20px 0;
+                border-bottom: 1px solid #e9ecef;
+                padding-bottom: 15px;
+            }
+            .filter-options {
+                display: flex;
+                gap: 10px;
+                flex-wrap: wrap;
+            }
+            .filter-btn {
+                padding: 8px 16px;
+                border: 1px solid #dee2e6;
+                border-radius: 20px;
+                background: white;
+                color: #666;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                font-size: 14px;
+                display: flex;
+                align-items: center;
+                gap: 5px;
+            }
+            .filter-btn .count {
+                color: #999;
+            }
+            .filter-btn:hover {
+                border-color: #AE1C9A;
+                color: #AE1C9A;
+            }
+            .filter-btn.active {
+                background: #AE1C9A;
+                color: white;
+                border-color: #AE1C9A;
+            }
+            .filter-btn.active .count {
+                color: rgba(255, 255, 255, 0.8);
+            }
+            @media (max-width: 768px) {
+                .filter-options {
+                    gap: 8px;
+                }
+                .filter-btn {
+                    padding: 6px 12px;
+                    font-size: 13px;
+                }
+            }
+            /* Style cho nút Mô tả sản phẩm và Đánh giá */
+            .nav-tabs {
+                border-bottom: 2px solid #ddd;
+            }
+            .nav-tabs .nav-link {
+                color: #333;
+                font-weight: 500;
+                padding: 12px 20px;
+                border: none;
+                border-radius: 0;
+                background: none;
+                transition: all 0.3s;
+            }
+            .nav-tabs .nav-link:hover {
+                color: #AE1C9A;
+                border-bottom: 2px solid #AE1C9A;
+            }
+            .nav-tabs .nav-link.active {
+                color: #AE1C9A;
+                border-bottom: 2px solid #AE1C9A;
+                font-weight: 600;
             }
         </style>
         <jsp:include page="Common/Css.jsp"/>
@@ -131,27 +343,15 @@
                                                                 <span class="inner-text">132 Products Available</span>
                                                             </div>-->
                                 <div class="product-size">
-                                    <P class="size-title">Kích cỡ</P>
+                                    <p>Chọn Kích Cỡ:</p>
                                     <div class="size-section">
-                                        <span class="size-text">Chọn kích cỡ của bạn</span>
-                                        <div class="toggle-btn">
-                                            <span class="toggle-btn2"></span>
-                                            <span class="chevron">
-                                                <svg width="11" height="7" viewBox="0 0 11 7" fill="none"
-                                                     xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M5.4 6.8L0 1.4L1.4 0L5.4 4L9.4 0L10.8 1.4L5.4 6.8Z"
-                                                      fill="#222222" />
-                                                </svg>
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <ul class="size-option">
                                         <c:forEach var="sizePro" items="${sizePro}">
-                                            <li class="option">
-                                                <span class="option-text">Cỡ ${sizePro.sizeName}</span> 
-                                            </li>
+                                            <div class="size-item">
+                                                <input type="checkbox" name="sizes" value="${sizePro.sizeName}" id="size-${sizePro.sizeName}">
+                                                <label for="size-${sizePro.sizeName}">Cỡ ${sizePro.sizeName}</label>
+                                            </div>
                                         </c:forEach>
-                                    </ul>
+                                    </div>
                                 </div>
                                 <div class="product-color-selector">
                                     <p>Chọn Màu Sắc:</p>
@@ -163,29 +363,8 @@
                                     </c:forEach>
                                 </div>
                                 <div class="product-quantity">
-                                    <div class="quantity-wrapper">
-                                        <div class="quantity">
-                                            <span class="minus">
-                                                -
-                                            </span>
-                                            <span class="number">1</span>
-                                            <span class="plus">
-                                                +
-                                            </span>
-                                        </div>
-                                        <div class="wishlist">
-                                            <span>
-                                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                                     xmlns="http://www.w3.org/2000/svg">
-                                                <path
-                                                    d="M17 1C14.9 1 13.1 2.1 12 3.7C10.9 2.1 9.1 1 7 1C3.7 1 1 3.7 1 7C1 13 12 22 12 22C12 22 23 13 23 7C23 3.7 20.3 1 17 1Z"
-                                                    stroke="#797979" stroke-width="2" stroke-miterlimit="10"
-                                                    stroke-linecap="square" />
-                                                </svg>
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <a href="#" class="shop-btn">
+                                   
+                                    <a href="#" class="shop-btn" onclick="addToCart('${sessionScope.user.userID}', '${pv.product.productId}', '${pv.variantID}')">
                                         <span>
                                             <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
                                                  xmlns="http://www.w3.org/2000/svg">
@@ -194,7 +373,7 @@
                                                 fill="white" />
                                             </svg>
                                         </span>
-                                        <span>Add to Cart</span>
+                                        <span>Thêm vào giỏ hàng</span>
                                     </a>
                                 </div>
                                 <hr>
@@ -242,81 +421,67 @@
         <!--------------- products-details-section--------------->
         <section class="product product-description">
             <div class="container">
-                <div class="product-detail-section">
-                    <nav>
-                        <div class="nav nav-tabs nav-item" id="nav-tab" role="tablist">
-                            <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab"
-                                    data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home"
-                                    aria-selected="true">Mô tả sản phẩm</button>
-                            <!--                            <button class="nav-link" id="nav-review-tab" data-bs-toggle="tab" data-bs-target="#nav-review"
-                                                                type="button" role="tab" aria-controls="nav-review" aria-selected="false">Reviews</button>
-                                                        <button class="nav-link" id="nav-seller-tab" data-bs-toggle="tab" data-bs-target="#nav-seller"
-                                                                type="button" role="tab" aria-controls="nav-seller" aria-selected="false">Seller
-                                                            Info</button>-->
-
-                        </div>
-                    </nav>
-                    <div class="tab-content tab-item" id="nav-tabContent">
-
-                        <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab"
-                             tabindex="0" data-aos="fade-up">
-                            <div class="product-intro-section">
-                                <h5 class="intro-heading">Mô tả</h5>
-                                <p class="product-details">
-                                    ${pv.product.full_description}
-                                </p>
+                <div class="row">
+                    <div class="col-md-12">
+                        <nav>
+                            <div style="font-size: 18px" class="nav nav-tabs" id="nav-tab" role="tablist">
+                                <button  class="nav-link" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="false">Mô tả sản phẩm</button>
+                                <button class="nav-link active" id="nav-review-tab" data-bs-toggle="tab" data-bs-target="#nav-review" type="button" role="tab" aria-controls="nav-review" aria-selected="true">Đánh giá</button>
                             </div>
-
-                        </div>
-                        <div class="tab-pane fade" id="nav-review" role="tabpanel" aria-labelledby="nav-review-tab"
-                             tabindex="0">
-                            <div class="product-review-section" data-aos="fade-up">
-                                <h5 class="intro-heading">Reviews</h5>
-
-                                <div class="review-wrapper">
-                                    <div class="wrapper">
-                                        <div class="wrapper-aurthor">
-                                            <div class="wrapper-info">
-                                                <div class="aurthor-img">
-                                                    <img src="./assets/images/homepage-one/aurthor-img-1.webp"
-                                                         alt="aurthor-img">
-                                                </div>
-                                                <div class="author-details">
-                                                    <h5>Sajjad Hossain</h5>
-                                                    <p>London, UK</p>
-                                                </div>
-                                            </div>
-                                            <div class="ratings">
-                                                <span>
-                                                    <svg width="75" height="15" viewBox="0 0 75 15" fill="none"
-                                                         xmlns="http://www.w3.org/2000/svg">
-                                                    <path
-                                                        d="M7.5 0L9.18386 5.18237H14.6329L10.2245 8.38525L11.9084 13.5676L7.5 10.3647L3.09161 13.5676L4.77547 8.38525L0.367076 5.18237H5.81614L7.5 0Z"
-                                                        fill="#FFA800" />
-                                                    <path
-                                                        d="M22.5 0L24.1839 5.18237H29.6329L25.2245 8.38525L26.9084 13.5676L22.5 10.3647L18.0916 13.5676L19.7755 8.38525L15.3671 5.18237H20.8161L22.5 0Z"
-                                                        fill="#FFA800" />
-                                                    <path
-                                                        d="M37.5 0L39.1839 5.18237H44.6329L40.2245 8.38525L41.9084 13.5676L37.5 10.3647L33.0916 13.5676L34.7755 8.38525L30.3671 5.18237H35.8161L37.5 0Z"
-                                                        fill="#FFA800" />
-                                                    <path
-                                                        d="M52.5 0L54.1839 5.18237H59.6329L55.2245 8.38525L56.9084 13.5676L52.5 10.3647L48.0916 13.5676L49.7755 8.38525L45.3671 5.18237H50.8161L52.5 0Z"
-                                                        fill="#FFA800" />
-                                                    <path
-                                                        d="M67.5 0L69.1839 5.18237H74.6329L70.2245 8.38525L71.9084 13.5676L67.5 10.3647L63.0916 13.5676L64.7755 8.38525L60.3671 5.18237H65.8161L67.5 0Z"
-                                                        fill="#FFA800" />
-                                                    </svg>
-                                                </span>
-                                                <span>(5.0)</span>
+                        </nav>
+                        <div class="tab-content" id="nav-tabContent">
+                            <div style="font-size: 16px; margin-top: 30px" class="tab-pane fade" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                                ${pv.product.full_description}
+                            </div>
+                            <div class="tab-pane fade show active" id="nav-review" role="tabpanel" aria-labelledby="nav-review-tab">
+                                <div class="review-summary">
+                                    <div class="rating-overview">
+                                        <div class="average-rating text-center">
+                                            <h2>${averageRating}/5 <i class="fas fa-star"></i></h2>
+                                            <p>${totalFeedbacks} đánh giá</p>
+                                        </div>
+                                        <div class="review-filter">
+                                            <div style="font-size:18px" class="filter-options">
+                                                <button class="filter-btn active" data-rating="0">
+                                                    Tất cả
+                                                    <span class="count">(${totalFeedbacks})</span>
+                                                </button>
+                                                <button class="filter-btn" data-rating="5">
+                                                    5 Sao
+                                                    <span class="count">(0)</span>
+                                                </button>
+                                                <button class="filter-btn" data-rating="4">
+                                                    4 Sao
+                                                    <span class="count">(0)</span>
+                                                </button>
+                                                <button class="filter-btn" data-rating="3">
+                                                    3 Sao
+                                                    <span class="count">(0)</span>
+                                                </button>
+                                                <button class="filter-btn" data-rating="2">
+                                                    2 Sao
+                                                    <span class="count">(0)</span>
+                                                </button>
+                                                <button class="filter-btn" data-rating="1">
+                                                    1 Sao
+                                                    <span class="count">(0)</span>
+                                                </button>
                                             </div>
                                         </div>
-                                        <div class="wrapper-description">
-                                            <p class="wrapper-details">Lorem Ipsum is simply dummy text of the printing and
-                                                typesetting industry. Lorem Ipsum has been the industry's standard dummy
-                                                text ever since the redi 1500s, when an unknown printer took a galley of
-                                                type and scrambled it to make a type specimen book. It has survived not only
-                                                five centuries but also the on leap into electronic typesetting, remaining
-                                            </p>
+                                    </div>
+                                </div>
+                                <div class="review-wrapper"></div>
+                                <!-- Modal hiển thị ảnh lớn -->
+                                <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered modal-lg">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="imageModalLabel">Hình ảnh đánh giá</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <img src="" class="img-fluid" id="modalImage" alt="Hình ảnh lớn">
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -395,7 +560,265 @@
         <jsp:include page="Common/Js.jsp"/>
         <jsp:include page="Common/Message.jsp"/>
 
+        <script>
+document.addEventListener('DOMContentLoaded', function () {
+    const variantId = "${pv.variantID}";
+    let currentPage = 1;
+    const pageSize = 5; // Số lượng feedback mỗi trang
+    let canLoadMore = true;
+    let currentRating = 0; // Mặc định là tab Tất cả
+    let isLoading = false;
+    let isAddingToCart = false; // Debounce flag for addToCart
 
+    // Add to Cart function
+    window.addToCart = function(userID, productID, variantID) {
+        if (isAddingToCart) return;
+        isAddingToCart = true;
 
+        // Kiểm tra xem người dùng đã chọn màu và kích cỡ chưa
+        const selectedColors = document.querySelectorAll('input[name="colors"]:checked');
+        const selectedSizes = document.querySelectorAll('input[name="sizes"]:checked');
+
+        if (selectedColors.length === 0 || selectedSizes.length === 0) {
+            showErrorToast('Vui lòng chọn màu sắc và kích cỡ trước khi thêm vào giỏ hàng');
+            isAddingToCart = false;
+            return;
+        }
+
+        console.log('addToCart called with:', {userID, productID, variantID});
+        if (!variantID || variantID === 'undefined') {
+            showErrorToast('Vui lòng chọn màu và size!');
+            isAddingToCart = false;
+            return;
+        }
+
+        jQuery.ajax({
+            url: 'addCart',
+            type: 'POST',
+            data: {
+                userID: userID,
+                productID: productID,
+                variantID: variantID,
+                quantity: 1
+            },
+            success: function (response) {
+                console.log('addCart response:', response);
+                if (response.status === 'success') {
+                    toastr.success('Đã thêm sản phẩm vào giỏ hàng!');
+                } else if (response.status === 'not_logged_in') {
+                    toastr.error('Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng!');
+                    setTimeout(() => {
+                        window.location.href = 'login';
+                    }, 1500);
+                } else {
+                    toastr.error(response.message || 'Lỗi khi thêm sản phẩm vào giỏ hàng!');
+                }
+                isAddingToCart = false;
+            },
+            error: function (xhr, status, error) {
+                console.log('addCart error:', status, error);
+                showErrorToast('Lỗi kết nối server: ' + error);
+                isAddingToCart = false;
+            }
+        });
+    };
+
+    // Định nghĩa hàm showImageInModal trong phạm vi toàn cục
+    window.showImageInModal = function (imageSrc) {
+        const modalImage = document.getElementById('modalImage');
+        if (modalImage) {
+            modalImage.src = imageSrc;
+            const modal = new bootstrap.Modal(document.getElementById('imageModal'));
+            modal.show();
+        } else {
+            console.error('Không tìm thấy phần tử modalImage');
+        }
+    };
+
+   
+
+    function createReviewElement(feedback) {
+        const div = document.createElement('div');
+        div.className = 'review-item new-item';
+
+        const date = new Date(feedback.feedbackDate);
+        const formattedDate = date.toLocaleDateString('vi-VN');
+
+        let ratingStars = '';
+        for (let i = 0; i < 5; i++) {
+            ratingStars += '<i class="fa' + (i < feedback.rating ? 's' : 'r') + ' fa-star"></i>';
+        }
+
+        let imagesHtml = '';
+        if (feedback.images && Array.isArray(feedback.images) && feedback.images.length > 0) {
+            imagesHtml = '<div class="review-images">';
+            feedback.images.forEach(function (image) {
+                if (image) {
+                    const imageSrc = 'api/img/' + image;
+                    imagesHtml += '<img src="' + imageSrc + '" alt="Hình ảnh đánh giá" class="review-image" data-image-src="' + imageSrc + '">';
+                }
+            });
+            imagesHtml += '</div>';
+        }
+
+        const avatarSrc = feedback.user && feedback.user.image_user ?
+            'api/img/' + feedback.user.image_user :
+            '/images/default-avatar.png'; // Sử dụng đường dẫn cục bộ cho ảnh mặc định
+
+        div.innerHTML =
+            '<div class="reviewer-info">' +
+            '<img src="' + avatarSrc + '" alt="Avatar người dùng" class="reviewer-avatar">' +
+            '<div class="reviewer-details">' +
+            '<h6>' + (feedback.user && feedback.user.fullName ? feedback.user.fullName : 'Ẩn danh') + '</h6>' +
+            '<div class="rating">' +
+            ratingStars +
+            '<span class="rating-value" style="margin-left: 10px; color: #AE1C9A; font-weight: bold;">' + feedback.rating + ' Sao</span>' +
+            '</div>' +
+            '<span class="review-date">' + formattedDate + '</span>' +
+            '</div>' +
+            '</div>' +
+            '<div class="review-content">' +
+            '<p>' + (feedback.comment || 'Không có bình luận') + '</p>' +
+            imagesHtml +
+            '</div>';
+
+        // Thêm sự kiện click cho ảnh động
+        const images = div.querySelectorAll('.review-image');
+        images.forEach(img => {
+            img.addEventListener('click', () => {
+                const src = img.getAttribute('data-image-src');
+                window.showImageInModal(src);
+            });
+        });
+
+        return div;
+    }
+
+    function loadRatingDistribution() {
+        fetch('api/feedback?action=getRatingDistribution&variantId=' + variantId)
+            .then(response => response.json())
+            .then(data => {
+                console.log('Phản hồi phân bố đánh giá:', data);
+                if (!data || !data.hasOwnProperty('total') || !data.distribution) {
+                    console.error('Dữ liệu phân bố đánh giá không hợp lệ:', data);
+                    return;
+                }
+                updateFilterCounts({
+                    distribution: data.distribution,
+                    total: data.total
+                });
+            })
+            .catch(error => console.error('Lỗi khi tải phân bố đánh giá:', error));
+    }
+
+    function loadFeedbacks(resetPage) {
+        if (isLoading || !canLoadMore) return;
+        isLoading = true;
+
+        // Luôn xóa toàn bộ nội dung cũ khi load feedback mới
+        const reviewWrapper = document.querySelector('.review-wrapper');
+        reviewWrapper.innerHTML = '';
+
+        if (resetPage) {
+            currentPage = 1;
+            canLoadMore = true;
+        }
+
+        fetch('api/feedback?action=getFeedbacks&variantId=' + variantId +
+                '&page=' + currentPage +
+                '&pageSize=' + pageSize +
+                '&rating=' + currentRating)
+            .then(response => response.json())
+            .then(data => {
+                console.log('Phản hồi đánh giá:', data);
+                const feedbacksContainer = document.querySelector('.review-wrapper');
+                const total = data.total || 0;
+
+                if (data.feedbacks && data.feedbacks.length > 0) {
+                    data.feedbacks.forEach(feedback => {
+                        const reviewDiv = createReviewElement(feedback);
+                        feedbacksContainer.appendChild(reviewDiv);
+                        requestAnimationFrame(() => {
+                            reviewDiv.classList.add('visible');
+                        });
+                    });
+
+                    // Log trước khi tăng currentPage
+                    console.log('Total:', total, 'CurrentPage:', currentPage, 'PageSize:', pageSize, 'Hiển thị nút Xem thêm:', total > currentPage * pageSize);
+
+                    // Thêm nút Xem thêm nếu còn feedback
+                    if (total > currentPage * pageSize) {
+                        const newLoadMoreBtn = document.createElement('button');
+                        newLoadMoreBtn.className = 'load-more-btn';
+                        newLoadMoreBtn.innerHTML = 'Xem thêm đánh giá';
+                        newLoadMoreBtn.addEventListener('click', () => loadFeedbacks(false));
+                        feedbacksContainer.appendChild(newLoadMoreBtn);
+                    }
+
+                    // Tăng currentPage sau khi kiểm tra nút
+                    currentPage++;
+                } else {
+                    if (resetPage) {
+                        feedbacksContainer.innerHTML = '<div class="no-reviews"><p>Không có đánh giá nào cho mức sao này.</p></div>';
+                    }
+                }
+
+                isLoading = false;
+            })
+            .catch(error => {
+                console.error('Lỗi khi tải đánh giá:', error);
+                isLoading = false;
+            });
+    }
+
+    function updateFilterCounts(distribution) {
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            const rating = parseInt(btn.dataset.rating);
+            const countSpan = btn.querySelector('.count');
+            if (!countSpan) {
+                console.error('Không tìm thấy phần tử .count trong nút lọc:', btn);
+                return;
+            }
+            const count = rating === 0 ? distribution.total :
+                (distribution.distribution && distribution.distribution[rating - 1] !== undefined ? distribution.distribution[rating - 1] : 0);
+            countSpan.textContent = '(' + count + ')';
+        });
+    }
+
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            if (btn.classList.contains('active')) return;
+
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            currentRating = parseInt(btn.dataset.rating);
+            loadFeedbacks(true);
+        });
+    });
+
+    // Gọi API khi tab Đánh giá được hiển thị
+    document.querySelector('#nav-review-tab').addEventListener('shown.bs.tab', function () {
+        console.log('Tab Đánh giá được hiển thị');
+        loadRatingDistribution();
+        loadFeedbacks(true);
+    });
+
+    // Tải dữ liệu ban đầu
+    loadRatingDistribution();
+    loadFeedbacks(true);
+
+    // Add to cart handler
+    document.querySelector('.shop-btn').addEventListener('click', function(e) {
+        e.preventDefault();
+        const userID = '${sessionScope.user.userID}';
+        const productID = '${pv.product.productId}';
+        const variantID = '${pv.variantID}';
+        window.addToCart(userID, productID, variantID);
+    });
+
+    
+});
+</script>
     </body>
 </html>

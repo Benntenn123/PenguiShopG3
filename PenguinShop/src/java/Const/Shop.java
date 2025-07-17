@@ -8,5 +8,7 @@ public class Shop {
     public static final String SHOP_ADDRESS = "FPT University Ha Noi";
     public static final String SHOP_CONTACT = "peguing6@gmail.com";
     
+    public static final String LINK_IMAGE = "http://127.0.0.1:8080/PenguinShop/api/img/";
+    
         
 }

@@ -12,9 +12,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import Models.Promotion;
 import Models.Size;
+import Utils.StringConvert;
 import java.util.ArrayList;
 import java.util.List;
 import java.sql.Timestamp;
+import java.util.HashMap;
+import java.util.Map;
 
 public class PromotionDAO extends DBContext {
 
@@ -47,62 +50,117 @@ public class PromotionDAO extends DBContext {
         return promotions;
     }
 
-    public int getTotalPromotions() throws SQLException {
-        String sql = "SELECT COUNT(*) FROM tbPromotion";
-        try (PreparedStatement stmt = connection.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
+    public int getTotalPromotions(String searchName, String searchStatus, String searchType) throws SQLException {
+    StringBuilder sql = new StringBuilder(
+        "SELECT COUNT(DISTINCT p.promotionID) AS total " +
+        "FROM tbPromotion p " +
+        "LEFT JOIN tbProductPromotion pp ON p.promotionID = pp.promotionID " +
+        "WHERE 1=1 "
+    );
+
+    // Thêm các điều kiện tìm kiếm
+    List<Object> params = new ArrayList<>();
+    if (searchName != null && !searchName.trim().isEmpty()) {
+        sql.append("AND p.promotionName LIKE ? ");
+        params.add("%" + searchName.trim() + "%");
+    }
+    if (searchStatus != null && !searchStatus.trim().isEmpty()) {
+        sql.append("AND p.isActive = ? ");
+        params.add(Integer.parseInt(searchStatus));
+    }
+    if (searchType != null && !searchType.trim().isEmpty()) {
+        sql.append("AND p.discountType = ? ");
+        params.add(searchType);
+    }
+
+    try (PreparedStatement stmt = connection.prepareStatement(sql.toString())) {
+        // Gán tham số
+        int paramIndex = 1;
+        for (Object param : params) {
+            stmt.setObject(paramIndex++, param);
+        }
+
+        try (ResultSet rs = stmt.executeQuery()) {
             if (rs.next()) {
-                return rs.getInt(1);
+                return rs.getInt("total");
             }
         }
-        return 0;
+    } catch (SQLException e) {
+        System.err.println("SQL error in getTotalPromotions: " + e.getMessage());
+        throw e;
+    }
+    return 0;
+}
+
+    public List<Promotion> getPromotionsByPage(int page, int pageSize, String searchName, String searchStatus, String searchType) throws SQLException {
+    List<Promotion> promotions = new ArrayList<>();
+    StringBuilder sql = new StringBuilder(
+        "SELECT p.promotionID, p.promotionName, p.discountType, p.discountValue, " +
+        "p.startDate, p.endDate, p.description, p.isActive, " +
+        "COUNT(DISTINCT pp.variantID) AS totalCount " +
+        "FROM tbPromotion p " +
+        "LEFT JOIN tbProductPromotion pp ON p.promotionID = pp.promotionID " +
+        "WHERE 1=1 "
+    );
+
+    // Thêm các điều kiện tìm kiếm
+    List<Object> params = new ArrayList<>();
+    if (searchName != null && !searchName.trim().isEmpty()) {
+        sql.append("AND p.promotionName LIKE ? ");
+        params.add("%" + searchName.trim() + "%");
+    }
+    if (searchStatus != null && !searchStatus.trim().isEmpty()) {
+        sql.append("AND p.isActive = ? ");
+        params.add(Integer.parseInt(searchStatus));
+    }
+    if (searchType != null && !searchType.trim().isEmpty()) {
+        sql.append("AND p.discountType = ? ");
+        params.add(searchType);
     }
 
-    public List<Promotion> getPromotionsByPage(int page, int pageSize) throws SQLException {
-        List<Promotion> promotions = new ArrayList<>();
+    sql.append(
+        "GROUP BY p.promotionID, p.promotionName, p.discountType, p.discountValue, " +
+        "p.startDate, p.endDate, p.description, p.isActive " +
+        "ORDER BY p.promotionID " +
+        "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY"
+    );
 
-        String sql = "SELECT "
-                + "p.promotionID, p.promotionName, p.discountType, p.discountValue, "
-                + "p.startDate, p.endDate, p.description, p.isActive, "
-                + "COUNT(DISTINCT pp.variantID) AS totalCount "
-                + "FROM tbPromotion p "
-                + "LEFT JOIN tbProductPromotion pp ON p.promotionID = pp.promotionID "
-                + "GROUP BY p.promotionID, p.promotionName, p.discountType, p.discountValue, "
-                + "p.startDate, p.endDate, p.description, p.isActive "
-                + "ORDER BY p.promotionID "
-                + "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
-
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setInt(1, (page - 1) * pageSize); // OFFSET
-            stmt.setInt(2, pageSize);              // FETCH NEXT
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    Promotion promotion = new Promotion();
-                    promotion.setPromotionID(rs.getInt("promotionID"));
-                    promotion.setPromotionName(rs.getString("promotionName"));
-                    promotion.setDiscountType(rs.getString("discountType"));
-                    promotion.setDiscountValue(rs.getDouble("discountValue"));
-                    promotion.setStartDate(rs.getString("startDate"));
-                    promotion.setEndDate(rs.getString("endDate"));
-                    promotion.setDescription(rs.getString("description"));
-                    promotion.setIsActive(rs.getInt("isActive"));
-                    promotion.setTotalCount(rs.getInt("totalCount"));
-
-                    // Lấy danh sách variant áp dụng cho promotion
-                    List<ProductVariant> variants = getVariantsForPromotion(promotion.getPromotionID());
-                    promotion.setVariant(variants);
-
-                    promotions.add(promotion);
-                }
-            }
-        } catch (SQLException e) {
-            System.err.println("SQL error in getPromotionsByPage: " + e.getMessage());
-            throw e; // ném tiếp để xử lý bên trên nếu cần
+    try (PreparedStatement stmt = connection.prepareStatement(sql.toString())) {
+        // Gán tham số cho câu query
+        int paramIndex = 1;
+        for (Object param : params) {
+            stmt.setObject(paramIndex++, param);
         }
+        stmt.setInt(paramIndex++, (page - 1) * pageSize); // OFFSET
+        stmt.setInt(paramIndex, pageSize);              // FETCH NEXT
 
-        return promotions;
+        try (ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                Promotion promotion = new Promotion();
+                promotion.setPromotionID(rs.getInt("promotionID"));
+                promotion.setPromotionName(rs.getString("promotionName"));
+                promotion.setDiscountType(rs.getString("discountType"));
+                promotion.setDiscountValue(rs.getDouble("discountValue"));
+                promotion.setStartDate(rs.getString("startDate"));
+                promotion.setEndDate(rs.getString("endDate"));
+                promotion.setDescription(rs.getString("description"));
+                promotion.setIsActive(rs.getInt("isActive"));
+                promotion.setTotalCount(rs.getInt("totalCount"));
+
+                // Lấy danh sách variant áp dụng cho promotion
+                List<ProductVariant> variants = getVariantsForPromotion(promotion.getPromotionID());
+                promotion.setVariant(variants);
+
+                promotions.add(promotion);
+            }
+        }
+    } catch (SQLException e) {
+        System.err.println("SQL error in getPromotionsByPage: " + e.getMessage());
+        throw e;
     }
 
+    return promotions;
+}
     private List<ProductVariant> getVariantsForPromotion(int promotionID) throws SQLException {
         List<ProductVariant> variants = new ArrayList<>();
         System.out.println("1");
@@ -147,38 +205,37 @@ public class PromotionDAO extends DBContext {
         }
         return variants;
     }
+
     public boolean updatePromotion(Promotion promotion) throws SQLException {
-    String sql = "UPDATE tbPromotion SET promotionName = ?, discountType = ?, discountValue = ?, " +
-                 "startDate = ?, endDate = ?, description = ?, isActive = ? WHERE promotionID = ?";
+        String sql = "UPDATE tbPromotion SET promotionName = ?, discountType = ?, discountValue = ?, "
+                + "startDate = ?, endDate = ?, description = ?, isActive = ? WHERE promotionID = ?";
 
-    try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-        stmt.setString(1, promotion.getPromotionName());
-        stmt.setString(2, promotion.getDiscountType());
-        stmt.setDouble(3, promotion.getDiscountValue());
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, promotion.getPromotionName());
+            stmt.setString(2, promotion.getDiscountType());
+            stmt.setDouble(3, promotion.getDiscountValue());
 
-        // Convert String → Timestamp (nếu không null hoặc rỗng)
-        Timestamp startTs = null;
-        Timestamp endTs = null;
+            // Convert String → Timestamp (nếu không null hoặc rỗng)
+            Timestamp startTs = null;
+            Timestamp endTs = null;
 
-        if (promotion.getStartDate() != null && !promotion.getStartDate().isEmpty()) {
-            startTs = Timestamp.valueOf(promotion.getStartDate().replace("T", " ") + ":00");
+            if (promotion.getStartDate() != null && !promotion.getStartDate().isEmpty()) {
+                startTs = Timestamp.valueOf(promotion.getStartDate().replace("T", " ") + ":00");
+            }
+            if (promotion.getEndDate() != null && !promotion.getEndDate().isEmpty()) {
+                endTs = Timestamp.valueOf(promotion.getEndDate().replace("T", " ") + ":00");
+            }
+
+            stmt.setTimestamp(4, startTs);
+            stmt.setTimestamp(5, endTs);
+            stmt.setString(6, promotion.getDescription());
+            stmt.setInt(7, promotion.getIsActive());
+            stmt.setInt(8, promotion.getPromotionID());
+
+            int rowsAffected = stmt.executeUpdate();
+            return rowsAffected > 0;
         }
-        if (promotion.getEndDate() != null && !promotion.getEndDate().isEmpty()) {
-            endTs = Timestamp.valueOf(promotion.getEndDate().replace("T", " ") + ":00");
-        }
-
-        stmt.setTimestamp(4, startTs);
-        stmt.setTimestamp(5, endTs);
-        stmt.setString(6, promotion.getDescription());
-        stmt.setInt(7, promotion.getIsActive());
-        stmt.setInt(8, promotion.getPromotionID());
-
-        int rowsAffected = stmt.executeUpdate();
-        return rowsAffected > 0;
     }
-}
-
-
 
     public boolean togglePromotionStatus(int promotionID, int isActive) throws SQLException {
         String sql = "UPDATE tbPromotion SET isActive = ? WHERE promotionID = ?";
@@ -189,14 +246,169 @@ public class PromotionDAO extends DBContext {
             return rowsAffected > 0;
         }
     }
+    
+    public Promotion getSoonExpiringPromotionWithProducts() throws SQLException {
+        Promotion promotion = null;
+        String sql = "SELECT TOP 4 "
+                + "    p.productID, p.productName, p.imageMainProduct, "
+                + "    pv.variantID, pv.price, pv.colorID, c.colorName, "
+                + "    pv.sizeID, s.sizeName, pv.quantity, "
+                + "    pr.promotionID, pr.promotionName, pr.discountType, pr.discountValue, pr.endDate "
+                + "FROM tbPromotion pr "
+                + "JOIN tbProductPromotion pp ON pr.promotionID = pp.promotionID "
+                + "JOIN tbProductVariant pv ON pp.variantID = pv.variantID "
+                + "JOIN tbProduct p ON pv.productID = p.productID "
+                + "LEFT JOIN tbColor c ON pv.colorID = c.colorID "
+                + "LEFT JOIN tbSize s ON pv.sizeID = s.sizeID "
+                + "WHERE pr.isActive = 1 AND GETDATE() BETWEEN pr.startDate AND pr.endDate "
+                + "AND pr.promotionID = (SELECT TOP 1 promotionID FROM tbPromotion WHERE isActive = 1 AND GETDATE() BETWEEN startDate AND endDate ORDER BY endDate ASC)";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            System.out.println(sql);
+            ResultSet rs = ps.executeQuery();
+            List<ProductVariant> variantList = new ArrayList<>();
+            
+            while (rs.next()) {
+                if (promotion == null) {
+                    promotion = new Promotion();
+                    promotion.setPromotionID(rs.getInt("promotionID"));
+                    promotion.setPromotionName(rs.getString("promotionName"));
+                    promotion.setDiscountType(rs.getString("discountType"));
+                    promotion.setDiscountValue(rs.getDouble("discountValue"));
+                    promotion.setEndDate(rs.getString("endDate"));
+                    promotion.setVariant(new ArrayList<>());
+                }
+
+                Product product = new Product();
+                product.setProductId(rs.getInt("productID"));
+                product.setProductName(rs.getString("productName"));
+                product.setImageMainProduct(rs.getString("imageMainProduct"));
+
+                ProductVariant variant = new ProductVariant();
+                variant.setVariantID(rs.getInt("variantID"));
+                variant.setPrice(rs.getDouble("price"));
+                variant.setQuantity(rs.getInt("quantity"));
+                variant.setProduct(product);
+
+                Color color = new Color();
+                color.setColorID(rs.getInt("colorID"));
+                color.setColorName(rs.getString("colorName"));
+                variant.setColor(color);
+
+                Size size = new Size();
+                size.setSizeID(rs.getInt("sizeID"));
+                size.setSizeName(rs.getString("sizeName"));
+                variant.setSize(size);
+
+                promotion.getVariant().add(variant);
+            }
+        }
+        return promotion;
+    }
+    public boolean addPromotion(Promotion promotion) throws SQLException {
+        String sql = "INSERT INTO tbPromotion (promotionName, discountType, discountValue, startDate, endDate, description, isActive) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?)";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, promotion.getPromotionName());
+            stmt.setString(2, promotion.getDiscountType());
+            stmt.setDouble(3, promotion.getDiscountValue());
+            stmt.setString(4, promotion.getStartDate());
+            stmt.setString(5, promotion.getEndDate());
+            stmt.setString(6, promotion.getDescription() != null ? promotion.getDescription() : "");
+            stmt.setInt(7, promotion.getIsActive());
+            
+            int rowsAffected = stmt.executeUpdate();
+            return rowsAffected > 0;
+        }
+    }
+    
+
+    public List<Integer> getVariantIDsByPromotion(int promotionID) throws SQLException {
+        List<Integer> variantIDs = new ArrayList<>();
+        String sql = "SELECT variantID FROM tbProductPromotion WHERE promotionID = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, promotionID);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    variantIDs.add(rs.getInt("variantID"));
+                }
+            }
+        }
+        return variantIDs;
+    }
+
+    public boolean addPromotionVariant(int promotionID, int variantID) throws SQLException {
+        String sql = "INSERT INTO tbProductPromotion (promotionID, variantID) VALUES (?, ?)";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, promotionID);
+            stmt.setInt(2, variantID);
+            return stmt.executeUpdate() > 0;
+        }
+    }
+
+    public boolean removePromotionVariant(int promotionID, int variantID) throws SQLException {
+        String sql = "DELETE FROM tbProductPromotion WHERE promotionID = ? AND variantID = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, promotionID);
+            stmt.setInt(2, variantID);
+            return stmt.executeUpdate() > 0;
+        }
+    }
+    public Map<Integer, List<Promotion>> getPromotionsByVariantIds(List<Integer> variantIds) {
+        Map<Integer, List<Promotion>> promotionsByVariant = new HashMap<>();
+        if (variantIds == null || variantIds.isEmpty()) {
+            return promotionsByVariant;
+        }
+
+        // Khởi tạo danh sách rỗng cho mỗi variantID
+        for (Integer variantId : variantIds) {
+            promotionsByVariant.put(variantId, new ArrayList<>());
+        }
+
+        String sql = "SELECT pp.variantID, p.promotionID, p.promotionName, p.discountType, p.discountValue, " +
+                     "p.startDate, p.endDate, p.description, p.isActive " +
+                     "FROM tbProductPromotion pp " +
+                     "JOIN tbPromotion p ON pp.promotionID = p.promotionID " +
+                     "WHERE pp.variantID IN (" + StringConvert.generatePlaceholders(variantIds.size()) + ") " +
+                     "AND p.isActive = 1 " +
+                     "AND p.startDate <= GETDATE() AND p.endDate >= GETDATE()";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            // Gán các variantID vào PreparedStatement
+            for (int i = 0; i < variantIds.size(); i++) {
+                ps.setInt(i + 1, variantIds.get(i));
+            }
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    int variantId = rs.getInt("variantID");
+                    Promotion promotion = new Promotion();
+                    promotion.setPromotionID(rs.getInt("promotionID"));
+                    promotion.setPromotionName(rs.getString("promotionName"));
+                    promotion.setDiscountType(rs.getString("discountType"));
+                    promotion.setDiscountValue(rs.getDouble("discountValue"));
+                    promotion.setStartDate(rs.getString("startDate"));
+                    promotion.setEndDate(rs.getString("endDate"));
+                    promotion.setDescription(rs.getString("description"));
+                    promotion.setIsActive(rs.getInt("isActive"));
+
+                    // Thêm promotion vào danh sách của variantID tương ứng
+                    promotionsByVariant.get(variantId).add(promotion);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return promotionsByVariant;
+    }
 
     public static void main(String[] args) {
         PromotionDAO pdao = new PromotionDAO();
         try {
-            List<Promotion> list = pdao.getPromotionsByPage(1, 10);
-            for (Promotion promotion : list) {
-                System.out.println(promotion.getVariant().size());
-            }
+//            List<Promotion> list = pdao.getPromotionsByPage(1, 10);
+//            for (Promotion promotion : list) {
+//                System.out.println(promotion.getVariant().size());
+//            }
 //                List<ProductVariant> list = pdao.getVariantsForPromotion(1);
 //                System.out.println(list.size());
         } catch (Exception e) {

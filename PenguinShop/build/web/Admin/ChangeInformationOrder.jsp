@@ -53,12 +53,7 @@
                                                         <option value="4" ${o.orderStatus == '4' ? 'selected' : ''}>Đang Chờ Xử Lí</option>
                                                         <option value="5" ${o.orderStatus == '5' ? 'selected' : ''}>Đã Xác Nhận</option>
                                                     </select>
-
-                                                    <!-- Thêm hidden input để đảm bảo giá trị vẫn được submit khi select bị disabled -->
-                                                    <c:if test="${o.orderStatus == '0' || o.orderStatus == '1' || o.orderStatus == '2' ||o.orderStatus == '3'}">
-                                                        <input type="hidden" name="orderStatus" value="${o.orderStatus}">
-                                                    </c:if>
-
+                                                    <input type="hidden" name="statusOld" value="${o.orderStatus}"/>
                                                     <!-- Thêm thông báo cho user hiểu tại sao không thể thay đổi -->
                                                     <c:if test="${o.orderStatus == '0'}">
                                                         <small class="text-muted">
@@ -168,9 +163,9 @@
                                         </div>
 
                                         <button class="btn btn-primary" type="submit" 
-                                                ${o.orderStatus == '0' || o.orderStatus == '1'|| o.orderStatus == '2' ? 'disabled' : ''}>
+                                                ${o.orderStatus == '0' || o.orderStatus == '1'|| o.orderStatus == '2'||o.orderStatus == '3' ? 'disabled' : ''}>
                                             <c:choose>
-                                                <c:when test="${o.orderStatus == '0' || o.orderStatus == '1'|| o.orderStatus == '2'}">
+                                                <c:when test="${o.orderStatus == '0' || o.orderStatus == '1'|| o.orderStatus == '2'|| o.orderStatus == '3'}">
                                                     <i class="fas fa-lock me-2"></i>Không thể cập nhật
                                                 </c:when>
                                                 <c:otherwise>

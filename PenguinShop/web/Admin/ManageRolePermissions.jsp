@@ -45,11 +45,14 @@
                                                     <select class="form-select" id="roleId" name="roleId" onchange="this.form.submit()">
                                                         <option value="">Chọn vai trò...</option>
                                                         <c:forEach var="role" items="${roleList}">
-                                                            <option value="${role.roleID}" ${param.roleId == role.roleID ? 'selected' : ''}>
-                                                                ${role.roleName}
-                                                            </option>
+                                                            <c:if test="${role.roleID != 2}">
+                                                                <option value="${role.roleID}" ${param.roleId == role.roleID ? 'selected' : ''}>
+                                                                    ${role.roleName}
+                                                                </option>
+                                                            </c:if>
                                                         </c:forEach>
                                                     </select>
+
                                                 </div>
                                             </div>
                                         </form>
@@ -73,9 +76,12 @@
                                                         <select class="form-select" id="permissionId" name="permissionId" required>
                                                             <option value="">Chọn quyền...</option>
                                                             <c:forEach var="perm" items="${availablePermissions}">
-                                                                <option value="${perm.permissionID}">${perm.permissionName}</option>
+                                                                <c:if test="${param.roleId == '1' or perm.modules.moduleID != 3}">
+                                                                    <option value="${perm.permissionID}">${perm.permissionName}</option>
+                                                                </c:if>
                                                             </c:forEach>
                                                         </select>
+
                                                     </div>
                                                     <div style="display: flex; align-items: flex-end" class="col-md-2">
                                                         <label class="form-label">&nbsp;</label>

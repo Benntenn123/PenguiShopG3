@@ -11,6 +11,9 @@ public class CartSession {
         this.totalAmount = totalAmount;
     }
 
+    public CartSession() {
+    }
+
     // Getters và Setters
 
     public Cart getCart() {
@@ -37,4 +40,6 @@ public class CartSession {
     public void setTotalAmount(double totalAmount) {
         this.totalAmount = totalAmount;
     }
+
+    
 }

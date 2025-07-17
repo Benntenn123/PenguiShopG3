@@ -47,7 +47,8 @@ GO
 -- Bảng vai trò người dùng
 CREATE TABLE tbRoles (
     roleID INT PRIMARY KEY IDENTITY(1,1),
-    roleName NVARCHAR(50) NOT NULL
+    roleName NVARCHAR(50) NOT NULL,
+	roleDescription NVARCHAR(max),
 );
 CREATE TABLE tbModules (
     moduleID INT PRIMARY KEY IDENTITY(1,1),

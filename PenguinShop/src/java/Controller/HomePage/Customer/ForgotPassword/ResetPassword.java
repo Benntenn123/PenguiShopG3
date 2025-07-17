@@ -8,6 +8,7 @@ package Controller.HomePage.Customer.ForgotPassword;
 import DAL.UserDAO;
 import Models.User;
 import Utils.HashPassword;
+import Utils.StringConvert;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -59,10 +60,15 @@ public class ResetPassword extends HttpServlet {
             request.getSession().setAttribute("error", "Vui lòng nhập đủ thông tin");
             response.sendRedirect("reset_password");
         }
+        if(!StringConvert.isValidPassword(password)){
+            request.getSession().setAttribute("error", "Password chưa thỏa mãn điều kiện");
+            response.sendRedirect("reset_password");
+        }
         if(!password.equals(confirmPassword)){
             request.getSession().setAttribute("error", "Mật khẩu không trùng khớp");
             response.sendRedirect("reset_password");
         }
+        
         if(udao.updatePassword(userforgot.getUserID(), HashPassword.hashWithSHA256(password))){
             request.getSession().setAttribute("ms", "Khôi phục mật khẩu thành công");
             response.sendRedirect("login");

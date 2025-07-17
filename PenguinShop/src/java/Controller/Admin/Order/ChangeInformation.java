@@ -76,8 +76,10 @@ public class ChangeInformation extends HttpServlet {
 
         } else {
             try {
-                int status = Integer.parseInt(data[4]);
-                if (status == StatusOrder.DA_XAC_NHAN || status == StatusOrder.DANG_CHO_XU_LI) {   // chỉ cho đổi trong th chưa ship chưa giao xong như shoppee
+                int status = Integer.parseInt(data[6]);
+                
+                System.out.println(status);
+                if (status == StatusOrder.DANG_CHO_XU_LI || status == StatusOrder.DA_XAC_NHAN) {   // chỉ cho đổi trong th chưa ship chưa giao xong như shoppee
                     if (odao.UpdateOrder(data)) {
                         request.getSession().setAttribute("ms", "Chỉnh sửa thông tin thành công!");
                     } else {
@@ -101,7 +103,8 @@ public class ChangeInformation extends HttpServlet {
         String email = request.getParameter("email");
         String phone = request.getParameter("phone");
         String address = request.getParameter("address");
-        return new String[]{address, email, phone, name_receiver, status, orderID};
+        String oldStatus = request.getParameter("statusOld");
+        return new String[]{address, email, phone, name_receiver, status, orderID,oldStatus};
     }
 
     @Override

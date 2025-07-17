@@ -4,7 +4,10 @@
  */
 package Controller.Admin.Authen;
 
+import DAL.PermissionDAO;
 import DAL.UserDAO;
+import Models.Modules;
+import Models.Permission;
 import Models.User;
 import Utils.HashPassword;
 import Utils.StringConvert;
@@ -15,11 +18,14 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 @WebServlet(name = "LoginAdmin", urlPatterns = {"/admin/loginAdmin"})
 public class LoginAdmin extends HttpServlet {
     
     UserDAO udao = new UserDAO();
+    PermissionDAO pdao = new PermissionDAO();
     
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -56,6 +62,8 @@ public class LoginAdmin extends HttpServlet {
         } else {
             if (udao.authenticateUser(email, HashPassword.hashWithSHA256(password))) {
                 User uAdmin = udao.loadUserInfoByEmailAdmin(email);
+                LinkedHashMap<Modules, List<Permission>> menu = pdao.loadPermissionsByRole(uAdmin.getRoleID());
+                request.getSession().setAttribute("menu", menu);
                 request.getSession().setAttribute("uAdmin", uAdmin);
                 request.getSession().setAttribute("ms", "Login thành công!");
                 response.sendRedirect("dashboard");

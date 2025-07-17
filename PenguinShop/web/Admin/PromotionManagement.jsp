@@ -67,14 +67,46 @@
                             <div class="col-md-6">
                                 <div class="d-flex flex-wrap align-items-center justify-content-end gap-2 mb-3">
                                     <div>
-                                        <a type="button" class="btn btn-light" href="addPromotion.jsp">
+                                        <a type="button" class="btn btn-light" href="addPromotion">
                                             <i class="bx bx-plus me-1"></i> Thêm khuyến mãi mới
                                         </a>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <form action="listPromotion" method="get" class="row g-3">
+                                    <div class="col-md-4">
+                                        <label for="searchName" class="form-label">Tên Khuyến Mãi</label>
+                                        <input type="text" class="form-control" id="searchName" name="searchName" value="${param.searchName}" placeholder="Nhập tên khuyến mãi">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="searchStatus" class="form-label">Trạng Thái</label>
+                                        <select class="form-select" id="searchStatus" name="searchStatus">
+                                            <option value="">Tất cả</option>
+                                            <option value="1" ${param.searchStatus == '1' ? 'selected' : ''}>Hoạt động</option>
+                                            <option value="0" ${param.searchStatus == '0' ? 'selected' : ''}>Ngừng hoạt động</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="searchType" class="form-label">Loại Giảm</label>
+                                        <select class="form-select" id="searchType" name="searchType">
+                                            <option value="">Tất cả</option>
+                                            <option value="PERCENTAGE" ${param.searchType == 'PERCENTAGE' ? 'selected' : ''}>Phần trăm</option>
+                                            <option value="FIXED" ${param.searchType == 'FIXED' ? 'selected' : ''}>Cố định</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2 d-flex align-items-end">
+                                        <button type="submit" class="btn btn-primary w-100">Tìm kiếm</button>
+                                    </div>
+                                    <div class="col-md-2 d-flex align-items-end gap-2">
+                                        <button type="submit" class=" disorder-1 btn btn-primary w-100">Tìm kiếm</button>
+                                        <a Targeting="no-referrer" class="btn btn-secondary w-100" onclick="window.location.href = 'listPromotion';">Xóa Bộ Lọc</a>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>            
                         <div class="table-responsive mb-4">
                             <table style="min-height: 150px" class="table align-middle datatable dt-responsive table-check nowrap promotion-table" style="border-collapse: collapse; border-spacing: 0 8px; width: 100%;">
                                 <thead>
@@ -140,6 +172,7 @@
                                                         <li><a class="dropdown-item" href="javascript:void(0);" onclick="toggleStatus(${promotion.promotionID}, ${promotion.isActive})">
                                                                 ${promotion.isActive == 1 ? 'Ngưng' : 'Kích hoạt'}
                                                             </a></li>
+                                                        <li><a class="dropdown-item" href="promotionVariant?promotionID=${promotion.promotionID}">Thêm sản phẩm giảm giá</a></li>
                                                     </ul>
                                                 </div>
                                             </td>
@@ -293,13 +326,13 @@
                                     <div class="mb-3">
                                         <label for="startDate${promotion.promotionID}" class="form-label">Ngày Bắt Đầu</label>
                                         <input type="datetime-local" class="form-control" id="startDate${promotion.promotionID}" name="startDate" 
-                                               value="${fn:replace(fn:substring(promotion.startDate, 0, 16), ' ', 'T')}" required>
+                                               value="${fn:replace(fn:substring(promotion.startDate, 0, 16), ' ', 'T')}" readonly="">
                                     </div>
 
                                     <div class="mb-3">
                                         <label for="endDate${promotion.promotionID}" class="form-label">Ngày Kết Thúc</label>
                                         <input type="datetime-local" class="form-control" id="endDate${promotion.promotionID}" name="endDate" 
-                                               value="${fn:replace(fn:substring(promotion.endDate, 0, 16), ' ', 'T')}" required>
+                                               value="${fn:replace(fn:substring(promotion.endDate, 0, 16), ' ', 'T')}" readonly="">
                                     </div>
 
                                     <div class="mb-3">

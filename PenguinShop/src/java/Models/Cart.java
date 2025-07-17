@@ -17,6 +17,9 @@ public class Cart {
         this.variant = variant;
     }
 
+    public Cart() {
+    }
+
     public Cart(int cartID, User user, ProductVariant variant, int quantity, Product product) {
         this.cartID = cartID;
         this.user = user;

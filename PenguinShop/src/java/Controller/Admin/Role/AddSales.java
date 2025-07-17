@@ -5,6 +5,7 @@
 package Controller.Admin.Role;
 
 import APIKey.CloudinaryConfig;
+import DAL.PermissionDAO;
 import DAL.UserDAO;
 import Models.Role;
 import Models.User;
@@ -22,11 +23,13 @@ import jakarta.servlet.http.Part;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 @MultipartConfig
 @WebServlet(name = "AddSales", urlPatterns = {"/admin/addSales"})
 public class AddSales extends HttpServlet {
 
     UserDAO usersDAO = new UserDAO();
+    PermissionDAO pdao = new PermissionDAO();
     public CloudinaryConfig cloudinaryService = new CloudinaryConfig();
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
@@ -49,6 +52,8 @@ public class AddSales extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        List<Role> role = pdao.getAllRole();
+        request.setAttribute("roles", role);
         request.getRequestDispatcher("/Admin/AddSales.jsp").forward(request, response);
     }
 
@@ -164,7 +169,7 @@ public class AddSales extends HttpServlet {
             usersDAO.addSales(user);
 
             // Chuyển về danh sách với thông báo
-            request.getSession().setAttribute("success", "Thêm Sales thành công!");
+            request.getSession().setAttribute("ms", "Thêm Sales thành công!");
             response.sendRedirect("listSales");
         } catch (Exception e) {
             e.printStackTrace();

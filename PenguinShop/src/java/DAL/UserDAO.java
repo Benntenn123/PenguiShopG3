@@ -600,14 +600,14 @@ public class UserDAO extends DBContext {
         List<User> users = new ArrayList<>();
         StringBuilder sql = new StringBuilder(
                 "SELECT u.userID, u.fullName, u.email, u.phone, u.created_at, u.status_account, u.roleID, r.roleName "
-                + "FROM tbUsers u LEFT JOIN tbRoles r ON u.roleID = r.roleID WHERE u.roleID = 3"
+                + "FROM tbUsers u LEFT JOIN tbRoles r ON u.roleID = r.roleID WHERE u.roleID != 1 and u.roleID !=2 "
         );
 
         if (fullName != null && !fullName.trim().isEmpty()) {
             sql.append(" AND u.fullName LIKE ?");
         }
         if (email != null && !email.trim().isEmpty()) {
-            sql.append("email != null && !email.trim(). AND u.email LIKE ?");
+            sql.append(" AND u.email LIKE ?");
         }
         if (phone != null && !phone.trim().isEmpty()) {
             sql.append(" AND u.phone LIKE ?");
@@ -627,7 +627,7 @@ public class UserDAO extends DBContext {
             }
             stmt.setInt(paramIndex++, (page - 1));
             stmt.setInt(paramIndex, pageSize);
-
+            System.out.println(sql);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     User user = new User();

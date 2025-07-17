@@ -33,16 +33,25 @@ public class FilterUser implements Filter {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse res = (HttpServletResponse) response;
 
-        HttpSession session = req.getSession();
+        // Get the servlet path (e.g., /login, /logout, /listservices)
+        String servletPath = req.getServletPath();
 
+        // Allow access to login and logout pages without authentication
+        if ("/login".equals(servletPath) || "/logout".equals(servletPath)) {
+            chain.doFilter(request, response);
+            return;
+        }
+
+        HttpSession session = req.getSession(false); // Use false to avoid creating a new session
         User user = (session != null) ? (User) session.getAttribute("user") : null;
 
         if (user == null) {
-            // Chưa đăng nhập, chuyển về trang login
-            session.setAttribute("error", "Vui lòng login");
+            // User is not logged in, redirect to login page with error message
+            session = req.getSession(true); // Create session if null for error message
+            session.setAttribute("error", "Vui lòng đăng nhập");
             res.sendRedirect(req.getContextPath() + "/login");
         } else {
-            // Đã đăng nhập, cho đi tiếp
+            // User is authenticated, proceed with the request
             chain.doFilter(request, response);
         }
     }

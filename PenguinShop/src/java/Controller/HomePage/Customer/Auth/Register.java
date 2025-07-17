@@ -131,6 +131,10 @@ public class Register extends HttpServlet {
             request.getSession().setAttribute("error", "Email phải chứa ký tự @.");
             return null;
         }
+        if(!StringConvert.isValidPassword(password)){
+            request.getSession().setAttribute("error", "Password chưa đủ kí tự");
+            return null;
+        }
 
         // Check if email or phone already exists
         if (udao.checkExistEmail(email)) {
