@@ -401,4 +401,53 @@ public class FeedbackDAO extends DBContext {
         }
         return feedbacks;
     }
+        // Lấy chi tiết feedback theo ID (kèm user, product, images)
+    public Feedback getFeedbackDetailById(int feedbackID) {
+        String sql = "SELECT f.*,u.email, p.productName, u.fullName, u.image_user, i.imageURL "
+                + "FROM tbFeedback f "
+                + "INNER JOIN tbProduct p ON f.productID = p.productID "
+                + "INNER JOIN tbUsers u ON f.userID = u.userID "
+                + "LEFT JOIN tbImages i ON f.feedbackID = i.feedbackID "
+                + "WHERE f.feedbackID = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, feedbackID);
+            ResultSet rs = ps.executeQuery();
+            Feedback feedback = null;
+            List<String> images = new ArrayList<>();
+            while (rs.next()) {
+                if (feedback == null) {
+                    feedback = new Feedback();
+                    feedback.setFeedbackID(rs.getInt("feedbackID"));
+                    feedback.setProductID(rs.getInt("productID"));
+                    feedback.setVariantID(rs.getInt("variantID"));
+                    feedback.setUserID(rs.getInt("userID"));
+                    feedback.setRating(rs.getInt("rating"));
+                    feedback.setComment(rs.getString("comment"));
+                    feedback.setFeedbackDate(rs.getTimestamp("feedbackDate"));
+                    // Set user
+                    Models.User u = new Models.User();
+                    u.setFullName(rs.getString("fullName"));
+                    u.setImage_user(rs.getString("image_user"));
+                    u.setEmail(rs.getString("email"));
+                    feedback.setUser(u);
+                    // Set product
+                    Models.Product p = new Models.Product();
+                    p.setProductName(rs.getString("productName"));
+                    feedback.setProduct(p);
+                }
+                String imgUrl = rs.getString("imageURL");
+                if (imgUrl != null && !imgUrl.isEmpty()) {
+                    images.add(imgUrl);
+                }
+            }
+            if (feedback != null) {
+                feedback.setImages(images);
+            }
+            return feedback;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }

@@ -1,3 +1,4 @@
+ 
 package Utils;
 
 import APIKey.Gmail;
@@ -660,5 +661,71 @@ public class SendMail {
         return false;
     }
 }
+    
+    public static boolean sendMailReplyFeedbackAsync(String email, String nameUser, String replyContent) {
+        Thread thread = new Thread(() -> {
+            try {
+                SendMail.sendMailReplyFeedback(email, nameUser, replyContent);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+        thread.start();
+
+        return true;
+    }
+   // Gửi mail phản hồi feedback cho người mua
+    public static boolean sendMailReplyFeedback(String email, String nameUser, String replyContent) {
+        Properties props = new Properties();
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.host", Gmail.HOST_NAME);
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.port", Gmail.TSL_PORT);
+
+        Session session = Session.getInstance(props, new jakarta.mail.Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(Gmail.APP_EMAIL, Gmail.APP_PASSWORD);
+            }
+        });
+        session.setDebug(true);
+        try {
+            MimeMessage message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(Gmail.APP_EMAIL, "PenguinShop"));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
+            String subject = "Phản hồi từ PenguinShop về đánh giá của bạn";
+            String emailContent = "<html><head>"
+                    + "<meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>"
+                    + "<style>body{font-family:Arial,sans-serif;}"
+                    + ".container{background:#f8f9fa;padding:20px;border-radius:10px;max-width:600px;margin:0 auto;}"
+                    + ".header{font-size:20px;font-weight:bold;color:#333;margin-bottom:10px;}"
+                    + ".content{font-size:16px;color:#444;margin-bottom:20px;}"
+                    + ".footer{font-size:13px;color:#888;margin-top:30px;text-align:center;}</style>"
+                    + "</head><body>"
+                    + "<div class='container'>"
+                    + "<div class='header'>Phản hồi từ PenguinShop</div>"
+                    + "<div class='content'>"
+                    + "Xin chào <b>" + (nameUser != null ? nameUser : "bạn") + "</b>,<br><br>"
+                    + "Chúng tôi đã nhận được đánh giá/feedback của bạn. Dưới đây là phản hồi từ shop:<br><br>"
+                    + "<div style='background:#fffbe6;border-left:4px solid #ffc107;padding:15px 20px;border-radius:6px;margin-bottom:15px;'><i>"
+                    + replyContent + "</i></div>"
+                    + "Nếu bạn có thêm câu hỏi hoặc cần hỗ trợ, hãy liên hệ với chúng tôi qua email này.<br><br>"
+                    + "Cảm ơn bạn đã tin tưởng và sử dụng dịch vụ của PenguinShop!"
+                    + "</div>"
+                    + "<div class='footer'>Đây là email tự động, vui lòng không trả lời lại email này.<br>© 2025 PenguinShop</div>"
+                    + "</div></body></html>";
+            message.setSubject(MimeUtility.encodeText(subject, "UTF-8", "B"));
+            MimeMultipart multipart = new MimeMultipart("alternative");
+            MimeBodyPart htmlPart = new MimeBodyPart();
+            htmlPart.setContent(emailContent, "text/html; charset=UTF-8");
+            multipart.addBodyPart(htmlPart);
+            message.setContent(multipart);
+            Transport.send(message);
+            System.out.println("Mail phản hồi feedback đã gửi thành công: " + System.currentTimeMillis());
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
 }

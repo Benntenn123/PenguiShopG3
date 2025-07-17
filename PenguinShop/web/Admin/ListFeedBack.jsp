@@ -56,6 +56,10 @@
                                 </td>
                                 <td>${fb.user != null ? fb.user.fullName : ''}</td>
                                 <td>${fb.rating}</td>
+                                <td>
+                                    <a class="btn btn-info btn-sm" href="feedbackDetail?feedbackID=${fb.feedbackID}">Xem chi tiết</a>
+                                    <button class="btn btn-primary btn-sm" onclick="messageSeller('${fb.productID}')">Nhắn tin cho người bán</button>
+                                </td>
                             </tr>
                         </c:forEach>
                         </tbody>
@@ -65,6 +69,13 @@
         </div>
     </div>
 </div>
+
+<script>
+    function messageSeller(productID) {
+        // Chuyển hướng sang trang nhắn tin cho người bán (cần BE hỗ trợ route)
+        window.location.href = '../admin/messageSeller?productID=' + productID;
+    }
+</script>
 <jsp:include page="Common/RightSideBar.jsp"/>
 <jsp:include page="Common/Js.jsp"/>
 <jsp:include page="Common/Message.jsp"/>
