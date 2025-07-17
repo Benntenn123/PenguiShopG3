@@ -11,7 +11,7 @@ INSERT INTO dbo.tbModules(moduleName,icon)VALUES
 (N'Yêu cầu người dùng','send'),
 (N'Lịch sử','clock'),
 (N'Nhân sự', 'users'),
-(N'Đánh giá', 'feedback');
+(N'Đánh giá', 'message-square');
 
 INSERT INTO dbo.tbPermissions
 (permissionName,url_permission,moduleID,isHide,permissionDescription)VALUES
@@ -55,7 +55,8 @@ INSERT INTO dbo.tbPermissions
 (N'Chỉnh sửa thông tin sales','/admin/editSales',9,1,NULL),
 (N'Thông tin tài khoản sales','/admin/profile',9,1,NULL),
 (N'Danh sách đánh giá','/admin/feedbackList',10,0,NULL),
-(N'Chi tiết đánh giá','/admin/feedbackDetail',10,1,NULL);
+(N'Chi tiết đánh giá','/admin/feedbackDetail',10,1,NULL),
+(N'Lịch sử hoạt động','/admin/list-logs',8,0,NULL);
 -- Gán tất cả các quyền cho role admin (roleID = 1)
 INSERT INTO tbRolePermissions (roleID, permissionID)
 SELECT 1, permissionID
