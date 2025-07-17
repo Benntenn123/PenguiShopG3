@@ -1,3 +1,4 @@
+
 package DAL;
 
 import Models.Feedback;
@@ -364,5 +365,40 @@ public class FeedbackDAO extends DBContext {
             e.printStackTrace();
         }
         return 0;
+    }
+        // Lấy tất cả feedback kèm thông tin sản phẩm và user
+    public List<Feedback> getAllFeedbacksWithProductAndUser() {
+        List<Feedback> feedbacks = new ArrayList<>();
+        String sql = "SELECT f.*, p.productName, u.fullName, u.image_user "
+                + "FROM tbFeedback f "
+                + "INNER JOIN tbProduct p ON f.productID = p.productID "
+                + "INNER JOIN tbUsers u ON f.userID = u.userID "
+                + "ORDER BY f.feedbackDate DESC";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Feedback feedback = new Feedback();
+                feedback.setFeedbackID(rs.getInt("feedbackID"));
+                feedback.setProductID(rs.getInt("productID"));
+                feedback.setVariantID(rs.getInt("variantID"));
+                feedback.setUserID(rs.getInt("userID"));
+                feedback.setRating(rs.getInt("rating"));
+                feedback.setComment(rs.getString("comment"));
+                feedback.setFeedbackDate(rs.getTimestamp("feedbackDate"));
+                // Set user
+                Models.User u = new Models.User();
+                u.setFullName(rs.getString("fullName"));
+                u.setImage_user(rs.getString("image_user"));
+                feedback.setUser(u);
+                // Set product
+                Models.Product p = new Models.Product();
+                p.setProductName(rs.getString("productName"));
+                feedback.setProduct(p);
+                feedbacks.add(feedback);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return feedbacks;
     }
 }

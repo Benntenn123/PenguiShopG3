@@ -2,9 +2,9 @@
 package Models;
 
 import java.util.Date;
+import java.util.List;
 
-
-    public class User {
+public class User {
     private int userID;
     private String fullName;
     private String password;
@@ -17,6 +17,15 @@ import java.util.Date;
     private Role role;
     private int status_account;
     private String created_at;
+    // Thêm danh sách quyền cho user (dùng cho API detail)
+    private List<Permission> permissions;
+    // Getter & Setter cho permissions
+    public List<Permission> getPermissions() {
+        return permissions;
+    }
+    public void setPermissions(List<Permission> permissions) {
+        this.permissions = permissions;
+    }
     public User(int userID, String fullName, Date birthday, String phone, String email, String image_user, Role role) {
         this.userID = userID;
         this.fullName = fullName;

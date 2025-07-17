@@ -1,3 +1,4 @@
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
@@ -10,9 +11,9 @@ import Models.GoogleAccount;
 import Models.Logs;
 import Models.Order;
 import Models.Role;
-import Utils.HashPassword;
 import Models.User;
 import Utils.GetDateTime;
+import Utils.HashPassword;
 import Utils.StringConvert;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -35,6 +36,7 @@ public class UserDAO extends DBContext {
         }
         return false;
     }
+    
 
     public User loadUserInfoByEmail(String email) {
         String sql = "SELECT u.userID,u.fullName,u.roleID,d.addressDetail AS address, u.birthday,u.phone, u.email, u.image_user,u.created_at,u.status_account FROM tbUsers u \n"
@@ -773,6 +775,43 @@ public class UserDAO extends DBContext {
             e.printStackTrace();
         }
         return null;
+    }
+
+        /**
+     * Cập nhật thông tin profile cho Sales (Admin chỉnh sửa)
+     * @param user User object chứa thông tin mới
+     * @param updatePassword Nếu khác null và không rỗng thì sẽ cập nhật mật khẩu mới
+     * @return true nếu cập nhật thành công
+     */
+    public boolean updateSalesProfile(User user, String updatePassword) {
+        StringBuilder sql = new StringBuilder("UPDATE tbUsers SET fullName = ?, birthday = ?, phone = ?, image_user = ?, status_account = ?, roleID = ?");
+        if (updatePassword != null && !updatePassword.trim().isEmpty()) {
+            sql.append(", password = ?");
+        }
+        sql.append(" WHERE userID = ?");
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql.toString());
+            int idx = 1;
+            ps.setString(idx++, user.getFullName());
+            if (user.getBirthday() != null) {
+                ps.setDate(idx++, new java.sql.Date(user.getBirthday().getTime()));
+            } else {
+                ps.setNull(idx++, java.sql.Types.DATE);
+            }
+            ps.setString(idx++, user.getPhone());
+            ps.setString(idx++, user.getImage_user());
+            ps.setInt(idx++, user.getStatus_account());
+            ps.setInt(idx++, user.getRoleID());
+            if (updatePassword != null && !updatePassword.trim().isEmpty()) {
+                ps.setString(idx++, updatePassword);
+            }
+            ps.setInt(idx, user.getUserID());
+            int rows = ps.executeUpdate();
+            return rows > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     public static void main(String[] args) {
