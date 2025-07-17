@@ -41,6 +41,42 @@ public class OrderDAO extends DBContext {
         } catch (Exception e) { e.printStackTrace(); }
         return list;
     }
+        // Lấy top N user chi nhiều tiền nhất
+    public List<Models.MonthValue> getTopUserSpending(int top) {
+        List<Models.MonthValue> list = new ArrayList<>();
+        String sql = "SELECT TOP " + top + " u.userID, SUM(o.total) as totalSpent FROM tbOrder o JOIN tbUsers u ON o.userID = u.userID WHERE o.paymentStatus = 1 GROUP BY u.userID ORDER BY totalSpent DESC";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    list.add(new Models.MonthValue(rs.getInt("userID"), rs.getDouble("totalSpent")));
+                }
+            }
+        } catch (Exception e) { e.printStackTrace(); }
+        return list;
+    }
+    // Lấy 5 đơn hàng gần nhất
+    public List<Order> getLatestOrders(int top) {
+        List<Order> list = new ArrayList<>();
+        String sql = "SELECT TOP " + top + " orderID, orderDate, total, userID, name_receiver, orderStatus FROM tbOrder ORDER BY orderDate DESC";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            try (ResultSet rs = ps.executeQuery()) {
+                User user = new User();
+                while (rs.next()) {
+                    Order o = new Order();
+                    o.setOrderID(rs.getInt("orderID"));
+                    o.setOrderDate(rs.getString("orderDate"));
+                    o.setTotal(rs.getDouble("total"));
+                    user.setUserID(rs.getInt("userID"));
+                    o.setName_receiver(rs.getString("name_receiver"));
+                    o.setUser(user);
+                    o.setOrderStatus(rs.getInt("orderStatus"));
+                    list.add(o);
+                }
+            }
+        } catch (Exception e) { e.printStackTrace(); }
+        return list;
+    }
+
 
     // Thống kê số đơn hàng theo tháng
     public List<Models.MonthValue> getMonthlyOrderCount(int year) {

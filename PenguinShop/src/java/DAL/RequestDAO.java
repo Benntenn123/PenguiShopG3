@@ -15,6 +15,29 @@ import java.util.List;
 
 public class RequestDAO extends DBContext {
 
+    // Lấy 5 request gần nhất
+    public List<CustomerRequest> getLatestRequests(int top) {
+        List<CustomerRequest> list = new ArrayList<>();
+        String sql = "SELECT TOP " + top + " requestID, requestDate, email_request, name_request, phone_request, requestType, requestStatus, description FROM tbRequests ORDER BY requestDate DESC";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    CustomerRequest request = new CustomerRequest();
+                    request.setRequestID(rs.getInt("requestID"));
+                    request.setRequestDate(rs.getString("requestDate"));
+                    request.setEmail_request(rs.getString("email_request"));
+                    request.setName_request(rs.getString("name_request"));
+                    request.setPhone_request(rs.getString("phone_request"));
+                    request.setRequestType(rs.getString("requestType"));
+                    request.setRequestStatus(rs.getInt("requestStatus"));
+                    request.setDescription(rs.getString("description"));
+                    list.add(request);
+                }
+            }
+        } catch (Exception e) { e.printStackTrace(); }
+        return list;
+    }
+
     public boolean addRequestSupport(String[] data) {
         String sql = "INSERT INTO dbo.tbRequests\n"
                 + "(email_request, phone_request, name_request, requestType, description, requestStatus, requestDate)\n"

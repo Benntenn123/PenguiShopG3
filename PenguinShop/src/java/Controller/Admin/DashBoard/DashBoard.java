@@ -8,6 +8,7 @@ package Controller.Admin.DashBoard;
 import DAL.FeedbackDAO;
 import DAL.OrderDAO;
 import DAL.UserDAO;
+import DAL.RequestDAO;
 import Models.MonthValue;
 import Models.User;
 import java.io.IOException;
@@ -54,16 +55,37 @@ public class DashBoard extends HttpServlet {
         OrderDAO orderDAO = new OrderDAO();
         UserDAO userDAO = new UserDAO();
         FeedbackDAO feedbackDAO = new FeedbackDAO();
+        RequestDAO requestDAO = new RequestDAO();
 
         List<MonthValue> revenueList = orderDAO.getMonthlyRevenue(year);
+        // Tổng doanh thu tháng hiện tại
+        double totalRevenueThisMonth = 0;
+        int currentMonth = java.time.LocalDate.now().getMonthValue();
+        for (MonthValue mv : revenueList) {
+            if (mv.getMonth() == currentMonth) {
+                totalRevenueThisMonth = mv.getValue();
+                break;
+            }
+        }
         List<MonthValue> orderList = orderDAO.getMonthlyOrderCount(year);
         List<MonthValue> userList = userDAO.getMonthlyNewUsers(year);
         List<MonthValue> feedbackList = feedbackDAO.getMonthlyFeedbacks(year);
 
+        // 5 request gần nhất
+        var latestRequests = requestDAO.getLatestRequests(5);
+        // 5 đơn hàng gần nhất
+        var latestOrders = orderDAO.getLatestOrders(5);
+        // top 5 user chi nhiều tiền nhất
+        var topUserSpending = orderDAO.getTopUserSpending(5);
+
         request.setAttribute("revenueList", revenueList);
+        request.setAttribute("totalRevenueThisMonth", totalRevenueThisMonth);
         request.setAttribute("orderList", orderList);
         request.setAttribute("userList", userList);
         request.setAttribute("feedbackList", feedbackList);
+        request.setAttribute("latestRequests", latestRequests);
+        request.setAttribute("latestOrders", latestOrders);
+        request.setAttribute("topUserSpending", topUserSpending);
         request.setAttribute("year", year);
         request.getRequestDispatcher("/Admin/TrangChu.jsp").forward(request, response);
     } 
