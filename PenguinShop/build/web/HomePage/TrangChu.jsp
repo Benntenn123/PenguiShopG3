@@ -1642,68 +1642,7 @@
                     </c:if>
                 </div>
             </section>
-            <!--            <button class="partnership-chat-button" id="partnershipChatToggle">
-                            <svg viewBox="0 0 24 24">
-                            <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 1L9 7V9C9 10.1 9.9 11 11 11V16L12 17L13 16V11C14.1 11 15 10.1 15 9V7H21M7 10.5C7 9.7 6.3 9 5.5 9S4 9.7 4 10.5 4.7 12 5.5 12 7 11.3 7 10.5M20 10.5C20 9.7 19.3 9 18.5 9S17 9.7 17 10.5 17.7 12 18.5 12 20 11.3 20 10.5M12 20C12 21.1 11.1 22 10 22H6C4.9 22 4 21.1 4 20V18H8V20H12M20 18V20C20 21.1 19.1 22 18 22H14C12.9 22 12 21.1 12 20V18H20Z"/>
-                            </svg>
-                        </button>
-                        ------------- flash-section-end-------------
-                        <div class="partnership-chat-window" id="partnershipChatWindow">
-                            <div class="partnership-chat-header">
-                                <button class="partnership-close-btn" id="partnershipCloseChat">&times;</button>
-                                <h3 style="font-size: 16px !important;
-                                    color: white">🤝 Hỗ trợ cộng tác</h3>
-                                <p style="font-size: 16px !important;
-                                   color: white">Gửi thông tin để chúng tôi liên hệ!</p>
-                            </div>
             
-                            <div class="partnership-chat-form">
-                                <div style="font-size: 16px !important;
-                                     color: white" class="partnership-success-message" id="partnershipSuccessMessage">
-                                    ✅ Cảm ơn bạn! Chúng tôi đã nhận được thông tin và sẽ liên hệ lại trong thời gian sớm nhất.
-                                </div>
-            
-                                <form id="partnershipSupportForm">
-                                    <div  class="partnership-form-group">
-                                        <label style="font-size: 16px !important;" for="partnershipFullName">Họ và tên *</label>
-                                        <input style="font-size: 16px !important;" type="text" id="partnershipFullName" name="fullName" required placeholder="Nhập họ tên của bạn">
-                                    </div>
-            
-                                    <div class="partnership-form-group">
-                                        <label style="font-size: 16px !important;" for="partnershipPhone">Số điện thoại *</label>
-                                        <input style="font-size: 16px !important;" type="tel" id="partnershipPhone" name="phone" required placeholder="Nhập số điện thoại">
-                                    </div>
-            
-                                    <div class="partnership-form-group">
-                                        <label style="font-size: 16px !important;" for="partnershipEmail">Email *</label>
-                                        <input style="font-size: 16px !important;" type="email" id="partnershipEmail" name="email" required placeholder="Nhập địa chỉ email">
-                                    </div>
-            
-                                    <div class="partnership-form-group">
-                                        <label style="font-size: 16px !important;" for="partnershipIssueType">Vấn đề gặp phải *</label>
-                                        <select style="font-size: 16px !important;" id="partnershipIssueType" name="issueType" required>
-                                            <option value="">-- Chọn loại vấn đề --</option>
-                                            <option value="account">Trạng thái tài khoản</option>
-                                            <option value="purchase">Vấn đề mua hàng</option>
-                                            <option value="payment">Vấn đề thanh toán</option>
-                                            <option value="shipping">Vấn đề giao hàng</option>
-                                            <option value="refund">Hoàn tiền/Đổi trả</option>
-                                            <option value="technical">Lỗi kỹ thuật</option>
-                                            <option value="other">Vấn đề khác</option>
-                                        </select>
-                                    </div>
-            
-                                    <div class="partnership-form-group">
-                                        <label style="font-size: 16px !important;" for="partnershipDescription">Nội dung mô tả *</label>
-                                        <textarea style="font-size: 16px !important;" id="partnershipDescription" name="description" required placeholder="Mô tả chi tiết vấn đề bạn đang gặp phải..."></textarea>
-                                    </div>
-            
-                                    <button style="font-size: 16px !important;" type="submit" class="partnership-submit-btn">
-                                        📨 Gửi thông tin
-                                    </button>
-                                </form>
-                            </div>
-                        </div>-->
             <!--------------- footer-section--------------->
             <jsp:include page="Common/Footer.jsp"/>
             <!--------------- footer-section-end--------------->
