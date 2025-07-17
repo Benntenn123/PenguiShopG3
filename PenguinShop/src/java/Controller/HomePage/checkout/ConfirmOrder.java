@@ -7,6 +7,7 @@ package Controller.HomePage.checkout;
 import DAL.DeliveryDAO;
 import DAL.OrderDAO;
 import DAL.TokenDAO;
+import DAL.UserDAO;
 import Models.CartSession;
 import Models.DeliveryInfo;
 import Models.User;
@@ -128,7 +129,9 @@ public class ConfirmOrder extends HttpServlet {
                     paymentMethod,
                     GetDateTime.getCurrentTime()
             );
-            
+            String thongbao = "User tạo thành công order với id " + orderID;
+                    UserDAO udao = new UserDAO();
+                    udao.insertLog(user.getUserID(), thongbao, thongbao);
 
             if (orderID != 0) {
                 // Lưu thông tin cần hiển thị

@@ -22,6 +22,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserDAO extends DBContext {
+    
+    public boolean insertLog(Integer userID, String action, String description) {
+        String sql = "INSERT INTO tbLogs (userID, action, description, logDate) VALUES (?, ?, ?, GETDATE())";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            if (userID != null) {
+                ps.setInt(1, userID);
+            } else {
+                ps.setNull(1, java.sql.Types.INTEGER);
+            }
+            ps.setString(2, action);
+            ps.setString(3, description);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
     // Thống kê số user mới theo tháng
     public List<Models.MonthValue> getMonthlyNewUsers(int year) {

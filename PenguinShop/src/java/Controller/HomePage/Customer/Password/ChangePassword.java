@@ -100,6 +100,9 @@ public class ChangePassword extends HttpServlet {
             response.sendRedirect("changepassword");
             return;
         }
+        String thongbao = "User đổi mật khẩu";
+        UserDAO udao = new UserDAO();
+        udao.insertLog(user.getUserID(), thongbao, thongbao);
         request.getSession().setAttribute("ms", "Đổi mật khẩu thành công!");
         response.sendRedirect("changepassword");
 

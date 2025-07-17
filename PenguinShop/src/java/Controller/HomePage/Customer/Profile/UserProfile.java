@@ -154,6 +154,9 @@ public class UserProfile extends HttpServlet {
             boolean isUpdated = udao.updateUserProfile(user);
 
             if (isUpdated) {
+                String thongbao = "User cập nhật hồ sơ người dùng";
+                UserDAO udao = new UserDAO();
+                udao.insertLog(user.getUserID(), thongbao, thongbao);
                 request.getSession().setAttribute("ms", "Cập nhật hồ sơ thành công!");
                 request.getSession().setAttribute("user", user); // Cập nhật lại user trong session
                 if (!response.isCommitted()) {
