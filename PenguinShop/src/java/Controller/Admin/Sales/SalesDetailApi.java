@@ -25,9 +25,8 @@ public class SalesDetailApi extends HttpServlet {
             PermissionDAO permissionDAO = new PermissionDAO();
             User user = userDAO.getUserById(userId);
             if (user != null) {
-                // Lấy danh sách quyền theo roleID
-                List<Permission> permissions = permissionDAO.getAvailablePermissionsForRole(user.getRoleID());
-                // Nếu User có setPermissions thì gọi trực tiếp (giả sử User là class tự định nghĩa)
+                // Lấy danh sách quyền theo userId (đúng logic join)
+                List<Permission> permissions = permissionDAO.getPermissionsByUserId(userId);
                 if (user instanceof Models.User) {
                     ((Models.User) user).setPermissions(permissions);
                 }

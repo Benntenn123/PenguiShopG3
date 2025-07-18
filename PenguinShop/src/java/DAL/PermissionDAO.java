@@ -1,3 +1,4 @@
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
@@ -7,8 +8,6 @@ package DAL;
 import Models.Modules;
 import Models.Permission;
 import Models.Role;
-import Models.RolesPermission;
-import Models.Size;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -19,7 +18,35 @@ import java.util.List;
 import java.util.Map;
 
 public class PermissionDAO extends DBContext {
-
+        /**
+     * Get permissions for a user by joining user, role, role-permission, and permission tables
+     */
+    public List<Permission> getPermissionsByUserId(int userId) {
+        List<Permission> permissions = new ArrayList<>();
+        String sql = "SELECT p.permissionID, p.permissionName, p.url_permission, p.isHide, p.permissionDescription "
+                + "FROM dbo.tbUsers u "
+                + "INNER JOIN dbo.tbRoles r ON u.roleID = r.roleID "
+                + "INNER JOIN dbo.tbRolePermissions rp ON r.roleID = rp.roleID "
+                + "INNER JOIN dbo.tbPermissions p ON rp.permissionID = p.permissionID "
+                + "WHERE u.userID = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Permission permission = new Permission();
+                    permission.setPermissionID(rs.getInt("permissionID"));
+                    permission.setPermissionName(rs.getString("permissionName"));
+                    permission.setUrl_permisson(rs.getString("url_permission"));
+                    permission.setIsHide(rs.getInt("isHide"));
+                    permission.setPermissionDescription(rs.getString("permissionDescription"));
+                    permissions.add(permission);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return permissions;
+    }
     public List<Role> getAllRole() {
         List<Role> list = new ArrayList<>();
         String sql = "SELECT * FROM dbo.tbRoles";
