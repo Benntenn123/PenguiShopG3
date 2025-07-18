@@ -153,9 +153,9 @@
                                         <!-- Danh sách ảnh -->
                                         <div class="gallery-container">
                                             <c:forEach var="image" items="${galleryImages}">
-                                                <div class="gallery-item" data-bs-toggle="modal" data-bs-target="#imageModal" data-image-url="../api/img/${image}">
-                                                    <img src="../api/img/${image}" alt="Gallery Image" onerror="this.src='/path/to/fallback-image.jpg'; console.error('Failed to load image: ../api/img/${image}');"/>
-                                                    <button class="delete-btn" data-image-url="${image}" data-product-id="${product.productId}">X</button>
+                                                <div class="gallery-item">
+                                                    <img src="../api/img/${image}" alt="Gallery Image" onerror="this.src='/path/to/fallback-image.jpg'; console.error('Failed to load image: ../api/img/${image}');" onclick="openImageModal('../api/img/${image}')"/>
+                                                    <button class="delete-btn" data-image-url="${image}" data-product-id="${product.productId}" onclick="event.stopPropagation(); deleteImage('${image}', ${product.productId});">X</button>
                                                 </div>
                                             </c:forEach>
                                         </div>
@@ -187,6 +187,25 @@
             <jsp:include page="Common/Message.jsp"/>
 
             <script>
+function openImageModal(imageUrl) {
+    document.getElementById('modalImage').src = imageUrl;
+    const modal = new bootstrap.Modal(document.getElementById('imageModal'));
+    modal.show();
+}
+
+function deleteImage(imageUrl, productId) {
+    if (confirm('Bạn có chắc chắn muốn xóa ảnh này?')) {
+        
+        console.log(imageUrl);
+        console.log(productId);
+        const url = "deleteGalleryImage?imageUrl="+imageUrl+"&productID="+productId;
+        console.log(url);
+        window.location.href = url;
+    }
+}
+
+
+
  function initializeGallery() {
     console.log('=== MULTI IMAGE PREVIEW INIT ===');
     
