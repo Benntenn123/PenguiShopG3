@@ -387,6 +387,7 @@ public class ProductDao extends DBContext {
                         product,
                         rs.getDouble("price")
                 );
+                
                 list.add(variant);
             }
         } catch (SQLException e) {
