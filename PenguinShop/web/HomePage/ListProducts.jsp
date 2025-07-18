@@ -255,10 +255,13 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div style="display: flex;
-                                     justify-content: center; align-content: center" class="search-button">
-                                    <button style="padding:10px 50px; background-color: #AE1C9A;border-radius: 8px
-                                            ;margin-top: 20px; color: white; font-size: 20px; " type="submit">Tìm Kiếm</button>
+                                <div class="row mt-3">
+                                    <div class="col-6 d-grid">
+                                        <button type="submit" class="btn btn-primary btn-lg w-100">Tìm Kiếm</button>
+                                    </div>
+                                    <div class="col-6 d-grid">
+                                        <button type="button" class="btn btn-outline-secondary btn-lg w-100" onclick="window.location.href='${pageContext.request.contextPath}/search';">Xóa bộ lọc</button>
+                                    </div>
                                 </div>
                             </div>
                         </form>
