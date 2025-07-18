@@ -9,12 +9,20 @@ public class CustomerRequest {
     private String email_request;
     private String phone_request;
     private String name_request;
+    private int salesID; // Thêm trường salesID
     private String requestType;
     private String description;
     private int requestStatus;
     private String requestDate;
     private String response;
     private String responseDate;
+
+    public int getSalesID() {
+        return salesID;
+    }
+    public void setSalesID(int salesID) {
+        this.salesID = salesID;
+    }
 
     public CustomerRequest() {
     }

@@ -49,8 +49,8 @@
                                             <tr><th>Quyền:</th><td>${admin.role.roleName}</td></tr>
                                         </table>
                                         <div class="mt-3">
-                                            <a href="${pageContext.request.contextPath}/admin/changePassword" class="btn btn-warning me-2">Đổi mật khẩu</a>
-                                            <a href="${pageContext.request.contextPath}/admin/editProfile" class="btn btn-primary me-2">Chỉnh sửa thông tin</a>
+                                            <a href="changePasswordAdmin" class="btn btn-warning me-2">Đổi mật khẩu</a>
+                                            <a href="editProfileAdmin" class="btn btn-primary me-2">Chỉnh sửa thông tin</a>
                                             <button type="button" class="btn btn-secondary" onclick="history.back();">Quay lại</button>
                                         </div>
                                     </div>

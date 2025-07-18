@@ -19,14 +19,106 @@ import Models.Size;
 import Models.User;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class OrderDAO extends DBContext {
+    // Đếm số hóa đơn mới trong ngày
+    public int countOrdersToday() {
+        String sql = "SELECT COUNT(*) FROM tbOrder WHERE paymentStatus = 1 AND CAST(orderDate AS DATE) = CAST(GETDATE() AS DATE)";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        } catch (Exception e) { e.printStackTrace(); }
+        return 0;
+    }
+    // Thống kê doanh thu theo tuần trong năm
+    
+    // Đếm tổng số hóa đơn toàn hệ thống
+    public int countAllOrders() {
+        String sql = "SELECT COUNT(*) FROM tbOrder WHERE paymentStatus = 1";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        } catch (Exception e) { e.printStackTrace(); }
+        return 0;
+    }
+
+    // Tổng doanh thu toàn hệ thống
+    public double sumAllRevenue() {
+        String sql = "SELECT SUM(total) FROM tbOrder WHERE paymentStatus = 1";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getDouble(1);
+                }
+            }
+        } catch (Exception e) { e.printStackTrace(); }
+        return 0.0;
+    }
+
+    // Đếm tổng số hóa đơn đã xử lý bởi sales
+    public int countOrdersBySalesId(int salesId) {
+        String sql = "SELECT COUNT(*) FROM tbOrder WHERE salesID = ? AND paymentStatus = 1";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, salesId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        } catch (Exception e) { e.printStackTrace(); }
+        return 0;
+    }
+
+
+    // Tổng doanh thu cá nhân của sales
+    public double sumRevenueBySalesId(int salesId) {
+        String sql = "SELECT SUM(total) FROM tbOrder WHERE salesID = ? AND paymentStatus = 1";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, salesId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getDouble(1);
+                }
+            }
+        } catch (Exception e) { e.printStackTrace(); }
+        return 0.0;
+    }
+
+
+    // Lấy N hóa đơn gần đây nhất do sales xử lý
+    public List<Order> getRecentOrdersBySalesId(int salesId, int top) {
+        List<Order> list = new ArrayList<>();
+        String sql = "SELECT TOP " + top + " orderID, orderDate, total, userID, name_receiver, orderStatus FROM tbOrder WHERE salesID = ? AND paymentStatus = 1 ORDER BY orderDate DESC";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, salesId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Order o = new Order();
+                    o.setOrderID(rs.getInt("orderID"));
+                    o.setOrderDate(rs.getString("orderDate"));
+                    o.setTotal(rs.getDouble("total"));
+                    User user = new User();
+                    user.setUserID(rs.getInt("userID"));
+                    o.setName_receiver(rs.getString("name_receiver"));
+                    o.setUser(user);
+                    o.setOrderStatus(rs.getInt("orderStatus"));
+                    list.add(o);
+                }
+            }
+        } catch (Exception e) { e.printStackTrace(); }
+        return list;
+    }
         // Thống kê doanh thu theo tháng
     public List<Models.MonthValue> getMonthlyRevenue(int year) {
         List<Models.MonthValue> list = new ArrayList<>();

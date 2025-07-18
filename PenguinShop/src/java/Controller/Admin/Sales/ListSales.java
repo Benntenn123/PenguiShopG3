@@ -1,4 +1,4 @@
-package Controller.Admin.Role;
+package Controller.Admin.Sales;
 
 import Const.Batch;
 import DAL.UserDAO;

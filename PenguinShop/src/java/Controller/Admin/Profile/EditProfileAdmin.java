@@ -1,63 +1,51 @@
-package Controller.Admin.Role;
+package Controller.Admin.Profile;
 
-import DAL.PermissionDAO;
 import DAL.UserDAO;
 import Models.User;
-import Utils.HashPassword;
+import APIKey.CloudinaryConfig;
 
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import java.io.IOException;
-import java.sql.Date;
-import java.io.InputStream;
 import jakarta.servlet.http.Part;
-import APIKey.CloudinaryConfig;
-import jakarta.servlet.annotation.MultipartConfig;
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.Date;
 
-@WebServlet(name = "EditSalesProfile", urlPatterns = {"/admin/editSales"})
+@WebServlet(name = "EditProfileAdmin", urlPatterns = {"/admin/editProfileAdmin"})
 @MultipartConfig
-public class EditSalesProfile extends HttpServlet {
-    UserDAO userDAO = new UserDAO();
-    PermissionDAO pdao = new PermissionDAO();
+public class EditProfileAdmin extends HttpServlet {
+    private final UserDAO userDAO = new UserDAO();
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        try {
-            String salesIdStr = request.getParameter("id");
-            if (salesIdStr != null && !salesIdStr.isEmpty()) {
-                int salesID = Integer.parseInt(salesIdStr);
-                
-                User sales = userDAO.getUserById(salesID);
-                request.setAttribute("sales", sales);
-            }
-            request.setAttribute("roles", pdao.getAllRole());
-        } catch (Exception e) {
-            e.printStackTrace();
-            request.setAttribute("error", "Không thể load thông tin Sales: " + e.getMessage());
-        }
-        request.getRequestDispatcher("/Admin/EditSales.jsp").forward(request, response);
+        request.getRequestDispatcher("/Admin/EditProfileAdmin.jsp").forward(request, response);
     }
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
         HttpSession session = request.getSession();
-
         try {
-            String salesID = request.getParameter("salesid");
-            int userID = Integer.parseInt(salesID);
+            User uAdmin = (User) session.getAttribute("uAdmin");
+            if (uAdmin == null) {
+                session.setAttribute("error", "Vui lòng đăng nhập lại!");
+                response.sendRedirect("loginAdmin");
+                return;
+            }
             String fullName = request.getParameter("fullName");
             String phone = request.getParameter("phone");
             String birthdayStr = request.getParameter("birthday");
-            int status_account = Integer.parseInt(request.getParameter("status_account"));
-            int roleID = Integer.parseInt(request.getParameter("roleID"));
-            String password = request.getParameter("password");
+            String address = request.getParameter("address");
+            String email = request.getParameter("email"); // readonly, không update
 
             // Lấy user cũ để lấy ảnh nếu không upload mới
-            User oldUser = userDAO.getUserById(userID);
+            User oldUser = userDAO.getUserById(uAdmin.getUserID());
             String image_user = oldUser != null ? oldUser.getImage_user() : null;
 
             // Xử lý upload file ảnh nếu có
@@ -76,32 +64,45 @@ public class EditSalesProfile extends HttpServlet {
             }
 
             User user = new User();
-            user.setUserID(userID);
+            user.setUserID(uAdmin.getUserID());
             user.setFullName(fullName);
             user.setPhone(phone);
-            user.setStatus_account(status_account);
-            user.setRoleID(roleID);
+            user.setAddress(address);
             user.setImage_user(image_user);
             if (birthdayStr != null && !birthdayStr.isEmpty()) {
                 user.setBirthday(Date.valueOf(birthdayStr));
             }
+            user.setEmail(email); // giữ nguyên
+            user.setRoleID(uAdmin.getRoleID());
+            user.setStatus_account(uAdmin.getStatus_account());
 
-            String updatePassword = null;
-            if (password != null && !password.trim().isEmpty()) {
-                updatePassword = HashPassword.hashWithSHA256(password);
-            }
-
-            boolean success = userDAO.updateSalesProfile(user, updatePassword);
+            boolean success = userDAO.updateUserProfile(user);
             if (success) {
-                session.setAttribute("ms", "Cập nhật thông tin Sales thành công!");
+                // Đồng bộ lại session: chỉ cập nhật các trường thay đổi, giữ lại các trường khác từ session cũ
+                User sessionUser = (User) session.getAttribute("uAdmin");
+                if (sessionUser != null) {
+                    sessionUser.setFullName(fullName);
+                    sessionUser.setPhone(phone);
+                    sessionUser.setAddress(address);
+                    sessionUser.setImage_user(image_user);
+                    if (birthdayStr != null && !birthdayStr.isEmpty()) {
+                        sessionUser.setBirthday(Date.valueOf(birthdayStr));
+                    }
+                    // Email, role, created_at, ... giữ nguyên
+                    session.setAttribute("uAdmin", sessionUser);
+                } else {
+                    // Nếu không có session cũ, set user mới
+                    session.setAttribute("uAdmin", user);
+                }
+                session.setAttribute("ms", "Cập nhật thông tin thành công!");
             } else {
                 session.setAttribute("error", "Cập nhật thất bại. Vui lòng thử lại!");
             }
-            response.sendRedirect("listSales");
+            response.sendRedirect("editProfileAdmin");
         } catch (Exception e) {
             e.printStackTrace();
             session.setAttribute("error", "Có lỗi xảy ra: " + e.getMessage());
-            response.sendRedirect("listSales");
+            response.sendRedirect("editProfileAdmin");
         }
     }
 }

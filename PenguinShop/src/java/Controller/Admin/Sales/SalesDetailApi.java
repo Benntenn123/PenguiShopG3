@@ -1,4 +1,4 @@
-package Controller.Admin.Role;
+package Controller.Admin.Sales;
 
 import DAL.UserDAO;
 import DAL.PermissionDAO;

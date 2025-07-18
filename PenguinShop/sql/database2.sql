@@ -56,7 +56,11 @@ INSERT INTO dbo.tbPermissions
 (N'Thông tin tài khoản sales','/admin/profile',9,1,NULL),
 (N'Danh sách đánh giá','/admin/feedbackList',10,0,NULL),
 (N'Chi tiết đánh giá','/admin/feedbackDetail',10,1,NULL),
-(N'Lịch sử hoạt động','/admin/list-logs',8,0,NULL);
+(N'Lịch sử hoạt động','/admin/list-logs',8,0,NULL),
+(N'Đổi mật khẩu admin','/admin/changePasswordAdmin',3,1,NULL),
+(N'Thay đổi thông tin hồ sơ','/admin/editProfileAdmin',3,1,NULL),
+(N'Trang welcome','/admin/welcomeAdmin',1,0,NULL),
+(N'Sales Dashboard','/admin/salesDashboard',1,0,NULL);
 -- Gán tất cả các quyền cho role admin (roleID = 1)
 INSERT INTO tbRolePermissions (roleID, permissionID)
 SELECT 1, permissionID

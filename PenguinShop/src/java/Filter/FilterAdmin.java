@@ -61,7 +61,7 @@ public class FilterAdmin implements Filter {
         }
         if(!adao.hasPermission(uAdmin.getRole().getRoleID(), requestPath)){
             request.getSession().setAttribute("error", "Bạn không có quyền để vô trang này!");
-            response.sendRedirect("dashboard");
+            response.sendRedirect("welcomeAdmin");
             return;
         }
 
