@@ -222,7 +222,7 @@
                                             <h5 class="card-title mb-0">
                                                 <i class="mdi mdi-package-variant me-2"></i>Danh sách sản phẩm
                                             </h5>
-                                            <div class="btn-group">
+                                            <div style="vertical-align: center" class="btn-group">
                                                 <button type="button" class="btn btn-success btn-sm" id="importExcelBtn">
                                                     <i class="mdi mdi-file-excel me-1"></i>Import Excel
                                                 </button>
@@ -566,9 +566,8 @@
                 const wb = XLSX.utils.book_new();
                 const wsData = [
                     ['Mã sản phẩm', 'Tên sản phẩm', 'Số lượng', 'Giá nhập (₫)', 'Ghi chú'],
-                    ['SP001', 'Áo thun nam', 10, 150000, 'Size M, màu đen'],
-                    ['SP002', 'Quần jean nữ', 5, 300000, 'Size L, màu xanh'],
-                    ['SP003', 'Giày thể thao', 3, 500000, 'Size 42, màu trắng']
+                    ['1', 'Áo thun chạy bộ Advanced Vent Tech Graphic Camo', 10, 150000, 'Size M, màu đen'],
+                    ['2', 'Biker Shorts nữ chạy bộ 8inch', 5, 300000, 'Size L, màu xanh'],
                 ];
                 
                 const ws = XLSX.utils.aoa_to_sheet(wsData);
