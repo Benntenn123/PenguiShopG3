@@ -366,3 +366,16 @@ CREATE TABLE OTPCode(
     isUsed BIT NOT NULL DEFAULT 0,
     FOREIGN KEY (userID) REFERENCES tbUsers(userID)
 );
+
+-- Bảng blog
+CREATE TABLE tbBlog (
+    blogID INT PRIMARY KEY IDENTITY(1,1),
+    title NVARCHAR(255) NOT NULL,
+    content NVARCHAR(MAX) NOT NULL,
+    image NVARCHAR(255),
+    created_at DATETIME NOT NULL DEFAULT GETDATE(),
+    updated_at DATETIME,
+    authorID INT,
+    status INT NOT NULL DEFAULT 1, -- 1: Hiển thị, 0: Ẩn
+    FOREIGN KEY (authorID) REFERENCES tbUsers(userID)
+);
