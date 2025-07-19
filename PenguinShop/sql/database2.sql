@@ -12,7 +12,8 @@ INSERT INTO dbo.tbModules(moduleName,icon)VALUES
 (N'Lịch sử','clock'),
 (N'Nhân sự', 'users'),
 (N'Đánh giá', 'message-square'),
-(N'Bài viết', 'message-square');
+(N'Bài viết', 'message-square'),
+(N'Nhà cung cấp', 'user');
 
 INSERT INTO dbo.tbPermissions
 (permissionName,url_permission,moduleID,isHide,permissionDescription)VALUES
@@ -67,6 +68,8 @@ INSERT INTO dbo.tbPermissions
 (N'Xóa bài viết','/admin/BlogDelete',11,1,NULL),
 (N'Chỉnh sửa trạng thái bài viết','/admin/BlogToggleStatus',11,1,NULL),
 (N'Chỉnh sửa bài viết','/admin/BlogEdit',11,1,NULL),
+(N'Danh sách nhà cung cấp','/admin/SupplierList',12,0,NULL),
+(N'Thêm nhà cung cấp','/admin/AddSupplier',12,0,NULL);
 -- Gán tất cả các quyền cho role admin (roleID = 1)
 INSERT INTO tbRolePermissions (roleID, permissionID)
 SELECT 1, permissionID
