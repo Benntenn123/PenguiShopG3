@@ -63,7 +63,9 @@ INSERT INTO dbo.tbPermissions
 (N'Trang welcome','/admin/welcomeAdmin',1,0,NULL),
 (N'Sales Dashboard','/admin/salesDashboard',1,0,NULL),
 (N'Thêm bài viết','/admin/BlogAdd',11,0,NULL),
-(N'Danh sách bài viết','/admin/BlogList',11,0,NULL);
+(N'Danh sách bài viết','/admin/BlogList',11,0,NULL),
+(N'Xóa bài viết','/admin/BlogDelete',11,1,NULL),
+(N'Chỉnh sửa bài viết','/admin/BlogToggleStatus',11,1,NULL);
 -- Gán tất cả các quyền cho role admin (roleID = 1)
 INSERT INTO tbRolePermissions (roleID, permissionID)
 SELECT 1, permissionID
