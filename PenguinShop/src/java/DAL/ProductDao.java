@@ -1612,5 +1612,185 @@ public class ProductDao extends DBContext {
         
         return variants;
     }
+    
+    // Lấy tất cả product variants để tạo QR code với search và phân trang
+    public List<ProductVariant> getAllProductVariantsForQR(String search, int page, int pageSize) {
+        List<ProductVariant> variants = new ArrayList<>();
+        String sql = "SELECT pv.variantID, pv.price, pv.quantity, " +
+                    "p.productID, p.productName, p.imageMainProduct, " +
+                    "b.brandName, " +
+                    "c.colorName, s.sizeName " +
+                    "FROM tbProductVariant pv " +
+                    "LEFT JOIN tbProduct p ON pv.productID = p.productID " +
+                    "LEFT JOIN tbBrand b ON p.brandID = b.brandID " +
+                    "LEFT JOIN tbColor c ON pv.colorID = c.colorID " +
+                    "LEFT JOIN tbSize s ON pv.sizeID = s.sizeID " +
+                    "WHERE pv.quantity > 0";
+        
+        // Thêm điều kiện search
+        if (search != null && !search.trim().isEmpty()) {
+            sql += " AND (p.productName LIKE ? OR b.brandName LIKE ? OR c.colorName LIKE ? OR s.sizeName LIKE ?)";
+        }
+        
+        sql += " ORDER BY p.productName ASC, c.colorName ASC, s.sizeName ASC";
+        sql += " OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+        
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            int paramIndex = 1;
+            
+            // Set search parameters
+            if (search != null && !search.trim().isEmpty()) {
+                String searchPattern = "%" + search.trim() + "%";
+                ps.setString(paramIndex++, searchPattern);
+                ps.setString(paramIndex++, searchPattern);
+                ps.setString(paramIndex++, searchPattern);
+                ps.setString(paramIndex++, searchPattern);
+            }
+            
+            // Set pagination parameters
+            ps.setInt(paramIndex++, (page - 1) * pageSize);
+            ps.setInt(paramIndex++, pageSize);
+            
+            ResultSet rs = ps.executeQuery();
+            
+            while (rs.next()) {
+                ProductVariant variant = new ProductVariant();
+                variant.setVariantID(rs.getInt("variantID"));
+                variant.setPrice(rs.getDouble("price"));
+                variant.setQuantity(rs.getInt("quantity"));
+                
+                // Tạo Product object
+                Product product = new Product();
+                product.setProductId(rs.getInt("productID"));
+                product.setProductName(rs.getString("productName"));
+                product.setImageMainProduct(rs.getString("imageMainProduct"));
+                
+                // Tạo Brand object
+                if (rs.getString("brandName") != null) {
+                    Brand brand = new Brand();
+                    brand.setBrandName(rs.getString("brandName"));
+                    product.setBrand(brand);
+                }
+                variant.setProduct(product);
+                
+                // Tạo Color object
+                if (rs.getString("colorName") != null) {
+                    Color color = new Color();
+                    color.setColorName(rs.getString("colorName"));
+                    variant.setColor(color);
+                }
+                
+                // Tạo Size object
+                if (rs.getString("sizeName") != null) {
+                    Size size = new Size();
+                    size.setSizeName(rs.getString("sizeName"));
+                    variant.setSize(size);
+                }
+                
+                variants.add(variant);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        return variants;
+    }
+    
+    // Đếm tổng số product variants để tạo QR code
+    public int countProductVariantsForQR(String search) {
+        String sql = "SELECT COUNT(*) FROM tbProductVariant pv " +
+                    "LEFT JOIN tbProduct p ON pv.productID = p.productID " +
+                    "LEFT JOIN tbBrand b ON p.brandID = b.brandID " +
+                    "LEFT JOIN tbColor c ON pv.colorID = c.colorID " +
+                    "LEFT JOIN tbSize s ON pv.sizeID = s.sizeID " +
+                    "WHERE pv.quantity > 0";
+        
+        if (search != null && !search.trim().isEmpty()) {
+            sql += " AND (p.productName LIKE ? OR b.brandName LIKE ? OR c.colorName LIKE ? OR s.sizeName LIKE ?)";
+        }
+        
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            
+            if (search != null && !search.trim().isEmpty()) {
+                String searchPattern = "%" + search.trim() + "%";
+                ps.setString(1, searchPattern);
+                ps.setString(2, searchPattern);
+                ps.setString(3, searchPattern);
+                ps.setString(4, searchPattern);
+            }
+            
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+    
+    // Lấy tất cả product variants để tạo QR code (method cũ giữ lại cho compatibility)
+    public List<ProductVariant> getAllProductVariantsForQR() {
+        List<ProductVariant> variants = new ArrayList<>();
+        String sql = "SELECT pv.variantID, pv.price, pv.quantity, " +
+                    "p.productID, p.productName, p.imageMainProduct, " +
+                    "b.brandName, " +
+                    "c.colorName, s.sizeName " +
+                    "FROM tbProductVariant pv " +
+                    "LEFT JOIN tbProduct p ON pv.productID = p.productID " +
+                    "LEFT JOIN tbBrand b ON p.brandID = b.brandID " +
+                    "LEFT JOIN tbColor c ON pv.colorID = c.colorID " +
+                    "LEFT JOIN tbSize s ON pv.sizeID = s.sizeID " +
+                    "WHERE pv.quantity > 0 " +
+                    "ORDER BY p.productName ASC, c.colorName ASC, s.sizeName ASC";
+        
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            
+            while (rs.next()) {
+                ProductVariant variant = new ProductVariant();
+                variant.setVariantID(rs.getInt("variantID"));
+                variant.setPrice(rs.getDouble("price"));
+                variant.setQuantity(rs.getInt("quantity"));
+                
+                // Tạo Product object
+                Product product = new Product();
+                product.setProductId(rs.getInt("productID"));
+                product.setProductName(rs.getString("productName"));
+                product.setImageMainProduct(rs.getString("imageMainProduct"));
+                
+                // Tạo Brand object
+                if (rs.getString("brandName") != null) {
+                    Brand brand = new Brand();
+                    brand.setBrandName(rs.getString("brandName"));
+                    product.setBrand(brand);
+                }
+                variant.setProduct(product);
+                
+                // Tạo Color object
+                if (rs.getString("colorName") != null) {
+                    Color color = new Color();
+                    color.setColorName(rs.getString("colorName"));
+                    variant.setColor(color);
+                }
+                
+                // Tạo Size object
+                if (rs.getString("sizeName") != null) {
+                    Size size = new Size();
+                    size.setSizeName(rs.getString("sizeName"));
+                    variant.setSize(size);
+                }
+                
+                variants.add(variant);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        return variants;
+    }
 
 }

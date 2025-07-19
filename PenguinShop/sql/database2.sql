@@ -75,7 +75,8 @@ INSERT INTO dbo.tbPermissions
 (N'API load sản phẩm cho hóa đơn','/admin/api/product-search',12,1,NULL),
 (N'List hóa đơn sản phẩm ','/admin/ImportOrderList',12,1,NULL),
 (N'Chỉnh sửa supplier ','/admin/EditSupplier',12,1,NULL),
-(N'Chi tiết import Order ','/admin//admin/ImportOrderDetails',12,1,NULL);
+(N'Chi tiết import Order ','/admin/ImportOrderDetails',12,1,NULL),
+(N'Tạo QR ảnh sản phẩm ','/admin/QRCodeGenerator',4,0,NULL);
 -- Gán tất cả các quyền cho role admin (roleID = 1)
 INSERT INTO tbRolePermissions (roleID, permissionID)
 SELECT 1, permissionID
