@@ -14,6 +14,82 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RequestDAO extends DBContext {
+    // Tổng số request trong ngày
+    public int countRequestsToday() {
+        String sql = "SELECT COUNT(*) FROM tbRequests WHERE CAST(requestDate AS DATE) = CAST(GETDATE() AS DATE)";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        } catch (Exception e) { e.printStackTrace(); }
+        return 0;
+    }
+
+    // Số request đã phản hồi trong ngày (requestStatus = 1)
+    public int countRequestsProcessedToday() {
+        String sql = "SELECT COUNT(*) FROM tbRequests WHERE requestStatus = 1 AND CAST(requestDate AS DATE) = CAST(GETDATE() AS DATE)";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        } catch (Exception e) { e.printStackTrace(); }
+        return 0;
+    }
+
+    // Số request chưa phản hồi trong ngày (requestStatus = 0)
+    public int countRequestsUnprocessedToday() {
+        String sql = "SELECT COUNT(*) FROM tbRequests WHERE requestStatus = 0 AND CAST(requestDate AS DATE) = CAST(GETDATE() AS DATE)";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        } catch (Exception e) { e.printStackTrace(); }
+        return 0;
+    }
+    // Đếm tổng số request hỗ trợ đã xử lý bởi sales
+    public int countRequestsBySalesId(int salesId) {
+        String sql = "SELECT COUNT(*) FROM tbRequests WHERE salesID = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, salesId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        } catch (Exception e) { e.printStackTrace(); }
+        return 0;
+    }
+
+    // Lấy N request hỗ trợ gần đây nhất do sales xử lý
+    public List<Models.CustomerRequest> getRecentRequestsBySalesId(int salesId, int top) {
+        List<Models.CustomerRequest> list = new ArrayList<>();
+        String sql = "SELECT TOP " + top + " * FROM tbRequests WHERE salesID = ? ORDER BY requestDate DESC";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, salesId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    CustomerRequest request = new CustomerRequest();
+                    request.setRequestID(rs.getInt("requestID"));
+                    request.setRequestDate(rs.getString("requestDate"));
+                    request.setEmail_request(rs.getString("email_request"));
+                    request.setName_request(rs.getString("name_request"));
+                    request.setPhone_request(rs.getString("phone_request"));
+                    request.setRequestType(rs.getString("requestType"));
+                    request.setRequestStatus(rs.getInt("requestStatus"));
+                    request.setDescription(rs.getString("description"));
+                    request.setSalesID(rs.getInt("salesID"));
+                    list.add(request);
+                }
+            }
+        } catch (Exception e) { e.printStackTrace(); }
+        return list;
+    }
 
     // Lấy 5 request gần nhất
     public List<CustomerRequest> getLatestRequests(int top) {

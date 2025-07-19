@@ -62,14 +62,16 @@
                                                 </h4>
                                             </div>
 
-                                            <div class="col-6">
-                                                <!-- Mini chart removed -->
+                                            <div class="col-6 text-end">
+<!--                                                <a href="revenueDetails" class="text-muted">
+                                                    <i data-feather="arrow-right-circle" class="font-size-24"></i>
+                                                </a>-->
                                             </div>
                                         </div>
-                                        <div class="text-nowrap">
+<!--                                        <div class="text-nowrap">
                                             <span class="badge bg-success-subtle text-success">+$20.9k</span>
                                             <span class="ms-1 text-muted font-size-13">Since last week</span>
-                                        </div>
+                                        </div>-->
                                     </div><!-- end card body -->
                                 </div><!-- end card -->
                             </div><!-- end col -->
@@ -86,14 +88,16 @@
                                                     <span class="counter-value" data-target="${orderList.size()}">${orderList.size()}</span>
                                                 </h4>
                                             </div>
-                                            <div class="col-6">
-                                                <!-- Mini chart removed -->
+                                            <div class="col-6 text-end">
+                                                <a href="listOrderAdmin?orderID=&from=2025-07-01&to=2025-07-30&status=&user=" class="text-muted">
+                                                    <i data-feather="arrow-right-circle" class="font-size-24"></i>
+                                                </a>
                                             </div>
                                         </div>
-                                        <div class="text-nowrap">
+<!--                                        <div class="text-nowrap">
                                             <span class="badge bg-danger-subtle text-danger">-29 Trades</span>
                                             <span class="ms-1 text-muted font-size-13">Since last week</span>
-                                        </div>
+                                        </div>-->
                                     </div><!-- end card body -->
                                 </div><!-- end card -->
                             </div><!-- end col-->
@@ -110,14 +114,16 @@
                                                     <span class="counter-value" data-target="${userList.size()}">${userList.size()}</span
                                                 </h4>
                                             </div>
-                                            <div class="col-6">
-                                                <!-- Mini chart removed -->
+                                            <div class="col-6 text-end">
+                                                <a href="listCustomerAdmin" class="text-muted">
+                                                    <i data-feather="arrow-right-circle" class="font-size-24"></i>
+                                                </a>
                                             </div>
                                         </div>
-                                        <div class="text-nowrap">
+<!--                                        <div class="text-nowrap">
                                             <span class="badge bg-success-subtle text-success">+ $2.8k</span>
                                             <span class="ms-1 text-muted font-size-13">Since last week</span>
-                                        </div>
+                                        </div>-->
                                     </div><!-- end card body -->
                                 </div><!-- end card -->
                             </div><!-- end col -->
@@ -134,14 +140,16 @@
                                                     <span class="counter-value" data-target="${feedbackList.size()}">${feedbackList.size()}</span>
                                                 </h4>
                                             </div>
-                                            <div class="col-6">
-                                                <!-- Mini chart removed -->
+                                            <div class="col-6 text-end">
+                                                <a href="feedbackList" class="text-muted">
+                                                    <i data-feather="arrow-right-circle" class="font-size-24"></i>
+                                                </a>
                                             </div>
                                         </div>
-                                        <div class="text-nowrap">
+<!--                                        <div class="text-nowrap">
                                             <span class="badge bg-success-subtle text-success">+2.95%</span>
                                             <span class="ms-1 text-muted font-size-13">Since last week</span>
-                                        </div>
+                                        </div>-->
                                     </div><!-- end card body -->
                                 </div><!-- end card -->
                             </div><!-- end col -->    

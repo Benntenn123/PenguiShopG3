@@ -66,7 +66,7 @@ public class LoginAdmin extends HttpServlet {
                 request.getSession().setAttribute("menu", menu);
                 request.getSession().setAttribute("uAdmin", uAdmin);
                 request.getSession().setAttribute("ms", "Login thành công!");
-                response.sendRedirect("dashboard");
+                response.sendRedirect("welcomeAdmin");
             }
             else{
                 request.getSession().setAttribute("error", "Đăng nhập thất bại!");

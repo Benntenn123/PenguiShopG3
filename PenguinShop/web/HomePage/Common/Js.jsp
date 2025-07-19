@@ -7,8 +7,8 @@
     <style>
         .partnership-chat-button {
             position: fixed;
-            bottom: 180px;
-            right: 20px;
+            bottom: 25px;
+            right: 220px;
             width: 60px;
             height: 60px;
             background: linear-gradient(135deg, #AE1C9A 0%, #c44ca8 100%);
@@ -27,7 +27,6 @@
             transform: scale(1.1);
             box-shadow: 0 12px 30px rgba(174, 28, 154, 0.6);
         }
-
         .partnership-chat-button svg {
             width: 28px;
             height: 28px;
@@ -399,7 +398,7 @@
     <style>
         #messenger-widget {
             position: fixed;
-            bottom: 20px;
+            bottom: -50px;
             right: 20px;
             z-index: 9999;
         }
@@ -408,8 +407,8 @@
             width: 60px;
             height: 60px;
             position: fixed;
-            right: 0px;
-            bottom: 80px;
+            right: 120px;
+            bottom: 25px;
             background: linear-gradient(135deg, #0084ff, #0066cc);
             border-radius: 50%;
             box-shadow: 0 4px 20px rgba(0, 132, 255, 0.4);
@@ -424,17 +423,7 @@
             color: white;
         }
 
-        .messenger-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 25px rgba(0, 132, 255, 0.6);
-            text-decoration: none;
-            color: white;
-        }
-
-        .messenger-btn:active {
-            transform: scale(0.95);
-        }
-
+        
         .messenger-icon {
             width: 32px;
             height: 32px;
@@ -457,28 +446,10 @@
             pointer-events: none;
         }
 
-        .tooltip::after {
-            content: '';
-            position: absolute;
-            top: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            border: 5px solid transparent;
-            border-top-color: rgba(0, 0, 0, 0.8);
-        }
-
-        .messenger-btn:hover .tooltip {
-            opacity: 1;
-            visibility: visible;
-            bottom: 75px;
-        }
-
-        /* Animation khi load */
         
 
-        .messenger-btn {
-            animation: bounce 2s infinite;
-        }
+        /* Animation khi load */
+
 
         .messenger-btn:hover {
             animation: none;
@@ -502,29 +473,7 @@
             }
         }
 
-        /* Hiệu ứng pulse */
-        .messenger-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            border-radius: 50%;
-            background: rgba(0, 132, 255, 0.3);
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% {
-                transform: scale(1);
-                opacity: 1;
-            }
-            100% {
-                transform: scale(1.5);
-                opacity: 0;
-            }
-        }
+       
     </style>
 
     <!-- Thay YOUR_PAGE_USERNAME bằng username Facebook Page của bạn -->
@@ -651,13 +600,97 @@
 
             <!-- thm custom script -->
             <script src="homepage/js/custom.js"></script>
-            <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+<!--            <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
 <df-messenger
   intent="WELCOME"
   chat-title="PenguinShop"
   agent-id="a2050fde-ca64-464c-9eb2-4b85d94d1a6c"
   language-code="vi"
-></df-messenger>
+></df-messenger>-->
+<!--<iframe 
+    src="livechat.fpt.ai/v36/src/index.html?botcode=e5bf810c1d95b54ebd093b75801b93ab&botname=PenguinShop&sendername=&scendpoint=livechat.fpt.ai%3A443&time=1752845943174&subchannel=&themes=&styles=%7B%22headerColorType%22%3A%22gradient%22%2C%22headerSolid%22%3A%22%23ededf2ff%22%2C%22headerGradient1%22%3A%22%23891299FF%22%2C%22headerGradient2%22%3A%22%23AE31B7FF%22%2C%22headerTextColor%22%3A%22%23ffffffff%22%2C%22headerLogoEnable%22%3Afalse%2C%22headerLogoLink%22%3A%22https%3A%2F%2Fres.cloudinary.com%2Fdcdwqd5up%2Fimage%2Fupload%2Fv1752845674%2Flogo_fvc6ie.png%22%2C%22headerText%22%3A%22PenguinShop%22%2C%22primaryColor%22%3A%22%23AF36A3FF%22%2C%22secondaryColor%22%3A%22%23ecececff%22%2C%22primaryTextColor%22%3A%22%23ffffffff%22%2C%22secondaryTextColor%22%3A%22%23000000DE%22%2C%22buttonColor%22%3A%22%23b4b4b4ff%22%2C%22buttonTextColor%22%3A%22%23ffffffff%22%2C%22bodyBackgroundEnable%22%3Afalse%2C%22bodyBackgroundLink%22%3A%22%22%2C%22avatarBot%22%3A%22https%3A%2F%2Fres.cloudinary.com%2Fdcdwqd5up%2Fimage%2Fupload%2Fv1752845785%2Ficon2_tegwls.png%22%2C%22sendMessagePlaceholder%22%3A%22Enter%20your%20message%20here%22%2C%22floatButtonLogo%22%3A%22https%3A%2F%2Fres.cloudinary.com%2Fdcdwqd5up%2Fimage%2Fupload%2Fv1752845785%2Ficon2_tegwls.png%22%2C%22floatButtonTooltip%22%3A%22T%C3%B4i%20c%C3%B3%20th%E1%BB%83%20gi%C3%BAp%20g%C3%AC%20cho%20b%E1%BA%A1n%22%2C%22floatButtonTooltipEnable%22%3Atrue%2C%22customerLogo%22%3A%22https%3A%2F%2Fres.cloudinary.com%2Fdcdwqd5up%2Fimage%2Fupload%2Fv1752845674%2Flogo_fvc6ie.png%22%2C%22customerWelcomeText%22%3A%22Vui%20l%C3%B2ng%20nh%E1%BA%ADp%20t%C3%AAn%20c%E1%BB%A7a%20b%E1%BA%A1n%22%2C%22customerButtonText%22%3A%22B%E1%BA%AFt%20%C4%91%E1%BA%A7u%20%22%2C%22prefixEnable%22%3Afalse%2C%22prefixType%22%3A%22radio%22%2C%22prefixOptions%22%3A%5B%22Anh%22%2C%22Ch%E1%BB%8B%22%5D%2C%22prefixPlaceholder%22%3A%22Danh%20x%C6%B0ng%22%2C%22headerBackground%22%3A%22linear-gradient(86.7deg%2C%20%23891299FF%200.85%25%2C%20%23AE31B7FF%2098.94%25)%22%2C%22css%22%3A%22%22%7D"
+  width="400" 
+  height="600" 
+  frameborder="0">
+</iframe>
+-->
+
+
+
+<script>
+    // Configs
+    let liveChatBaseUrl   = document.location.protocol + '//' + 'livechat.fpt.ai/v36/src'
+    let LiveChatSocketUrl = 'livechat.fpt.ai:443'
+    let FptAppCode        = 'b5f5dfafa4459d587c21b20c8116adbc'
+    let FptAppName        = 'PenguinShop'
+    // Define custom styles
+    let CustomStyles = {
+        // header
+        headerBackground: 'linear-gradient(86.7deg, #B619B8FF 0.85%, #B7319EFF 98.94%)',
+        headerTextColor: '#ffffffff',
+        headerLogoEnable: false,
+        headerLogoLink: 'https://res.cloudinary.com/dcdwqd5up/image/upload/v1752845674/logo_fvc6ie.png',
+        headerText: 'PenguinShop',
+        // main
+        primaryColor: '#C213BFFF',
+        secondaryColor: '#ecececff',
+        primaryTextColor: '#ffffffff',
+        secondaryTextColor: '#000000DE',
+        buttonColor: '#b4b4b4ff',
+        buttonTextColor: '#ffffffff',
+        bodyBackgroundEnable: false,
+        bodyBackgroundLink: '',
+        avatarBot: 'https://res.cloudinary.com/dcdwqd5up/image/upload/v1752845785/icon2_tegwls.png',
+        sendMessagePlaceholder: 'Nhập tin nhắn ở đây',
+        // float button
+        floatButtonLogo: 'https://res.cloudinary.com/dcdwqd5up/image/upload/v1752845785/icon2_tegwls.png',
+        floatButtonTooltip: 'Tôi có thể giúp gì cho bạn',
+        floatButtonTooltipEnable: true,
+        // start screen
+        customerLogo: 'https://res.cloudinary.com/dcdwqd5up/image/upload/v1752845674/logo_fvc6ie.png',
+        customerWelcomeText: 'Vui lòng nhập tên của bạn',
+        customerButtonText: 'Bắt đầu',
+        prefixEnable: false,
+        prefixType: 'radio',
+        prefixOptions: ["Anh","Chị"],
+        prefixPlaceholder: 'Danh xưng',
+        // custom css
+        css: ''
+    }
+    // Get bot code from url if FptAppCode is empty
+    if (!FptAppCode) {
+        let appCodeFromHash = window.location.hash.substr(1)
+        if (appCodeFromHash.length === 32) {
+            FptAppCode = appCodeFromHash
+        }
+    }
+    // Set Configs
+    let FptLiveChatConfigs = {
+        appName: FptAppName,
+        appCode: FptAppCode,
+        themes : '',
+        styles : CustomStyles
+    }
+    // Append Script
+    let FptLiveChatScript  = document.createElement('script')
+    FptLiveChatScript.id   = 'fpt_ai_livechat_script'
+    FptLiveChatScript.src  = liveChatBaseUrl + '/static/fptai-livechat.js'
+    document.body.appendChild(FptLiveChatScript)
+    // Append Stylesheet
+    let FptLiveChatStyles  = document.createElement('link')
+    FptLiveChatStyles.id   = 'fpt_ai_livechat_script'
+    FptLiveChatStyles.rel  = 'stylesheet'
+    FptLiveChatStyles.href = liveChatBaseUrl + '/static/fptai-livechat.css'
+    document.body.appendChild(FptLiveChatStyles)
+    // Init
+    FptLiveChatScript.onload = function () {
+        fpt_ai_render_chatbox(FptLiveChatConfigs, liveChatBaseUrl, LiveChatSocketUrl)
+    }
+</script>
+
+
+
+
     </body>
 </html>
 

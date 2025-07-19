@@ -6,6 +6,7 @@
 package Controller.HomePage.Customer.Delivery;
 
 import DAL.DeliveryDAO;
+import DAL.UserDAO;
 import Models.User;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -47,6 +48,10 @@ public class DeleteDelivery extends HttpServlet {
         try {
             int deId = Integer.parseInt(deID);
             if(de.deleteAllDeliveryInfo(deId)){
+                String thongbao = "User xóa địa chỉ";
+                User user = (User) request.getSession().getAttribute("user");
+                UserDAO udao = new UserDAO();
+                udao.insertLog(user.getUserID(), thongbao, thongbao);
                 request.setAttribute("ms", "Xóa địa chỉ thành công");
                 response.sendRedirect("deliveryinfo");
             }

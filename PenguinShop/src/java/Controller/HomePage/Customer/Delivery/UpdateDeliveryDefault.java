@@ -6,6 +6,7 @@ package Controller.HomePage.Customer.Delivery;
 
 import Const.Delivery;
 import DAL.DeliveryDAO;
+import DAL.UserDAO;
 import Models.User;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -79,6 +80,9 @@ public class UpdateDeliveryDefault extends HttpServlet {
                     response.sendRedirect("deliveryinfo");
                 }
             }
+            String thongbao = "User cập nhật địa chỉ người nhận";
+            UserDAO udao = new UserDAO();
+            udao.insertLog(user.getUserID(), thongbao, thongbao);
         } catch (NumberFormatException e) {
             request.getSession().setAttribute("error", "ID địa chỉ không hợp lệ!");
             response.sendRedirect("deliveryinfo");

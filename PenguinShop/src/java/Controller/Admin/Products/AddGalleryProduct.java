@@ -49,29 +49,73 @@ public class AddGalleryProduct extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         HttpSession session = request.getSession();
-        try{
+        try {
             String productID = request.getParameter("productID");
-            Part imageFile = request.getPart("imageFile");
+            if (productID == null || productID.trim().isEmpty()) {
+                session.setAttribute("error", "Vui lòng chọn sản phẩm!");
+                response.sendRedirect("galleryProduct?productID=" + (productID != null ? productID : ""));
+                return;
+            }
 
-            if (productID == null || imageFile == null || imageFile.getSize() == 0) {
-                session.setAttribute("error", "Vui lòng chọn sản phẩm và file ảnh!");
+            int productId;
+            try {
+                productId = Integer.parseInt(productID);
+            } catch (NumberFormatException e) {
+                session.setAttribute("error", "ID sản phẩm không hợp lệ!");
                 response.sendRedirect("galleryProduct?productID=" + productID);
                 return;
             }
 
-            String imageUrl = cloudinaryService.uploadImage(imageFile.getInputStream(), imageFile.getSubmittedFileName());
-            if (imageUrl == null) {
-                session.setAttribute("error", "Lỗi upload ảnh lên Cloudinary!");
-                response.sendRedirect("galleryProduct?productID=" + productID);
-                return;
+            // Lấy các part có name="imageFile" (nhiều file)
+            int maxFiles = 10;
+            int successCount = 0;
+            int failCount = 0;
+            StringBuilder errorMsg = new StringBuilder();
+            int totalFiles = 0;
+
+            for (jakarta.servlet.http.Part part : request.getParts()) {
+                if ("imageFile".equals(part.getName()) && part.getSize() > 0) {
+                    totalFiles++;
+                    if (totalFiles > maxFiles) {
+                        errorMsg.append("Chỉ được tải lên tối đa ").append(maxFiles).append(" ảnh mỗi lần!\n");
+                        break;
+                    }
+                    String fileName = part.getSubmittedFileName();
+                    if (fileName == null || !fileName.matches(".*\\.(jpg|jpeg|png|gif|bmp|webp)$")) {
+                        failCount++;
+                        errorMsg.append("File ").append(fileName != null ? fileName : "[không xác định]").append(" không phải ảnh hợp lệ!\n");
+                        continue;
+                    }
+                    try (java.io.InputStream inputStream = part.getInputStream()) {
+                        String imageUrl = cloudinaryService.uploadImage(inputStream, fileName);
+                        if (imageUrl != null) {
+                            ProductDao galleryDAO = new ProductDao();
+                            boolean saved = galleryDAO.addGalleryImage(productId, imageUrl);
+                            if (saved) {
+                                successCount++;
+                            } else {
+                                failCount++;
+                                errorMsg.append("Lỗi lưu ảnh ").append(fileName).append(" vào CSDL!\n");
+                            }
+                        } else {
+                            failCount++;
+                            errorMsg.append("Lỗi upload ảnh ").append(fileName).append(" lên Cloudinary!\n");
+                        }
+                    } catch (Exception ex) {
+                        failCount++;
+                        errorMsg.append("Lỗi xử lý file ").append(fileName).append(": ").append(ex.getMessage()).append("\n");
+                    }
+                }
             }
 
-            ProductDao galleryDAO = new ProductDao();
-            boolean success = galleryDAO.addGalleryImage(Integer.parseInt(productID), imageUrl);
-            if (success) {
-                session.setAttribute("ms", "Thêm ảnh thành công!");
-            } else {
-                session.setAttribute("error", "Thêm ảnh không thành công!");
+            if (successCount > 0) {
+                session.setAttribute("ms", "Thêm " + successCount + " ảnh thành công!");
+            }
+            if (failCount > 0 || errorMsg.length() > 0) {
+                session.setAttribute("error", errorMsg.toString());
+            }
+            if (successCount == 0) {
+                session.setAttribute("error", errorMsg.length() > 0 ? errorMsg.toString() : "Không có ảnh nào được thêm!");
             }
             response.sendRedirect("galleryProduct?productID=" + productID);
         } catch (Exception e) {

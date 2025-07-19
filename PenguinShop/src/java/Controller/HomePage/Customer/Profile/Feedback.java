@@ -2,6 +2,7 @@ package Controller.HomePage.Customer.Profile;
 
 import APIKey.CloudinaryConfig;
 import DAL.FeedbackDAO;
+import DAL.UserDAO;
 import Models.User;
 import java.io.IOException;
 import java.io.InputStream;
@@ -148,6 +149,9 @@ public class Feedback extends HttpServlet {
             boolean success = feedbackDAO.addFeedback(feedback);
 
             if (success) {
+                String thongbao = "User đánh giá sản phẩm với id" +variantID;
+                UserDAO udao = new UserDAO();
+                udao.insertLog(user.getUserID(), thongbao, thongbao);
                 session.setAttribute("ms", "Đánh giá sản phẩm thành công!");
             } else {
                 session.setAttribute("error", "Có lỗi xảy ra khi lưu đánh giá");

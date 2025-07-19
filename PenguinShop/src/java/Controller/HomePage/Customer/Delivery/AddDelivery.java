@@ -6,6 +6,7 @@
 package Controller.HomePage.Customer.Delivery;
 
 import DAL.DeliveryDAO;
+import DAL.UserDAO;
 import Models.User;
 import Utils.GetDateTime;
 import Utils.StringConvert;
@@ -66,6 +67,9 @@ public class AddDelivery extends HttpServlet {
                     GetDateTime.getCurrentTime(),
                     GetDateTime.getCurrentTime());
             if(dao.insertDeliveryInfo(di)){
+                String thongbao = "User thêm địa chỉ nhận mới";
+                UserDAO udao = new UserDAO();
+                udao.insertLog(user.getUserID(), thongbao, thongbao);
                 request.getSession().setAttribute("ms", "Thêm địa chỉ nhận thành công");
                 response.sendRedirect("deliveryinfo");
             }

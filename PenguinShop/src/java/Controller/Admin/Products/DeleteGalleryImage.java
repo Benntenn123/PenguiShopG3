@@ -41,15 +41,19 @@ public class DeleteGalleryImage extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         try {
+            // Đổi parameter names để khớp với frontend JSP
             String imageUrl = request.getParameter("imageUrl");
             String productID = request.getParameter("productID");
-
-            if (imageUrl == null || productID == null) {
+            
+            System.out.println("Link ảnh: " + imageUrl);
+            System.out.println("ProductID: " + productID);
+            
+            if (imageUrl == null || productID == null || imageUrl.trim().isEmpty() || productID.trim().isEmpty()) {
                 session.setAttribute("error", "Thiếu thông tin ảnh hoặc sản phẩm!");
                 response.sendRedirect("galleryProduct?productID=" + productID);
                 return;
             }
-
+            
             ProductDao galleryDAO = new ProductDao();
             // Kiểm tra ảnh tồn tại
             if (!galleryDAO.checkImageExists(imageUrl, Integer.parseInt(productID))) {
@@ -57,7 +61,8 @@ public class DeleteGalleryImage extends HttpServlet {
                 response.sendRedirect("galleryProduct?productID=" + productID);
                 return;
             }
-
+            System.out.println(imageUrl +"hehehe");
+            System.out.println(productID +"hehehe");
             // Xóa ảnh
             boolean success = galleryDAO.deleteGalleryImage(imageUrl, Integer.parseInt(productID));
             if (success) {
@@ -68,6 +73,7 @@ public class DeleteGalleryImage extends HttpServlet {
             response.sendRedirect("galleryProduct?productID=" + productID);
         }catch (Exception e) {
             session.setAttribute("error", "Lỗi: " + e.getMessage());
+            e.printStackTrace();
             response.sendRedirect("galleryProduct?productID=" + request.getParameter("productID"));
         }
     }
@@ -81,6 +87,6 @@ public class DeleteGalleryImage extends HttpServlet {
     @Override
     public String getServletInfo() {
         return "Short description";
-    }// </editor-fold>
+    }
 
 }
