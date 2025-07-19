@@ -570,6 +570,11 @@
                                 <span class="list-text">Trang Chủ</span>
                             </a>
                         </li>
+                        <li>
+                            <a href="blogs">
+                                <span class="list-text">Bài viết</span>
+                            </a>
+                        </li>
                         <li class="mega-menu">
                             <a href="search">
                                 <span class="list-text">Cửa hàng</span>

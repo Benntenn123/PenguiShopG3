@@ -90,6 +90,32 @@
                 padding: 50px 0;
                 text-align: center;
             }
+            .pagination .page-link {
+                background: linear-gradient(135deg, #AE1C9A 0%, #c44ca8 100%);
+                color: #fff;
+                border: none;
+                font-size: 16px;
+                border-radius: 25px !important;
+                margin: 0 4px;
+                min-width: 44px;
+                min-height: 44px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: all 0.2s;
+                box-shadow: 0 2px 8px rgba(174,28,154,0.08);
+            }
+            .pagination .page-link:hover, .pagination .page-item.active .page-link {
+                background: linear-gradient(135deg, #c44ca8 0%, #AE1C9A 100%);
+                color: #fff;
+                box-shadow: 0 4px 16px rgba(174,28,154,0.18);
+                text-decoration: none;
+            }
+            .pagination .page-item.disabled .page-link {
+                background: #eee;
+                color: #bbb;
+                box-shadow: none;
+            }
             .no-blogs {
                 text-align: center;
                 padding: 100px 0;
@@ -116,6 +142,26 @@
                 transform: translateY(-2px);
                 box-shadow: 0 5px 15px rgba(174, 28, 154, 0.3);
             }
+            .btn-search-custom {
+                background: linear-gradient(135deg, #AE1C9A 0%, #c44ca8 100%);
+                color: #fff;
+                border: none;
+                font-size: 16px;
+                border-radius: 25px;
+                min-width: 44px;
+                min-height: 44px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: all 0.2s;
+                box-shadow: 0 2px 8px rgba(174,28,154,0.08);
+            }
+            .btn-search-custom:hover, .btn-search-custom:focus {
+                background: linear-gradient(135deg, #c44ca8 0%, #AE1C9A 100%);
+                color: #fff;
+                box-shadow: 0 4px 16px rgba(174,28,154,0.18);
+                text-decoration: none;
+            }
         </style>
     </head>
     <body>
@@ -140,7 +186,7 @@
                                         <input style="font-size: 16px" type="date" class="form-control" name="searchDate" value="${searchDate}">
                                     </div>
                                     <div style="font-size: 16px" class="col-md-3">
-                                        <button style="font-size: 16px" type="submit" class="btn btn-primary w-100">
+                                        <button type="submit" class="btn-search-custom w-100">
                                             <i class="fas fa-search me-2"></i> Tìm kiếm
                                         </button>
                                     </div>
@@ -237,7 +283,7 @@
                         </div>
 
                         <!-- Pagination -->
-                        <c:if test="${totalPages > 1}">
+                        <c:if test="${totalPages > 0}">
                             <div class="pagination-wrapper">
                                 <nav aria-label="Blog pagination">
                                     <ul class="pagination justify-content-center">

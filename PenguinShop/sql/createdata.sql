@@ -48,7 +48,7 @@ GO
 CREATE TABLE tbRoles (
     roleID INT PRIMARY KEY IDENTITY(1,1),
     roleName NVARCHAR(50) NOT NULL,
-	roleDescription NVARCHAR(max),
+    roleDescription NVARCHAR(max),
 );
 CREATE TABLE tbModules (
     moduleID INT PRIMARY KEY IDENTITY(1,1),
@@ -60,11 +60,11 @@ CREATE TABLE tbModules (
 CREATE TABLE tbPermissions (
     permissionID INT PRIMARY KEY IDENTITY(1,1),
     permissionName NVARCHAR(50) NOT NULL,
-	url_permission NVARCHAR(100),
-	moduleID INT,
-	isHide INT,
+    url_permission NVARCHAR(100),
+    moduleID INT,
+    isHide INT,
     permissionDescription NVARCHAR(200),
-	FOREIGN KEY(moduleID) REFERENCES dbo.tbModules(moduleID)
+    FOREIGN KEY(moduleID) REFERENCES dbo.tbModules(moduleID)
 );
 
 -- Bảng liên kết vai trò và quyền hạn
@@ -285,10 +285,10 @@ CREATE TABLE tbOrder (
     shippingAddress NVARCHAR(200),
     paymentMethod INT,
     paymentStatus BIT,
-	emall_receiver NVARCHAR(255),
-	phone_receiver NVARCHAR(255),
-	name_receiver NVARCHAR(255),
-	shipFee DECIMAL(10, 2),
+    emall_receiver NVARCHAR(255),
+    phone_receiver NVARCHAR(255),
+    name_receiver NVARCHAR(255),
+    shipFee DECIMAL(10, 2),
     FOREIGN KEY (userID) REFERENCES tbUsers(userID),
     FOREIGN KEY (paymentMethod) REFERENCES tbPaymentMethod(paymentMethodID)
 );
@@ -308,8 +308,8 @@ CREATE TABLE tbOrderDetail (
 CREATE TABLE tbRequests (
     requestID INT PRIMARY KEY IDENTITY(1,1),
     email_request NVARCHAR(255),
-	phone_request NVARCHAR(255),
-	name_request NVARCHAR(255),
+    phone_request NVARCHAR(255),
+    name_request NVARCHAR(255),
     requestType NVARCHAR(50) NOT NULL,
     description NVARCHAR(500) NOT NULL,
     requestStatus INT NOT NULL DEFAULT 0,
@@ -378,4 +378,43 @@ CREATE TABLE tbBlog (
     authorID INT,
     status INT NOT NULL DEFAULT 1, -- 1: Hiển thị, 0: Ẩn
     FOREIGN KEY (authorID) REFERENCES tbUsers(userID)
+);
+
+-- Bảng nhà cung cấp
+CREATE TABLE tbSupplier (
+    supplierID INT PRIMARY KEY IDENTITY(1,1),
+    supplierName NVARCHAR(100) NOT NULL,
+    contactName NVARCHAR(100),
+    phone NVARCHAR(20),
+    email NVARCHAR(100),
+    address NVARCHAR(255),
+    note NVARCHAR(255),
+    created_at DATETIME DEFAULT GETDATE(),
+    updated_at DATETIME
+);
+
+-- Bảng đơn nhập hàng
+CREATE TABLE tbImportOrder (
+    importOrderID INT PRIMARY KEY IDENTITY(1,1),
+    supplierID INT NOT NULL,
+    importDate DATETIME NOT NULL DEFAULT GETDATE(),
+    totalImportAmount DECIMAL(18,2),
+    note NVARCHAR(255),
+    created_by INT, -- userID của người tạo đơn nhập
+    created_at DATETIME DEFAULT GETDATE(),
+    updated_at DATETIME,
+    FOREIGN KEY (supplierID) REFERENCES tbSupplier(supplierID),
+    FOREIGN KEY (created_by) REFERENCES tbUsers(userID)
+);
+
+-- Bảng chi tiết đơn nhập hàng (theo variantID)
+CREATE TABLE tbImportOrderDetail (
+    importOrderDetailID INT PRIMARY KEY IDENTITY(1,1),
+    importOrderID INT NOT NULL,
+    variantID INT NOT NULL,
+    quantity INT NOT NULL,
+    importPrice DECIMAL(18,2) NOT NULL,
+    note NVARCHAR(255),
+    FOREIGN KEY (importOrderID) REFERENCES tbImportOrder(importOrderID),
+    FOREIGN KEY (variantID) REFERENCES tbProductVariant(variantID)
 );
