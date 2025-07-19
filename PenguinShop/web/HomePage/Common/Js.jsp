@@ -8,7 +8,7 @@
         .partnership-chat-button {
             position: fixed;
             bottom: 25px;
-            right: 220px;
+            right: 180px;
             width: 60px;
             height: 60px;
             background: linear-gradient(135deg, #AE1C9A 0%, #c44ca8 100%);
@@ -169,7 +169,7 @@
             .partnership-chat-window {
                 width: calc(100vw - 20px);
                 height: calc(100vh - 40px);
-                bottom: 20px;
+                bottom: 10px;
                 right: 10px;
                 left: 10px;
                 border-radius: 15px;
@@ -178,6 +178,15 @@
             .partnership-chat-button {
                 bottom: 20px;
                 right: 20px;
+                width: 55px;
+                height: 55px;
+            }
+
+            .messenger-btn {
+                bottom: 20px;
+                right: 85px;
+                width: 55px;
+                height: 55px;
             }
         }
 
@@ -398,8 +407,8 @@
     <style>
         #messenger-widget {
             position: fixed;
-            bottom: -50px;
-            right: 20px;
+            bottom: 25px;
+            right: 100px;
             z-index: 9999;
         }
 
@@ -407,7 +416,7 @@
             width: 60px;
             height: 60px;
             position: fixed;
-            right: 120px;
+            right: 100px;
             bottom: 25px;
             background: linear-gradient(135deg, #0084ff, #0066cc);
             border-radius: 50%;
@@ -465,11 +474,28 @@
             .messenger-btn {
                 width: 55px;
                 height: 55px;
+                right: 80px;
+                bottom: 20px;
             }
             
             .messenger-icon {
                 width: 28px;
                 height: 28px;
+            }
+
+            .partnership-chat-button {
+                width: 55px;
+                height: 55px;
+                right: 20px;
+                bottom: 20px;
+            }
+
+            .partnership-chat-window {
+                width: calc(100vw - 20px);
+                height: calc(100vh - 40px);
+                bottom: 10px;
+                right: 10px;
+                left: 10px;
             }
         }
 
@@ -505,13 +531,12 @@
         let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
         const messengerWidget = document.getElementById('messenger-widget');
         
-        if (scrollTop > lastScrollTop && scrollTop > 200) {
-            // Scroll down - có thể ẩn nút
-            // messengerWidget.style.transform = 'translateY(100px)';
-        } else {
-            // Scroll up - hiện nút
-            messengerWidget.style.transform = 'translateY(0)';
-        }
+        // Giữ nguyên vị trí, không thay đổi transform
+        // if (scrollTop > lastScrollTop && scrollTop > 200) {
+        //     messengerWidget.style.transform = 'translateY(100px)';
+        // } else {
+        //     messengerWidget.style.transform = 'translateY(0)';
+        // }
         lastScrollTop = scrollTop;
     });
 </script>
@@ -576,7 +601,53 @@
 
             <!--support-->
 
+            <script>
+                // Partnership Chat Toggle
+                const partnershipChatToggle = document.getElementById('partnershipChatToggle');
+                const partnershipChatWindow = document.getElementById('partnershipChatWindow');
+                const partnershipCloseChat = document.getElementById('partnershipCloseChat');
 
+                // Open chat window
+                partnershipChatToggle.addEventListener('click', function() {
+                    partnershipChatWindow.classList.add('active');
+                });
+
+                // Close chat window
+                partnershipCloseChat.addEventListener('click', function() {
+                    partnershipChatWindow.classList.remove('active');
+                });
+
+                // Close when clicking outside
+                document.addEventListener('click', function(event) {
+                    if (!partnershipChatWindow.contains(event.target) && 
+                        !partnershipChatToggle.contains(event.target) && 
+                        partnershipChatWindow.classList.contains('active')) {
+                        partnershipChatWindow.classList.remove('active');
+                    }
+                });
+
+                // Handle form submission
+                document.getElementById('partnershipSupportForm').addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const formData = new FormData(this);
+                    
+                    fetch('sendRequestSupport', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => response.text())
+                    .then(data => {
+                        alert('Cảm ơn bạn! Yêu cầu hỗ trợ đã được gửi thành công. Chúng tôi sẽ liên hệ với bạn sớm nhất.');
+                        partnershipChatWindow.classList.remove('active');
+                        this.reset();
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Có lỗi xảy ra. Vui lòng thử lại sau.');
+                    });
+                });
+            </script>
 
             <!--------------- jQuery ---------------->
             <script src="./HomePage/assets/js/jquery_3.7.1.min.js"></script>

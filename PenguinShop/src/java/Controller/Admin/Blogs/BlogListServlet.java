@@ -56,6 +56,11 @@ public class BlogListServlet extends HttpServlet {
         // Calculate total pages
         int totalPages = (int) Math.ceil((double) totalBlogs / pageSize);
         
+        // Get statistics
+        int totalActiveBlog = blogDAO.countBlogByStatus(1, uAdmin.getRoleID(), uAdmin.getUserID());
+        int totalInactiveBlog = blogDAO.countBlogByStatus(0, uAdmin.getRoleID(), uAdmin.getUserID());
+        int totalAllBlogs = totalActiveBlog + totalInactiveBlog;
+        
         // Set attributes for JSP
         request.setAttribute("blogs", blogs);
         request.setAttribute("currentPage", page);
@@ -64,6 +69,11 @@ public class BlogListServlet extends HttpServlet {
         request.setAttribute("searchTitle", searchTitle);
         request.setAttribute("searchStatus", searchStatus);
         request.setAttribute("searchDate", searchDate);
+        
+        // Statistics attributes
+        request.setAttribute("totalAllBlogs", totalAllBlogs);
+        request.setAttribute("totalActiveBlog", totalActiveBlog);
+        request.setAttribute("totalInactiveBlog", totalInactiveBlog);
         
         request.getRequestDispatcher("/Admin/BlogList.jsp").forward(request, response);
     }

@@ -3,20 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/F:/Git/PenguiShopG3/PenguinShop/web/Admin/Welcome.jsp</file>
-            <file>file:/F:/Git/PenguiShopG3/PenguinShop/web/Admin/EditProfileAdmin.jsp</file>
-            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/DAL/UserDAO.java</file>
-            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Controller/Admin/DashBoard/DashBoard.java</file>
-            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Controller/Admin/Sales/SalesDashboard.java</file>
-            <file>file:/F:/Git/PenguiShopG3/PenguinShop/web/Admin/SalesDashboard.jsp</file>
-            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Controller/Admin/Authen/LoginAdmin.java</file>
-            <file>file:/F:/Git/PenguiShopG3/PenguinShop/web/Admin/ChangeInformationOrder.jsp</file>
-            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/DAL/PermissionDAO.java</file>
-            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/DAL/OrderDAO.java</file>
-            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Controller/Admin/WelcomeAdmin.java</file>
-            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Filter/FilterAdmin.java</file>
-            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Controller/Admin/Profile/EditProfileAdmin.java</file>
-            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Controller/Admin/Sales/SalesDetailApi.java</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/web/HomePage/BlogDetail.jsp</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/web/Admin/ProductGallery.jsp</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/web/HomePage/Common/Js.jsp</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/web/Admin/BlogPreview.jsp</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/web/HomePage/BlogList.jsp</file>
         </group>
     </open-files>
 </project-private>

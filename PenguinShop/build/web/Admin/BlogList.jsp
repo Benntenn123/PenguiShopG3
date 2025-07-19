@@ -32,6 +32,29 @@
                 overflow: hidden;
                 text-overflow: ellipsis;
             }
+            .stats-card {
+                transition: transform 0.2s ease-in-out;
+            }
+            .stats-card:hover {
+                transform: translateY(-2px);
+            }
+            .avatar-sm {
+                width: 48px;
+                height: 48px;
+            }
+            .avatar-title {
+                width: 100%;
+                height: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .btn-preview {
+                transition: all 0.2s ease;
+            }
+            .btn-preview:hover {
+                transform: scale(1.05);
+            }
         </style>
     </head>
     <body>
@@ -51,6 +74,67 @@
                                             <li class="breadcrumb-item"><a href="#">Blog</a></li>
                                             <li class="breadcrumb-item active">Danh sách Blog</li>
                                         </ol>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Statistics Cards -->
+                        <div class="row mb-4">
+                            <div class="col-md-4">
+                                <div class="card bg-primary text-white stats-card">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h3 class="mb-0">${totalAllBlogs}</h3>
+                                                <p class="mb-0">Tổng số bài viết
+                                                    <c:if test="${sessionScope.uAdmin.roleID != 1}">
+                                                        của tôi
+                                                    </c:if>
+                                                </p>
+                                            </div>
+                                            <div class="avatar-sm">
+                                                <div class="avatar-title bg-light rounded-circle">
+                                                    <i class="mdi mdi-book-open-page-variant text-primary" style="font-size: 24px;"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <div class="card bg-success text-white stats-card">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h3 class="mb-0">${totalActiveBlog}</h3>
+                                                <p class="mb-0">Bài đang công khai</p>
+                                            </div>
+                                            <div class="avatar-sm">
+                                                <div class="avatar-title bg-light rounded-circle">
+                                                    <i class="mdi mdi-eye text-success" style="font-size: 24px;"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <div class="card bg-warning text-white stats-card">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h3 class="mb-0">${totalInactiveBlog}</h3>
+                                                <p class="mb-0">Bài đang ẩn</p>
+                                            </div>
+                                            <div class="avatar-sm">
+                                                <div class="avatar-title bg-light rounded-circle">
+                                                    <i class="mdi mdi-eye-off text-warning" style="font-size: 24px;"></i>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -123,7 +207,7 @@
                                                     <c:choose>
                                                         <c:when test="${empty blogs}">
                                                             <tr>
-                                                                <td colspan="7" class="text-center py-4">
+                                                                <td colspan="6" class="text-center py-4">
                                                                     <div class="text-muted">
                                                                         <i class="mdi mdi-inbox-outline" style="font-size: 48px;"></i>
                                                                         <p class="mt-2 mb-0">Không có blog nào</p>
@@ -167,6 +251,12 @@
                                                                     </td>
                                                                     <td>
                                                                         <div class="btn-group" role="group">
+                                                                            <!-- Preview Button -->
+                                                                            <a href="BlogPreview?id=${blog.blogID}" class="btn btn-sm btn-outline-info btn-preview" 
+                                                                               title="Xem trước" target="_blank">
+                                                                                <i class="mdi mdi-eye-outline"></i>
+                                                                            </a>
+                                                                            
                                                                             <!-- Edit Button -->
                                                                             <a href="BlogEdit?id=${blog.blogID}" class="btn btn-sm btn-outline-primary" title="Chỉnh sửa">
                                                                                 <i class="mdi mdi-pencil"></i>
@@ -210,7 +300,7 @@
                                         </div>
 
                                         <!-- Pagination -->
-                                        <c:if test="${totalPages > 1}">
+                                        <c:if test="${totalPages > 0}">
                                             <nav aria-label="Page navigation">
                                                 <ul class="pagination justify-content-center">
                                                     <c:if test="${currentPage > 1}">

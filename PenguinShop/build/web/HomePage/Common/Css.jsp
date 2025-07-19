@@ -24,6 +24,9 @@
     <!---------------------- Scroll ------------------->
     <link rel="stylesheet" href="./HomePage/css/aos-3.0.0.css">
 
+    <!--------------- FontAwesome Icons ---------------->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <!--------------- additional-css ---------------->
     <link rel="stylesheet" href="./HomePage/css/style.css">
 </head>

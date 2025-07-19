@@ -319,4 +319,196 @@ public class BlogDAO extends DBContext {
         } catch (SQLException e) { e.printStackTrace(); }
         return 0;
     }
+    
+    // Get blogs with author info for homepage
+    public List<Blog> getBlogsWithAuthor(String title, String date, int offset, int limit) {
+        List<Blog> list = new ArrayList<>();
+        StringBuilder sql = new StringBuilder(
+            "SELECT b.*, u.fullName as authorName, u.image_user as authorImage " +
+            "FROM tbBlog b INNER JOIN tbUsers u ON b.authorID = u.userID " +
+            "WHERE b.status = 1"
+        );
+        List<Object> params = new ArrayList<>();
+        
+        if (title != null && !title.trim().isEmpty()) {
+            sql.append(" AND b.title LIKE ?");
+            params.add("%" + title.trim() + "%");
+        }
+        if (date != null && !date.trim().isEmpty()) {
+            sql.append(" AND CAST(b.created_at AS DATE) = ?");
+            params.add(date);
+        }
+        
+        sql.append(" ORDER BY b.created_at DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
+        params.add(offset);
+        params.add(limit);
+        
+        try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i));
+            }
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Blog blog = mapResultSetToBlog(rs);
+                blog.setAuthorName(rs.getString("authorName"));
+                blog.setAuthorImage(rs.getString("authorImage"));
+                list.add(blog);
+            }
+        } catch (SQLException e) { e.printStackTrace(); }
+        return list;
+    }
+    
+    // Get recent blogs (for sidebar)
+    public List<Blog> getRecentBlogs(int limit) {
+        List<Blog> list = new ArrayList<>();
+        String sql = "SELECT TOP (?) b.*, u.fullName as authorName, u.image_user as authorImage " +
+                    "FROM tbBlog b INNER JOIN tbUsers u ON b.authorID = u.userID " +
+                    "WHERE b.status = 1 ORDER BY b.created_at DESC";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, limit);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Blog blog = mapResultSetToBlog(rs);
+                blog.setAuthorName(rs.getString("authorName"));
+                blog.setAuthorImage(rs.getString("authorImage"));
+                list.add(blog);
+            }
+        } catch (SQLException e) { e.printStackTrace(); }
+        return list;
+    }
+
+    // Count blogs with filters (for homepage pagination)
+    public int countBlogsWithFilters(String title, String date) {
+        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM tbBlog WHERE status = 1");
+        List<Object> params = new ArrayList<>();
+        
+        if (title != null && !title.trim().isEmpty()) {
+            sql.append(" AND title LIKE ?");
+            params.add("%" + title.trim() + "%");
+        }
+        if (date != null && !date.trim().isEmpty()) {
+            sql.append(" AND CAST(created_at AS DATE) = ?");
+            params.add(date);
+        }
+        
+        try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i));
+            }
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) return rs.getInt(1);
+        } catch (SQLException e) { e.printStackTrace(); }
+        return 0;
+    }
+    
+    // Get related blogs based on title similarity
+    public List<Blog> getRelatedBlogs(int currentBlogId, String currentTitle, int limit) {
+        List<Blog> list = new ArrayList<>();
+        
+        // Step 1: Try to find blogs with similar title keywords
+        String[] keywords = currentTitle.toLowerCase().split("\\s+");
+        
+        if (keywords.length > 0) {
+            StringBuilder sql = new StringBuilder(
+                "SELECT TOP (?) b.*, u.fullName as authorName, u.image_user as authorImage " +
+                "FROM tbBlog b INNER JOIN tbUsers u ON b.authorID = u.userID " +
+                "WHERE b.status = 1 AND b.blogID != ? AND ("
+            );
+            
+            // Build OR conditions for each keyword
+            for (int i = 0; i < keywords.length; i++) {
+                if (i > 0) sql.append(" OR ");
+                sql.append("LOWER(b.title) LIKE ?");
+            }
+            sql.append(") ORDER BY b.created_at DESC");
+            
+            try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
+                ps.setInt(1, limit * 2); // Get more to have options
+                ps.setInt(2, currentBlogId);
+                
+                // Set keyword parameters
+                for (int i = 0; i < keywords.length; i++) {
+                    ps.setString(3 + i, "%" + keywords[i] + "%");
+                }
+                
+                ResultSet rs = ps.executeQuery();
+                while (rs.next() && list.size() < limit) {
+                    Blog blog = mapResultSetToBlog(rs);
+                    blog.setAuthorName(rs.getString("authorName"));
+                    blog.setAuthorImage(rs.getString("authorImage"));
+                    list.add(blog);
+                }
+            } catch (SQLException e) { 
+                e.printStackTrace(); 
+            }
+        }
+        
+        // Step 2: If we don't have enough related blogs, fill with recent ones
+        if (list.size() < limit) {
+            List<Blog> recentBlogs = getRecentBlogsExcluding(currentBlogId, limit);
+            for (Blog recentBlog : recentBlogs) {
+                // Avoid duplicates
+                boolean exists = list.stream().anyMatch(b -> b.getBlogID() == recentBlog.getBlogID());
+                if (!exists) {
+                    list.add(recentBlog);
+                }
+                if (list.size() >= limit) break;
+            }
+        }
+        
+        // Step 3: If still not enough, get ANY published blogs (fallback)
+        if (list.size() < limit) {
+            List<Blog> allBlogs = getAllPublishedBlogsExcluding(currentBlogId, limit);
+            for (Blog blog : allBlogs) {
+                // Avoid duplicates
+                boolean exists = list.stream().anyMatch(b -> b.getBlogID() == blog.getBlogID());
+                if (!exists) {
+                    list.add(blog);
+                }
+                if (list.size() >= limit) break;
+            }
+        }
+        
+        return list;
+    }
+    
+    // Helper method to get recent blogs excluding current blog
+    private List<Blog> getRecentBlogsExcluding(int excludeId, int limit) {
+        List<Blog> list = new ArrayList<>();
+        String sql = "SELECT TOP (?) b.*, u.fullName as authorName, u.image_user as authorImage " +
+                    "FROM tbBlog b INNER JOIN tbUsers u ON b.authorID = u.userID " +
+                    "WHERE b.status = 1 AND b.blogID != ? ORDER BY b.created_at DESC";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, limit * 2); // Get more than needed
+            ps.setInt(2, excludeId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Blog blog = mapResultSetToBlog(rs);
+                blog.setAuthorName(rs.getString("authorName"));
+                blog.setAuthorImage(rs.getString("authorImage"));
+                list.add(blog);
+            }
+        } catch (SQLException e) { e.printStackTrace(); }
+        return list;
+    }
+    
+    // Helper method to get all published blogs excluding current (final fallback)
+    private List<Blog> getAllPublishedBlogsExcluding(int excludeId, int limit) {
+        List<Blog> list = new ArrayList<>();
+        String sql = "SELECT TOP (?) b.*, u.fullName as authorName, u.image_user as authorImage " +
+                    "FROM tbBlog b INNER JOIN tbUsers u ON b.authorID = u.userID " +
+                    "WHERE b.status = 1 AND b.blogID != ? ORDER BY NEWID()"; // Random order
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, limit * 3); // Get plenty
+            ps.setInt(2, excludeId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Blog blog = mapResultSetToBlog(rs);
+                blog.setAuthorName(rs.getString("authorName"));
+                blog.setAuthorImage(rs.getString("authorImage"));
+                list.add(blog);
+            }
+        } catch (SQLException e) { e.printStackTrace(); }
+        return list;
+    }
 }

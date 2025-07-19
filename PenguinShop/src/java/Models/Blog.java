@@ -8,6 +8,8 @@ public class Blog {
     private String content;
     private String image;
     private String imageUrl; // For displaying Cloudinary URLs
+    private String authorName; // For displaying author name
+    private String authorImage; // For displaying author image
     private Date created_at;
     private Date updated_at;
     private int authorID;
@@ -98,5 +100,21 @@ public class Blog {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public String getAuthorName() {
+        return authorName;
+    }
+
+    public void setAuthorName(String authorName) {
+        this.authorName = authorName;
+    }
+
+    public String getAuthorImage() {
+        return authorImage;
+    }
+
+    public void setAuthorImage(String authorImage) {
+        this.authorImage = authorImage;
     }
 }
