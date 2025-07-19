@@ -7,7 +7,21 @@
         <div class="container">
             <div class="header-top">
                 <div class="header-profile">
-                    <a><span style="font-weight: bold;">Cần đồ thể thao - Đã có Penguin lo. Nhập mã <span style="color: red; font-weight: bold;">Sơn</span>  để đặt hàng</span></a>
+                    <c:choose>
+                        <c:when test="${not empty sessionScope.user}">
+                            <!-- User đã login - hiển thị QR scanner -->
+                            <a href="#" onclick="openQRScanner()" style="cursor: pointer;">
+                                <span style="font-weight: bold;">
+                                    <i class="fas fa-qrcode" style="margin-right: 8px; color: #007bff;"></i>
+                                    Quét mã QR để thêm sản phẩm vào giỏ hàng
+                                </span>
+                            </a>
+                        </c:when>
+                        <c:otherwise>
+                            <!-- User chưa login - hiển thị promo -->
+                            <a><span style="font-weight: bold;">Cần đồ thể thao - Đã có Penguin lo. Nhập mã <span style="color: red; font-weight: bold;">Sơn</span>  để đặt hàng</span></a>
+                        </c:otherwise>
+                    </c:choose>
                 </div>
 
             </div>
@@ -699,3 +713,1278 @@
         </div>
     </div>
 </header>
+
+<!-- QR Scanner Modal -->
+<div class="modal fade" id="qrScannerModal" tabindex="-1" aria-labelledby="qrScannerModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="qrScannerModalLabel" style="font-size: 18px;">
+                    <i class="fas fa-qrcode text-primary me-2"></i>
+                    Quét mã QR sản phẩm
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                <div class="qr-scanner-container">
+                    <!-- Camera Preview -->
+                    <div id="cameraContainer" style="display: none; position: relative; margin: 0 auto;">
+                        <div id="qrVideo" style="width: 100%; max-width: 500px; height: 375px; border-radius: 10px; border: 2px solid #007bff; overflow: hidden; position: relative; background: #222; margin: 0 auto;">
+                            <!-- Video will be inserted here by Html5Qrcode -->
+                            <div id="loadingText" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-size: 14px; text-align: center; z-index: 20;">Đang khởi động camera...</div>
+                        </div>
+                        <div id="scanningLine" style="position: absolute; top: 50%; left: 0; right: 0; height: 2px; background: #007bff; animation: scanning 2s ease-in-out infinite; z-index: 15;"></div>
+                        <!-- QR Box Overlay - Larger and more centered -->
+                        <div id="qrBoxOverlay" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 300px; height: 300px; border: 4px solid #00ff00; border-radius: 15px; background: transparent; z-index: 10; box-shadow: 0 0 0 9999px rgba(0,0,0,0.4);"></div>
+                        <div style="position: absolute; top: 15px; left: 50%; transform: translateX(-50%); color: white; background: rgba(0,0,0,0.8); padding: 8px 16px; border-radius: 20px; font-size: 14px; z-index: 15; font-weight: 500;">
+                            📱 Đưa mã QR vào khung xanh để quét
+                        </div>
+                        <!-- QR Detection Status -->
+                        <div id="qrStatus" style="position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%); color: white; background: rgba(0,0,0,0.8); padding: 6px 12px; border-radius: 15px; font-size: 14px; z-index: 15; display: none;">
+                            🔍 Đang tìm kiếm QR code...
+                        </div>
+                    </div>
+                    
+                    <!-- Upload Image -->
+                    <div id="uploadContainer">
+                        <div class="upload-area" style="border: 3px dashed #007bff; border-radius: 15px; padding: 40px; margin: 20px 0; background: #f8f9fa;">
+                            <i class="fas fa-upload fa-3x text-primary mb-3"></i>
+                            <h5 style="font-size: 18px;">Tải lên ảnh QR Code</h5>
+                            <p class="text-muted" style="font-size: 16px;">Chọn ảnh chứa mã QR từ thiết bị của bạn</p>
+                            <input type="file" id="qrImageInput" accept="image/*" style="display: none;">
+                            <button type="button" class="btn btn-primary" onclick="document.getElementById('qrImageInput').click();" style="font-size: 16px;">
+                                <i class="fas fa-image me-2"></i>Chọn ảnh
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Scanner Controls -->
+                    <div class="scanner-controls mt-3">
+                        <button type="button" id="startCameraBtn" class="btn btn-primary me-2" onclick="startAIScanner()" style="font-size: 16px; background: linear-gradient(45deg, #e91e63, #ad1457); border-color: #e91e63;">
+                            <i class="fas fa-qrcode me-2"></i>Quét Ngay
+                        </button>
+                        <button type="button" id="smartScanBtn" class="btn btn-secondary me-2" onclick="startSmartScan()" style="display: none; font-size: 16px;">
+                            <i class="fas fa-magic me-2"></i>Quét Thông Minh
+                        </button>
+                        <button type="button" id="stopCameraBtn" class="btn btn-danger" onclick="stopCamera()" style="display: none; font-size: 16px;">
+                            <i class="fas fa-stop me-2"></i>Tắt Camera
+                        </button>
+                    </div>
+                    
+                    <!-- Quick Scan Tips -->
+                    <div id="scanTips" class="mt-3" style="display: none;">
+                        <div class="alert alert-info">
+                            <h6 style="font-size: 16px;"><i class="fas fa-lightbulb me-2"></i>Mẹo quét nhanh:</h6>
+                            <ul class="mb-0" style="text-align: left; font-size: 14px;">
+                                <li>📱 Giữ điện thoại cách QR code 15-30cm</li>
+                                <li>☀️ Tránh ánh sáng chói hoặc quá tối</li>
+                                <li>🎯 Đưa QR code vào giữa khung xanh</li>
+                                <li>⏰ Giữ ổn định 2-3 giây</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Result Display -->
+                    <div id="scanResult" style="display: none;" class="mt-4 p-3 bg-light rounded">
+                        <h6 style="font-size: 18px;">Kết quả quét:</h6>
+                        <pre id="qrResult" class="text-start" style="font-size: 14px;"></pre>
+                        <button type="button" class="btn btn-primary" onclick="addQRToCart()" style="font-size: 16px;">
+                            <i class="fas fa-cart-plus me-2"></i>Thêm vào giỏ hàng
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Product Confirmation Modal -->
+<div class="modal fade" id="productConfirmModal" tabindex="-1" aria-labelledby="productConfirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg shadow-lg">
+        <div class="modal-content rounded-4">
+            <div class="modal-header bg-gradient-primary text-white p-4 border-0">
+                <h5 class="modal-title fw-bold" id="productConfirmModalLabel" style="font-size: 18px;">
+                    <i class="fas fa-check-circle me-2"></i>
+                    Xác nhận thông tin sản phẩm
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="row g-4">
+                    <div class="col-md-5">
+                        <div class="product-image-container position-relative">
+                            <img id="productConfirmImage" src="" alt="Product" class="img-fluid rounded-3 shadow-sm" style="width: 100%; height: 200px; object-fit: cover;">
+                            <div class="position-absolute top-0 end-0 m-2">
+                                <span class="badge bg-pink px-3 py-2 rounded-pill text-white">
+                                    <i class="fas fa-robot me-1"></i>AI Detected
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-7">
+                        <div class="product-details h-100 d-flex flex-column">
+                            <h4 id="productConfirmName" class="fw-bold text-dark mb-3" style="font-size: 18px; line-height: 1.3;">Tên sản phẩm</h4>
+                            
+                            <div class="mb-3">
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="fas fa-tags text-pink me-2"></i>
+                                    <span class="text-muted" style="font-size: 14px;">Phân loại:</span>
+                                </div>
+                                <p id="productConfirmVariant" class="fw-semibold text-pink ms-4" style="font-size: 16px;">
+                                    <span></span>
+                                </p>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="fas fa-dollar-sign text-pink me-2"></i>
+                                    <span class="text-muted" style="font-size: 14px;">Giá bán:</span>
+                                </div>
+                                <p id="productConfirmPrice" class="text-pink fw-bold fs-4 ms-4" style="font-size: 20px;">
+                                    <span></span>
+                                </p>
+                            </div>
+                            
+                            <div class="alert alert-info d-flex align-items-center border-0" style="background: linear-gradient(45deg, #fce4ec, #f8bbd9); font-size: 14px; padding: 1rem; border-radius: 12px;">
+                                <i class="fas fa-info-circle text-pink me-2"></i>
+                                <div>
+                                    <strong>Số lượng:</strong> 1 sản phẩm<br>
+                                    <small class="text-muted">QR Scanner tự động thêm 1 sản phẩm vào giỏ hàng</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer bg-light p-4 border-0">
+                <div class="d-flex w-100 gap-3">
+                    <button type="button" class="btn btn-outline-secondary flex-fill py-3 rounded-3" data-bs-dismiss="modal" style="font-size: 16px;">
+                        <i class="fas fa-times me-2"></i>Hủy bỏ
+                    </button>
+                    <button type="button" class="btn btn-primary flex-fill py-3 rounded-3 fw-bold" onclick="confirmAddToCart()" style="font-size: 16px; background: linear-gradient(45deg, #e91e63, #ad1457);">
+                        <i class="fas fa-cart-plus me-2"></i>Xác nhận thêm vào giỏ
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+@keyframes scanning {
+    0% { transform: translateY(-50px); opacity: 0; }
+    50% { opacity: 1; }
+    100% { transform: translateY(50px); opacity: 0; }
+}
+
+@keyframes pulse {
+    0% { transform: translate(-50%, -50%) scale(1); }
+    50% { transform: translate(-50%, -50%) scale(1.05); }
+    100% { transform: translate(-50%, -50%) scale(1); }
+}
+
+.upload-area {
+    transition: all 0.3s ease;
+}
+
+.upload-area:hover {
+    background-color: #e3f2fd !important;
+    border-color: #1976d2 !important;
+}
+
+/* Enhanced QR Box Animation */
+#qrBoxOverlay {
+    transition: all 0.3s ease-in-out;
+}
+
+/* Smart Scan Button Gradient */
+#smartScanBtn {
+    background: linear-gradient(45deg, #6c757d, #495057);
+    border: none;
+    transition: all 0.3s ease;
+    font-size: 16px;
+}
+
+#smartScanBtn:hover {
+    background: linear-gradient(45deg, #495057, #6c757d);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(108,117,125,0.3);
+}
+
+/* Primary Scanner Button */
+#startCameraBtn {
+    background: linear-gradient(45deg, #e91e63, #ad1457);
+    border: none;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+#startCameraBtn:hover {
+    background: linear-gradient(45deg, #ad1457, #880e4f);
+    transform: translateY(-1px);
+    box-shadow: 0 3px 10px rgba(233,30,99,0.4);
+}
+
+/* Stop Button */
+#stopCameraBtn {
+    background: linear-gradient(45deg, #dc3545, #c82333);
+    border: none;
+    transition: all 0.3s ease;
+}
+
+#stopCameraBtn:hover {
+    background: linear-gradient(45deg, #c82333, #bd2130);
+    transform: translateY(-1px);
+    box-shadow: 0 3px 10px rgba(220,53,69,0.4);
+}
+
+/* Product Confirmation Modal Enhancements */
+.bg-gradient-primary {
+    background: linear-gradient(135deg, #e91e63 0%, #ad1457 100%) !important;
+}
+
+.text-pink {
+    color: #e91e63 !important;
+}
+
+.bg-pink {
+    background-color: #e91e63 !important;
+}
+
+#productConfirmModal .modal-content {
+    border-radius: 20px !important;
+    overflow: hidden;
+    border: none;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+}
+
+#productConfirmModal .modal-header {
+    padding: 1.5rem 2rem;
+    border-bottom: none;
+}
+
+#productConfirmModal .modal-body {
+    padding: 2rem;
+}
+
+#productConfirmModal .modal-footer {
+    padding: 1.5rem 2rem 2rem 2rem;
+    background: linear-gradient(to bottom, #f8f9fa, #e9ecef);
+    border-top: none;
+}
+
+.product-image-container img {
+    transition: transform 0.3s ease;
+    border: 3px solid #f8f9fa;
+}
+
+.product-image-container:hover img {
+    transform: scale(1.02);
+}
+
+.product-details .alert {
+    border: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+#productConfirmModal .btn {
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+#productConfirmModal .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+#productConfirmModal .btn-primary {
+    background: linear-gradient(45deg, #e91e63, #ad1457) !important;
+    border: none;
+}
+
+#productConfirmModal .btn-primary:hover {
+    background: linear-gradient(45deg, #ad1457, #880e4f) !important;
+}
+
+/* Enhanced Badge */
+#productConfirmModal .badge {
+    font-size: 11px;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 8px rgba(233, 30, 99, 0.3);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    #productConfirmModal .modal-body {
+        padding: 1.5rem;
+    }
+    
+    #productConfirmModal .modal-footer {
+        padding: 1rem 1.5rem 1.5rem 1.5rem;
+    }
+    
+    #productConfirmModal .modal-footer .d-flex {
+        flex-direction: column;
+    }
+    
+    #productConfirmModal .modal-footer .btn {
+        margin-bottom: 0.5rem;
+        width: 100% !important;
+    }
+}
+</style>
+
+<!-- QR Code Scanner JavaScript -->
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+<script>
+let html5QrCode;
+let qrScanResult = null;
+let isScanning = false;
+let scanAttempts = 0;
+let lastGuidanceUpdate = 0;
+
+// AI Scanner variables
+let aiScannerActive = false;
+let aiScannerInterval;
+let aiVideoStream;
+let aiCanvas;
+let aiContext;
+let productConfirmData = null;
+
+// Scanning guidance messages
+const scanGuidanceMessages = [
+    '🔍 Đang quét QR code...',
+    '📱 Đưa QR code gần camera hơn',
+    '☀️ Kiểm tra ánh sáng xung quanh',
+    '🎯 Căn chỉnh QR code vào giữa khung',
+    '📏 Thử xa ra hoặc gần vào',
+    '🔄 Giữ điện thoại thẳng và ổn định',
+    '✨ Đảm bảo QR code rõ nét, không bị mờ'
+];
+
+// AI Scanner Functions
+function startAIScanner() {
+    if (aiScannerActive) return;
+    
+    console.log('🤖 Starting AI Scanner...');
+    document.getElementById('scanTips').style.display = 'block';
+    
+    const cameraContainer = document.getElementById('cameraContainer');
+    const startBtn = document.getElementById('startCameraBtn');
+    const stopBtn = document.getElementById('stopCameraBtn');
+    
+    // Create canvas for screenshot capture
+    if (!aiCanvas) {
+        aiCanvas = document.createElement('canvas');
+        aiContext = aiCanvas.getContext('2d');
+    }
+    
+    // Get user media
+    navigator.mediaDevices.getUserMedia({
+        video: {
+            facingMode: "environment",
+            width: { ideal: 640 },
+            height: { ideal: 480 }
+        }
+    }).then(stream => {
+        aiVideoStream = stream;
+        
+        // Create video element
+        const videoElement = document.createElement('video');
+        videoElement.srcObject = stream;
+        videoElement.autoplay = true;
+        videoElement.playsInline = true;
+        videoElement.style.width = '100%';
+        videoElement.style.height = '100%';
+        videoElement.style.objectFit = 'cover';
+        
+        // Clear existing content and add video
+        const qrVideo = document.getElementById('qrVideo');
+        qrVideo.innerHTML = '';
+        qrVideo.appendChild(videoElement);
+        
+        // Show camera UI
+        aiScannerActive = true;
+        startBtn.style.display = 'none';
+        stopBtn.style.display = 'inline-block';
+        cameraContainer.style.display = 'block';
+        
+        // Update status
+        const qrStatus = document.getElementById('qrStatus');
+        if (qrStatus) {
+            qrStatus.textContent = '🤖 AI Scanner đang phân tích...';
+            qrStatus.style.display = 'block';
+            qrStatus.style.background = 'rgba(0,123,255,0.8)';
+        }
+        
+        // Start screenshot capture loop
+        videoElement.addEventListener('loadeddata', () => {
+            aiCanvas.width = videoElement.videoWidth;
+            aiCanvas.height = videoElement.videoHeight;
+            
+            startScreenshotCapture(videoElement);
+        });
+        
+        console.log('✅ AI Scanner started');
+        
+    }).catch(err => {
+        console.error('❌ AI Scanner camera error:', err);
+        alert('Không thể khởi động AI Scanner: ' + err.message);
+    });
+}
+
+function startScreenshotCapture(videoElement) {
+    aiScannerInterval = setInterval(() => {
+        if (!aiScannerActive) return;
+        
+        try {
+            // Capture frame from video
+            aiContext.drawImage(videoElement, 0, 0, aiCanvas.width, aiCanvas.height);
+            
+            // Convert to base64
+            const imageData = aiCanvas.toDataURL('image/jpeg', 0.8);
+            
+            // Send to backend for QR processing
+            sendFrameToBackend(imageData);
+            
+        } catch (error) {
+            console.error('Screenshot capture error:', error);
+        }
+        
+    }, 1000); // Capture every 1 second - adjust as needed
+}
+
+function sendFrameToBackend(imageBase64) {
+    // Remove data URL prefix
+    const base64Data = imageBase64.replace(/^data:image\/jpeg;base64,/, '');
+    
+    $.ajax({
+        url: 'qrAnalyze', // New servlet endpoint
+        type: 'POST',
+        data: {
+            imageData: base64Data,
+            userID: '${sessionScope.user.userID}'
+        },
+        timeout: 3000, // 3 second timeout
+        success: function(response) {
+            console.log('🤖 AI Response:', response);
+            
+            if (response.status === 'success' && response.qrData) {
+                // QR detected! Show confirmation
+                showProductConfirmation(response.qrData, response.productInfo);
+                stopAIScanner();
+            } else if (response.status === 'no_qr') {
+                // No QR found - continue scanning
+                updateAIScannerStatus('🔍 Đang tìm QR code...');
+            } else if (response.status === 'error') {
+                updateAIScannerStatus('⚠️ Lỗi phân tích: ' + response.message);
+            }
+        },
+        error: function(xhr, status, error) {
+            if (status !== 'timeout') {
+                console.error('AI Scanner AJAX error:', error);
+                updateAIScannerStatus('❌ Lỗi kết nối AI server');
+            }
+        }
+    });
+}
+
+function updateAIScannerStatus(message) {
+    const qrStatus = document.getElementById('qrStatus');
+    if (qrStatus && aiScannerActive) {
+        qrStatus.textContent = message;
+    }
+}
+
+function stopAIScanner() {
+    if (!aiScannerActive) return;
+    
+    console.log('🛑 Stopping AI Scanner...');
+    aiScannerActive = false;
+    
+    // Clear interval
+    if (aiScannerInterval) {
+        clearInterval(aiScannerInterval);
+        aiScannerInterval = null;
+    }
+    
+    // Stop video stream
+    if (aiVideoStream) {
+        aiVideoStream.getTracks().forEach(track => track.stop());
+        aiVideoStream = null;
+    }
+    
+    // Reset UI
+    cleanupCamera();
+}
+
+function showProductConfirmation(qrData, productInfo) {
+    console.log('📦 Showing product confirmation:', {qrData, productInfo});
+    
+    // Store data for confirmation - fixed quantity to 1
+    productConfirmData = {
+        userID: '${sessionScope.user.userID}',
+        productID: qrData.productID,
+        variantID: qrData.variantID,
+        quantity: 1 // Fixed quantity
+    };
+    
+    // Populate modal with product info
+    document.getElementById('productConfirmImage').src = "api/img/"+productInfo.imageUrl || './Images/default-product.jpg';
+    document.getElementById('productConfirmName').textContent = productInfo.productName || 'Sản phẩm không xác định';
+    document.getElementById('productConfirmVariant').querySelector('span').textContent = productInfo.variantName || 'Mặc định';
+    document.getElementById('productConfirmPrice').querySelector('span').textContent = productInfo.price || 'Liên hệ';
+    
+    // Close QR scanner modal and show confirmation
+    const qrModal = bootstrap.Modal.getInstance(document.getElementById('qrScannerModal'));
+    if (qrModal) {
+        qrModal.hide();
+    }
+    
+    const confirmModal = new bootstrap.Modal(document.getElementById('productConfirmModal'));
+    confirmModal.show();
+}
+
+function confirmAddToCart() {
+    if (!productConfirmData) {
+        alert('Không có dữ liệu sản phẩm!');
+        return;
+    }
+    
+    console.log('✅ Confirming add to cart:', productConfirmData);
+    
+    $.ajax({
+        url: 'addCart',
+        type: 'POST',
+        data: {
+            userID: productConfirmData.userID,
+            productID: productConfirmData.productID,
+            variantID: productConfirmData.variantID,
+            quantity: productConfirmData.quantity
+        },
+        success: function(response) {
+            console.log('🛒 Add cart response:', response);
+            
+            if (response.status === 'success') {
+                alert('✅ Đã thêm sản phẩm vào giỏ hàng bằng AI!');
+                
+                // Close confirmation modal
+                const confirmModal = bootstrap.Modal.getInstance(document.getElementById('productConfirmModal'));
+                if (confirmModal) {
+                    confirmModal.hide();
+                }
+                
+                // Optional: Update cart count or reload
+                // window.location.reload();
+                
+            } else if (response.status === 'not_logged_in') {
+                alert('⚠️ Vui lòng đăng nhập để thêm sản phẩm!');
+                window.location.href = 'login';
+            } else {
+                alert('❌ ' + (response.message || 'Lỗi khi thêm vào giỏ hàng!'));
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('❌ Confirm add cart error:', error);
+            alert('❌ Lỗi kết nối: ' + error);
+        }
+    });
+}
+
+function updateScanningGuidance() {
+    const now = Date.now();
+    if (now - lastGuidanceUpdate < 3000) return; // Update every 3 seconds
+    
+    lastGuidanceUpdate = now;
+    scanAttempts++;
+    
+    const qrStatus = document.getElementById('qrStatus');
+    if (qrStatus && isScanning) {
+        const messageIndex = (scanAttempts % scanGuidanceMessages.length);
+        qrStatus.textContent = scanGuidanceMessages[messageIndex];
+        qrStatus.style.display = 'block';
+        qrStatus.style.background = 'rgba(0,0,0,0.8)';
+        
+        // Change QR box color based on attempts
+        const qrBox = document.getElementById('qrBoxOverlay');
+        if (qrBox) {
+            if (scanAttempts > 5) {
+                qrBox.style.borderColor = '#ff9900'; // Orange after many attempts
+            } else {
+                qrBox.style.borderColor = '#00ff00'; // Green normally
+            }
+        }
+    }
+}
+
+// Wait for library to load
+function waitForHtml5QrCode(callback) {
+    if (typeof Html5Qrcode !== 'undefined') {
+        callback();
+    } else {
+        setTimeout(() => waitForHtml5QrCode(callback), 100);
+    }
+}
+
+function openQRScanner() {
+    const modal = new bootstrap.Modal(document.getElementById('qrScannerModal'));
+    modal.show();
+}
+
+function startSmartScan() {
+    if (isScanning) return;
+    
+    // Show smart scan tips
+    document.getElementById('scanTips').style.display = 'block';
+    
+    waitForHtml5QrCode(() => {
+        const qrVideo = document.getElementById('qrVideo');
+        const startBtn = document.getElementById('startCameraBtn');
+        const smartBtn = document.getElementById('smartScanBtn');
+        const stopBtn = document.getElementById('stopCameraBtn');
+        const cameraContainer = document.getElementById('cameraContainer');
+        
+        // Reset scan attempts
+        scanAttempts = 0;
+        lastGuidanceUpdate = 0;
+        
+        // Properly cleanup existing scanner
+        if (html5QrCode) {
+            if (isScanning) {
+                html5QrCode.stop().then(() => {
+                    initializeSmartCamera();
+                }).catch((err) => {
+                    console.log('Previous scanner cleanup:', err);
+                    initializeSmartCamera();
+                });
+            } else {
+                html5QrCode.clear();
+                initializeSmartCamera();
+            }
+        } else {
+            initializeSmartCamera();
+        }
+        
+        function initializeSmartCamera() {
+            html5QrCode = new Html5Qrcode("qrVideo");
+            
+            document.getElementById('loadingText').textContent = '🧠 Khởi động quét thông minh...';
+            
+            Html5Qrcode.getCameras().then(cameras => {
+                console.log('🧠 Smart Scan - Available cameras:', cameras);
+                if (cameras && cameras.length) {
+                    // Prioritize back camera for QR scanning
+                    let cameraId = cameras[0].id;
+                    
+                    const backCamera = cameras.find(camera => 
+                        camera.label.toLowerCase().includes('back') || 
+                        camera.label.toLowerCase().includes('environment') ||
+                        camera.label.toLowerCase().includes('rear')
+                    );
+                    if (backCamera) {
+                        cameraId = backCamera.id;
+                        console.log('🔍 Smart Scan using back camera:', backCamera.label);
+                    }
+                    
+                    // Enhanced smart scan configuration
+                    const smartConfig = {
+                        fps: 30, // Max FPS for real-time scanning
+                        qrbox: function(viewfinderWidth, viewfinderHeight) {
+                            // Larger detection area for easier scanning
+                            let qrboxSize = Math.min(viewfinderWidth, viewfinderHeight) * 0.8;
+                            return {
+                                width: qrboxSize,
+                                height: qrboxSize
+                            };
+                        },
+                        aspectRatio: 1.333,
+                        disableFlip: false,
+                        rememberLastUsedCamera: true,
+                        supportedScanTypes: [Html5QrcodeScanType.SCAN_TYPE_CAMERA],
+                        experimentalFeatures: {
+                            useBarCodeDetectorIfSupported: true
+                        },
+                        videoConstraints: {
+                            facingMode: "environment",
+                            width: { 
+                                min: 320, 
+                                ideal: 640, // Giảm xuống mức realistic
+                                max: 1280 
+                            },
+                            height: { 
+                                min: 240, 
+                                ideal: 480, 
+                                max: 720 
+                            }
+                            // Bỏ các experimental constraints
+                        }
+                    };
+                    
+                    html5QrCode.start(
+                        cameraId,
+                        smartConfig,
+                        (decodedText, decodedResult) => {
+                            console.log(`🧠 Smart Scan SUCCESS: ${decodedText}`);
+                            // Success feedback
+                            const qrStatus = document.getElementById('qrStatus');
+                            if (qrStatus) {
+                                qrStatus.textContent = '🎉 Quét thành công bằng AI!';
+                                qrStatus.style.display = 'block';
+                                qrStatus.style.background = 'rgba(0,200,0,0.9)';
+                            }
+                            
+                            // Enhanced success animation
+                            try {
+                                if (navigator.vibrate) {
+                                    navigator.vibrate([100, 50, 100, 50, 200]);
+                                }
+                                
+                                const qrBox = document.getElementById('qrBoxOverlay');
+                                if (qrBox) {
+                                    qrBox.style.borderColor = '#00ff00';
+                                    qrBox.style.boxShadow = '0 0 50px rgba(0,255,0,1), 0 0 0 9999px rgba(0,0,0,0.4)';
+                                    qrBox.style.animation = 'pulse 0.5s ease-in-out 2';
+                                }
+                            } catch (e) {
+                                console.log('Enhanced feedback not supported');
+                            }
+                            
+                            handleQRResult(decodedText);
+                            setTimeout(() => stopCamera(), 1500);
+                        },
+                        (errorMessage) => {
+                            updateScanningGuidance();
+                        }
+                    ).then(() => {
+                        isScanning = true;
+                        startBtn.style.display = 'none';
+                        smartBtn.style.display = 'none';
+                        stopBtn.style.display = 'inline-block';
+                        cameraContainer.style.display = 'block';
+                        
+                        const loadingText = document.getElementById('loadingText');
+                        if (loadingText) {
+                            loadingText.style.display = 'none';
+                        }
+                        
+                        // Start guidance immediately
+                        setTimeout(() => updateScanningGuidance(), 1000);
+                        
+                        // Enhanced video styling for smart scan
+                        setTimeout(() => {
+                            const videoElement = document.querySelector('#qrVideo video');
+                            if (videoElement) {
+                                videoElement.style.width = '100%';
+                                videoElement.style.height = '100%';
+                                videoElement.style.objectFit = 'cover';
+                                videoElement.style.transform = 'none';
+                                videoElement.style.filter = 'contrast(1.1) brightness(1.05)'; // Enhance image quality
+                                console.log('🧠 Smart Scan video enhanced');
+                            }
+                        }, 1000);
+                        
+                    }).catch(err => {
+                        console.error('❌ Smart Scan error:', err);
+                        
+                        // Safe error handling
+                        const loadingText = document.getElementById('loadingText');
+                        if (loadingText) {
+                            loadingText.textContent = 'Smart Scan lỗi: ' + (err.message || 'Không khả dụng');
+                        }
+                        
+                        let errorMsg = 'Smart Scan không khả dụng!\n\n';
+                        if (err.name === 'OverconstrainedError') {
+                            errorMsg += '🔧 Camera không hỗ trợ chế độ Smart Scan.\n→ Thử "Bật Camera" thường hoặc "Tải lên ảnh"';
+                        } else {
+                            errorMsg += '→ Thử "Bật Camera" thường thay thế!';
+                        }
+                        
+                        alert(errorMsg);
+                    });
+                } else {
+                    alert('Không tìm thấy camera cho Smart Scan!');
+                }
+            });
+        }
+    });
+}
+
+function startCamera() {
+    if (isScanning) return;
+    
+    waitForHtml5QrCode(() => {
+        const qrVideo = document.getElementById('qrVideo');
+        const startBtn = document.getElementById('startCameraBtn');
+        const stopBtn = document.getElementById('stopCameraBtn');
+        const cameraContainer = document.getElementById('cameraContainer');
+        
+        // Properly cleanup existing scanner
+        if (html5QrCode) {
+            // Only stop if scanner is actually running
+            if (isScanning) {
+                html5QrCode.stop().then(() => {
+                    initializeCamera();
+                }).catch((err) => {
+                    console.log('Previous scanner cleanup:', err);
+                    initializeCamera();
+                });
+            } else {
+                // Scanner exists but not running, just recreate
+                html5QrCode.clear();
+                initializeCamera();
+            }
+        } else {
+            initializeCamera();
+        }
+        
+        function initializeCamera() {
+            html5QrCode = new Html5Qrcode("qrVideo");
+            
+            // Show loading text
+            document.getElementById('loadingText').textContent = 'Đang tìm camera...';
+            
+            Html5Qrcode.getCameras().then(cameras => {
+                console.log('📷 Available cameras:', cameras);
+                if (cameras && cameras.length) {
+                    // Ưu tiên camera sau (back camera) cho QR scanning
+                    let cameraId = cameras[0].id;
+                    
+                    // Tìm camera sau trước (tốt hơn cho QR scanning)
+                    const backCamera = cameras.find(camera => 
+                        camera.label.toLowerCase().includes('back') || 
+                        camera.label.toLowerCase().includes('environment') ||
+                        camera.label.toLowerCase().includes('rear')
+                    );
+                    if (backCamera) {
+                        cameraId = backCamera.id;
+                        console.log('🔍 Using back camera:', backCamera.label);
+                    } else {
+                        console.log('📱 Using default camera:', cameras[0].label);
+                    }
+                    
+                    document.getElementById('loadingText').textContent = 'Đang khởi động camera...';
+                    
+                    // Primary config - try advanced first
+                    const config = {
+                        fps: 20, // Tăng FPS để quét nhanh hơn
+                        qrbox: function(viewfinderWidth, viewfinderHeight) {
+                            // Dynamic QR box size - thích ứng với kích thước camera
+                            let minEdgePercentage = 0.7; // 70% of smaller edge
+                            let minEdgeSize = Math.min(viewfinderWidth, viewfinderHeight);
+                            let qrboxSize = Math.floor(minEdgeSize * minEdgePercentage);
+                            return {
+                                width: qrboxSize,
+                                height: qrboxSize
+                            };
+                        },
+                        aspectRatio: 1.777, // 16:9 ratio for modern cameras
+                        disableFlip: false,
+                        rememberLastUsedCamera: true,
+                        supportedScanTypes: [Html5QrcodeScanType.SCAN_TYPE_CAMERA],
+                        // Enhanced configuration for better detection
+                        experimentalFeatures: {
+                            useBarCodeDetectorIfSupported: true
+                        },
+                        videoConstraints: {
+                            facingMode: "environment", // Đơn giản hơn
+                            width: { 
+                                min: 320, // Giảm min requirement
+                                ideal: 640, // Giảm xuống mức an toàn
+                                max: 1280 
+                            },
+                            height: { 
+                                min: 240, // Giảm min requirement
+                                ideal: 480, // Giảm xuống mức an toàn
+                                max: 720 
+                            }
+                            // Bỏ các constraint có thể không support
+                        }
+                    };
+                    
+                    // Fallback config - minimal constraints
+                    const fallbackConfig = {
+                        fps: 10,
+                        qrbox: 250,
+                        aspectRatio: 1.0
+                        // Không có videoConstraints - để browser tự chọn
+                    };
+                    
+                    // Try primary config first, then fallback
+                    function tryStartCamera(configToUse, isFallback = false) {
+                        return html5QrCode.start(
+                            cameraId,
+                            configToUse,
+                            (decodedText, decodedResult) => {
+                                console.log(`🎯 QR Code quét được: ${decodedText}`);
+                                // Success feedback (same as before)
+                                const qrStatus = document.getElementById('qrStatus');
+                                if (qrStatus) {
+                                    qrStatus.textContent = '✅ QR đã quét thành công!';
+                                    qrStatus.style.display = 'block';
+                                    qrStatus.style.background = 'rgba(0,128,0,0.8)';
+                                }
+                                
+                                // Success animation
+                                try {
+                                    if (navigator.vibrate) {
+                                        navigator.vibrate([200, 100, 200]);
+                                    }
+                                    
+                                    const qrBox = document.getElementById('qrBoxOverlay');
+                                    if (qrBox) {
+                                        qrBox.style.borderColor = '#00ff00';
+                                        qrBox.style.boxShadow = '0 0 30px rgba(0,255,0,0.8), 0 0 0 9999px rgba(0,0,0,0.4)';
+                                        setTimeout(() => {
+                                            qrBox.style.borderColor = '#00ff00';
+                                            qrBox.style.boxShadow = '0 0 0 9999px rgba(0,0,0,0.4)';
+                                        }, 500);
+                                    }
+                                } catch (e) {
+                                    console.log('Feedback effects not supported');
+                                }
+                                
+                                handleQRResult(decodedText);
+                                setTimeout(() => stopCamera(), 1000);
+                            },
+                            (errorMessage) => {
+                                updateScanningGuidance();
+                            }
+                        );
+                    }
+                    
+                    // Start with primary config
+                    tryStartCamera(config, false).then(() => {
+                        isScanning = true;
+                        startBtn.style.display = 'none';
+                        stopBtn.style.display = 'inline-block';
+                        cameraContainer.style.display = 'block';
+                        
+                        // Show Smart Scan option after regular camera starts
+                        const smartBtn = document.getElementById('smartScanBtn');
+                        if (smartBtn) {
+                            smartBtn.style.display = 'none'; // Hide when regular scanning
+                        }
+                        
+                        // Hide loading text
+                        const loadingText = document.getElementById('loadingText');
+                        if (loadingText) {
+                            loadingText.style.display = 'none';
+                        }
+                        
+                        console.log('✅ Camera started successfully');
+                        
+                        // Wait a moment for video to load, then apply styling
+                        setTimeout(() => {
+                            const videoElement = document.querySelector('#qrVideo video');
+                            if (videoElement) {
+                                videoElement.style.width = '100%';
+                                videoElement.style.height = '100%';
+                                videoElement.style.objectFit = 'cover';
+                                videoElement.style.transform = 'none'; // Remove any transforms that cause misalignment
+                                console.log('📺 Video element styled:', videoElement);
+                                
+                                // Show scanning status
+                                const qrStatus = document.getElementById('qrStatus');
+                                if (qrStatus) {
+                                    qrStatus.style.display = 'block';
+                                }
+                            } else {
+                                console.warn('⚠️ Video element not found');
+                            }
+                        }, 1500); // Longer wait for better initialization
+                        
+                    }).catch(err => {
+                        console.warn('⚠️ Primary config failed, trying fallback...', err);
+                        
+                        // Try fallback config
+                        tryStartCamera(fallbackConfig, true).then(() => {
+                            isScanning = true;
+                            startBtn.style.display = 'none';
+                            stopBtn.style.display = 'inline-block';
+                            cameraContainer.style.display = 'block';
+                            
+                            const loadingText = document.getElementById('loadingText');
+                            if (loadingText) {
+                                loadingText.style.display = 'none';
+                            }
+                            
+                            console.log('✅ Camera started with fallback config');
+                            
+                            // Show notification about fallback mode
+                            const qrStatus = document.getElementById('qrStatus');
+                            if (qrStatus) {
+                                qrStatus.textContent = '📱 Chế độ tương thích - Quét chậm hơn';
+                                qrStatus.style.display = 'block';
+                                qrStatus.style.background = 'rgba(255,165,0,0.8)';
+                            }
+                            
+                        }).catch(fallbackErr => {
+                            console.error('❌ Both configs failed:', fallbackErr);
+                            
+                            // Safe error handling
+                            const loadingText = document.getElementById('loadingText');
+                            if (loadingText) {
+                                loadingText.textContent = 'Lỗi: ' + (fallbackErr.message || 'Camera không khả dụng');
+                            }
+                            
+                            // More user-friendly error messages
+                            let errorMsg = 'Không thể bật camera!\n\n';
+                            if (fallbackErr.name === 'OverconstrainedError') {
+                                errorMsg += '🔧 Camera không hỗ trợ cấu hình yêu cầu.\n• Thử nút "Quét Thông Minh" thay thế\n• Hoặc dùng "Tải lên ảnh QR"';
+                            } else if (fallbackErr.name === 'NotAllowedError') {
+                                errorMsg += '🚫 Quyền truy cập camera bị từ chối.\n• Cho phép camera trong cài đặt trình duyệt\n• Refresh trang và thử lại';
+                            } else if (fallbackErr.name === 'NotFoundError') {
+                                errorMsg += '📷 Không tìm thấy camera.\n• Kiểm tra camera có được kết nối\n• Thử dùng "Tải lên ảnh QR"';
+                            } else {
+                                errorMsg += '• Thử "Quét Thông Minh"\n• Hoặc "Tải lên ảnh QR"\n• Refresh trang nếu cần';
+                            }
+                            
+                            alert(errorMsg);
+                        });
+                    });
+                } else {
+                    document.getElementById('loadingText').textContent = 'Không tìm thấy camera';
+                    alert('Không tìm thấy camera trên thiết bị!');
+                }
+            }).catch(err => {
+                console.error('❌ Camera access error:', err);
+                document.getElementById('loadingText').textContent = 'Lỗi truy cập camera';
+                alert('Không thể truy cập camera. Vui lòng cho phép truy cập camera và thử lại!\n\nLưu ý: Nếu dùng HTTPS, hãy cho phép camera trong cài đặt trình duyệt.');
+            });
+        }
+    });
+}
+
+function stopCamera() {
+    // Stop AI Scanner if active
+    if (aiScannerActive) {
+        stopAIScanner();
+        return;
+    }
+    
+    // Stop regular scanner
+    if (html5QrCode && isScanning) {
+        html5QrCode.stop().then(() => {
+            console.log('⏹️ Camera stopped successfully');
+            cleanupCamera();
+        }).catch(err => {
+            console.error('❌ Camera stop error:', err);
+            // Force cleanup even if stop failed
+            cleanupCamera();
+        });
+    } else {
+        console.log('⏹️ Camera already stopped or not initialized');
+        cleanupCamera();
+    }
+}
+
+function cleanupCamera() {
+    // Stop AI Scanner if active
+    if (aiScannerActive) {
+        stopAIScanner();
+        return;
+    }
+    
+    isScanning = false;
+    scanAttempts = 0;
+    lastGuidanceUpdate = 0;
+    
+    document.getElementById('startCameraBtn').style.display = 'inline-block';
+    document.getElementById('smartScanBtn').style.display = 'inline-block';
+    document.getElementById('stopCameraBtn').style.display = 'none';
+    document.getElementById('cameraContainer').style.display = 'none';
+    document.getElementById('scanTips').style.display = 'none';
+    
+    // Hide QR status
+    const qrStatus = document.getElementById('qrStatus');
+    if (qrStatus) {
+        qrStatus.style.display = 'none';
+    }
+    
+    // Reset QR box appearance
+    const qrBox = document.getElementById('qrBoxOverlay');
+    if (qrBox) {
+        qrBox.style.borderColor = '#00ff00';
+        qrBox.style.boxShadow = '0 0 0 9999px rgba(0,0,0,0.4)';
+        qrBox.style.animation = '';
+    }
+    
+    // Show loading text for next time
+    const loadingText = document.getElementById('loadingText');
+    if (loadingText) {
+        loadingText.style.display = 'block';
+        loadingText.textContent = 'Đang khởi động camera...';
+    }
+}
+
+// Handle image upload - with library check
+document.addEventListener('DOMContentLoaded', function() {
+    const qrImageInput = document.getElementById('qrImageInput');
+    if (qrImageInput) {
+        qrImageInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                waitForHtml5QrCode(() => {
+                    // Create temporary div for image scanning
+                    const tempDiv = document.createElement('div');
+                    tempDiv.id = 'qr-reader-temp';
+                    tempDiv.style.display = 'none';
+                    document.body.appendChild(tempDiv);
+                    
+                    const html5QrCodeForImage = new Html5Qrcode("qr-reader-temp");
+                    html5QrCodeForImage.scanFile(file, true)
+                    .then(decodedText => {
+                        console.log(`🖼️ QR từ ảnh: ${decodedText}`);
+                        handleQRResult(decodedText);
+                        document.body.removeChild(tempDiv);
+                    })
+                    .catch(err => {
+                        console.error('❌ Image scan error:', err);
+                        alert('Không thể đọc QR code từ ảnh này! Vui lòng chọn ảnh khác.');
+                        document.body.removeChild(tempDiv);
+                    });
+                });
+            }
+        });
+    }
+});
+
+function handleQRResult(qrText) {
+    console.log('🔍 Processing QR result:', qrText);
+    
+    // Hiển thị kết quả
+    document.getElementById('qrResult').textContent = qrText;
+    document.getElementById('scanResult').style.display = 'block';
+    
+    // Parse QR content theo format: productID\n123\nvariantID\n456\nquantity\n1
+    const lines = qrText.split('\n').map(line => line.trim());
+    const qrData = {};
+    
+    for (let i = 0; i < lines.length; i += 2) {
+        if (i + 1 < lines.length) {
+            qrData[lines[i]] = lines[i + 1];
+        }
+    }
+    
+    console.log('📊 Raw QR text:', qrText);
+    console.log('📊 Split lines:', lines);
+    console.log('📊 Parsed QR data:', qrData);
+    
+    // Get userId from session (JSP renders this)
+    const userId = '${sessionScope.user.userID}';
+    console.log('👤 User ID from session:', userId);
+    
+    if (qrData.productID && qrData.variantID && userId && userId !== '') {
+        qrScanResult = {
+            userID: userId,
+            productID: qrData.productID,
+            variantID: qrData.variantID,
+            quantity: qrData.quantity || '1'
+        };
+        console.log('✅ Ready to add to cart:', qrScanResult);
+    } else {
+        console.error('❌ Missing data:', {
+            productID: qrData.productID,
+            variantID: qrData.variantID, 
+            userID: userId,
+            qrData: qrData
+        });
+        alert('Mã QR không đúng định dạng hoặc chưa đăng nhập!\n\nDữ liệu thiếu:\n- Product ID: ' + (qrData.productID || 'Thiếu') + '\n- Variant ID: ' + (qrData.variantID || 'Thiếu') + '\n- User ID: ' + (userId || 'Chưa đăng nhập'));
+        qrScanResult = null;
+    }
+}
+
+function addQRToCart() {
+    if (!qrScanResult) {
+        alert('Chưa có dữ liệu QR hợp lệ!');
+        return;
+    }
+    
+    // Validate required fields
+    if (!qrScanResult.userID || !qrScanResult.productID || !qrScanResult.variantID) {
+        console.error('❌ Missing required data for addQRToCart:', qrScanResult);
+        alert('❌ Thiếu thông tin cần thiết để thêm vào giỏ hàng!');
+        return;
+    }
+    
+    console.log('🛒 Adding QR to cart via AJAX:', qrScanResult);
+    
+    // Use AJAX like in TrangChu.jsp with exact parameter names
+    $.ajax({
+        url: 'addCart',
+        type: 'POST',
+        data: {
+            userID: qrScanResult.userID,
+            productID: qrScanResult.productID,
+            variantID: qrScanResult.variantID,
+            quantity: qrScanResult.quantity || 1
+        },
+        beforeSend: function() {
+            console.log('📤 Sending QR AJAX request with data:', {
+                userID: qrScanResult.userID,
+                productID: qrScanResult.productID,
+                variantID: qrScanResult.variantID,
+                quantity: qrScanResult.quantity || 1
+            });
+        },
+        success: function (response) {
+            console.log('✅ addQRToCart response:', response);
+            if (response.status === 'success') {
+                // Success message
+                alert('✅ Đã thêm sản phẩm vào giỏ hàng từ QR!');
+                // Close modal
+                const modal = bootstrap.Modal.getInstance(document.getElementById('qrScannerModal'));
+                if (modal) {
+                    modal.hide();
+                }
+                // Optional: Refresh cart count or redirect
+                // window.location.reload();
+            } else if (response.status === 'not_logged_in') {
+                alert('⚠️ Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng!');
+                setTimeout(() => {
+                    window.location.href = 'login';
+                }, 1500);
+            } else {
+                alert('❌ ' + (response.message || 'Lỗi khi thêm sản phẩm vào giỏ hàng!'));
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error('❌ QR AJAX Error:', {xhr, status, error});
+            console.error('❌ Response text:', xhr.responseText);
+            alert('❌ Lỗi kết nối server: ' + error);
+        }
+    });
+}
+
+// Cleanup when modal closes
+document.addEventListener('DOMContentLoaded', function() {
+    const qrModal = document.getElementById('qrScannerModal');
+    if (qrModal) {
+        qrModal.addEventListener('hidden.bs.modal', function () {
+            console.log('🚪 Modal closing, cleaning up...');
+            stopCamera();
+            
+            // Reset UI state
+            document.getElementById('scanResult').style.display = 'none';
+            qrScanResult = null;
+            
+            // Clear any file input
+            const qrImageInput = document.getElementById('qrImageInput');
+            if (qrImageInput) {
+                qrImageInput.value = '';
+            }
+            
+            // Reset result display
+            document.getElementById('qrResult').textContent = '';
+        });
+        
+        // Also cleanup when modal is being shown (fresh start)
+        qrModal.addEventListener('show.bs.modal', function () {
+            console.log('🚪 Modal opening, ensuring clean state...');
+            if (html5QrCode && isScanning) {
+                stopCamera();
+            }
+        });
+    }
+});
+</script>
