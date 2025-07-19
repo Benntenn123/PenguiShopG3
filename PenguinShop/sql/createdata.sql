@@ -405,10 +405,10 @@ CREATE TABLE tbImportOrder (
 CREATE TABLE tbImportOrderDetail (
     importOrderDetailID INT PRIMARY KEY IDENTITY(1,1),
     importOrderID INT NOT NULL,
-    productID INT NOT NULL,
+    variantID INT NOT NULL,
     quantity INT NOT NULL,
     importPrice DECIMAL(18,2) NOT NULL,
     expiryDate DATETIME,
     FOREIGN KEY (importOrderID) REFERENCES tbImportOrder(importOrderID),
-    FOREIGN KEY (productID) REFERENCES tbProduct(productID)
+    FOREIGN KEY (variantID) REFERENCES tbProductVariant(variantID)
 );

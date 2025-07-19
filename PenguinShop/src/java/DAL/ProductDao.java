@@ -13,9 +13,7 @@ import Models.ProductVariant;
 import Models.Size;
 import Models.Tag;
 import Models.Type;
-import Models.User;
 import Utils.StringConvert;
-import java.beans.Statement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -28,19 +26,38 @@ import java.util.Map;
 public class ProductDao extends DBContext {
 
     public List<Product> getAll() {
-        String sql = "select * from tbProduct p join tbCategory c "
-                + "on p.categoryID = c.categoryID  "
-                + "join tbProductType t on p.productTypeID = t.productTypeID ";
+        String sql = "SELECT p.*, t.productTypeID, t.productTypeName, " +
+                    "(SELECT TOP 1 c.categoryID FROM tbProductCategory pc " +
+                    " JOIN tbCategory c ON pc.categoryID = c.categoryID " +
+                    " WHERE pc.productID = p.productID) as categoryID, " +
+                    "(SELECT TOP 1 c.categoryName FROM tbProductCategory pc " +
+                    " JOIN tbCategory c ON pc.categoryID = c.categoryID " +
+                    " WHERE pc.productID = p.productID) as categoryName, " +
+                    "(SELECT TOP 1 c.sportType FROM tbProductCategory pc " +
+                    " JOIN tbCategory c ON pc.categoryID = c.categoryID " +
+                    " WHERE pc.productID = p.productID) as sportType " +
+                    "FROM tbProduct p " +
+                    "LEFT JOIN tbProductType t ON p.productTypeID = t.productTypeID";
         List<Product> list = new ArrayList<>();
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
 
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                Type type = new Type(rs.getInt("productTypeId"), rs.getString("productTypeName"));
-                Category category = new Category(rs.getInt("categoryId"), rs.getString("categoryName"), rs.getString("sportType"));
-                Product prodcut = new Product(rs.getInt("productId"), rs.getString("productName"), rs.getString("SKU"), type, category, rs.getString("importDate"), rs.getString("description"), rs.getDouble("weight"));
-                list.add(prodcut);
+                Type type = null;
+                if (rs.getInt("productTypeId") != 0) {
+                    type = new Type(rs.getInt("productTypeId"), rs.getString("productTypeName"));
+                }
+                
+                Category category = null;
+                if (rs.getInt("categoryId") != 0) {
+                    category = new Category(rs.getInt("categoryId"), rs.getString("categoryName"), rs.getString("sportType"));
+                }
+                
+                Product product = new Product(rs.getInt("productId"), rs.getString("productName"), 
+                                            rs.getString("SKU"), type, category, rs.getString("importDate"), 
+                                            rs.getString("description"), rs.getDouble("weight"));
+                list.add(product);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -1482,6 +1499,118 @@ public class ProductDao extends DBContext {
 //
 //        int totalRecords = dao.getTotalRecords(searchCriteria);
 //        System.out.println("Total Records: " + totalRecords);
+    }
+    
+    // Method để search sản phẩm cho import order
+    public List<Product> searchProducts(String query, int limit) {
+        List<Product> products = new ArrayList<>();
+        String sql = "SELECT TOP " + limit + " " +
+                    "p.productID, p.productName, p.imageMainProduct, " +
+                    "b.brandName, " +
+                    "(SELECT TOP 1 c.categoryName FROM tbProductCategory pc " +
+                    " JOIN tbCategory c ON pc.categoryID = c.categoryID " +
+                    " WHERE pc.productID = p.productID) as categoryName " +
+                    "FROM tbProduct p " +
+                    "LEFT JOIN tbBrand b ON p.brandID = b.brandID " +
+                    "WHERE p.productName LIKE ? " +
+                    "ORDER BY p.productName ASC";
+        
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, "%" + query + "%");
+            ResultSet rs = ps.executeQuery();
+            
+            while (rs.next()) {
+                Product product = new Product();
+                product.setProductId(rs.getInt("productID"));
+                product.setProductName(rs.getString("productName"));
+                product.setImageMainProduct(rs.getString("imageMainProduct"));
+                
+                // Tạo Brand object
+                if (rs.getString("brandName") != null) {
+                    Brand brand = new Brand();
+                    brand.setBrandName(rs.getString("brandName"));
+                    product.setBrand(brand);
+                }
+                
+                // Tạo Category object
+                if (rs.getString("categoryName") != null) {
+                    Category category = new Category();
+                    category.setCategoryName(rs.getString("categoryName"));
+                    product.setCategory(category);
+                }
+                
+                products.add(product);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        return products;
+    }
+    
+    // Method để search variants cho import order
+    public List<ProductVariant> searchProductVariants(String query, int limit) {
+        List<ProductVariant> variants = new ArrayList<>();
+        String sql = "SELECT TOP " + limit + " " +
+                    "pv.variantID, pv.price, pv.quantity, " +
+                    "p.productID, p.productName, p.imageMainProduct, " +
+                    "b.brandName, " +
+                    "c.colorName, s.sizeName " +
+                    "FROM tbProductVariant pv " +
+                    "LEFT JOIN tbProduct p ON pv.productID = p.productID " +
+                    "LEFT JOIN tbBrand b ON p.brandID = b.brandID " +
+                    "LEFT JOIN tbColor c ON pv.colorID = c.colorID " +
+                    "LEFT JOIN tbSize s ON pv.sizeID = s.sizeID " +
+                    "WHERE p.productName LIKE ? AND pv.quantity > 0 " +
+                    "ORDER BY p.productName ASC, c.colorName ASC, s.sizeName ASC";
+        
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, "%" + query + "%");
+            ResultSet rs = ps.executeQuery();
+            
+            while (rs.next()) {
+                ProductVariant variant = new ProductVariant();
+                variant.setVariantID(rs.getInt("variantID"));
+                variant.setPrice(rs.getDouble("price"));
+                variant.setQuantity(rs.getInt("quantity"));
+                
+                // Tạo Product object
+                Product product = new Product();
+                product.setProductId(rs.getInt("productID"));
+                product.setProductName(rs.getString("productName"));
+                product.setImageMainProduct(rs.getString("imageMainProduct"));
+                
+                // Tạo Brand object
+                if (rs.getString("brandName") != null) {
+                    Brand brand = new Brand();
+                    brand.setBrandName(rs.getString("brandName"));
+                    product.setBrand(brand);
+                }
+                variant.setProduct(product);
+                
+                // Tạo Color object
+                if (rs.getString("colorName") != null) {
+                    Color color = new Color();
+                    color.setColorName(rs.getString("colorName"));
+                    variant.setColor(color);
+                }
+                
+                // Tạo Size object
+                if (rs.getString("sizeName") != null) {
+                    Size size = new Size();
+                    size.setSizeName(rs.getString("sizeName"));
+                    variant.setSize(size);
+                }
+                
+                variants.add(variant);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        return variants;
     }
 
 }

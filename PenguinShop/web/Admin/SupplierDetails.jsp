@@ -7,8 +7,8 @@
         <jsp:include page="Common/Css.jsp"/>
         <style>
             .supplier-header {
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                color: white;
+                
+                color: black;
                 border-radius: 10px;
                 padding: 25px;
                 margin-bottom: 25px;
@@ -80,8 +80,8 @@
                                     <h4 class="mb-sm-0 font-size-18">Chi tiết nhà cung cấp</h4>
                                     <div class="page-title-right">
                                         <ol class="breadcrumb m-0">
-                                            <li class="breadcrumb-item"><a href="TrangChu.jsp">Trang chủ</a></li>
-                                            <li class="breadcrumb-item"><a href="supplier">Nhà cung cấp</a></li>
+                                            <li class="breadcrumb-item"><a href="welcomeAdmin">Trang chủ</a></li>
+                                            <li class="breadcrumb-item"><a href="SupplierList">Nhà cung cấp</a></li>
                                             <li class="breadcrumb-item active">Chi tiết</li>
                                         </ol>
                                     </div>
@@ -93,9 +93,9 @@
                         <jsp:include page="Common/Message.jsp"/>
 
                         <!-- Supplier Header -->
-                        <div class="supplier-header">
+                        <div class="card supplier-header">
                             <div class="row align-items-center">
-                                <div class="col-lg-8">
+                                <div class="col-lg-5">
                                     <h2 class="mb-2">
                                         <i class="mdi mdi-office-building me-3"></i>
                                         ${supplier.supplierName}
@@ -106,7 +106,10 @@
                                         </c:if>
                                     </p>
                                 </div>
-                                <div class="col-lg-4 text-lg-end text-start mt-3 mt-lg-0">
+                                <div class="col-lg-7 text-lg-end text-start mt-3 mt-lg-0">
+                                    <a href="ImportOrderList?supplierId=${supplier.supplierID}" class="btn btn-primary btn-lg me-2">
+                                        <i class="mdi mdi-pencil me-2"></i>Xem tất cả
+                                    </a>
                                     <a href="EditSupplier?id=${supplier.supplierID}" class="btn btn-light btn-lg me-2">
                                         <i class="mdi mdi-pencil me-2"></i>Chỉnh sửa
                                     </a>
@@ -254,9 +257,18 @@
                                         <h5 class="card-title mb-0">
                                             <i class="mdi mdi-package-variant-closed me-2"></i>5 lần nhập hàng gần nhất
                                         </h5>
-                                        <c:if test="${totalImportOrders > 5}">
-                                            <a href="#" class="btn btn-sm btn-outline-primary">Xem tất cả</a>
-                                        </c:if>
+                                        <div>
+                                            <c:if test="${totalImportOrders > 5}">
+                                                <a href="ImportOrderList?supplierId=${supplier.supplierID}" class="btn btn-sm btn-outline-primary me-2">
+                                                    <i class="mdi mdi-format-list-bulleted me-1"></i>Xem tất cả
+                                                </a>
+                                            </c:if>
+                                            <c:if test="${not empty recentImportOrders}">
+                                                <a href="AddImportOrder?supplierId=${supplier.supplierID}" class="btn btn-sm btn-primary">
+                                                    <i class="mdi mdi-plus me-1"></i>Tạo đơn mới
+                                                </a>
+                                            </c:if>
+                                        </div>
                                     </div>
                                     <div class="card-body">
                                         <c:choose>
@@ -288,7 +300,7 @@
                                                                                     pattern="#,##0 ₫"/>
                                                                 </span>
                                                                 <br>
-                                                                <a href="import-order-details?id=${order.importOrderID}" 
+                                                                <a href="ImportOrderDetails?id=${order.importOrderID}" 
                                                                    class="btn btn-sm btn-outline-primary mt-1">
                                                                     <i class="mdi mdi-eye"></i>
                                                                 </a>
@@ -301,7 +313,7 @@
                                                 <div class="text-center py-4">
                                                     <i class="mdi mdi-package-variant-closed-remove text-muted" style="font-size: 48px;"></i>
                                                     <p class="text-muted mt-3 mb-0">Chưa có đơn nhập hàng nào</p>
-                                                    <a href="import-order-add?supplierId=${supplier.supplierID}" 
+                                                    <a href="AddImportOrder?supplierId=${supplier.supplierID}" 
                                                        class="btn btn-primary btn-sm mt-2">
                                                         <i class="mdi mdi-plus me-2"></i>Tạo đơn nhập hàng
                                                     </a>

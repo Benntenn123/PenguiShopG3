@@ -7,12 +7,7 @@
         <jsp:include page="Common/Css.jsp"/>
         <style>
             .status-active {
-                backgroun                                                            <th width="20%">Tên nhà cung cấp</th>
-                                                            <th width="15%">Người liên hệ</th>
-                                                            <th width="15%">Điện thoại</th>
-                                                            <th width="20%">Email</th>
-                                                            <th width="15%" class="text-center">Thao tác</th>r: #28a745;
-                color: white;
+                background-color: white;
                 padding: 4px 8px;
                 border-radius: 4px;
                 font-size: 0.875rem;
@@ -78,6 +73,13 @@
                 .card-header h5 {
                     margin: 0;
                     font-weight: 600;
+                }
+                
+                .card-footer {
+                    background-color: #f8f9fa;
+                    border-top: 1px solid #dee2e6;
+                    border-radius: 0 0 8px 8px;
+                    padding: 15px 20px;
                 }
 
                 .search-section {
@@ -160,30 +162,33 @@
 
                 .pagination {
                     margin: 0;
-                    justify-content: center;
                 }
 
                 .pagination .page-link {
-                    border: none;
-                    border-radius: 6px !important;
+                    border: 1px solid #dee2e6;
+                    border-radius: 4px !important;
                     margin: 0 2px;
-                    padding: 8px 12px;
+                    padding: 6px 12px;
                     color: #667eea;
                     background: white;
-                    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                    font-size: 13px;
                 }
 
                 .pagination .page-item.active .page-link {
                     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
                     color: white;
-                    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+                    border-color: #667eea;
                 }
 
                 .pagination .page-link:hover {
                     color: white;
                     background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
-                    transform: translateY(-1px);
-                    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+                    border-color: #5a6fd8;
+                }
+                
+                .pagination-sm .page-link {
+                    padding: 4px 8px;
+                    font-size: 12px;
                 }
 
                 .alert {
@@ -253,7 +258,7 @@
                                         <h1><i class="fas fa-truck me-2"></i>Quản lý nhà cung cấp</h1>
                                         <nav aria-label="breadcrumb">
                                             <ol class="breadcrumb">
-                                                <li class="breadcrumb-item"><a href="TrangChu.jsp">Trang chủ</a></li>
+                                                <li class="breadcrumb-item"><a href="welcomeAdmin">Trang chủ</a></li>
                                                 <li class="breadcrumb-item active">Nhà cung cấp</li>
                                             </ol>
                                         </nav>
@@ -281,14 +286,9 @@
                                 </div>
                             </c:if>
 
-                            <c:if test="${param.success == 'deleted'}">
-                                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                    <i class="fas fa-check-circle me-2"></i>Xóa nhà cung cấp thành công!
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                                </div>
-                            </c:if>
+                           
 
-                            
+
 
                             <!-- Search Section -->
                             <div class="search-section">
@@ -327,175 +327,182 @@
 
                             <!-- Suppliers Table -->
                             <div style="margin-top: 20px" class="card">
-                                <div class="card-header">
-                                    <h5><i class="fas fa-list me-2"></i>Danh sách nhà cung cấp</h5>
-                                </div>
-                                <div class="card-body p-0">
-                                    <c:choose>
-                                        <c:when test="${empty suppliers}">
-                                            <div style="text-align: center; margin: 30px 10px" class="empty-state">
-                                                <i class="fas fa-truck"></i>
-                                                <h5>Không có nhà cung cấp nào</h5>
-                                                <p class="text-muted">
-                                                    <c:choose>
-                                                        <c:when test="${not empty search}">
-                                                            Không tìm thấy nhà cung cấp nào phù hợp với từ khóa "${search}"
-                                                        </c:when>
-                                                        <c:otherwise>
-                                                            Hãy thêm nhà cung cấp đầu tiên của bạn
-                                                        </c:otherwise>
-                                                    </c:choose>
-                                                </p>
-                                                <a href="AddSupplier" class="btn btn-primary">
-                                                    <i class="fas fa-plus me-2"></i>Thêm nhà cung cấp
-                                                </a>
-                                            </div>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <div class="table-responsive">
-                                                <table class="table table-hover">
-                                                    <thead>
-                                                        <tr>
-                                                            <th width="5%">#</th>
-                                                            <th width="20%">Tên nhà cung cấp</th>
-                                                            <th width="15%">Người liên hệ</th>
-                                                            <th width="15%">Số điện thoại</th>
-                                                            <th width="20%">Email</th>
-                                                            <th width="15%" class="text-center">Thao tác</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <c:forEach var="supplier" items="${suppliers}" varStatus="status">
-                                                            <tr>
-                                                                <td><strong>${(currentPage - 1) * 10 + status.index + 1}</strong></td>
-                                                                <td>
-                                                                    <strong class="text-primary">${supplier.supplierName}</strong>
-                                                                    
-                                                                </td>
-                                                                <td>
-                                                                    <c:choose>
-                                                                        <c:when test="${not empty supplier.contactName}">
-                                                                            ${supplier.contactName}
-                                                                        </c:when>
-                                                                        <c:otherwise>
-                                                                            <span class="text-muted">Chưa có</span>
-                                                                        </c:otherwise>
-                                                                    </c:choose>
-                                                                </td>
-                                                                <td>
-                                                                    <c:choose>
-                                                                        <c:when test="${not empty supplier.phone}">
-                                                                            <i class="fas fa-phone me-1"></i>${supplier.phone}
-                                                                        </c:when>
-                                                                        <c:otherwise>
-                                                                            <span class="text-muted">Chưa có</span>
-                                                                        </c:otherwise>
-                                                                    </c:choose>
-                                                                </td>
-                                                                <td>
-                                                                    <c:choose>
-                                                                        <c:when test="${not empty supplier.email}">
-                                                                            <i class="fas fa-envelope me-1"></i>
-                                                                            <a href="mailto:${supplier.email}">${supplier.email}</a>
-                                                                        </c:when>
-                                                                        <c:otherwise>
-                                                                            <span class="text-muted">Chưa có</span>
-                                                                        </c:otherwise>
-                                                                    </c:choose>
-                                                                </td>
-                                                                
-                                                                <td class="text-center">
-                                                                    <div class="btn-group" role="group">
-                                                                        <a href="supplier-details?id=${supplier.supplierID}" 
-                                                                           class="btn btn-info btn-sm" title="Xem chi tiết">
-                                                                            <i class="mdi mdi-eye"></i>
-                                                                        </a>
-                                                                        <a href="supplier?action=edit&id=${supplier.supplierID}" 
-                                                                           class="btn btn-warning btn-sm" title="Chỉnh sửa">
-                                                                            <i class="mdi mdi-pencil"></i>
-                                                                        </a>
-                                                                        <button type="button" class="btn btn-danger btn-sm" 
-                                                                                onclick="confirmDelete(${supplier.supplierID}, '${supplier.supplierName}')"
-                                                                                title="Xóa">
-                                                                            <i class="mdi mdi-delete"></i>
-                                                                        </button>
-                                                                    </div>
-                                                                </td>
-                                                            </tr>
-                                                        </c:forEach>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </c:otherwise>
-                                    </c:choose>
-                                </div>
-
-                                <!-- Pagination -->
-                                <c:if test="${totalPages > 1}">
-                                    <div class="card-footer bg-light">
-                                        <nav aria-label="Supplier pagination">
-                                            <ul class="pagination">
-                                                <!-- Previous page -->
-                                                <c:if test="${currentPage > 1}">
-                                                    <li class="page-item">
-                                                        <a class="page-link" href="?page=${currentPage - 1}&search=${search}&sortBy=${sortBy}&sortDir=${sortDir}">
-                                                            <i class="fas fa-chevron-left"></i> Trước
-                                                        </a>
-                                                    </li>
-                                                </c:if>
-
-                                                <!-- Page numbers -->
-                                                <c:forEach var="i" begin="1" end="${totalPages}">
-                                                    <c:if test="${i <= currentPage + 2 && i >= currentPage - 2}">
-                                                        <li class="page-item ${i == currentPage ? 'active' : ''}">
-                                                            <a class="page-link" href="?page=${i}&search=${search}&sortBy=${sortBy}&sortDir=${sortDir}">
-                                                                ${i}
-                                                            </a>
-                                                        </li>
-                                                    </c:if>
-                                                </c:forEach>
-
-                                                <!-- Next page -->
-                                                <c:if test="${currentPage < totalPages}">
-                                                    <li class="page-item">
-                                                        <a class="page-link" href="?page=${currentPage + 1}&search=${search}&sortBy=${sortBy}&sortDir=${sortDir}">
-                                                            Sau <i class="fas fa-chevron-right"></i>
-                                                        </a>
-                                                    </li>
-                                                </c:if>
-                                            </ul>
-                                        </nav>
+                                    <div class="card-header">
+                                        <h5><i class="fas fa-list me-2"></i>Danh sách nhà cung cấp</h5>
                                     </div>
-                                </c:if>
+                                    <div class="card-body p-0">
+                                        <c:choose>
+                                            <c:when test="${empty suppliers}">
+                                                <div style="text-align: center;
+                                                margin: 30px 10px" class="empty-state">
+                                                    <i class="fas fa-truck"></i>
+                                                    <h5>Không có nhà cung cấp nào</h5>
+                                                    <p class="text-muted">
+                                                        <c:choose>
+                                                            <c:when test="${not empty search}">
+                                                                Không tìm thấy nhà cung cấp nào phù hợp với từ khóa "${search}"
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                Hãy thêm nhà cung cấp đầu tiên của bạn
+                                                            </c:otherwise>
+                                                        </c:choose>
+                                                    </p>
+                                                    <a href="AddSupplier" class="btn btn-primary">
+                                                        <i class="fas fa-plus me-2"></i>Thêm nhà cung cấp
+                                                    </a>
+                                                </div>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <div class="table-responsive">
+                                                    <table class="table table-hover">
+                                                        <thead>
+                                                            <tr>
+                                                                <th width="5%">#</th>
+                                                                <th width="20%">Tên nhà cung cấp</th>
+                                                                <th width="15%">Người liên hệ</th>
+                                                                <th width="15%">Số điện thoại</th>
+                                                                <th width="20%">Email</th>
+                                                                <th width="15%" class="text-center">Thao tác</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <c:forEach var="supplier" items="${suppliers}" varStatus="status">
+                                                                <tr>
+                                                                    <td><strong>${(currentPage - 1) * 10 + status.index + 1}</strong></td>
+                                                                    <td>
+                                                                        <strong class="text-primary">${supplier.supplierName}</strong>
+
+                                                                    </td>
+                                                                    <td>
+                                                                        <c:choose>
+                                                                            <c:when test="${not empty supplier.contactName}">
+                                                                                ${supplier.contactName}
+                                                                            </c:when>
+                                                                            <c:otherwise>
+                                                                                <span class="text-muted">Chưa có</span>
+                                                                            </c:otherwise>
+                                                                        </c:choose>
+                                                                    </td>
+                                                                    <td>
+                                                                        <c:choose>
+                                                                            <c:when test="${not empty supplier.phone}">
+                                                                                <i class="fas fa-phone me-1"></i>${supplier.phone}
+                                                                            </c:when>
+                                                                            <c:otherwise>
+                                                                                <span class="text-muted">Chưa có</span>
+                                                                            </c:otherwise>
+                                                                        </c:choose>
+                                                                    </td>
+                                                                    <td>
+                                                                        <c:choose>
+                                                                            <c:when test="${not empty supplier.email}">
+                                                                                <i class="fas fa-envelope me-1"></i>
+                                                                                <a href="mailto:${supplier.email}">${supplier.email}</a>
+                                                                            </c:when>
+                                                                            <c:otherwise>
+                                                                                <span class="text-muted">Chưa có</span>
+                                                                            </c:otherwise>
+                                                                        </c:choose>
+                                                                    </td>
+
+                                                                    <td class="text-center">
+                                                                        <div class="btn-group" role="group">
+                                                                            <a href="supplier-details?id=${supplier.supplierID}" 
+                                                                               class="btn btn-info btn-sm" title="Xem chi tiết">
+                                                                                <i class="mdi mdi-eye"></i>
+                                                                            </a>
+                                                                            <a style="margin-left: 10px" href="EditSupplier?id=${supplier.supplierID}" 
+                                                                               class="btn btn-warning btn-sm" title="Chỉnh sửa">
+                                                                                <i class="mdi mdi-pencil"></i>
+                                                                            </a>
+                                                                            
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                            </c:forEach>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </div>
+
+                                    <!-- Pagination -->
+                                    <c:if test="${totalPages > 0}">
+                                        <div class="card-footer bg-light">
+                                            <div class="row align-items-center">
+                                                <div class="col-md-6">
+                                                    <div class="text-muted">
+                                                        Hiển thị ${(currentPage - 1) * 10 + 1} - ${currentPage * 10 > totalRecords ? totalRecords : currentPage * 10} 
+                                                        trong tổng số ${totalRecords} nhà cung cấp
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <nav aria-label="Supplier pagination" class="d-flex justify-content-end">
+                                                        <ul class="pagination pagination-sm mb-0">
+                                                            <!-- Previous page -->
+                                                            <c:if test="${currentPage > 1}">
+                                                                <li class="page-item">
+                                                                    <a class="page-link" href="?page=${currentPage - 1}&search=${search}&sortBy=${sortBy}&sortDir=${sortDir}">
+                                                                        <i class="fas fa-chevron-left"></i>
+                                                                    </a>
+                                                                </li>
+                                                            </c:if>
+
+                                                            <!-- Page numbers -->
+                                                            <c:forEach var="i" begin="1" end="${totalPages}">
+                                                                <c:if test="${i <= currentPage + 2 && i >= currentPage - 2}">
+                                                                    <li class="page-item ${i == currentPage ? 'active' : ''}">
+                                                                        <a class="page-link" href="?page=${i}&search=${search}&sortBy=${sortBy}&sortDir=${sortDir}">
+                                                                            ${i}
+                                                                        </a>
+                                                                    </li>
+                                                                </c:if>
+                                                            </c:forEach>
+
+                                                            <!-- Next page -->
+                                                            <c:if test="${currentPage < totalPages}">
+                                                                <li class="page-item">
+                                                                    <a class="page-link" href="?page=${currentPage + 1}&search=${search}&sortBy=${sortBy}&sortDir=${sortDir}">
+                                                                        <i class="fas fa-chevron-right"></i>
+                                                                    </a>
+                                                                </li>
+                                                            </c:if>
+                                                        </ul>
+                                                    </nav>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </c:if>
+                                </div>
                             </div>
-                        </div>
 
-                    </div> <!-- container-fluid -->
+                        </div> <!-- container-fluid -->
+                    </div>
+                    <!-- End Page-content -->
+
                 </div>
-                <!-- End Page-content -->
+                <!-- end main content-->
+            </div>
+        </div></div>
+        <jsp:include page="Common/RightSideBar.jsp"/>
+    <!-- END layout-wrapper -->
 
-            </div>
-            <!-- end main content-->
-        </div>
-    </div></div>
-    <jsp:include page="Common/RightSideBar.jsp"/>
-<!-- END layout-wrapper -->
-
-<!-- Delete Confirmation Modal -->
-<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="deleteModalLabel">Xác nhận xóa</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p>Bạn có chắc chắn muốn xóa nhà cung cấp <strong id="supplierName"></strong>?</p>
-                <p class="text-muted">Hành động này không thể hoàn tác.</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                <form id="deleteForm" method="post" action="DeleteSupplier" style="display: inline;">
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Xác nhận xóa</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Bạn có chắc chắn muốn xóa nhà cung cấp <strong id="supplierName"></strong>?</p>
+                    <p class="text-muted">Hành động này không thể hoàn tác.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <form id="deleteForm" method="post" action="DeleteSupplier" style="display: inline;">
                     <input type="hidden" name="supplierID" id="deleteSupplierID">
                     <button type="submit" class="btn btn-danger">Xóa</button>
                 </form>

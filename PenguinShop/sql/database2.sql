@@ -69,7 +69,13 @@ INSERT INTO dbo.tbPermissions
 (N'Chỉnh sửa trạng thái bài viết','/admin/BlogToggleStatus',11,1,NULL),
 (N'Chỉnh sửa bài viết','/admin/BlogEdit',11,1,NULL),
 (N'Danh sách nhà cung cấp','/admin/SupplierList',12,0,NULL),
-(N'Thêm nhà cung cấp','/admin/AddSupplier',12,0,NULL);
+(N'Thêm nhà cung cấp','/admin/AddSupplier',12,0,NULL),
+(N'Chi tiết nhà cung cấp','/admin/supplier-details',12,1,NULL),
+(N'Thêm hóa đơn nhà cung cấp','/admin/AddImportOrder',12,1,NULL),
+(N'API load sản phẩm cho hóa đơn','/admin/api/product-search',12,1,NULL),
+(N'List hóa đơn sản phẩm ','/admin/ImportOrderList',12,1,NULL),
+(N'Chỉnh sửa supplier ','/admin/EditSupplier',12,1,NULL),
+(N'Chi tiết import Order ','/admin//admin/ImportOrderDetails',12,1,NULL);
 -- Gán tất cả các quyền cho role admin (roleID = 1)
 INSERT INTO tbRolePermissions (roleID, permissionID)
 SELECT 1, permissionID

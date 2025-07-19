@@ -12,15 +12,14 @@ public class ImportOrderDAO extends DBContext {
     // Lấy danh sách đơn nhập hàng với phân trang và tìm kiếm
     public List<ImportOrder> getAllImportOrders(int page, int pageSize, String search, String sortBy, String sortDir) {
         List<ImportOrder> orders = new ArrayList<>();
-        String sql = "SELECT io.*, s.supplierName, u.fullName as createdByName " +
+        String sql = "SELECT io.*, s.supplierName " +
                     "FROM tbImportOrder io " +
                     "LEFT JOIN tbSupplier s ON io.supplierID = s.supplierID " +
-                    "LEFT JOIN tbUsers u ON io.created_by = u.userID " +
                     "WHERE 1=1";
         
         // Thêm điều kiện tìm kiếm
         if (search != null && !search.trim().isEmpty()) {
-            sql += " AND (s.supplierName LIKE ? OR u.fullName LIKE ? OR io.note LIKE ?)";
+            sql += " AND (s.supplierName LIKE ? OR io.note LIKE ?)";
         }
         
         // Thêm sắp xếp
@@ -42,7 +41,6 @@ public class ImportOrderDAO extends DBContext {
                 String searchPattern = "%" + search.trim() + "%";
                 ps.setString(paramIndex++, searchPattern);
                 ps.setString(paramIndex++, searchPattern);
-                ps.setString(paramIndex++, searchPattern);
             }
             
             // Set tham số phân trang
@@ -55,13 +53,9 @@ public class ImportOrderDAO extends DBContext {
                 order.setImportOrderID(rs.getInt("importOrderID"));
                 order.setSupplierID(rs.getInt("supplierID"));
                 order.setImportDate(rs.getTimestamp("importDate"));
-                order.setTotalImportAmount(rs.getBigDecimal("totalImportAmount"));
+                order.setTotalImportAmount(rs.getBigDecimal("totalAmount"));
                 order.setNote(rs.getString("note"));
-                order.setCreatedBy(rs.getInt("created_by"));
-                order.setCreatedAt(rs.getTimestamp("created_at"));
-                order.setUpdatedAt(rs.getTimestamp("updated_at"));
                 order.setSupplierName(rs.getString("supplierName"));
-                order.setCreatedByName(rs.getString("createdByName"));
                 orders.add(order);
             }
         } catch (SQLException e) {
@@ -74,11 +68,10 @@ public class ImportOrderDAO extends DBContext {
     public int countImportOrders(String search) {
         String sql = "SELECT COUNT(*) FROM tbImportOrder io " +
                     "LEFT JOIN tbSupplier s ON io.supplierID = s.supplierID " +
-                    "LEFT JOIN tbUsers u ON io.created_by = u.userID " +
                     "WHERE 1=1";
         
         if (search != null && !search.trim().isEmpty()) {
-            sql += " AND (s.supplierName LIKE ? OR u.fullName LIKE ? OR io.note LIKE ?)";
+            sql += " AND (s.supplierName LIKE ? OR io.note LIKE ?)";
         }
         
         try {
@@ -88,7 +81,6 @@ public class ImportOrderDAO extends DBContext {
                 String searchPattern = "%" + search.trim() + "%";
                 ps.setString(1, searchPattern);
                 ps.setString(2, searchPattern);
-                ps.setString(3, searchPattern);
             }
             
             ResultSet rs = ps.executeQuery();
@@ -103,10 +95,9 @@ public class ImportOrderDAO extends DBContext {
     
     // Lấy đơn nhập hàng theo ID kèm chi tiết
     public ImportOrder getImportOrderById(int importOrderID) {
-        String sql = "SELECT io.*, s.supplierName, u.fullName as createdByName " +
+        String sql = "SELECT io.*, s.supplierName " +
                     "FROM tbImportOrder io " +
                     "LEFT JOIN tbSupplier s ON io.supplierID = s.supplierID " +
-                    "LEFT JOIN tbUsers u ON io.created_by = u.userID " +
                     "WHERE io.importOrderID = ?";
         
         try {
@@ -119,13 +110,9 @@ public class ImportOrderDAO extends DBContext {
                 order.setImportOrderID(rs.getInt("importOrderID"));
                 order.setSupplierID(rs.getInt("supplierID"));
                 order.setImportDate(rs.getTimestamp("importDate"));
-                order.setTotalImportAmount(rs.getBigDecimal("totalImportAmount"));
+                order.setTotalImportAmount(rs.getBigDecimal("totalAmount"));
                 order.setNote(rs.getString("note"));
-                order.setCreatedBy(rs.getInt("created_by"));
-                order.setCreatedAt(rs.getTimestamp("created_at"));
-                order.setUpdatedAt(rs.getTimestamp("updated_at"));
                 order.setSupplierName(rs.getString("supplierName"));
-                order.setCreatedByName(rs.getString("createdByName"));
                 
                 // Lấy chi tiết đơn nhập
                 order.setDetails(getImportOrderDetails(importOrderID));
@@ -138,20 +125,28 @@ public class ImportOrderDAO extends DBContext {
         return null;
     }
     
-    // Lấy chi tiết đơn nhập hàng
+    // Lấy chi tiết đơn nhập hàng với thông tin sản phẩm đầy đủ
     public List<ImportOrderDetail> getImportOrderDetails(int importOrderID) {
         List<ImportOrderDetail> details = new ArrayList<>();
-        String sql = "SELECT iod.*, p.productName, p.SKU as productSKU, c.colorName, s.sizeName " +
+        String sql = "SELECT iod.importOrderDetailID, iod.importOrderID, iod.variantID, iod.quantity, iod.importPrice, " +
+                    "p.productID, p.productName, p.SKU as productSKU, p.description as productDescription, " +
+                    "p.imageMainProduct as productImage, c.colorName, s.sizeName, " +
+                    "pv.quantity as variantStock " +
                     "FROM tbImportOrderDetail iod " +
-                    "LEFT JOIN tbProductVariant pv ON iod.variantID = pv.variantID " +
-                    "LEFT JOIN tbProduct p ON pv.productID = p.productID " +
+                    "INNER JOIN tbProductVariant pv ON iod.variantID = pv.variantID " +
+                    "INNER JOIN tbProduct p ON pv.productID = p.productID " +
                     "LEFT JOIN tbColor c ON pv.colorID = c.colorID " +
                     "LEFT JOIN tbSize s ON pv.sizeID = s.sizeID " +
-                    "WHERE iod.importOrderID = ?";
+                    "WHERE iod.importOrderID = ? " +
+                    "ORDER BY iod.importOrderDetailID";
         
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, importOrderID);
+            
+            System.out.println("ImportOrderDAO - Executing query for import order: " + importOrderID);
+            System.out.println("ImportOrderDAO - Query: " + sql);
+            
             ResultSet rs = ps.executeQuery();
             
             while (rs.next()) {
@@ -161,36 +156,104 @@ public class ImportOrderDAO extends DBContext {
                 detail.setVariantID(rs.getInt("variantID"));
                 detail.setQuantity(rs.getInt("quantity"));
                 detail.setImportPrice(rs.getBigDecimal("importPrice"));
-                detail.setNote(rs.getString("note"));
+                detail.setProductID(rs.getInt("productID"));
+                
+                // Thông tin sản phẩm
                 detail.setProductName(rs.getString("productName"));
                 detail.setProductSKU(rs.getString("productSKU"));
+                detail.setProductDescription(rs.getString("productDescription"));
+                
+                // Xử lý đường dẫn ảnh chính
+                String mainImage = rs.getString("productImage");
+                if (mainImage != null && !mainImage.isEmpty()) {
+                    detail.setProductImage("../api/img/" + mainImage);
+                } else {
+                    detail.setProductImage("../api/img/default-product.jpg"); // Ảnh mặc định
+                }
+                
                 detail.setColorName(rs.getString("colorName"));
                 detail.setSizeName(rs.getString("sizeName"));
+                
+                // Set unitPrice for JSP compatibility  
+                detail.setUnitPrice(rs.getBigDecimal("importPrice"));
+                
                 details.add(detail);
+                
+                // Debug thông tin từng detail
+                System.out.println("ImportOrderDAO - Detail loaded: variantID=" + detail.getVariantID() + 
+                    ", productName=" + detail.getProductName() + 
+                    ", colorName=" + detail.getColorName() + 
+                    ", sizeName=" + detail.getSizeName() +
+                    ", quantity=" + detail.getQuantity() +
+                    ", price=" + detail.getImportPrice() +
+                    ", image=" + detail.getProductImage());
             }
+            
+            System.out.println("ImportOrderDAO - Total details loaded: " + details.size());
+            
         } catch (SQLException e) {
+            System.out.println("ImportOrderDAO - SQL Error: " + e.getMessage());
             e.printStackTrace();
         }
         return details;
     }
     
+    // Test method để kiểm tra variantID có tồn tại không
+    public void testVariantID(int variantID) {
+        String sql = "SELECT pv.variantID, pv.productID, p.productName, c.colorName, s.sizeName " +
+                    "FROM tbProductVariant pv " +
+                    "LEFT JOIN tbProduct p ON pv.productID = p.productID " +
+                    "LEFT JOIN tbColor c ON pv.colorID = c.colorID " +
+                    "LEFT JOIN tbSize s ON pv.sizeID = s.sizeID " +
+                    "WHERE pv.variantID = ?";
+        
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, variantID);
+            ResultSet rs = ps.executeQuery();
+            
+            if (rs.next()) {
+                System.out.println("testVariantID - Found variant: " +
+                    "variantID=" + rs.getInt("variantID") + 
+                    ", productID=" + rs.getInt("productID") +
+                    ", productName=" + rs.getString("productName") +
+                    ", color=" + rs.getString("colorName") +
+                    ", size=" + rs.getString("sizeName"));
+            } else {
+                System.out.println("testVariantID - No variant found for ID: " + variantID);
+            }
+        } catch (SQLException e) {
+            System.out.println("testVariantID - Error: " + e.getMessage());
+        }
+    }
+    
     // Thêm đơn nhập hàng mới
     public int addImportOrder(ImportOrder order) {
-        String sql = "INSERT INTO tbImportOrder (supplierID, importDate, totalImportAmount, note, created_by, created_at) " +
-                    "VALUES (?, GETDATE(), ?, ?, ?, GETDATE())";
+        String sql = "INSERT INTO tbImportOrder (supplierID, importDate, totalAmount, note) " +
+                    "VALUES (?, ?, ?, ?)";
         
         try {
             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, order.getSupplierID());
-            ps.setBigDecimal(2, order.getTotalImportAmount());
-            ps.setString(3, order.getNote());
-            ps.setInt(4, order.getCreatedBy());
+            ps.setTimestamp(2, new Timestamp(order.getImportDate().getTime()));
+            ps.setBigDecimal(3, order.getTotalImportAmount());
+            ps.setString(4, order.getNote());
             
             int result = ps.executeUpdate();
             if (result > 0) {
                 ResultSet generatedKeys = ps.getGeneratedKeys();
                 if (generatedKeys.next()) {
-                    return generatedKeys.getInt(1); // Trả về ID của đơn nhập vừa tạo
+                    int importOrderID = generatedKeys.getInt(1);
+                    
+                    // Lưu từng detail nếu có
+                    if (order.getDetails() != null && !order.getDetails().isEmpty()) {
+                        for (ImportOrderDetail detail : order.getDetails()) {
+                            detail.setImportOrderID(importOrderID);
+                            addImportOrderDetail(detail);
+                        }
+                    }
+                    
+                    return importOrderID; // Trả về ID của đơn nhập vừa tạo
                 }
             }
         } catch (SQLException e) {
@@ -201,8 +264,8 @@ public class ImportOrderDAO extends DBContext {
     
     // Thêm chi tiết đơn nhập hàng
     public boolean addImportOrderDetail(ImportOrderDetail detail) {
-        String sql = "INSERT INTO tbImportOrderDetail (importOrderID, variantID, quantity, importPrice, note) " +
-                    "VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO tbImportOrderDetail (importOrderID, variantID, quantity, importPrice) " +
+                    "VALUES (?, ?, ?, ?)";
         
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
@@ -210,7 +273,6 @@ public class ImportOrderDAO extends DBContext {
             ps.setInt(2, detail.getVariantID());
             ps.setInt(3, detail.getQuantity());
             ps.setBigDecimal(4, detail.getImportPrice());
-            ps.setString(5, detail.getNote());
             
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -221,7 +283,7 @@ public class ImportOrderDAO extends DBContext {
     
     // Cập nhật tổng tiền đơn nhập
     public boolean updateImportOrderTotal(int importOrderID, BigDecimal totalAmount) {
-        String sql = "UPDATE tbImportOrder SET totalImportAmount = ?, updated_at = GETDATE() WHERE importOrderID = ?";
+        String sql = "UPDATE tbImportOrder SET totalAmount = ? WHERE importOrderID = ?";
         
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
@@ -238,10 +300,9 @@ public class ImportOrderDAO extends DBContext {
     // Lấy đơn nhập gần đây (top 10)
     public List<ImportOrder> getRecentImportOrders() {
         List<ImportOrder> orders = new ArrayList<>();
-        String sql = "SELECT TOP 10 io.*, s.supplierName, u.fullName as createdByName " +
+        String sql = "SELECT TOP 10 io.*, s.supplierName " +
                     "FROM tbImportOrder io " +
                     "LEFT JOIN tbSupplier s ON io.supplierID = s.supplierID " +
-                    "LEFT JOIN tbUsers u ON io.created_by = u.userID " +
                     "ORDER BY io.importDate DESC";
         
         try {
@@ -253,13 +314,9 @@ public class ImportOrderDAO extends DBContext {
                 order.setImportOrderID(rs.getInt("importOrderID"));
                 order.setSupplierID(rs.getInt("supplierID"));
                 order.setImportDate(rs.getTimestamp("importDate"));
-                order.setTotalImportAmount(rs.getBigDecimal("totalImportAmount"));
+                order.setTotalImportAmount(rs.getBigDecimal("totalAmount"));
                 order.setNote(rs.getString("note"));
-                order.setCreatedBy(rs.getInt("created_by"));
-                order.setCreatedAt(rs.getTimestamp("created_at"));
-                order.setUpdatedAt(rs.getTimestamp("updated_at"));
                 order.setSupplierName(rs.getString("supplierName"));
-                order.setCreatedByName(rs.getString("createdByName"));
                 orders.add(order);
             }
         } catch (SQLException e) {
@@ -303,4 +360,96 @@ public class ImportOrderDAO extends DBContext {
         }
         return false;
     }
+    
+    // Lấy danh sách đơn nhập hàng theo supplier ID
+    public List<ImportOrder> getImportOrdersBySupplier(int supplierId, int page, int pageSize, String search, String sortBy, String sortDir) {
+        List<ImportOrder> orders = new ArrayList<>();
+        String sql = "SELECT io.*, s.supplierName " +
+                    "FROM tbImportOrder io " +
+                    "LEFT JOIN tbSupplier s ON io.supplierID = s.supplierID " +
+                    "WHERE io.supplierID = ?";
+        
+        // Thêm điều kiện tìm kiếm
+        if (search != null && !search.trim().isEmpty()) {
+            sql += " AND (s.supplierName LIKE ? OR io.note LIKE ?)";
+        }
+        
+        // Thêm sắp xếp
+        if (sortBy != null && !sortBy.isEmpty()) {
+            sql += " ORDER BY " + sortBy + " " + (sortDir != null && sortDir.equalsIgnoreCase("ASC") ? "ASC" : "DESC");
+        } else {
+            sql += " ORDER BY io.importDate DESC";
+        }
+        
+        // Thêm phân trang
+        sql += " OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+        
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            int paramIndex = 1;
+            
+            // Set supplier ID
+            ps.setInt(paramIndex++, supplierId);
+            
+            // Set tham số tìm kiếm
+            if (search != null && !search.trim().isEmpty()) {
+                String searchPattern = "%" + search.trim() + "%";
+                ps.setString(paramIndex++, searchPattern);
+                ps.setString(paramIndex++, searchPattern);
+            }
+            
+            // Set tham số phân trang
+            ps.setInt(paramIndex++, (page - 1) * pageSize);
+            ps.setInt(paramIndex++, pageSize);
+            
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                ImportOrder order = new ImportOrder();
+                order.setImportOrderID(rs.getInt("importOrderID"));
+                order.setSupplierID(rs.getInt("supplierID"));
+                order.setImportDate(rs.getTimestamp("importDate"));
+                order.setTotalImportAmount(rs.getBigDecimal("totalAmount"));
+                order.setNote(rs.getString("note"));
+                order.setSupplierName(rs.getString("supplierName"));
+                orders.add(order);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return orders;
+    }
+    
+    // Đếm tổng số đơn nhập hàng theo supplier ID
+    public int countImportOrdersBySupplier(int supplierId, String search) {
+        String sql = "SELECT COUNT(*) FROM tbImportOrder io " +
+                    "LEFT JOIN tbSupplier s ON io.supplierID = s.supplierID " +
+                    "WHERE io.supplierID = ?";
+        
+        if (search != null && !search.trim().isEmpty()) {
+            sql += " AND (s.supplierName LIKE ? OR io.note LIKE ?)";
+        }
+        
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            int paramIndex = 1;
+            
+            // Set supplier ID
+            ps.setInt(paramIndex++, supplierId);
+            
+            if (search != null && !search.trim().isEmpty()) {
+                String searchPattern = "%" + search.trim() + "%";
+                ps.setString(paramIndex++, searchPattern);
+                ps.setString(paramIndex++, searchPattern);
+            }
+            
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
 }

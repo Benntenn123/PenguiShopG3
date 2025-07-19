@@ -9,12 +9,15 @@ public class ImportOrderDetail {
     private int quantity;
     private BigDecimal importPrice;
     private String note;
-    
+    private int productID;
     // Thông tin liên kết
     private String productName;
     private String colorName;
     private String sizeName;
     private String productSKU;
+    private String productDescription;
+    private String productImage;
+    private BigDecimal unitPrice; // Alias for importPrice for JSP
     
     // Default constructor
     public ImportOrderDetail() {}
@@ -26,6 +29,14 @@ public class ImportOrderDetail {
         this.quantity = quantity;
         this.importPrice = importPrice;
         this.note = note;
+    }
+
+    public int getProductID() {
+        return productID;
+    }
+
+    public void setProductID(int productID) {
+        this.productID = productID;
     }
     
     // Getters and Setters
@@ -107,6 +118,30 @@ public class ImportOrderDetail {
     
     public void setProductSKU(String productSKU) {
         this.productSKU = productSKU;
+    }
+    
+    public String getProductDescription() {
+        return productDescription;
+    }
+    
+    public void setProductDescription(String productDescription) {
+        this.productDescription = productDescription;
+    }
+    
+    public String getProductImage() {
+        return productImage;
+    }
+    
+    public void setProductImage(String productImage) {
+        this.productImage = productImage;
+    }
+    
+    public BigDecimal getUnitPrice() {
+        return unitPrice != null ? unitPrice : importPrice;
+    }
+    
+    public void setUnitPrice(BigDecimal unitPrice) {
+        this.unitPrice = unitPrice;
     }
     
     // Tính tổng tiền cho chi tiết này

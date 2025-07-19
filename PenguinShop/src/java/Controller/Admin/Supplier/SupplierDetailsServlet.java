@@ -28,8 +28,9 @@ public class SupplierDetailsServlet extends HttpServlet {
         String supplierIdParam = request.getParameter("id");
         
         if (supplierIdParam == null || supplierIdParam.trim().isEmpty()) {
-            request.setAttribute("error", "Không tìm thấy thông tin nhà cung cấp");
-            request.getRequestDispatcher("ListSuppliers.jsp").forward(request, response);
+            request.getSession().setAttribute("error", "Không tìm thấy thông tin nhà cung cấp");
+            response.sendRedirect("SupplierList");
+            
             return;
         }
         
@@ -40,8 +41,8 @@ public class SupplierDetailsServlet extends HttpServlet {
             Supplier supplier = supplierDAO.getSupplierById(supplierId);
             
             if (supplier == null) {
-                request.setAttribute("error", "Không tìm thấy nhà cung cấp với ID: " + supplierId);
-                request.getRequestDispatcher("ListSuppliers.jsp").forward(request, response);
+                request.getSession().setAttribute("error", "Không tìm thấy nhà cung cấp với ID: " + supplierId);
+                response.sendRedirect("SupplierList");
                 return;
             }
             
@@ -59,15 +60,15 @@ public class SupplierDetailsServlet extends HttpServlet {
             request.setAttribute("totalImportValue", totalImportValue);
             
             // Forward đến JSP
-            request.getRequestDispatcher("SupplierDetails.jsp").forward(request, response);
+            request.getRequestDispatcher("/Admin/SupplierDetails.jsp").forward(request, response);
             
         } catch (NumberFormatException e) {
-            request.setAttribute("error", "ID nhà cung cấp không hợp lệ");
-            request.getRequestDispatcher("ListSuppliers.jsp").forward(request, response);
+            request.getSession().setAttribute("error", "ID nhà cung cấp không hợp lệ");
+            response.sendRedirect("SupplierList");
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("error", "Có lỗi xảy ra khi tải thông tin nhà cung cấp");
-            request.getRequestDispatcher("ListSuppliers.jsp").forward(request, response);
+            request.getSession().setAttribute("error", "Có lỗi xảy ra khi tải thông tin nhà cung cấp");
+            response.sendRedirect("SupplierList");;
         }
     }
 }

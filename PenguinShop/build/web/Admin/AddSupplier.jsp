@@ -66,8 +66,8 @@
                                     <h4 class="mb-sm-0 font-size-18">Thêm nhà cung cấp mới</h4>
                                     <div class="page-title-right">
                                         <ol class="breadcrumb m-0">
-                                            <li class="breadcrumb-item"><a href="TrangChu.jsp">Trang chủ</a></li>
-                                            <li class="breadcrumb-item"><a href="supplier">Nhà cung cấp</a></li>
+                                            <li class="breadcrumb-item"><a href="welcomeAdmin">Trang chủ</a></li>
+                                            <li class="breadcrumb-item"><a href="SupplierList">Nhà cung cấp</a></li>
                                             <li class="breadcrumb-item active">Thêm mới</li>
                                         </ol>
                                     </div>

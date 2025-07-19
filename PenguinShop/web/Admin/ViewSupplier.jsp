@@ -219,8 +219,8 @@
                         <h1><i class="fas fa-truck me-2"></i>Chi tiết nhà cung cấp</h1>
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="TrangChu.jsp">Trang chủ</a></li>
-                                <li class="breadcrumb-item"><a href="supplier">Nhà cung cấp</a></li>
+                                <li class="breadcrumb-item"><a href="welcomeAdmin">Trang chủ</a></li>
+                                <li class="breadcrumb-item"><a href="SupplierList">Nhà cung cấp</a></li>
                                 <li class="breadcrumb-item active">${supplier.supplierName}</li>
                             </ol>
                         </nav>
