@@ -12,8 +12,9 @@ INSERT INTO dbo.tbModules(moduleName,icon)VALUES
 (N'Lịch sử','clock'),
 (N'Nhân sự', 'users'),
 (N'Đánh giá', 'message-square'),
-(N'Bài viết', 'message-square'),
-(N'Nhà cung cấp', 'user');
+(N'Bài viết', 'edit'),
+(N'Nhà cung cấp', 'truck'),
+(N'Banner', 'sliders');
 
 INSERT INTO dbo.tbPermissions
 (permissionName,url_permission,moduleID,isHide,permissionDescription)VALUES
@@ -76,7 +77,12 @@ INSERT INTO dbo.tbPermissions
 (N'List hóa đơn sản phẩm ','/admin/ImportOrderList',12,1,NULL),
 (N'Chỉnh sửa supplier ','/admin/EditSupplier',12,1,NULL),
 (N'Chi tiết import Order ','/admin/ImportOrderDetails',12,1,NULL),
-(N'Tạo QR ảnh sản phẩm ','/admin/QRCodeGenerator',4,0,NULL);
+(N'Tạo QR ảnh sản phẩm ','/admin/QRCodeGenerator',4,0,NULL),
+(N'Tạo Banner ','/admin/addBanner',13,0,NULL),
+(N'Danh sách banner','/admin/listBanner',13,0,NULL),
+(N'Chỉnh sửa trạng thái banner','/admin/api/bannerStatus',13,1,NULL),
+(N'Xóa banner','/admin/deleteBanner',13,1,NULL),
+(N'Chỉnh sửa banner','/admin/editBanner',13,1,NULL);
 -- Gán tất cả các quyền cho role admin (roleID = 1)
 INSERT INTO tbRolePermissions (roleID, permissionID)
 SELECT 1, permissionID

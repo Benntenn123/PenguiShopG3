@@ -44,11 +44,11 @@ WHERE  TABLE_TYPE = 'BASE TABLE'
 EXEC sp_executesql @sql2 
 GO
 
--- Bảng vai trò người dùng
 CREATE TABLE tbRoles (
     roleID INT PRIMARY KEY IDENTITY(1,1),
     roleName NVARCHAR(50) NOT NULL,
-	roleDescription NVARCHAR(max),
+    roleDescription NVARCHAR(max),
+    createdAt DATETIME NOT NULL DEFAULT GETDATE(), -- ngày tạo role
 );
 CREATE TABLE tbModules (
     moduleID INT PRIMARY KEY IDENTITY(1,1),
@@ -60,11 +60,11 @@ CREATE TABLE tbModules (
 CREATE TABLE tbPermissions (
     permissionID INT PRIMARY KEY IDENTITY(1,1),
     permissionName NVARCHAR(50) NOT NULL,
-	url_permission NVARCHAR(100),
-	moduleID INT,
-	isHide INT,
+    url_permission NVARCHAR(100),
+    moduleID INT,
+    isHide INT,
     permissionDescription NVARCHAR(200),
-	FOREIGN KEY(moduleID) REFERENCES dbo.tbModules(moduleID)
+    FOREIGN KEY(moduleID) REFERENCES dbo.tbModules(moduleID)
 );
 
 -- Bảng liên kết vai trò và quyền hạn
@@ -285,10 +285,10 @@ CREATE TABLE tbOrder (
     shippingAddress NVARCHAR(200),
     paymentMethod INT,
     paymentStatus BIT,
-	emall_receiver NVARCHAR(255),
-	phone_receiver NVARCHAR(255),
-	name_receiver NVARCHAR(255),
-	shipFee DECIMAL(10, 2),
+    emall_receiver NVARCHAR(255),
+    phone_receiver NVARCHAR(255),
+    name_receiver NVARCHAR(255),
+    shipFee DECIMAL(10, 2),
     FOREIGN KEY (userID) REFERENCES tbUsers(userID),
     FOREIGN KEY (paymentMethod) REFERENCES tbPaymentMethod(paymentMethodID)
 );
@@ -308,8 +308,8 @@ CREATE TABLE tbOrderDetail (
 CREATE TABLE tbRequests (
     requestID INT PRIMARY KEY IDENTITY(1,1),
     email_request NVARCHAR(255),
-	phone_request NVARCHAR(255),
-	name_request NVARCHAR(255),
+    phone_request NVARCHAR(255),
+    name_request NVARCHAR(255),
     requestType NVARCHAR(50) NOT NULL,
     description NVARCHAR(500) NOT NULL,
     requestStatus INT NOT NULL DEFAULT 0,
@@ -318,10 +318,13 @@ CREATE TABLE tbRequests (
     responseDate DATETIME,
 );
 
--- Bảng banner
 CREATE TABLE Banner (
     bannerID INT IDENTITY(1,1) PRIMARY KEY,
-    bannerLink NVARCHAR(255)
+    bannerName NVARCHAR(255) NULL, -- Tên banner
+    bannerHref NVARCHAR(255) NULL, -- Đường dẫn href
+    bannerStatus BIT NOT NULL DEFAULT 1, -- 1: mở, 0: đóng
+    createdAt DATETIME NOT NULL DEFAULT GETDATE(), -- Ngày tạo
+    bannerLink NVARCHAR(255) -- Đường dẫn hình ảnh banner (nếu cần)
 );
 
 -- Bảng token người dùng

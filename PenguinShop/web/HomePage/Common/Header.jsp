@@ -585,8 +585,13 @@
                             </a>
                         </li>
                         <li>
-                            <a href="blogs">
+                            <a href="blog">
                                 <span class="list-text">Bài viết</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="brands">
+                                <span class="list-text">Thương hiệu</span>
                             </a>
                         </li>
                         <li class="mega-menu">
