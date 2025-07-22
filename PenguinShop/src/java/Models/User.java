@@ -102,6 +102,7 @@ public class User {
         this.email = email;
         this.image_user = image_user;
     }
+    
 
     public User(int aInt, String string) {
         this.userID = aInt;
@@ -135,19 +136,17 @@ public class User {
         this.userID = userID;
     }
 
+    // Getters and Setters
+    public int getUserID() {
+        return userID;
+    }
+
     public int getPermissionCount() {
         return permissionCount;
     }
 
     public void setPermissionCount(int permissionCount) {
         this.permissionCount = permissionCount;
-    }
-
-    
-
-    // Getters and Setters
-    public int getUserID() {
-        return userID;
     }
 
     public int getStatus_account() {

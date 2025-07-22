@@ -252,7 +252,7 @@
                                                                     <td>
                                                                         <div class="btn-group" role="group">
                                                                             <!-- Preview Button -->
-                                                                            <a href="BlogPreview?id=${blog.blogID}" class="btn btn-sm btn-outline-info btn-preview" 
+                                                                            <a href="../blogDetail?id=${blog.blogID}" class="btn btn-sm btn-outline-info btn-preview" 
                                                                                title="Xem trước" target="_blank">
                                                                                 <i class="mdi mdi-eye-outline"></i>
                                                                             </a>

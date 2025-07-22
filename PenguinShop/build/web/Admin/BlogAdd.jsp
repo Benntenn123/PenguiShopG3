@@ -71,11 +71,12 @@
                                                             </div>
                                                         </div>
                                                         <button class="btn btn-primary" type="submit">Đăng bài</button>
+                                                        <a style="padding: 7px 30px;color: white; background-color: black" href="BlogAdd" class="btn btn-cancel" type="submit">Hủy</a>
                                                     </form>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                   </div>
                             </div>
                         </div>
                     </div>
