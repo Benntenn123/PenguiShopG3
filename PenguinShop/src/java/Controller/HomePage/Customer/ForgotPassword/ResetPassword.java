@@ -59,19 +59,28 @@ public class ResetPassword extends HttpServlet {
         if(password.isEmpty() || password == null || confirmPassword.isEmpty() || confirmPassword == null){
             request.getSession().setAttribute("error", "Vui lòng nhập đủ thông tin");
             response.sendRedirect("reset_password");
+            return;
         }
         if(!StringConvert.isValidPassword(password)){
             request.getSession().setAttribute("error", "Password chưa thỏa mãn điều kiện");
             response.sendRedirect("reset_password");
+            return;
         }
         if(!password.equals(confirmPassword)){
             request.getSession().setAttribute("error", "Mật khẩu không trùng khớp");
             response.sendRedirect("reset_password");
+            return;
+        }
+        if(HashPassword.hashWithSHA256(password).equals(udao.checkDuplicatePassword(userforgot.getUserID()))){
+            request.getSession().setAttribute("error", "Mật khẩu không được giống cái cũ");
+            response.sendRedirect("reset_password");
+            return;
         }
         
         if(udao.updatePassword(userforgot.getUserID(), HashPassword.hashWithSHA256(password))){
             request.getSession().setAttribute("ms", "Khôi phục mật khẩu thành công");
             response.sendRedirect("login");
+            return;
         }
         
     }

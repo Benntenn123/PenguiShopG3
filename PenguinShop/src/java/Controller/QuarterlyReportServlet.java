@@ -51,18 +51,7 @@ public class QuarterlyReportServlet extends HttpServlet {
             List<ProductSalesReport> topSellingProducts = quarterlyReportAction.getTopSellingProducts(year, quarter, 5);
             List<ProductSalesReport> slowSellingProducts = quarterlyReportAction.getSlowSellingProducts(year, quarter, 5);
             
-            for (MonthlyReport monthlyReport : monthlyReports) {
-                System.out.println(monthlyReport.getMonth() +"hehe");
-            }
-            for (MonthlyReport monthlyReport : monthlyReports) {
-                System.out.println(monthlyReport.getImportCost() +"hehe");
-            }
-            for (MonthlyReport monthlyReport : monthlyReports) {
-                System.out.println(monthlyReport.getProfit() +"hehe");
-            }
-            for (MonthlyReport monthlyReport : monthlyReports) {
-                System.out.println(monthlyReport.getRevenue()+"hehe");
-            }
+            
             
             // Set attributes for JSP display
             request.setAttribute("quarterlyRevenue", quarterlyRevenue);

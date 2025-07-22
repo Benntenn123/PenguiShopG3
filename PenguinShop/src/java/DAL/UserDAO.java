@@ -39,7 +39,19 @@ public class UserDAO extends DBContext {
         }
         return false;
     }
-
+    public String checkDuplicatePassword(int userID){
+        String sql = "SELECT password FROM dbo.tbUsers WHERE userID = ?";
+        String result = "";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, userID);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    result = rs.getString(1);
+                }
+            }
+        } catch (Exception e) { e.printStackTrace(); }
+        return result;
+    }
     // Thống kê số user mới theo tháng
     public List<Models.MonthValue> getMonthlyNewUsers(int year) {
         List<Models.MonthValue> list = new ArrayList<>();

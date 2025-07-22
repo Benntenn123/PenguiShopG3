@@ -483,7 +483,7 @@
             ];
             var monthLabels = [
             <c:forEach var="monthly" items="${monthlyReports}" varStatus="loop">
-                "T${monthly.month}"<c:if test="${!loop.last}">,</c:if>
+            "T${monthly.month}"<c:if test="${!loop.last}">,</c:if>
             </c:forEach>
             ];
             var hasData = ${not empty monthlyReports ? 'true' : 'false'};
@@ -609,13 +609,16 @@
 
                 // Profit Chart
                 var profit = quarterlyRevenue - quarterlyImportCost;
+                var profitLabel = profit >= 0 ? 'Lợi nhuận' : 'Lỗ';
+                var profitValue = Math.abs(profit);
+
                 var optionsProfit = {
-                    series: [quarterlyImportCost, profit >= 0 ? profit : 0],
+                    series: [quarterlyImportCost, profitValue],
                     chart: {
                         type: 'donut',
                         height: 350
                     },
-                    labels: ['Chi phí', 'Lợi nhuận'],
+                    labels: ['Chi phí', profitLabel],
                     colors: getChartColorsArray('#profit-chart'),
                     dataLabels: {
                         enabled: true,
@@ -632,6 +635,7 @@
                     },
                     legend: {position: 'bottom'}
                 };
+
                 try {
                     new ApexCharts(document.querySelector('#profit-chart'), optionsProfit).render();
                 } catch (e) {

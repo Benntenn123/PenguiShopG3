@@ -4,8 +4,11 @@
  */
 package Controller.Admin.Order;
 
+import Const.Delivery;
 import Const.StatusOrder;
+import DAL.DeliveryDAO;
 import DAL.OrderDAO;
+import Models.DeliveryInfo;
 import Models.Order;
 import Utils.ReadFile;
 import Utils.StringConvert;
@@ -22,6 +25,7 @@ import java.util.List;
 public class ChangeInformation extends HttpServlet {
 
     OrderDAO odao = new OrderDAO();
+    DeliveryDAO ddao = new DeliveryDAO();
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -53,6 +57,9 @@ public class ChangeInformation extends HttpServlet {
                 int oID = Integer.parseInt(orderID);  // chuyển thành integer
                 Order o = odao.getOrderDetails(oID);
                 request.setAttribute("o", o);
+                
+                List<DeliveryInfo> deli = ddao.loadDefaultDelivery(o.getUser().getUserID());
+                request.setAttribute("deli", deli);
 
                 List<String> provinces = ReadFile.loadAllProvinces(request);
                 request.setAttribute("provinces", provinces);

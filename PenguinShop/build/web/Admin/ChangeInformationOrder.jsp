@@ -118,7 +118,43 @@
                                             </div>
 
                                             <!-- Address change section - initially hidden -->
+                                            
                                             <div id="address-change-section" style="display: none;">
+                                                <div class="col-md-12">
+                                                    <div class="mb-3">
+                                                        <label class="form-label" for="validationCustom02">Địa chỉ đang có : </label>
+                                                        <select id="edit-province" name="province" class="form-select" onchange="loadDistrictsForEdit(this.value)" required>
+                                                            <option value="">Chọn 1 địa chỉ đang có của bạn</option>
+                                                            <c:forEach var="deli" items="${deli}">
+                                                                <option value="${deli.addessDetail}">${deli.addessDetail}</option>
+                                                            </c:forEach>
+                                                        </select>
+                                                        <script>
+// Khi chọn địa chỉ có sẵn, disable các select tỉnh/huyện/xã và input bổ sung
+document.getElementById('edit-province').addEventListener('change', function() {
+    var selected = this.value;
+    // Select địa chỉ đang có: KHÔNG khóa chính nó
+    var provinceSelect2 = document.querySelectorAll('select[id="edit-province"]')[1]; // select tỉnh
+    var districtSelect = document.getElementById('edit-district');
+    var wardSelect = document.getElementById('edit-ward');
+    var additionalInput = document.getElementById('additional-address');
+    if (selected !== '') {
+        // Disable các select tỉnh/huyện/xã và input bổ sung
+        if (provinceSelect2) provinceSelect2.disabled = true;
+        if (districtSelect) districtSelect.disabled = true;
+        if (wardSelect) wardSelect.disabled = true;
+        if (additionalInput) additionalInput.disabled = true;
+    } else {
+        // Enable lại nếu chọn rỗng
+        if (provinceSelect2) provinceSelect2.disabled = false;
+        if (districtSelect) districtSelect.disabled = false;
+        if (wardSelect) wardSelect.disabled = false;
+        if (additionalInput) additionalInput.disabled = false;
+    }
+});
+                                                        </script>
+                                                    </div>
+                                                </div>
                                                 <div class="col-md-12">
                                                     <div class="mb-3">
                                                         <label class="form-label" for="validationCustom02">Tỉnh : </label>
