@@ -415,3 +415,71 @@ CREATE TABLE tbImportOrderDetail (
     FOREIGN KEY (importOrderID) REFERENCES tbImportOrder(importOrderID),
     FOREIGN KEY (variantID) REFERENCES tbProductVariant(variantID)
 );
+
+-- Bảng thông tin về chúng tôi
+CREATE TABLE tbAboutUs (
+    aboutID INT PRIMARY KEY IDENTITY(1,1),
+    title NVARCHAR(255) NOT NULL,
+    subtitle NVARCHAR(500),
+    mainImage NVARCHAR(255),
+    content NVARCHAR(MAX) NOT NULL,
+    highlightPoints NVARCHAR(MAX), -- Lưu các điểm nổi bật dưới dạng JSON hoặc string phân cách bằng |
+    videoUrl NVARCHAR(255), -- URL video quảng cáo
+    isActive BIT NOT NULL DEFAULT 1,
+    createdAt DATETIME NOT NULL DEFAULT GETDATE(),
+    updatedAt DATETIME,
+    updatedBy INT,
+    FOREIGN KEY (updatedBy) REFERENCES tbUsers(userID)
+);
+
+-- Bảng dịch vụ của công ty
+CREATE TABLE tbAboutServices (
+    serviceID INT PRIMARY KEY IDENTITY(1,1),
+    serviceName NVARCHAR(100) NOT NULL,
+    serviceDescription NVARCHAR(500),
+    serviceIcon NVARCHAR(255), -- Lưu SVG hoặc icon class
+    displayOrder INT DEFAULT 1,
+    isActive BIT NOT NULL DEFAULT 1
+);
+
+-- Bảng thống kê công ty
+CREATE TABLE tbCompanyStats (
+    statID INT PRIMARY KEY IDENTITY(1,1),
+    statName NVARCHAR(100) NOT NULL, -- Ví dụ: "Customers Served", "Products Available"
+    statValue NVARCHAR(50) NOT NULL, -- Ví dụ: "50,000+", "10,000+"
+    statIcon NVARCHAR(255), -- Icon tương ứng
+    displayOrder INT DEFAULT 1,
+    isActive BIT NOT NULL DEFAULT 1
+);
+
+-- Thêm dữ liệu mẫu cho bảng tbAboutUs
+INSERT INTO tbAboutUs (
+    title, 
+    subtitle, 
+    mainImage, 
+    content, 
+    highlightPoints,
+    videoUrl,
+    isActive
+) VALUES (
+    N'Về chúng tôi',
+    N'Điểm đến mua sắm trực tuyến đáng tin cậy của bạn',
+    N'./assets/images/homepage-one/about/about-img-1.webp',
+    N'PenguinShop không chỉ là một cửa hàng trực tuyến - chúng tôi là đối tác đáng tin cậy trong việc cung cấp sản phẩm chất lượng và trải nghiệm mua sắm tuyệt vời. Từ khi thành lập, chúng tôi cam kết mang đến cho khách hàng những sản phẩm tốt nhất với giá cả cạnh tranh, được hỗ trợ bởi dịch vụ khách hàng xuất sắc.',
+    N'Khử trùng và vệ sinh hoàn toàn phòng tắm|Khi nhìn vào bố cục của nó. Đó là một thực tế được thiết lập từ lâu|Khử trùng và vệ sinh hoàn toàn phòng tắm',
+    N'./assets/images/homepage-one/about/advertrisement-vedio.mp4',
+    1
+);
+
+-- Thêm dữ liệu mẫu cho bảng tbAboutServices
+INSERT INTO tbAboutServices (serviceName, serviceDescription, displayOrder, isActive) VALUES
+(N'Chọn sản phẩm', N'Nếu bạn định sử dụng một đoạn văn, bạn cần chắc chắn rằng không có gì ngại ngùng ẩn giữa', 1, 1),
+(N'Thanh toán', N'Trải nghiệm mua sắm trực tuyến không rắc rối với dịch vụ của chúng tôi! Chỉ cần chọn sản phẩm bạn muốn', 2, 1),
+(N'Giao hàng nhanh', N'Trải nghiệm mua sắm trực tuyến không rắc rối với dịch vụ của chúng tôi! Tận hưởng giao hàng nhanh chóng ngay tại cửa nhà bạn.', 3, 1);
+
+-- Thêm dữ liệu mẫu cho bảng tbCompanyStats
+INSERT INTO tbCompanyStats (statName, statValue, displayOrder, isActive) VALUES
+(N'Năm thành lập', N'2020', 1, 1),
+(N'Khách hàng phục vụ', N'50,000+', 2, 1),
+(N'Sản phẩm có sẵn', N'10,000+', 3, 1),
+(N'Quốc gia giao hàng', N'15+', 4, 1);

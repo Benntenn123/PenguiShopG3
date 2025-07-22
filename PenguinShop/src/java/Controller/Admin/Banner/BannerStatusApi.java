@@ -1,4 +1,4 @@
-package Controller.Banner;
+package Controller.Admin.Banner;
 
 import DAL.BannerDAO;
 import com.google.gson.Gson;

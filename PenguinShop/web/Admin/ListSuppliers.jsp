@@ -292,7 +292,7 @@
 
                             <!-- Search Section -->
                             <div class="search-section">
-                                <form method="get" action="supplier">
+                                <form method="get" action="SupplierList">
                                     <div class="row g-3">
                                         <div class="col-md-4">
                                             <label class="form-label">Tìm kiếm nhà cung cấp</label>
@@ -317,7 +317,7 @@
                                             <button type="submit" class="btn btn-primary me-2">
                                                 <i class="fas fa-search me-1"></i>Tìm kiếm
                                             </button>
-                                            <a href="supplier" class="btn btn-outline-secondary">
+                                            <a href="SupplierList" class="btn btn-outline-secondary">
                                                 <i class="fas fa-redo me-1"></i>Làm mới
                                             </a>
                                         </div>

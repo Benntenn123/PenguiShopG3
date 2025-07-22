@@ -6,12 +6,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BlogDAO extends DBContext {
+
     // Lấy tất cả blog (super admin thấy hết, user thường chỉ thấy blog của mình)
     public List<Blog> getAllBlogs(int roleId, int authorId) {
         List<Blog> list = new ArrayList<>();
         String sql = (roleId == 1)
-            ? "SELECT * FROM tbBlog ORDER BY created_at DESC"
-            : "SELECT * FROM tbBlog WHERE authorID = ? ORDER BY created_at DESC";
+                ? "SELECT * FROM tbBlog ORDER BY created_at DESC"
+                : "SELECT * FROM tbBlog WHERE authorID = ? ORDER BY created_at DESC";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             if (roleId != 1) {
                 ps.setInt(1, authorId);
@@ -20,7 +21,9 @@ public class BlogDAO extends DBContext {
             while (rs.next()) {
                 list.add(mapResultSetToBlog(rs));
             }
-        } catch (SQLException e) { e.printStackTrace(); }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return list;
     }
 
@@ -60,7 +63,9 @@ public class BlogDAO extends DBContext {
             while (rs.next()) {
                 list.add(mapResultSetToBlog(rs));
             }
-        } catch (SQLException e) { e.printStackTrace(); }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return list;
     }
 
@@ -93,8 +98,12 @@ public class BlogDAO extends DBContext {
                 ps.setObject(i + 1, params.get(i));
             }
             ResultSet rs = ps.executeQuery();
-            if (rs.next()) return rs.getInt(1);
-        } catch (SQLException e) { e.printStackTrace(); }
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return 0;
     }
 
@@ -104,8 +113,12 @@ public class BlogDAO extends DBContext {
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, blogID);
             ResultSet rs = ps.executeQuery();
-            if (rs.next()) return mapResultSetToBlog(rs);
-        } catch (SQLException e) { e.printStackTrace(); }
+            if (rs.next()) {
+                return mapResultSetToBlog(rs);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
@@ -121,7 +134,9 @@ public class BlogDAO extends DBContext {
             ps.setInt(6, blog.getAuthorID());
             ps.setInt(7, blog.getStatus());
             return ps.executeUpdate() > 0;
-        } catch (SQLException e) { e.printStackTrace(); }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return false;
     }
 
@@ -137,7 +152,9 @@ public class BlogDAO extends DBContext {
             ps.setInt(6, blog.getStatus());
             ps.setInt(7, blog.getBlogID());
             return ps.executeUpdate() > 0;
-        } catch (SQLException e) { e.printStackTrace(); }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return false;
     }
 
@@ -148,7 +165,9 @@ public class BlogDAO extends DBContext {
             ps.setInt(1, status);
             ps.setInt(2, blogID);
             return ps.executeUpdate() > 0;
-        } catch (SQLException e) { e.printStackTrace(); }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return false;
     }
 
@@ -158,23 +177,29 @@ public class BlogDAO extends DBContext {
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, blogID);
             return ps.executeUpdate() > 0;
-        } catch (SQLException e) { e.printStackTrace(); }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return false;
     }
 
     // Thống kê cơ bản (super admin thấy hết, user thường chỉ thấy blog của mình)
     public int countBlogByStatus(int status, int roleId, int authorId) {
         String sql = (roleId == 1)
-            ? "SELECT COUNT(*) FROM tbBlog WHERE status=?"
-            : "SELECT COUNT(*) FROM tbBlog WHERE status=? AND authorID = ?";
+                ? "SELECT COUNT(*) FROM tbBlog WHERE status=?"
+                : "SELECT COUNT(*) FROM tbBlog WHERE status=? AND authorID = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, status);
             if (roleId != 1) {
                 ps.setInt(2, authorId);
             }
             ResultSet rs = ps.executeQuery();
-            if (rs.next()) return rs.getInt(1);
-        } catch (SQLException e) { e.printStackTrace(); }
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return 0;
     }
 
@@ -197,7 +222,7 @@ public class BlogDAO extends DBContext {
         List<Blog> list = new ArrayList<>();
         StringBuilder sql = new StringBuilder("SELECT * FROM tbBlog WHERE 1=1");
         List<Object> params = new ArrayList<>();
-        
+
         if (title != null && !title.trim().isEmpty()) {
             sql.append(" AND title LIKE ?");
             params.add("%" + title.trim() + "%");
@@ -210,11 +235,11 @@ public class BlogDAO extends DBContext {
             sql.append(" AND CAST(created_at AS DATE) = ?");
             params.add(date);
         }
-        
+
         sql.append(" ORDER BY created_at DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
         params.add(offset);
         params.add(limit);
-        
+
         try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
             for (int i = 0; i < params.size(); i++) {
                 ps.setObject(i + 1, params.get(i));
@@ -223,7 +248,9 @@ public class BlogDAO extends DBContext {
             while (rs.next()) {
                 list.add(mapResultSetToBlog(rs));
             }
-        } catch (SQLException e) { e.printStackTrace(); }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return list;
     }
 
@@ -233,7 +260,7 @@ public class BlogDAO extends DBContext {
         StringBuilder sql = new StringBuilder("SELECT * FROM tbBlog WHERE authorID = ?");
         List<Object> params = new ArrayList<>();
         params.add(authorID);
-        
+
         if (title != null && !title.trim().isEmpty()) {
             sql.append(" AND title LIKE ?");
             params.add("%" + title.trim() + "%");
@@ -246,11 +273,11 @@ public class BlogDAO extends DBContext {
             sql.append(" AND CAST(created_at AS DATE) = ?");
             params.add(date);
         }
-        
+
         sql.append(" ORDER BY created_at DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
         params.add(offset);
         params.add(limit);
-        
+
         try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
             for (int i = 0; i < params.size(); i++) {
                 ps.setObject(i + 1, params.get(i));
@@ -259,7 +286,9 @@ public class BlogDAO extends DBContext {
             while (rs.next()) {
                 list.add(mapResultSetToBlog(rs));
             }
-        } catch (SQLException e) { e.printStackTrace(); }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return list;
     }
 
@@ -267,7 +296,7 @@ public class BlogDAO extends DBContext {
     public int getTotalBlogsCount(String title, String status, String date) {
         StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM tbBlog WHERE 1=1");
         List<Object> params = new ArrayList<>();
-        
+
         if (title != null && !title.trim().isEmpty()) {
             sql.append(" AND title LIKE ?");
             params.add("%" + title.trim() + "%");
@@ -280,14 +309,18 @@ public class BlogDAO extends DBContext {
             sql.append(" AND CAST(created_at AS DATE) = ?");
             params.add(date);
         }
-        
+
         try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
             for (int i = 0; i < params.size(); i++) {
                 ps.setObject(i + 1, params.get(i));
             }
             ResultSet rs = ps.executeQuery();
-            if (rs.next()) return rs.getInt(1);
-        } catch (SQLException e) { e.printStackTrace(); }
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return 0;
     }
 
@@ -296,7 +329,7 @@ public class BlogDAO extends DBContext {
         StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM tbBlog WHERE authorID = ?");
         List<Object> params = new ArrayList<>();
         params.add(authorID);
-        
+
         if (title != null && !title.trim().isEmpty()) {
             sql.append(" AND title LIKE ?");
             params.add("%" + title.trim() + "%");
@@ -309,27 +342,31 @@ public class BlogDAO extends DBContext {
             sql.append(" AND CAST(created_at AS DATE) = ?");
             params.add(date);
         }
-        
+
         try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
             for (int i = 0; i < params.size(); i++) {
                 ps.setObject(i + 1, params.get(i));
             }
             ResultSet rs = ps.executeQuery();
-            if (rs.next()) return rs.getInt(1);
-        } catch (SQLException e) { e.printStackTrace(); }
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return 0;
     }
-    
+
     // Get blogs with author info for homepage
     public List<Blog> getBlogsWithAuthor(String title, String date, int offset, int limit) {
         List<Blog> list = new ArrayList<>();
         StringBuilder sql = new StringBuilder(
-            "SELECT b.*, u.fullName as authorName, u.image_user as authorImage " +
-            "FROM tbBlog b INNER JOIN tbUsers u ON b.authorID = u.userID " +
-            "WHERE b.status = 1"
+                "SELECT b.*, u.fullName as authorName, u.image_user as authorImage "
+                + "FROM tbBlog b INNER JOIN tbUsers u ON b.authorID = u.userID "
+                + "WHERE b.status = 1"
         );
         List<Object> params = new ArrayList<>();
-        
+
         if (title != null && !title.trim().isEmpty()) {
             sql.append(" AND b.title LIKE ?");
             params.add("%" + title.trim() + "%");
@@ -338,11 +375,11 @@ public class BlogDAO extends DBContext {
             sql.append(" AND CAST(b.created_at AS DATE) = ?");
             params.add(date);
         }
-        
+
         sql.append(" ORDER BY b.created_at DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
         params.add(offset);
         params.add(limit);
-        
+
         try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
             for (int i = 0; i < params.size(); i++) {
                 ps.setObject(i + 1, params.get(i));
@@ -354,16 +391,18 @@ public class BlogDAO extends DBContext {
                 blog.setAuthorImage(rs.getString("authorImage"));
                 list.add(blog);
             }
-        } catch (SQLException e) { e.printStackTrace(); }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return list;
     }
-    
+
     // Get recent blogs (for sidebar)
     public List<Blog> getRecentBlogs(int limit) {
         List<Blog> list = new ArrayList<>();
-        String sql = "SELECT TOP (?) b.*, u.fullName as authorName, u.image_user as authorImage " +
-                    "FROM tbBlog b INNER JOIN tbUsers u ON b.authorID = u.userID " +
-                    "WHERE b.status = 1 ORDER BY b.created_at DESC";
+        String sql = "SELECT TOP (?) b.*, u.fullName as authorName, u.image_user as authorImage "
+                + "FROM tbBlog b INNER JOIN tbUsers u ON b.authorID = u.userID "
+                + "WHERE b.status = 1 ORDER BY b.created_at DESC";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, limit);
             ResultSet rs = ps.executeQuery();
@@ -373,7 +412,9 @@ public class BlogDAO extends DBContext {
                 blog.setAuthorImage(rs.getString("authorImage"));
                 list.add(blog);
             }
-        } catch (SQLException e) { e.printStackTrace(); }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return list;
     }
 
@@ -381,7 +422,7 @@ public class BlogDAO extends DBContext {
     public int countBlogsWithFilters(String title, String date) {
         StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM tbBlog WHERE status = 1");
         List<Object> params = new ArrayList<>();
-        
+
         if (title != null && !title.trim().isEmpty()) {
             sql.append(" AND title LIKE ?");
             params.add("%" + title.trim() + "%");
@@ -390,47 +431,53 @@ public class BlogDAO extends DBContext {
             sql.append(" AND CAST(created_at AS DATE) = ?");
             params.add(date);
         }
-        
+
         try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
             for (int i = 0; i < params.size(); i++) {
                 ps.setObject(i + 1, params.get(i));
             }
             ResultSet rs = ps.executeQuery();
-            if (rs.next()) return rs.getInt(1);
-        } catch (SQLException e) { e.printStackTrace(); }
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return 0;
     }
-    
+
     // Get related blogs based on title similarity
     public List<Blog> getRelatedBlogs(int currentBlogId, String currentTitle, int limit) {
         List<Blog> list = new ArrayList<>();
-        
+
         // Step 1: Try to find blogs with similar title keywords
         String[] keywords = currentTitle.toLowerCase().split("\\s+");
-        
+
         if (keywords.length > 0) {
             StringBuilder sql = new StringBuilder(
-                "SELECT TOP (?) b.*, u.fullName as authorName, u.image_user as authorImage " +
-                "FROM tbBlog b INNER JOIN tbUsers u ON b.authorID = u.userID " +
-                "WHERE b.status = 1 AND b.blogID != ? AND ("
+                    "SELECT TOP (?) b.*, u.fullName as authorName, u.image_user as authorImage "
+                    + "FROM tbBlog b INNER JOIN tbUsers u ON b.authorID = u.userID "
+                    + "WHERE b.status = 1 AND b.blogID != ? AND ("
             );
-            
+
             // Build OR conditions for each keyword
             for (int i = 0; i < keywords.length; i++) {
-                if (i > 0) sql.append(" OR ");
+                if (i > 0) {
+                    sql.append(" OR ");
+                }
                 sql.append("LOWER(b.title) LIKE ?");
             }
             sql.append(") ORDER BY b.created_at DESC");
-            
+
             try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
                 ps.setInt(1, limit * 2); // Get more to have options
                 ps.setInt(2, currentBlogId);
-                
+
                 // Set keyword parameters
                 for (int i = 0; i < keywords.length; i++) {
                     ps.setString(3 + i, "%" + keywords[i] + "%");
                 }
-                
+
                 ResultSet rs = ps.executeQuery();
                 while (rs.next() && list.size() < limit) {
                     Blog blog = mapResultSetToBlog(rs);
@@ -438,11 +485,11 @@ public class BlogDAO extends DBContext {
                     blog.setAuthorImage(rs.getString("authorImage"));
                     list.add(blog);
                 }
-            } catch (SQLException e) { 
-                e.printStackTrace(); 
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
         }
-        
+
         // Step 2: If we don't have enough related blogs, fill with recent ones
         if (list.size() < limit) {
             List<Blog> recentBlogs = getRecentBlogsExcluding(currentBlogId, limit);
@@ -452,10 +499,12 @@ public class BlogDAO extends DBContext {
                 if (!exists) {
                     list.add(recentBlog);
                 }
-                if (list.size() >= limit) break;
+                if (list.size() >= limit) {
+                    break;
+                }
             }
         }
-        
+
         // Step 3: If still not enough, get ANY published blogs (fallback)
         if (list.size() < limit) {
             List<Blog> allBlogs = getAllPublishedBlogsExcluding(currentBlogId, limit);
@@ -465,19 +514,21 @@ public class BlogDAO extends DBContext {
                 if (!exists) {
                     list.add(blog);
                 }
-                if (list.size() >= limit) break;
+                if (list.size() >= limit) {
+                    break;
+                }
             }
         }
-        
+
         return list;
     }
-    
+
     // Helper method to get recent blogs excluding current blog
     private List<Blog> getRecentBlogsExcluding(int excludeId, int limit) {
         List<Blog> list = new ArrayList<>();
-        String sql = "SELECT TOP (?) b.*, u.fullName as authorName, u.image_user as authorImage " +
-                    "FROM tbBlog b INNER JOIN tbUsers u ON b.authorID = u.userID " +
-                    "WHERE b.status = 1 AND b.blogID != ? ORDER BY b.created_at DESC";
+        String sql = "SELECT TOP (?) b.*, u.fullName as authorName, u.image_user as authorImage "
+                + "FROM tbBlog b INNER JOIN tbUsers u ON b.authorID = u.userID "
+                + "WHERE b.status = 1 AND b.blogID != ? ORDER BY b.created_at DESC";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, limit * 2); // Get more than needed
             ps.setInt(2, excludeId);
@@ -488,16 +539,18 @@ public class BlogDAO extends DBContext {
                 blog.setAuthorImage(rs.getString("authorImage"));
                 list.add(blog);
             }
-        } catch (SQLException e) { e.printStackTrace(); }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return list;
     }
-    
+
     // Helper method to get all published blogs excluding current (final fallback)
     private List<Blog> getAllPublishedBlogsExcluding(int excludeId, int limit) {
         List<Blog> list = new ArrayList<>();
-        String sql = "SELECT TOP (?) b.*, u.fullName as authorName, u.image_user as authorImage " +
-                    "FROM tbBlog b INNER JOIN tbUsers u ON b.authorID = u.userID " +
-                    "WHERE b.status = 1 AND b.blogID != ? ORDER BY NEWID()"; // Random order
+        String sql = "SELECT TOP (?) b.*, u.fullName as authorName, u.image_user as authorImage "
+                + "FROM tbBlog b INNER JOIN tbUsers u ON b.authorID = u.userID "
+                + "WHERE b.status = 1 AND b.blogID != ? ORDER BY NEWID()"; // Random order
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, limit * 3); // Get plenty
             ps.setInt(2, excludeId);
@@ -508,7 +561,25 @@ public class BlogDAO extends DBContext {
                 blog.setAuthorImage(rs.getString("authorImage"));
                 list.add(blog);
             }
-        } catch (SQLException e) { e.printStackTrace(); }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return list;
     }
+
+    public List<Blog> getTop3BlogNewest() {
+        List<Blog> list = new ArrayList<>();
+        String sql = "SELECT TOP 3 * FROM dbo.tbBlog"; // Random order
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                list.add(mapResultSetToBlog(rs));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
 }

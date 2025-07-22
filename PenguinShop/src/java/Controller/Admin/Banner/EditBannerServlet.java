@@ -1,4 +1,4 @@
-package Controller.Banner;
+package Controller.Admin.Banner;
 
 import APIKey.CloudinaryConfig;
 import DAL.BannerDAO;
@@ -13,16 +13,24 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Date;
 
-@WebServlet(name = "AddBannerServlet", urlPatterns = {"/admin/addBanner"})
+@WebServlet(name = "EditBannerServlet", urlPatterns = {"/admin/editBanner"})
 @MultipartConfig(maxFileSize = 16177215) // 16MB
-public class AddBannerServlet extends HttpServlet {
-    CloudinaryConfig  cloud = new CloudinaryConfig();
+public class EditBannerServlet extends HttpServlet {
+    CloudinaryConfig cloud = new CloudinaryConfig();
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
-        request.getRequestDispatcher("../Admin/AddBanner.jsp").forward(request, response);
+        int bannerID = Integer.parseInt(request.getParameter("id"));
+        BannerDAO dao = new BannerDAO();
+        Banner banner = dao.getBannerById(bannerID);
+        
+        if (banner != null) {
+            request.setAttribute("banner", banner);
+            request.getRequestDispatcher("../Admin/EditBanner.jsp").forward(request, response);
+        } else {
+            response.sendRedirect("listBanner");
+        }
     }
     
     @Override
@@ -30,50 +38,60 @@ public class AddBannerServlet extends HttpServlet {
             throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         
+        // Parse multipart form data
+        String bannerIDStr = request.getParameter("bannerID");
         String bannerName = request.getParameter("bannerName");
         String bannerHref = request.getParameter("bannerHref");
         String bannerStatusStr = request.getParameter("bannerStatus");
+        String currentBannerLink = request.getParameter("currentBannerLink");
         
         // Validation
-        if (bannerName == null || bannerHref == null || bannerStatusStr == null) {
+        if (bannerIDStr == null || bannerName == null || bannerHref == null || bannerStatusStr == null) {
             request.setAttribute("error", "Vui lòng điền đầy đủ thông tin!");
-            request.getRequestDispatcher("../Admin/AddBanner.jsp").forward(request, response);
+            request.getRequestDispatcher("../Admin/EditBanner.jsp").forward(request, response);
             return;
         }
         
+        int bannerID = Integer.parseInt(bannerIDStr);
         int bannerStatus = Integer.parseInt(bannerStatusStr);
-        String bannerLink = "";
+        String bannerLink = currentBannerLink; // Default to current image
         
-        // Handle file upload
+        // Handle file upload if new image is selected
         Part filePart = request.getPart("bannerImageFile");
         if (filePart != null && filePart.getSize() > 0) {
             try {
-                String fileName = "banner_" + System.currentTimeMillis() + ".jpg";
+                String fileName = "banner_" + bannerID + "_" + System.currentTimeMillis() + ".jpg";
                 InputStream imageStream = filePart.getInputStream();
                 bannerLink = cloud.uploadImage(imageStream, fileName);
+                
+                
             } catch (Exception e) {
                 request.setAttribute("error", "Lỗi khi tải lên hình ảnh: " + e.getMessage());
-                request.getRequestDispatcher("../Admin/AddBanner.jsp").forward(request, response);
+                BannerDAO dao = new BannerDAO();
+                Banner banner = dao.getBannerById(bannerID);
+                request.setAttribute("banner", banner);
+                request.getRequestDispatcher("../Admin/EditBanner.jsp").forward(request, response);
                 return;
             }
         }
         
         Banner banner = new Banner();
+        banner.setBannerID(bannerID);
         banner.setBannerName(bannerName);
         banner.setBannerHref(bannerHref);
         banner.setBannerLink(bannerLink);
         banner.setBannerStatus(bannerStatus);
-        banner.setCreatedAt(new Date());
         
         BannerDAO dao = new BannerDAO();
-        boolean success = dao.addBanner(banner);
+        boolean success = dao.updateBanner(banner);
         
         if (success) {
-            request.getSession().setAttribute("ms", "Thêm banner thành công");
+            request.getSession().setAttribute("ms", "Chỉnh sửa banner thành công");
             response.sendRedirect("listBanner");
         } else {
-            request.getSession().setAttribute("error", "Thêm banner thất bại!");
-            request.getRequestDispatcher("../Admin/AddBanner.jsp").forward(request, response);
+            request.getSession().setAttribute("error", "Cập nhật banner thất bại!");
+            request.setAttribute("banner", banner);
+            request.getRequestDispatcher("../Admin/EditBanner.jsp").forward(request, response);
         }
     }
 }
