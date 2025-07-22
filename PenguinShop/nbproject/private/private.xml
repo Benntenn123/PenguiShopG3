@@ -3,11 +3,18 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Controller/HomePage/Customer/ForgotPassword/ResetPassword.java</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/web/Admin/ChangeInformationOrder.jsp</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/web/HomePage/TrangChu.jsp</file>
             <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Models/User.java</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/DAL/OrderDAO.java</file>
             <file>file:/F:/Git/PenguiShopG3/PenguinShop/sql/database2.sql</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Controller/Admin/Order/ChangeInformation.java</file>
             <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/DAL/UserDAO.java</file>
-            <file>file:/F:/Git/PenguiShopG3/PenguinShop/web/Admin/ManageAboutUs.jsp</file>
-            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Controller/Admin/Sales/ListSales.java</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/web/Admin/ListSales.jsp</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Models/DeliveryInfo.java</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/web/Admin/ListCustomerAdmin.jsp</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/web/Admin/AddGroupProduct.jsp</file>
         </group>
     </open-files>
 </project-private>

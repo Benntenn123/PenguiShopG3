@@ -84,7 +84,8 @@ INSERT INTO dbo.tbPermissions
 (N'Chỉnh sửa trạng thái banner','/admin/api/bannerStatus',13,1,NULL),
 (N'Xóa banner','/admin/deleteBanner',13,1,NULL),
 (N'Chỉnh sửa banner','/admin/editBanner',13,1,NULL),
-(N'Về chúng tôi','/admin/aboutus',14,0,NULL);
+(N'Về chúng tôi','/admin/aboutus',14,0,NULL),
+(N'Thống kê thu chi','/admin/quarterly-report',1,0,NULL);
 -- Gán tất cả các quyền cho role admin (roleID = 1)
 INSERT INTO tbRolePermissions (roleID, permissionID)
 SELECT 1, permissionID
