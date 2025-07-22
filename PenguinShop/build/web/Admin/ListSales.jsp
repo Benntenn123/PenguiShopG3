@@ -82,8 +82,10 @@
                                         <th scope="col">Họ tên</th>
                                         <th scope="col">Email</th>
                                         <th scope="col">Số điện thoại</th>
-                                        <th scope="col">Ngày tạo</th>
+                                        <th scope="col">Ngày tạo</th>                                        
                                         <th scope="col">Trạng thái</th>
+                                        <th scope="col">Tổng quyền</th>
+                                        <th scope="col">Quyền</th>
                                         <th scope="col">Hành động</th>
                                     </tr>
                                 </thead>
@@ -103,6 +105,8 @@
                                                     </c:choose>
                                                 </span>
                                             </td>
+                                            <td>${user.permissionCount} quyền</td>
+                                            <td>${user.role.roleName}</td>
                                             <td>
                                                 <div class="dropdown">
                                                     <button class="btn btn-link font-size-16 shadow-none py-0 text-muted dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">

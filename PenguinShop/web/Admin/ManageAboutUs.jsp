@@ -86,10 +86,10 @@
                                                     <div class="form-text">Chọn file để thay đổi ảnh (để trống nếu không muốn thay đổi)</div>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <label for="videoUrl" class="form-label">Video URL</label>
-                                                    <input type="url" class="form-control" id="videoUrl" name="videoUrl" 
+                                                    
+                                                    <input type="hidden" class="form-control" id="videoUrl" name="videoUrl" 
                                                            value="${aboutInfo.videoUrl}" placeholder="https://...">
-                                                    <div class="form-text">Link video giới thiệu (tùy chọn)</div>
+                                                    <div style="display: none" class="form-text">Link video giới thiệu (tùy chọn)</div>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label for="isActive" class="form-label">Trạng thái <span class="text-danger">*</span></label>

@@ -738,7 +738,8 @@ public class UserDAO extends DBContext {
     public List<User> getSalesList(String fullName, String email, String phone, int page, int pageSize) throws SQLException {
         List<User> users = new ArrayList<>();
         StringBuilder sql = new StringBuilder(
-                "SELECT u.userID, u.fullName, u.email, u.phone, u.created_at, u.status_account, u.roleID, r.roleName "
+                "SELECT u.userID, u.fullName, u.email, u.phone, u.created_at, u.status_account, u.roleID, r.roleName, "
+                + "(SELECT COUNT(*) FROM tbRolePermissions rp WHERE rp.roleID = u.roleID) AS permissionCount "
                 + "FROM tbUsers u LEFT JOIN tbRoles r ON u.roleID = r.roleID WHERE u.roleID != 1 and u.roleID !=2 "
         );
 
@@ -782,6 +783,9 @@ public class UserDAO extends DBContext {
                     role.setRoleID(rs.getInt("roleID"));
                     role.setRoleName(rs.getString("roleName"));
                     user.setRole(role);
+
+                    // Thêm trường tổng số quyền
+                    user.setPermissionCount(rs.getInt("permissionCount"));
 
                     users.add(user);
                 }

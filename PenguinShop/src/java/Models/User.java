@@ -19,6 +19,8 @@ public class User {
     private String created_at;
     // Thêm danh sách quyền cho user (dùng cho API detail)
     private List<Permission> permissions;
+
+    private int permissionCount;
     // Getter & Setter cho permissions
     public List<Permission> getPermissions() {
         return permissions;
@@ -132,6 +134,16 @@ public class User {
     public User(int userID) {
         this.userID = userID;
     }
+
+    public int getPermissionCount() {
+        return permissionCount;
+    }
+
+    public void setPermissionCount(int permissionCount) {
+        this.permissionCount = permissionCount;
+    }
+
+    
 
     // Getters and Setters
     public int getUserID() {

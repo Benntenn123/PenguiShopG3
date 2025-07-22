@@ -37,7 +37,7 @@
                     <div class="row align-items-center gy-5">
                         <div class="col-lg-6">
                             <div class="about-img" data-aos="fade-right">
-                                <img src="${aboutInfo.mainImage}" alt="About Us">
+                                <img src="api/img/${aboutInfo.mainImage}" alt="About Us">
                             </div>
                         </div>
                         <div class="col-lg-6">

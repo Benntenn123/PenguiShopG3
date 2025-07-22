@@ -267,7 +267,7 @@
                                                                     Không có dữ liệu sản phẩm bán chạy
                                                                 </td>
                                                             </tr>
-                                                           
+
                                                         </c:otherwise>
                                                     </c:choose>
                                                 </tbody>
@@ -335,23 +335,23 @@
                                                                     Không có dữ liệu sản phẩm bán chậm
                                                                 </td>
                                                             </tr>
-                                                                <td><span class="badge badge-soft-warning font-size-12">5</span></td>
-                                                                <td>
-                                                                    <div class="d-flex align-items-center">
-                                                                        <div class="avatar-sm me-3">
-                                                                            <div class="avatar-title bg-dark rounded font-size-16">TL</div>
-                                                                        </div>
-                                                                        <div>
-                                                                            <h6 class="mb-0 font-size-14">Thắt lưng</h6>
-                                                                            <p class="text-muted mb-0 font-size-12">Da - Đen</p>
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
-                                                                <td><h6 class="mb-0">18</h6></td>
-                                                                <td><h6 class="mb-0 text-warning">900,000đ</h6></td>
-                                                            </tr>
-                                                        </c:otherwise>
-                                                    </c:choose>
+                                                        <td><span class="badge badge-soft-warning font-size-12">5</span></td>
+                                                        <td>
+                                                            <div class="d-flex align-items-center">
+                                                                <div class="avatar-sm me-3">
+                                                                    <div class="avatar-title bg-dark rounded font-size-16">TL</div>
+                                                                </div>
+                                                                <div>
+                                                                    <h6 class="mb-0 font-size-14">Thắt lưng</h6>
+                                                                    <p class="text-muted mb-0 font-size-12">Da - Đen</p>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td><h6 class="mb-0">18</h6></td>
+                                                        <td><h6 class="mb-0 text-warning">900,000đ</h6></td>
+                                                        </tr>
+                                                    </c:otherwise>
+                                                </c:choose>
                                                 </tbody>
                                             </table>
                                         </div>
@@ -469,176 +469,176 @@
         <jsp:include page="Common/Js.jsp"/>
         <jsp:include page="Common/Message.jsp"/>
         <script>
-           // Dữ liệu từ backend
+            // Dữ liệu từ backend
 // Dữ liệu từ backend
-var monthlyRevenue = [
-    <c:forEach var="monthly" items="${monthlyReports}" varStatus="loop">
-        ${monthly.revenue != null ? monthly.revenue : 0}<c:if test="${!loop.last}">,</c:if>
-    </c:forEach>
-];
-var monthlyExpense = [
-    <c:forEach var="monthly" items="${monthlyReports}" varStatus="loop">
-        ${monthly.importCost != null ? monthly.importCost : 0}<c:if test="${!loop.last}">,</c:if>
-    </c:forEach>
-];
-var monthLabels = [
-    <c:forEach var="monthly" items="${monthlyReports}" varStatus="loop">
-        "T${monthly.month}"<c:if test="${!loop.last}">,</c:if>
-    </c:forEach>
-];
-var hasData = ${not empty monthlyReports ? 'true' : 'false'};
-var quarterlyRevenue = ${quarterlyRevenue != null ? quarterlyRevenue : 0};
-var quarterlyImportCost = ${quarterlyImportCost != null ? quarterlyImportCost : 0};
+            var monthlyRevenue = [
+            <c:forEach var="monthly" items="${monthlyReports}" varStatus="loop">
+                ${monthly.revenue != null ? monthly.revenue : 0}<c:if test="${!loop.last}">,</c:if>
+            </c:forEach>
+            ];
+            var monthlyExpense = [
+            <c:forEach var="monthly" items="${monthlyReports}" varStatus="loop">
+                ${monthly.importCost != null ? monthly.importCost : 0}<c:if test="${!loop.last}">,</c:if>
+            </c:forEach>
+            ];
+            var monthLabels = [
+            <c:forEach var="monthly" items="${monthlyReports}" varStatus="loop">
+                "T${monthly.month}"<c:if test="${!loop.last}">,</c:if>
+            </c:forEach>
+            ];
+            var hasData = ${not empty monthlyReports ? 'true' : 'false'};
+            var quarterlyRevenue = ${quarterlyRevenue != null ? quarterlyRevenue : 0};
+            var quarterlyImportCost = ${quarterlyImportCost != null ? quarterlyImportCost : 0};
 
 // Debug dữ liệu
-console.log('monthlyRevenue:', monthlyRevenue);
-console.log('monthlyExpense:', monthlyExpense);
-console.log('monthLabels:', monthLabels);
-console.log('hasData:', hasData);
-console.log('quarterlyRevenue:', quarterlyRevenue);
-console.log('quarterlyImportCost:', quarterlyImportCost);
+            console.log('monthlyRevenue:', monthlyRevenue);
+            console.log('monthlyExpense:', monthlyExpense);
+            console.log('monthLabels:', monthLabels);
+            console.log('hasData:', hasData);
+            console.log('quarterlyRevenue:', quarterlyRevenue);
+            console.log('quarterlyImportCost:', quarterlyImportCost);
 
 // Hàm lấy màu từ data-colors
-function getChartColorsArray(elementId) {
-    try {
-        var element = document.querySelector(elementId);
-        if (!element) {
-            console.warn('Element not found for ID:', elementId);
-            return elementId === '#revenue-expense-chart' ? ['#34c38f', '#f46a6a'] : ['#556ee6', '#f1b44c'];
-        }
-        var colorsAttr = element.getAttribute('data-colors');
-        if (!colorsAttr) {
-            console.warn('data-colors attribute not found for:', elementId);
-            return elementId === '#revenue-expense-chart' ? ['#34c38f', '#f46a6a'] : ['#556ee6', '#f1b44c'];
-        }
-        var colors = JSON.parse(colorsAttr);
-        if (!Array.isArray(colors)) {
-            console.warn('Invalid data-colors format for:', elementId);
-            return elementId === '#revenue-expense-chart' ? ['#34c38f', '#f46a6a'] : ['#556ee6', '#f1b44c'];
-        }
-        return colors.map(function(value) {
-            var newValue = value.replace(/\s/g, '');
-            if (newValue.indexOf(',') === -1) {
-                var color = getComputedStyle(document.documentElement).getPropertyValue(newValue);
-                return color ? color.trim() : newValue;
-            } else {
-                var val = newValue.split(',');
-                if (val.length === 2) {
-                    var rgbaColor = getComputedStyle(document.documentElement).getPropertyValue(val[0]);
-                    return 'rgba(' + rgbaColor.trim() + ',' + val[1] + ')';
-                }
-                return newValue;
-            }
-        });
-    } catch (e) {
-        console.error('Error in getChartColorsArray for ' + elementId + ':', e);
-        return elementId === '#revenue-expense-chart' ? ['#34c38f', '#f46a6a'] : ['#556ee6', '#f1b44c'];
-    }
-}
-
-document.addEventListener('DOMContentLoaded', function () {
-    if (typeof ApexCharts === 'undefined') {
-        console.error('ApexCharts is not defined');
-        document.querySelector('#revenue-expense-chart').innerHTML = '<div class="text-center py-5"><h5 class="text-muted">Lỗi: ApexCharts không được tải</h5></div>';
-        document.querySelector('#profit-chart').innerHTML = '<div class="text-center py-5"><h5 class="text-muted">Lỗi: ApexCharts không được tải</h5></div>';
-        return;
-    }
-
-    // Revenue-Expense Chart
-    if (hasData && monthLabels.length > 0) {
-        var optionsRevenueExpense = {
-            series: [{
-                name: 'Doanh thu',
-                data: monthlyRevenue
-            }, {
-                name: 'Chi phí nhập hàng',
-                data: monthlyExpense
-            }],
-            chart: {
-                type: 'bar',
-                height: 350,
-                toolbar: { show: true }
-            },
-            colors: getChartColorsArray('#revenue-expense-chart'),
-            plotOptions: {
-                bar: {
-                    horizontal: false,
-                    columnWidth: '55%',
-                    endingShape: 'rounded'
-                }
-            },
-            dataLabels: { enabled: false },
-            stroke: {
-                show: true,
-                width: 2,
-                colors: ['transparent']
-            },
-            xaxis: {
-                categories: monthLabels,
-                title: { text: 'Tháng' }
-            },
-            yaxis: {
-                title: { text: 'Số tiền (VND)' },
-                labels: {
-                    formatter: function(val) {
-                        return val.toLocaleString();
+            function getChartColorsArray(elementId) {
+                try {
+                    var element = document.querySelector(elementId);
+                    if (!element) {
+                        console.warn('Element not found for ID:', elementId);
+                        return elementId === '#revenue-expense-chart' ? ['#34c38f', '#f46a6a'] : ['#556ee6', '#f1b44c'];
                     }
-                }
-            },
-            fill: { opacity: 1 },
-            tooltip: {
-                shared: true,
-                intersect: false,
-                y: {
-                    formatter: function(val) {
-                        return val.toLocaleString() + " đ";
+                    var colorsAttr = element.getAttribute('data-colors');
+                    if (!colorsAttr) {
+                        console.warn('data-colors attribute not found for:', elementId);
+                        return elementId === '#revenue-expense-chart' ? ['#34c38f', '#f46a6a'] : ['#556ee6', '#f1b44c'];
                     }
+                    var colors = JSON.parse(colorsAttr);
+                    if (!Array.isArray(colors)) {
+                        console.warn('Invalid data-colors format for:', elementId);
+                        return elementId === '#revenue-expense-chart' ? ['#34c38f', '#f46a6a'] : ['#556ee6', '#f1b44c'];
+                    }
+                    return colors.map(function (value) {
+                        var newValue = value.replace(/\s/g, '');
+                        if (newValue.indexOf(',') === -1) {
+                            var color = getComputedStyle(document.documentElement).getPropertyValue(newValue);
+                            return color ? color.trim() : newValue;
+                        } else {
+                            var val = newValue.split(',');
+                            if (val.length === 2) {
+                                var rgbaColor = getComputedStyle(document.documentElement).getPropertyValue(val[0]);
+                                return 'rgba(' + rgbaColor.trim() + ',' + val[1] + ')';
+                            }
+                            return newValue;
+                        }
+                    });
+                } catch (e) {
+                    console.error('Error in getChartColorsArray for ' + elementId + ':', e);
+                    return elementId === '#revenue-expense-chart' ? ['#34c38f', '#f46a6a'] : ['#556ee6', '#f1b44c'];
                 }
-            },
-            legend: { position: 'top' }
-        };
-        try {
-            new ApexCharts(document.querySelector('#revenue-expense-chart'), optionsRevenueExpense).render();
-        } catch (e) {
-            console.error('Error rendering revenue-expense-chart:', e);
-            document.querySelector('#revenue-expense-chart').innerHTML = '<div class="text-center py-5"><h5 class="text-muted">Lỗi khi vẽ biểu đồ</h5></div>';
-        }
-    } else {
-        document.querySelector('#revenue-expense-chart').innerHTML = '<div class="text-center py-5"><h5 class="text-muted">Không có dữ liệu để hiển thị biểu đồ</h5></div>';
-    }
+            }
 
-    // Profit Chart
-    var profit = quarterlyRevenue - quarterlyImportCost;
-    var optionsProfit = {
-        series: [quarterlyImportCost, profit >= 0 ? profit : 0],
-        chart: {
-            type: 'donut',
-            height: 350
-        },
-        labels: ['Chi phí', 'Lợi nhuận'],
-        colors: getChartColorsArray('#profit-chart'),
-        dataLabels: {
-            enabled: true,
-            formatter: function(val) {
-                return val.toFixed(1) + "%";
-            }
-        },
-        tooltip: {
-            y: {
-                formatter: function(val) {
-                    return val.toLocaleString() + " đ";
+            document.addEventListener('DOMContentLoaded', function () {
+                if (typeof ApexCharts === 'undefined') {
+                    console.error('ApexCharts is not defined');
+                    document.querySelector('#revenue-expense-chart').innerHTML = '<div class="text-center py-5"><h5 class="text-muted">Lỗi: ApexCharts không được tải</h5></div>';
+                    document.querySelector('#profit-chart').innerHTML = '<div class="text-center py-5"><h5 class="text-muted">Lỗi: ApexCharts không được tải</h5></div>';
+                    return;
                 }
-            }
-        },
-        legend: { position: 'bottom' }
-    };
-    try {
-        new ApexCharts(document.querySelector('#profit-chart'), optionsProfit).render();
-    } catch (e) {
-        console.error('Error rendering profit-chart:', e);
-        document.querySelector('#profit-chart').innerHTML = '<div class="text-center py-5"><h5 class="text-muted">Lỗi khi vẽ biểu đồ</h5></div>';
-    }
-});
+
+                // Revenue-Expense Chart
+                if (hasData && monthLabels.length > 0) {
+                    var optionsRevenueExpense = {
+                        series: [{
+                                name: 'Doanh thu',
+                                data: monthlyRevenue
+                            }, {
+                                name: 'Chi phí nhập hàng',
+                                data: monthlyExpense
+                            }],
+                        chart: {
+                            type: 'bar',
+                            height: 350,
+                            toolbar: {show: true}
+                        },
+                        colors: getChartColorsArray('#revenue-expense-chart'),
+                        plotOptions: {
+                            bar: {
+                                horizontal: false,
+                                columnWidth: '55%',
+                                endingShape: 'rounded'
+                            }
+                        },
+                        dataLabels: {enabled: false},
+                        stroke: {
+                            show: true,
+                            width: 2,
+                            colors: ['transparent']
+                        },
+                        xaxis: {
+                            categories: monthLabels,
+                            title: {text: 'Tháng'}
+                        },
+                        yaxis: {
+                            title: {text: 'Số tiền (VND)'},
+                            labels: {
+                                formatter: function (val) {
+                                    return val.toLocaleString();
+                                }
+                            }
+                        },
+                        fill: {opacity: 1},
+                        tooltip: {
+                            shared: true,
+                            intersect: false,
+                            y: {
+                                formatter: function (val) {
+                                    return val.toLocaleString() + " đ";
+                                }
+                            }
+                        },
+                        legend: {position: 'top'}
+                    };
+                    try {
+                        new ApexCharts(document.querySelector('#revenue-expense-chart'), optionsRevenueExpense).render();
+                    } catch (e) {
+                        console.error('Error rendering revenue-expense-chart:', e);
+                        document.querySelector('#revenue-expense-chart').innerHTML = '<div class="text-center py-5"><h5 class="text-muted">Lỗi khi vẽ biểu đồ</h5></div>';
+                    }
+                } else {
+                    document.querySelector('#revenue-expense-chart').innerHTML = '<div class="text-center py-5"><h5 class="text-muted">Không có dữ liệu để hiển thị biểu đồ</h5></div>';
+                }
+
+                // Profit Chart
+                var profit = quarterlyRevenue - quarterlyImportCost;
+                var optionsProfit = {
+                    series: [quarterlyImportCost, profit >= 0 ? profit : 0],
+                    chart: {
+                        type: 'donut',
+                        height: 350
+                    },
+                    labels: ['Chi phí', 'Lợi nhuận'],
+                    colors: getChartColorsArray('#profit-chart'),
+                    dataLabels: {
+                        enabled: true,
+                        formatter: function (val) {
+                            return val.toFixed(1) + "%";
+                        }
+                    },
+                    tooltip: {
+                        y: {
+                            formatter: function (val) {
+                                return val.toLocaleString() + " đ";
+                            }
+                        }
+                    },
+                    legend: {position: 'bottom'}
+                };
+                try {
+                    new ApexCharts(document.querySelector('#profit-chart'), optionsProfit).render();
+                } catch (e) {
+                    console.error('Error rendering profit-chart:', e);
+                    document.querySelector('#profit-chart').innerHTML = '<div class="text-center py-5"><h5 class="text-muted">Lỗi khi vẽ biểu đồ</h5></div>';
+                }
+            });
         </script>
     </body>
 </html>
