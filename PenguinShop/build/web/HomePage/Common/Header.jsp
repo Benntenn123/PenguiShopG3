@@ -678,7 +678,7 @@
                             </ul>
                         </li>-->
                         <li>
-                            <a href="about.html">
+                            <a href="aboutus">
                                 <span class="list-text">Về chúng tôi</span>
                             </a>
                         </li>
