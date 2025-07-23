@@ -92,8 +92,8 @@
                                                     <div style="display: none" class="form-text">Link video giới thiệu (tùy chọn)</div>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <label for="isActive" class="form-label">Trạng thái <span class="text-danger">*</span></label>
-                                                    <select class="form-select" id="isActive" name="isActive" required>
+                                                    <label style="display: none" for="isActive" class="form-label">Trạng thái <span class="text-danger">*</span></label>
+                                                    <select style="display: none" class="form-select" id="isActive" name="isActive" required>
                                                         <option value="1" ${aboutInfo.active ? 'selected' : ''}>Hiển thị</option>
                                                         <option value="0" ${!aboutInfo.active ? 'selected' : ''}>Ẩn</option>
                                                     </select>
@@ -105,7 +105,7 @@
                                                     <i class="fas fa-save"></i> Cập nhật
                                                 </button>
                                                 <a href="../aboutus" target="_blank" class="btn btn-info">
-                                                    <i class="fas fa-eye"></i> Xem trước
+                                                    <i class="fas fa-eye"></i> Xem ngay
                                                 </a>
                                                 <button type="button" class="btn btn-secondary" onclick="resetForm()">
                                                     <i class="fas fa-undo"></i> Reset
