@@ -71,10 +71,10 @@ public class BlogAddServlet extends HttpServlet {
         
         if (success) {
             request.getSession().setAttribute("ms", "Thêm blog thành công!");
-            response.sendRedirect("BlogAdd");
+            response.sendRedirect("BlogList");
         } else {
             request.getSession().setAttribute("error", "Thêm blog thất bại!");
-            response.sendRedirect("BlogAdd");
+            response.sendRedirect("BlogList");
         }
     }
 }
