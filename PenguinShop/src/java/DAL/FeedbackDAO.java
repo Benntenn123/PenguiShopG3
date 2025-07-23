@@ -464,4 +464,81 @@ public class FeedbackDAO extends DBContext {
         return null;
     }
 
+    // Search feedback với filter
+    public List<Feedback> searchFeedbacks(String productName, String userName, Integer rating, String fromDate, String toDate) {
+        List<Feedback> feedbacks = new ArrayList<>();
+        StringBuilder sql = new StringBuilder(
+                "SELECT f.*, p.productName, u.fullName, u.image_user "
+                + "FROM tbFeedback f "
+                + "INNER JOIN tbProduct p ON f.productID = p.productID "
+                + "INNER JOIN tbUsers u ON f.userID = u.userID "
+                + "WHERE 1=1"
+        );
+        
+        if (productName != null && !productName.trim().isEmpty()) {
+            sql.append(" AND p.productName LIKE ?");
+        }
+        if (userName != null && !userName.trim().isEmpty()) {
+            sql.append(" AND u.fullName LIKE ?");
+        }
+        if (rating != null) {
+            sql.append(" AND f.rating = ?");
+        }
+        if (fromDate != null && !fromDate.trim().isEmpty()) {
+            sql.append(" AND f.feedbackDate >= ?");
+        }
+        if (toDate != null && !toDate.trim().isEmpty()) {
+            sql.append(" AND f.feedbackDate <= ?");
+        }
+        sql.append(" ORDER BY f.feedbackDate DESC");
+        
+        try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
+            int paramIndex = 1;
+            
+            if (productName != null && !productName.trim().isEmpty()) {
+                ps.setString(paramIndex++, "%" + productName.trim() + "%");
+            }
+            if (userName != null && !userName.trim().isEmpty()) {
+                ps.setString(paramIndex++, "%" + userName.trim() + "%");
+            }
+            if (rating != null) {
+                ps.setInt(paramIndex++, rating);
+            }
+            if (fromDate != null && !fromDate.trim().isEmpty()) {
+                ps.setString(paramIndex++, fromDate + " 00:00:00");
+            }
+            if (toDate != null && !toDate.trim().isEmpty()) {
+                ps.setString(paramIndex++, toDate + " 23:59:59");
+            }
+            
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Feedback feedback = new Feedback();
+                feedback.setFeedbackID(rs.getInt("feedbackID"));
+                feedback.setProductID(rs.getInt("productID"));
+                feedback.setVariantID(rs.getInt("variantID"));
+                feedback.setUserID(rs.getInt("userID"));
+                feedback.setRating(rs.getInt("rating"));
+                feedback.setComment(rs.getString("comment"));
+                feedback.setFeedbackDate(rs.getTimestamp("feedbackDate"));
+                
+                // Set user
+                Models.User u = new Models.User();
+                u.setFullName(rs.getString("fullName"));
+                u.setImage_user(rs.getString("image_user"));
+                feedback.setUser(u);
+                
+                // Set product
+                Models.Product p = new Models.Product();
+                p.setProductName(rs.getString("productName"));
+                feedback.setProduct(p);
+                
+                feedbacks.add(feedback);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return feedbacks;
+    }
+
 }

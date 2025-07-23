@@ -36,6 +36,57 @@
                                 </a>
                             </div>
                         </div>
+                        
+                        <!-- Search Form -->
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="mb-0">Tìm kiếm Banner</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <form method="get" action="listBanner">
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Tên Banner</label>
+                                                        <input type="text" class="form-control" name="bannerName" 
+                                                               value="${param.bannerName}" placeholder="Nhập tên banner">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Link</label>
+                                                        <input type="text" class="form-control" name="bannerHref" 
+                                                               value="${param.bannerHref}" placeholder="Nhập link banner">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Trạng thái</label>
+                                                        <select class="form-select" name="bannerStatus">
+                                                            <option value="">Tất cả</option>
+                                                            <option value="1" ${param.bannerStatus == '1' ? 'selected' : ''}>Hoạt động</option>
+                                                            <option value="0" ${param.bannerStatus == '0' ? 'selected' : ''}>Không hoạt động</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <button type="submit" class="btn btn-primary me-2">
+                                                        <i class="bx bx-search me-1"></i>Tìm kiếm
+                                                    </button>
+                                                    <a href="listBanner" class="btn btn-secondary">
+                                                        <i class="bx bx-refresh me-1"></i>Đặt lại
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <!-- Banner Table -->
                         <div class="table-responsive mb-4">
                             <table class="table align-middle datatable dt-responsive table-check nowrap" style="border-collapse: collapse; border-spacing: 0 8px; width: 100%;">

@@ -138,4 +138,49 @@ public class BannerDAO extends DBContext{
         }
         return false;
     }
+    public List<Banner> searchBanners(String bannerName, String bannerHref, Integer bannerStatus) {
+        List<Banner> banners = new ArrayList<>();
+        StringBuilder sql = new StringBuilder("SELECT bannerID, bannerName, bannerHref, bannerStatus, createdAt, bannerLink FROM Banner WHERE 1=1");
+        
+        if (bannerName != null && !bannerName.trim().isEmpty()) {
+            sql.append(" AND bannerName LIKE ?");
+        }
+        if (bannerHref != null && !bannerHref.trim().isEmpty()) {
+            sql.append(" AND bannerHref LIKE ?");
+        }
+        if (bannerStatus != null) {
+            sql.append(" AND bannerStatus = ?");
+        }
+        sql.append(" ORDER BY createdAt DESC");
+        
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql.toString());
+            int paramIndex = 1;
+            
+            if (bannerName != null && !bannerName.trim().isEmpty()) {
+                ps.setString(paramIndex++, "%" + bannerName.trim() + "%");
+            }
+            if (bannerHref != null && !bannerHref.trim().isEmpty()) {
+                ps.setString(paramIndex++, "%" + bannerHref.trim() + "%");
+            }
+            if (bannerStatus != null) {
+                ps.setInt(paramIndex++, bannerStatus);
+            }
+            
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Banner banner = new Banner();
+                banner.setBannerID(rs.getInt("bannerID"));
+                banner.setBannerName(rs.getString("bannerName"));
+                banner.setBannerHref(rs.getString("bannerHref"));
+                banner.setBannerStatus(rs.getInt("bannerStatus"));
+                banner.setCreatedAt(rs.getTimestamp("createdAt"));
+                banner.setBannerLink(rs.getString("bannerLink"));
+                banners.add(banner);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return banners;
+    }
 }
