@@ -42,33 +42,67 @@ public class vnpayReturn extends HttpServlet {
             String vnp_Amount = request.getParameter("vnp_Amount");
             String vnp_OrderInfo = request.getParameter("vnp_OrderInfo");
 
-            // Parse vnp_OrderInfo to extract checkoutCode and orderID
+            // Parse vnp_OrderInfo to extract checkoutCode, orderID/userID, and transaction type
             String checkoutCode = "";
-            String orderID = "";
+            String id = ""; // Could be orderID or userID based on type
+            String transactionType = "";
             if (vnp_OrderInfo != null && !vnp_OrderInfo.isEmpty()) {
                 String[] parts = vnp_OrderInfo.split("_");
-                checkoutCode = parts[0].replace("Thanh toan don hang: ", "").trim();
-                orderID = parts.length > 1 ? parts[1] : "";
+                if (vnp_OrderInfo.startsWith("Thanh toan don hang")) {
+                    transactionType = "thanhtoan";
+                    checkoutCode = parts[0].replace("Thanh toan don hang: ", "").trim();
+                    id = parts.length > 1 ? parts[1] : "";
+                } else if (vnp_OrderInfo.startsWith("Nap tien tai khoan")) {
+                    transactionType = "naptien";
+                    checkoutCode = parts[0].replace("Nap tien tai khoan: ", "").trim();
+                    id = parts.length > 1 ? parts[1] : "";
+                }
             }
 
             String status = "00".equals(vnp_ResponseCode) ? "SUCCESS" : "FAILURE";
-            if ("SUCCESS".equals(status) && orderID != null) {
-                // tiền vnpay trả double -> string -> chia 100 
+            if ("SUCCESS".equals(status) && !id.isEmpty()) {
                 try {
-                    double vnpAmountInDouble = Integer.parseInt(vnp_Amount) / 100.0;
-                    int orderId = Integer.parseInt(orderID);
-                    double orderTotal = odao.getTotalOrder(orderId);
-                    
-                    boolean sucees =  odao.updateOrderStatus(orderId, PaymentStatus.DA_THANH_TOAN); // Update status to COMPLETED
-                    User user = (User) request.getSession().getAttribute("user");
-                    if(user !=null){
-                        user.setWallet(odao.getWalletBalance(user.getUserID()));
-                    }
-                    System.out.println(sucees);
-                } catch (Exception e) {
+                    double vnpAmountInDouble = Integer.parseInt(vnp_Amount) / 100.0; // VNPay amount is in VND * 100
+                    HttpSession session = request.getSession();
+                    User user = (User) session.getAttribute("user");
 
+                    if ("thanhtoan".equals(transactionType)) {
+                        // Handle order payment
+                        int orderId = Integer.parseInt(id);
+                        double orderTotal = odao.getTotalOrder(orderId);
+                        if (Math.abs(vnpAmountInDouble - orderTotal) < 0.01) { // Verify amount matches order total
+                            boolean success = odao.updateOrderStatus(orderId, PaymentStatus.DA_THANH_TOAN);
+                            if (success && user != null) {
+                                user.setWallet(odao.getWalletBalance(user.getUserID()));
+                                session.setAttribute("user", user);
+                            }
+                            LOGGER.log(Level.INFO, "Order {0} payment status updated: {1}", new Object[]{orderId, success});
+                        } else {
+                            LOGGER.log(Level.WARNING, "Amount mismatch for order {0}. Expected: {1}, Received: {2}",
+                                    new Object[]{orderId, orderTotal, vnpAmountInDouble});
+                            status = "FAILURE";
+                        }
+                    } else if ("naptien".equals(transactionType)) {
+                        // Handle wallet top-up
+                        int userId = Integer.parseInt(id);
+                        
+                        boolean success = odao.plusWallet(vnpAmountInDouble,userId);
+                        if (success && user != null && user.getUserID() == userId) {
+                            user.setWallet(odao.getWalletBalance(userId));
+                            session.setAttribute("user", user);
+                        }
+                        LOGGER.log(Level.INFO, "Wallet top-up for user {0}: Amount={1}, Success={2}",
+                                new Object[]{userId, vnpAmountInDouble, success});
+                    }
+                } catch (NumberFormatException e) {
+                    LOGGER.log(Level.SEVERE, "Error parsing ID or amount: {0}", e.getMessage());
+                    status = "FAILURE";
+                } catch (Exception e) {
+                    LOGGER.log(Level.SEVERE, "Error processing transaction: {0}", e.getMessage());
+                    status = "FAILURE";
                 }
             }
+
             // Log parameters for debugging
             LOGGER.log(Level.INFO, "vnp_SecureHash: {0}", vnp_SecureHash);
             LOGGER.log(Level.INFO, "vnp_TxnRef: {0}", vnp_TxnRef);
@@ -79,7 +113,8 @@ public class vnpayReturn extends HttpServlet {
             LOGGER.log(Level.INFO, "vnp_Amount: {0}", vnp_Amount);
             LOGGER.log(Level.INFO, "vnp_OrderInfo: {0}", vnp_OrderInfo);
             LOGGER.log(Level.INFO, "checkoutCode: {0}", checkoutCode);
-            LOGGER.log(Level.INFO, "orderID: {0}", orderID);
+            LOGGER.log(Level.INFO, "id: {0}", id);
+            LOGGER.log(Level.INFO, "transactionType: {0}", transactionType);
             LOGGER.log(Level.INFO, "status: {0}", status);
 
             // Set attributes for JSP
@@ -90,8 +125,9 @@ public class vnpayReturn extends HttpServlet {
             request.setAttribute("vnp_PayDate", vnp_PayDate != null ? vnp_PayDate : "N/A");
             request.setAttribute("vnp_Amount", vnp_Amount != null ? vnp_Amount : "N/A");
             request.setAttribute("vnp_OrderInfo", vnp_OrderInfo != null ? vnp_OrderInfo : "N/A");
-            request.setAttribute("orderID", orderID);
+            request.setAttribute("orderID", id);
             request.setAttribute("status", status);
+            request.setAttribute("transactionType", transactionType);
 
             // Forward to JSP
             request.getRequestDispatcher("HomePage/vnpay/vnpay_info.jsp").forward(request, response);

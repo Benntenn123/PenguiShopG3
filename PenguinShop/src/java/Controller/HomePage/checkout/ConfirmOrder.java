@@ -176,7 +176,7 @@ public class ConfirmOrder extends HttpServlet {
                         Double amount = totalBillShip - walletBalance;
                         
                         int total = amount.intValue();
-                        response.sendRedirect("vnpay?orderID=" + orderID + "&amount=" + total);
+                        response.sendRedirect("vnpay?orderID=" + orderID + "&amount=" + total +"&type=thanhtoan");
                     }
                 } else {
                     request.getSession().setAttribute("error", "Vui lòng chọn 1 cổng thanh toán");

@@ -40,6 +40,8 @@ public class vnpay_pay extends HttpServlet {
             throws ServletException, IOException {
         String orderID = request.getParameter("orderID");
         String amount = request.getParameter("amount");
+        String type = request.getParameter("type");
+        request.setAttribute("type", type);
         request.setAttribute("amount", amount);
         request.setAttribute("orderID", orderID);
         request.getRequestDispatcher("/HomePage/vnpay/vnpay_pay.jsp").forward(request, response);

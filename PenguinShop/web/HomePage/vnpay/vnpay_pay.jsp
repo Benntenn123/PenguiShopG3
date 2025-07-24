@@ -389,7 +389,7 @@
                     </div>
                     
                     <input name="orderID" value="${orderID}" type="hidden"/>
-                    
+                    <input name="type" value="${type}" type="hidden"/>
                     <button type="submit" class="submit-btn">
                         <i class="fas fa-lock"></i> Thanh toán an toàn
                     </button>

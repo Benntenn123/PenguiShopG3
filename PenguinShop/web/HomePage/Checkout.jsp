@@ -592,7 +592,7 @@
                     <div style="font-size: 18px" class="section-header">
                         <div style="margin-bottom: 0px !important" class="section-title">
                             <svg class="icon" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
                             </svg>
                             <h2 style="margin-bottom: 0px !important">Địa chỉ nhận hàng</h2>
                         </div>
@@ -640,7 +640,7 @@
                 <div class="section">
                     <div class="section-title" style="margin-bottom: 16px;">
                         <svg class="icon" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4zM6 18.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm13.5-9l1.96 2.5H17V9.5h2.5zm-1.5 9c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/>
+                        <path d="M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4zM6 18.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm13.5-9l1.96 2.5H17V9.5h2.5zm-1.5 9c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/>
                         </svg>
                         <h2 style="font-size: 18px">Phương thức vận chuyển</h2>
                     </div>
@@ -657,7 +657,7 @@
                 <div class="section">
                     <div class="section-title" style="margin-bottom: 16px;">
                         <svg class="icon" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/>
+                        <path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/>
                         </svg>
                         <h2 style="font-size: 18px">Phương thức thanh toán</h2>
                     </div>
@@ -686,7 +686,7 @@
                                 Số dư: <fmt:formatNumber value="${walletBalance}" type="currency" currencyCode="VND"/>
                             </div>
                             <span id="wallet-insufficient-message" class="insufficient-message" style="display: none;"></span>
-                            <a id="wallet-topup-button" href="walletTopUp" class="topup-button" style="display: none;">Nạp tiền</a>
+                            <a id="wallet-topup-button" class="topup-button" style="display: none;">Nạp tiền</a>
                         </div>
                     </div>
                 </div>
@@ -745,7 +745,7 @@
             <!-- Floating button -->
             <button class="floating-btn" onclick="showAddressModal()">
                 <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
                 </svg>
             </button>
             <jsp:include page="Common/Footer.jsp"/>
@@ -876,11 +876,11 @@
                                 promotionsData = {};
                                 response.data.forEach(item => {
                                     promotionsData[item.variantID] = item.promotions.map(p => ({
-                                        promotionID: p.promotionID.toString(),
-                                        promotionName: p.promotionName,
-                                        discountType: p.discountType,
-                                        discountValue: p.discountValue
-                                    }));
+                                            promotionID: p.promotionID.toString(),
+                                            promotionName: p.promotionName,
+                                            discountType: p.discountType,
+                                            discountValue: p.discountValue
+                                        }));
                                 });
                                 console.log('Processed promotionsData:', promotionsData);
 
@@ -958,13 +958,13 @@
                         const city = selectedAddress.city || '';
 
                         const htmlContent = '<div class="address-info">' +
-                            '<div>' +
-                            '<div style="font-size: 16px" class="address-name">' + fullName + ' | ' + phone + '</div>' +
-                            '<div style="font-size: 16px" class="address-text">' + addressDetail + ', ' + city + '</div>' +
-                            '<span style="font-size: 16px" class="default-badge">Mặc định</span>' +
-                            '</div>' +
-                            '<button style="font-size: 16px" type="button" onclick="showAddressModal()" class="btn-change">Thay đổi</button>' +
-                            '</div>';
+                                '<div>' +
+                                '<div style="font-size: 16px" class="address-name">' + fullName + ' | ' + phone + '</div>' +
+                                '<div style="font-size: 16px" class="address-text">' + addressDetail + ', ' + city + '</div>' +
+                                '<span style="font-size: 16px" class="default-badge">Mặc định</span>' +
+                                '</div>' +
+                                '<button style="font-size: 16px" type="button" onclick="showAddressModal()" class="btn-change">Thay đổi</button>' +
+                                '</div>';
 
                         addressCard.innerHTML = htmlContent;
                         addressIdInput.value = addressId;
@@ -1023,24 +1023,24 @@
                         const city = defaultAddress.city || '';
 
                         const htmlContent = '<div class="address-info">' +
-                            '<div>' +
-                            '<div style="font-size: 16px" class="address-name">' + fullName + ' | ' + phone + '</div>' +
-                            '<div style="font-size: 16px" class="address-text">' + addressDetail + ', ' + city + '</div>' +
-                            '<span style="font-size: 16px" class="default-badge">Mặc định</span>' +
-                            '</div>' +
-                            '<button type="button" style="font-size: 16px" onclick="showAddressModal()" class="btn-change">Thay đổi</button>' +
-                            '</div>';
+                                '<div>' +
+                                '<div style="font-size: 16px" class="address-name">' + fullName + ' | ' + phone + '</div>' +
+                                '<div style="font-size: 16px" class="address-text">' + addressDetail + ', ' + city + '</div>' +
+                                '<span style="font-size: 16px" class="default-badge">Mặc định</span>' +
+                                '</div>' +
+                                '<button type="button" style="font-size: 16px" onclick="showAddressModal()" class="btn-change">Thay đổi</button>' +
+                                '</div>';
 
                         addressCard.innerHTML = htmlContent;
                         addressIdInput.value = defaultAddress.deliveryInfoID;
                     } else {
                         addressCard.innerHTML = '<div class="address-info">' +
-                            '<div style="font-size: 16px; color: #666;">Chưa có địa chỉ nào được chọn. Vui lòng thêm địa chỉ.</div>' +
-                            '<button style="font-size: 16px" onclick="showAddressModal()" class="btn-change">Thêm địa chỉ</button>' +
-                            '</div>';
+                                '<div style="font-size: 16px; color: #666;">Chưa có địa chỉ nào được chọn. Vui lòng thêm địa chỉ.</div>' +
+                                '<button style="font-size: 16px" onclick="showAddressModal()" class="btn-change">Thêm địa chỉ</button>' +
+                                '</div>';
                     }
                 }
-
+                let userId = '${sessionScope.user.userID}';
                 function checkWalletBalance() {
                     const totalBillShip = parseFloat(document.getElementById('totalBillShip').value);
                     const walletOption = document.getElementById('wallet-option');
@@ -1050,13 +1050,27 @@
                     if (userWalletBalance < totalBillShip) {
                         const insufficientAmount = totalBillShip - userWalletBalance;
                         const formattedInsufficient = formatPrice(insufficientAmount);
+
+                        // Debug log để kiểm tra giá trị
+                        console.log('User ID:', userId);
+                        console.log('Insufficient Amount:', insufficientAmount);
+                        console.log('Total Bill Ship:', totalBillShip);
+                        console.log('User Wallet Balance:', userWalletBalance);
+
                         insufficientMessage.textContent = `Số dư không đủ! Thiếu ${formattedInsufficient}`;
                         insufficientMessage.style.display = 'inline';
                         topupButton.style.display = 'inline-block';
+
+                        // Sửa lại cách tạo URL - sử dụng cách nối chuỗi thay vì template string
+                        const vnpayUrl = 'vnpay?orderID=' + userId + '&amount=' + Math.round(insufficientAmount) + '&type=naptien';
+                        topupButton.href = vnpayUrl;
+
+                        console.log('Generated VNPAY URL:', vnpayUrl); // Debug log
+
                         walletOption.classList.add('disabled');
-                        walletOption.onclick = null; // Disable click event
+                        walletOption.onclick = null;
+
                         if (selectedPayment === 'wallet') {
-                            // If wallet was selected, switch to COD
                             const codOption = document.querySelector('.payment-option[data-payment="cod"]') || document.querySelector('.payment-option');
                             if (codOption) {
                                 selectPayment(codOption, 'cod');
@@ -1066,11 +1080,12 @@
                         insufficientMessage.style.display = 'none';
                         topupButton.style.display = 'none';
                         walletOption.classList.remove('disabled');
-                        walletOption.onclick = () => selectPayment(walletOption, 'wallet'); // Restore click event
+                        walletOption.onclick = () => selectPayment(walletOption, 'wallet');
                         if (selectedPayment === 'wallet') {
                             toastr.success('Số dư ví đủ để thanh toán!', 'Thông báo');
                         }
                     }
+
                 }
 
                 let selectedPayment = 'cod';
