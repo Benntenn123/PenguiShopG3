@@ -153,7 +153,7 @@ public class ConfirmOrder extends HttpServlet {
                     request.getRequestDispatcher("HomePage/OrderSuccess.jsp").forward(request, response);
                 } else if ("vnpay".equals(paymentMethod)) {
                     int total = totalBillShip.intValue();
-                    response.sendRedirect("vnpay?orderID=" + orderID + "&amount=" + total);
+                    response.sendRedirect("vnpay?orderID=" + orderID + "&amount=" + total +"&type=thanhtoan");
                 } else if ("wallet".equals(paymentMethod)) {
                     // Kiểm tra số dư ví và trừ tiền nếu đủ, nếu không đủ thì chuyển sang vnpay
                     double walletBalance = odao.getWalletBalance(user.getUserID());
