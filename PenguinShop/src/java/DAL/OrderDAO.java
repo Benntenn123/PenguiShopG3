@@ -594,7 +594,7 @@ public class OrderDAO extends DBContext {
                     + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             try (PreparedStatement ps = connection.prepareStatement(insertOrderSql, PreparedStatement.RETURN_GENERATED_KEYS)) {
                 ps.setString(1, dateTime);
-                ps.setDouble(2, totalBill);
+                ps.setDouble(2, totalBillShip);
                 ps.setInt(3, userId);
                 ps.setInt(4, StatusOrder.DANG_CHO_XU_LI);
                 ps.setString(5, deli.getAddessDetail());
@@ -724,9 +724,10 @@ public class OrderDAO extends DBContext {
     }
 
     public boolean updateOrderStatus(int orderID, int status) {
-        String sql = "UPDATE dbo.tbOrder SET orderStatus = ? WHERE orderID = ?";
+        String sql = "UPDATE dbo.tbOrder SET paymentStatus = ? WHERE orderID = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, orderID);
+            ps.setInt(1, status);
+            ps.setInt(2, orderID);
             int row = ps.executeUpdate();
             if (row > 0) {
                 return true;

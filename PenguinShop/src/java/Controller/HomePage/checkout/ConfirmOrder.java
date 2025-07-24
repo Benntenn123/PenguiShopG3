@@ -153,7 +153,7 @@ public class ConfirmOrder extends HttpServlet {
                     session.setAttribute("ms", "Đặt hàng thành công!");
                     request.getRequestDispatcher("HomePage/OrderSuccess.jsp").forward(request, response);
                 } else if ("vnpay".equals(paymentMethod)) {
-                    int total = totalBill.intValue(); // hoặc (int) Math.floor(totalBill)
+                    int total = totalBillShip.intValue(); // hoặc (int) Math.floor(totalBill)
                     response.sendRedirect("vnpay?orderID=" + orderID +"&amount="+total);  // chỉ truyền đc int k hàm bên vnpay chuyển số lỗi
                 } else {
                     request.getSession().setAttribute("error", "Vui lòng chọn 1 cổng thanh toán");

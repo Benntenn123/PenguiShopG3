@@ -56,9 +56,11 @@ public class vnpayReturn extends HttpServlet {
                     double vnpAmountInDouble = Integer.parseInt(vnp_Amount) / 100.0;
                     int orderId = Integer.parseInt(orderID);
                     double orderTotal = odao.getTotalOrder(orderId);
-                    if (Math.abs(orderTotal - vnpAmountInDouble) < 0.01) { // double -> so sanh 0.01
-                        odao.updateOrderStatus(orderId, PaymentStatus.DA_THANH_TOAN); // Update status to COMPLETED
-                    }
+                    System.out.println(vnpAmountInDouble + "Checkout");
+                    System.out.println(orderTotal + "heheeeee");
+
+                    boolean sucees =  odao.updateOrderStatus(orderId, PaymentStatus.DA_THANH_TOAN); // Update status to COMPLETED
+                    System.out.println(sucees);
                 } catch (Exception e) {
 
                 }
