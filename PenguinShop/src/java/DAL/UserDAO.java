@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserDAO extends DBContext {
-    
+
     public boolean insertLog(Integer userID, String action, String description) {
         String sql = "INSERT INTO tbLogs (userID, action, description, logDate) VALUES (?, ?, ?, GETDATE())";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -39,7 +39,8 @@ public class UserDAO extends DBContext {
         }
         return false;
     }
-    public String checkDuplicatePassword(int userID){
+
+    public String checkDuplicatePassword(int userID) {
         String sql = "SELECT password FROM dbo.tbUsers WHERE userID = ?";
         String result = "";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -49,9 +50,12 @@ public class UserDAO extends DBContext {
                     result = rs.getString(1);
                 }
             }
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return result;
     }
+
     // Thống kê số user mới theo tháng
     public List<Models.MonthValue> getMonthlyNewUsers(int year) {
         List<Models.MonthValue> list = new ArrayList<>();
@@ -63,18 +67,21 @@ public class UserDAO extends DBContext {
                     list.add(new Models.MonthValue(rs.getInt("month"), rs.getInt("count")));
                 }
             }
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return list;
     }
 
     /**
-     * Tìm kiếm logs, join user, filter theo tên, email, phone, thời gian, phân trang
+     * Tìm kiếm logs, join user, filter theo tên, email, phone, thời gian, phân
+     * trang
      */
     public List<Logs> searchLogs(String fullName, String email, String phone, String from, String to, int page, int pageSize) {
         List<Logs> logs = new ArrayList<>();
         StringBuilder sql = new StringBuilder(
-                "SELECT l.logID, l.userID, l.action, l.description, l.logDate, u.fullName, u.email, u.phone " +
-                "FROM tbLogs l INNER JOIN tbUsers u ON l.userID = u.userID WHERE 1=1 "
+                "SELECT l.logID, l.userID, l.action, l.description, l.logDate, u.fullName, u.email, u.phone "
+                + "FROM tbLogs l INNER JOIN tbUsers u ON l.userID = u.userID WHERE 1=1 "
         );
         List<Object> params = new ArrayList<>();
         if (fullName != null && !fullName.trim().isEmpty()) {
@@ -185,7 +192,6 @@ public class UserDAO extends DBContext {
         }
         return false;
     }
-    
 
     public User loadUserInfoByEmail(String email) {
         String sql = "SELECT u.userID,u.fullName,u.roleID,d.addressDetail AS address,"
@@ -878,8 +884,8 @@ public class UserDAO extends DBContext {
     public boolean hasPermission(int role_id, String request) {
         String sql = "SELECT COUNT(*) FROM dbo.tbPermissions p JOIN dbo.tbRolePermissions pr ON pr.permissionID = p.permissionID\n"
                 + "JOIN dbo.tbRoles r ON r.roleID = pr.roleID\n"
-                + "JOIN dbo.tbModules m ON m.moduleID = p.moduleID\n" +
-        "WHERE r.roleID = ? AND p.url_permission = ?";
+                + "JOIN dbo.tbModules m ON m.moduleID = p.moduleID\n"
+                + "WHERE r.roleID = ? AND p.url_permission = ?";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setInt(1, role_id);
@@ -933,10 +939,12 @@ public class UserDAO extends DBContext {
         return null;
     }
 
-        /**
+    /**
      * Cập nhật thông tin profile cho Sales (Admin chỉnh sửa)
+     *
      * @param user User object chứa thông tin mới
-     * @param updatePassword Nếu khác null và không rỗng thì sẽ cập nhật mật khẩu mới
+     * @param updatePassword Nếu khác null và không rỗng thì sẽ cập nhật mật
+     * khẩu mới
      * @return true nếu cập nhật thành công
      */
     public boolean updateSalesProfile(User user, String updatePassword) {
@@ -968,6 +976,23 @@ public class UserDAO extends DBContext {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public double getWalletUser(int userID) {
+        String sql = "SELECT wallet FROM dbo.tbUsers WHERE userID = ?";
+        double result = 0.0;
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql.toString());
+            ps.setInt(1, userID);
+            ResultSet rs = ps.executeQuery();
+            while (true) {
+                result = rs.getDouble(1);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 
     public static void main(String[] args) {

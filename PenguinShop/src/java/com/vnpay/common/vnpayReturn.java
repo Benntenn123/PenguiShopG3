@@ -6,11 +6,13 @@ package com.vnpay.common;
 
 import Const.PaymentStatus;
 import DAL.OrderDAO;
+import Models.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -56,10 +58,12 @@ public class vnpayReturn extends HttpServlet {
                     double vnpAmountInDouble = Integer.parseInt(vnp_Amount) / 100.0;
                     int orderId = Integer.parseInt(orderID);
                     double orderTotal = odao.getTotalOrder(orderId);
-                    System.out.println(vnpAmountInDouble + "Checkout");
-                    System.out.println(orderTotal + "heheeeee");
-
+                    
                     boolean sucees =  odao.updateOrderStatus(orderId, PaymentStatus.DA_THANH_TOAN); // Update status to COMPLETED
+                    User user = (User) request.getSession().getAttribute("user");
+                    if(user !=null){
+                        user.setWallet(odao.getWalletBalance(user.getUserID()));
+                    }
                     System.out.println(sucees);
                 } catch (Exception e) {
 

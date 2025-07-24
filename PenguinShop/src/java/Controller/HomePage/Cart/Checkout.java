@@ -86,13 +86,19 @@ public class Checkout extends HttpServlet {
             e.printStackTrace();
         }
         
+        // Lấy số dư ví
+        double walletBalance = 0.0;
+        if (user != null) {
+            DAL.OrderDAO odao = new DAL.OrderDAO();
+            walletBalance = odao.getWalletBalance(user.getUserID());
+        }
         Gson gson = new Gson();
         String deliJson = gson.toJson(deli);
         System.out.println("Delivery JSON: " + deliJson);
-        
         request.setAttribute("deliList", deli);
         request.setAttribute("deli", deliJson);
         request.setAttribute("selectedCartItems", cart);
+        request.setAttribute("walletBalance", walletBalance);
         request.getRequestDispatcher("HomePage/Checkout.jsp").forward(request, response);
     }
     
@@ -139,7 +145,7 @@ public class Checkout extends HttpServlet {
                 return;
             }
             
-            if (!"cod".equals(method) && !"vnpay".equals(method)) {
+            if (!"cod".equals(method) && !"vnpay".equals(method) && !"wallet".equals(method)) {
                 request.getSession().setAttribute("error", "Phương thức thanh toán không hợp lệ!");
                 response.sendRedirect("listCart");
                 return;

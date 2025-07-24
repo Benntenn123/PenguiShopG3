@@ -118,8 +118,8 @@ public class ConfirmOrder extends HttpServlet {
         // ✅ OTP hợp lệ, tiếp tục xử lý đơn hàng
         try {
             tdao.markOTPAsUsed(user.getUserID(), storedOtp);
-
-            int orderID = odao.createOrder(   // tạo order là trừ quantity luôn
+            UserDAO udao = new UserDAO();
+            int orderID = odao.createOrder(
                     user.getUserID(),
                     cartItems,
                     totalBill,
@@ -130,8 +130,7 @@ public class ConfirmOrder extends HttpServlet {
                     GetDateTime.getCurrentTime()
             );
             String thongbao = "User tạo thành công order với id " + orderID;
-                    UserDAO udao = new UserDAO();
-                    udao.insertLog(user.getUserID(), thongbao, thongbao);
+            udao.insertLog(user.getUserID(), thongbao, thongbao);
 
             if (orderID != 0) {
                 // Lưu thông tin cần hiển thị
@@ -153,18 +152,40 @@ public class ConfirmOrder extends HttpServlet {
                     session.setAttribute("ms", "Đặt hàng thành công!");
                     request.getRequestDispatcher("HomePage/OrderSuccess.jsp").forward(request, response);
                 } else if ("vnpay".equals(paymentMethod)) {
-                    int total = totalBillShip.intValue(); // hoặc (int) Math.floor(totalBill)
-                    response.sendRedirect("vnpay?orderID=" + orderID +"&amount="+total);  // chỉ truyền đc int k hàm bên vnpay chuyển số lỗi
+                    int total = totalBillShip.intValue();
+                    response.sendRedirect("vnpay?orderID=" + orderID + "&amount=" + total);
+                } else if ("wallet".equals(paymentMethod)) {
+                    // Kiểm tra số dư ví và trừ tiền nếu đủ, nếu không đủ thì chuyển sang vnpay
+                    double walletBalance = odao.getWalletBalance(user.getUserID());
+                    if (walletBalance >= totalBillShip) {
+                        boolean deductSuccess = odao.deductWallet(totalBillShip, user.getUserID());
+                        if (deductSuccess) {
+                            String logMessage = "Thanh toán đơn hàng #" + orderID + " bằng ví PenguinShop: -" + totalBillShip + " VND";
+                            udao.insertLog(user.getUserID(), "PAYMENT_WALLET", logMessage);
+                            if(user != null){
+                                user.setWallet(odao.getWalletBalance(user.getUserID()));
+                            }
+                            
+                            session.setAttribute("ms", "Đặt hàng và thanh toán ví thành công!");
+                            request.getRequestDispatcher("HomePage/OrderSuccess.jsp").forward(request, response);
+                        } else {
+                            session.setAttribute("error", "Lỗi khi trừ tiền ví. Vui lòng thử lại!");
+                            response.sendRedirect("checkout");
+                        }
+                    } else {
+                        Double amount = totalBillShip - walletBalance;
+                        
+                        int total = amount.intValue();
+                        response.sendRedirect("vnpay?orderID=" + orderID + "&amount=" + total);
+                    }
                 } else {
                     request.getSession().setAttribute("error", "Vui lòng chọn 1 cổng thanh toán");
-                    response.sendRedirect("payment-gateway?orderID=" + orderID); // fallback cho các phương thức khác
+                    response.sendRedirect("payment-gateway?orderID=" + orderID);
                 }
-
             } else {
                 session.setAttribute("error", "Lỗi khi lưu đơn hàng!");
                 response.sendRedirect("checkout");
             }
-
         } catch (Exception e) {
             session.setAttribute("error", "Lỗi xử lý đơn hàng: " + e.getMessage());
             response.sendRedirect("checkout");

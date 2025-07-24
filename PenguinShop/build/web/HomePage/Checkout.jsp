@@ -207,6 +207,12 @@
                 background: rgba(174, 28, 154, 0.05);
             }
 
+            .payment-option.disabled {
+                opacity: 0.6;
+                cursor: not-allowed;
+                background: #f5f5f5;
+            }
+
             .radio {
                 width: 20px;
                 height: 20px;
@@ -221,6 +227,10 @@
                 border-color: #AE1C9A;
             }
 
+            .payment-option.disabled .radio {
+                border-color: #ccc;
+            }
+
             .radio-dot {
                 width: 10px;
                 height: 10px;
@@ -233,8 +243,40 @@
                 display: block;
             }
 
+            .payment-option.disabled .radio-dot {
+                display: none;
+            }
+
             .payment-icon {
                 font-size: 24px;
+            }
+
+            .wallet-info {
+                margin-left: 30px;
+                font-size: 14px;
+                color: #666;
+            }
+
+            .insufficient-message {
+                color: #e74c3c;
+                font-size: 14px;
+                margin-left: 10px;
+                flex: 1;
+            }
+
+            .topup-button {
+                background: #AE1C9A;
+                color: white;
+                border: none;
+                padding: 6px 12px;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 14px;
+                margin-left: 10px;
+            }
+
+            .topup-button:hover {
+                opacity: 0.9;
             }
 
             .summary-row {
@@ -395,7 +437,7 @@
             .floating-btn:hover {
                 opacity: 0.9;
             }
-            /* Style cho select promotion giống Shopee */
+
             .promotion-select {
                 width: 100%;
                 padding: 12px 16px;
@@ -434,19 +476,6 @@
                 border-color: #e0e0e0;
             }
 
-            /* Style cho option trong select */
-            .promotion-select option {
-                padding: 10px;
-                color: #333;
-                background-color: white;
-            }
-
-            .promotion-select option:hover {
-                background-color: #AE1C9A;
-                color: #ee4d2d;
-            }
-
-            /* Container cho select với label */
             .promotion-wrapper {
                 margin: 12px 0;
                 position: relative;
@@ -460,7 +489,6 @@
                 font-weight: 500;
             }
 
-            /* Style cho price section */
             .price-section {
                 margin-top: 12px;
                 display: flex;
@@ -490,7 +518,6 @@
                 font-weight: 500;
             }
 
-            /* Style cho product item container */
             .product-item {
                 background: white;
                 border-radius: 8px;
@@ -500,7 +527,6 @@
                 border: 1px solid #f0f0f0;
             }
 
-            /* Responsive cho mobile */
             @media (max-width: 768px) {
                 .promotion-select {
                     padding: 10px 14px;
@@ -516,13 +542,11 @@
                 }
             }
 
-            /* Animation cho select khi thay đổi */
             .promotion-select.updating {
                 border-color: #AE1C9A;
                 box-shadow: 0 0 0 2px rgba(238, 77, 45, 0.2);
             }
 
-            /* Style cho loading state */
             .promotion-select.loading {
                 background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ee4d2d' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpath d='M21 12a9 9 0 11-6.219-8.56'/%3e%3c/svg%3e");
                 animation: spin 1s linear infinite;
@@ -568,7 +592,7 @@
                     <div style="font-size: 18px" class="section-header">
                         <div style="margin-bottom: 0px !important" class="section-title">
                             <svg class="icon" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
                             </svg>
                             <h2 style="margin-bottom: 0px !important">Địa chỉ nhận hàng</h2>
                         </div>
@@ -605,7 +629,6 @@
                                             <option value="">Không áp dụng khuyến mãi</option>
                                         </select>
                                     </div>
-
                                     <input type="hidden" name="promotion_${cartsession.value.cart.variant.variantID}" class="promotion-input" value="">
                                 </div>
                             </div>
@@ -617,7 +640,7 @@
                 <div class="section">
                     <div class="section-title" style="margin-bottom: 16px;">
                         <svg class="icon" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4zM6 18.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm13.5-9l1.96 2.5H17V9.5h2.5zm-1.5 9c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/>
+                            <path d="M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4zM6 18.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm13.5-9l1.96 2.5H17V9.5h2.5zm-1.5 9c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/>
                         </svg>
                         <h2 style="font-size: 18px">Phương thức vận chuyển</h2>
                     </div>
@@ -634,7 +657,7 @@
                 <div class="section">
                     <div class="section-title" style="margin-bottom: 16px;">
                         <svg class="icon" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/>
+                            <path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/>
                         </svg>
                         <h2 style="font-size: 18px">Phương thức thanh toán</h2>
                     </div>
@@ -652,6 +675,18 @@
                             </div>
                             <span class="payment-icon">🅿️</span>
                             <span>Ví VNPAY</span>
+                        </div>
+                        <div class="payment-option" id="wallet-option" onclick="selectPayment(this, 'wallet')">
+                            <div class="radio">
+                                <div class="radio-dot"></div>
+                            </div>
+                            <span class="payment-icon">💰</span>
+                            <span>Ví PenguinShop</span>
+                            <div class="wallet-info">
+                                Số dư: <fmt:formatNumber value="${walletBalance}" type="currency" currencyCode="VND"/>
+                            </div>
+                            <span id="wallet-insufficient-message" class="insufficient-message" style="display: none;"></span>
+                            <a id="wallet-topup-button" href="walletTopUp" class="topup-button" style="display: none;">Nạp tiền</a>
                         </div>
                     </div>
                 </div>
@@ -675,14 +710,12 @@
 
                 <!-- Form gửi dữ liệu đến Servlet -->
                 <div style="margin-bottom: 200px" class="section">
-
                     <input type="hidden" name="paymentMethod" id="paymentMethod" value="cod">
                     <input type="hidden" name="addressId" id="addressId" value="">
                     <input type="hidden" name="totalBill" id="totalBill" value="${totalBill}">
                     <input type="hidden" name="shipfee" id="shipfee" value="${shipfee}">
                     <input type="hidden" name="totalBillShip" id="totalBillShip" value="${totalBillShip}">
                     <button type="submit" class="btn-order">Đặt hàng</button>
-
                     <p class="terms">Nhấn "Đặt hàng" đồng nghĩa với việc bạn đồng ý tuân theo Điều khoản PenguinShop</p>
                 </div>
             </form>            
@@ -712,7 +745,7 @@
             <!-- Floating button -->
             <button class="floating-btn" onclick="showAddressModal()">
                 <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
                 </svg>
             </button>
             <jsp:include page="Common/Footer.jsp"/>
@@ -736,6 +769,7 @@
                 }
 
                 let promotionsData = {};
+                let userWalletBalance = parseFloat('${walletBalance}') || 0;
 
                 function formatPrice(amount) {
                     return Math.round(amount).toLocaleString('vi-VN') + ' ₫';
@@ -777,7 +811,7 @@
                         if (promotion) {
                             discountedUnitPrice = calculateDiscountedPrice(unitPrice, promotion);
                             originalPriceElement.style.display = 'inline';
-                            priceElement.style.color = '#e74c3c'; // Red for discounted price
+                            priceElement.style.color = '#e74c3c';
                             console.log('Applied promotion:', promotion.promotionName, 'New price:', discountedUnitPrice);
                         } else {
                             originalPriceElement.style.display = 'none';
@@ -818,13 +852,14 @@
                     document.getElementById('totalBillShip').value = total;
 
                     console.log(`Subtotal: ${subtotal}, Shipping: ${shippingFee}, Total: ${total}`);
+
+                    checkWalletBalance(); // Check wallet balance after updating total
                 }
 
                 function loadPromotions() {
                     const variantIds = Array.from(document.querySelectorAll('.product-item')).map(item => item.getAttribute('data-variant-id'));
                     console.log('Loading promotions for variants:', variantIds);
 
-                    // Add loading class to all selects
                     document.querySelectorAll('.promotion-select').forEach(select => {
                         select.classList.add('loading');
                         select.disabled = true;
@@ -841,11 +876,11 @@
                                 promotionsData = {};
                                 response.data.forEach(item => {
                                     promotionsData[item.variantID] = item.promotions.map(p => ({
-                                            promotionID: p.promotionID.toString(),
-                                            promotionName: p.promotionName,
-                                            discountType: p.discountType,
-                                            discountValue: p.discountValue
-                                        }));
+                                        promotionID: p.promotionID.toString(),
+                                        promotionName: p.promotionName,
+                                        discountType: p.discountType,
+                                        discountValue: p.discountValue
+                                    }));
                                 });
                                 console.log('Processed promotionsData:', promotionsData);
 
@@ -861,7 +896,6 @@
 
                                     console.log(`Populating promotions for variant ${variantId}:`, promotions);
 
-                                    // Remove loading class
                                     select.classList.remove('loading');
 
                                     select.innerHTML = '<option value="">Không áp dụng khuyến mãi</option>';
@@ -891,7 +925,6 @@
                             } else {
                                 console.error('API response failed:', response);
                                 toastr.error('Lỗi khi tải danh sách khuyến mãi!');
-                                // Remove loading class on error
                                 document.querySelectorAll('.promotion-select').forEach(select => {
                                     select.classList.remove('loading');
                                     select.disabled = false;
@@ -901,7 +934,6 @@
                         error: function (error) {
                             console.error('Error loading promotions:', error);
                             toastr.error('Đã xảy ra lỗi khi tải khuyến mãi!');
-                            // Remove loading class on error
                             document.querySelectorAll('.promotion-select').forEach(select => {
                                 select.classList.remove('loading');
                                 select.disabled = false;
@@ -926,13 +958,13 @@
                         const city = selectedAddress.city || '';
 
                         const htmlContent = '<div class="address-info">' +
-                                '<div>' +
-                                '<div style="font-size: 16px" class="address-name">' + fullName + ' | ' + phone + '</div>' +
-                                '<div style="font-size: 16px" class="address-text">' + addressDetail + ', ' + city + '</div>' +
-                                '<span style="font-size: 16px" class="default-badge">Mặc định</span>' +
-                                '</div>' +
-                                '<button style="font-size: 16px" type="button" onclick="showAddressModal()" class="btn-change">Thay đổi</button>' +
-                                '</div>';
+                            '<div>' +
+                            '<div style="font-size: 16px" class="address-name">' + fullName + ' | ' + phone + '</div>' +
+                            '<div style="font-size: 16px" class="address-text">' + addressDetail + ', ' + city + '</div>' +
+                            '<span style="font-size: 16px" class="default-badge">Mặc định</span>' +
+                            '</div>' +
+                            '<button style="font-size: 16px" type="button" onclick="showAddressModal()" class="btn-change">Thay đổi</button>' +
+                            '</div>';
 
                         addressCard.innerHTML = htmlContent;
                         addressIdInput.value = addressId;
@@ -991,29 +1023,62 @@
                         const city = defaultAddress.city || '';
 
                         const htmlContent = '<div class="address-info">' +
-                                '<div>' +
-                                '<div style="font-size: 16px" class="address-name">' + fullName + ' | ' + phone + '</div>' +
-                                '<div style="font-size: 16px" class="address-text">' + addressDetail + ', ' + city + '</div>' +
-                                '<span style="font-size: 16px" class="default-badge">Mặc định</span>' +
-                                '</div>' +
-                                '<button type="button" style="font-size: 16px" onclick="showAddressModal()" class="btn-change">Thay đổi</button>' +
-                                '</div>';
+                            '<div>' +
+                            '<div style="font-size: 16px" class="address-name">' + fullName + ' | ' + phone + '</div>' +
+                            '<div style="font-size: 16px" class="address-text">' + addressDetail + ', ' + city + '</div>' +
+                            '<span style="font-size: 16px" class="default-badge">Mặc định</span>' +
+                            '</div>' +
+                            '<button type="button" style="font-size: 16px" onclick="showAddressModal()" class="btn-change">Thay đổi</button>' +
+                            '</div>';
 
                         addressCard.innerHTML = htmlContent;
                         addressIdInput.value = defaultAddress.deliveryInfoID;
                     } else {
                         addressCard.innerHTML = '<div class="address-info">' +
-                                '<div style="font-size: 16px; color: #666;">Chưa có địa chỉ nào được chọn. Vui lòng thêm địa chỉ.</div>' +
-                                '<button style="font-size: 16px" onclick="showAddressModal()" class="btn-change">Thêm địa chỉ</button>' +
-                                '</div>';
+                            '<div style="font-size: 16px; color: #666;">Chưa có địa chỉ nào được chọn. Vui lòng thêm địa chỉ.</div>' +
+                            '<button style="font-size: 16px" onclick="showAddressModal()" class="btn-change">Thêm địa chỉ</button>' +
+                            '</div>';
                     }
                 }
 
-                displayDefaultAddress();
+                function checkWalletBalance() {
+                    const totalBillShip = parseFloat(document.getElementById('totalBillShip').value);
+                    const walletOption = document.getElementById('wallet-option');
+                    const insufficientMessage = document.getElementById('wallet-insufficient-message');
+                    const topupButton = document.getElementById('wallet-topup-button');
+
+                    if (userWalletBalance < totalBillShip) {
+                        const insufficientAmount = totalBillShip - userWalletBalance;
+                        const formattedInsufficient = formatPrice(insufficientAmount);
+                        insufficientMessage.textContent = `Số dư không đủ! Thiếu ${formattedInsufficient}`;
+                        insufficientMessage.style.display = 'inline';
+                        topupButton.style.display = 'inline-block';
+                        walletOption.classList.add('disabled');
+                        walletOption.onclick = null; // Disable click event
+                        if (selectedPayment === 'wallet') {
+                            // If wallet was selected, switch to COD
+                            const codOption = document.querySelector('.payment-option[data-payment="cod"]') || document.querySelector('.payment-option');
+                            if (codOption) {
+                                selectPayment(codOption, 'cod');
+                            }
+                        }
+                    } else {
+                        insufficientMessage.style.display = 'none';
+                        topupButton.style.display = 'none';
+                        walletOption.classList.remove('disabled');
+                        walletOption.onclick = () => selectPayment(walletOption, 'wallet'); // Restore click event
+                        if (selectedPayment === 'wallet') {
+                            toastr.success('Số dư ví đủ để thanh toán!', 'Thông báo');
+                        }
+                    }
+                }
 
                 let selectedPayment = 'cod';
 
                 function selectPayment(element, paymentId) {
+                    if (element.classList.contains('disabled')) {
+                        return; // Prevent selection if disabled
+                    }
                     document.querySelectorAll('.payment-option').forEach(option => {
                         option.classList.remove('selected');
                     });
@@ -1045,6 +1110,8 @@
                     console.log('DOMContentLoaded triggered');
                     updateFloatingButton();
                     loadPromotions();
+                    displayDefaultAddress();
+                    checkWalletBalance(); // Initial wallet balance check
                     const addressModal = document.getElementById('addressModal');
                     if (addressModal) {
                         addressModal.addEventListener('click', function (e) {

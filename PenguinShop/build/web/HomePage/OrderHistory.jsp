@@ -803,11 +803,9 @@
                                                             </button>
                                                         </c:if>
 
-                                                        <c:if test="${order.stringOrderStatus == 'Giao Hàng Thành công'}">
-                                                            <button class="btn btn-outline">
-                                                                <i class="fas fa-download"></i> Xuất hóa đơn
-                                                            </button>
-                                                        </c:if>
+                                                        <button class="btn btn-outline">
+                                                            <i class="fas fa-download"></i> Xuất hóa đơn
+                                                        </button>
                                                     </div>
 
                                                     <!-- Order Details -->

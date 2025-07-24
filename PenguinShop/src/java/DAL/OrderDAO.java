@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 public class OrderDAO extends DBContext {
+
     // Đếm số hóa đơn mới trong ngày
     public int countOrdersToday() {
         String sql = "SELECT COUNT(*) FROM tbOrder WHERE paymentStatus = 1 AND CAST(orderDate AS DATE) = CAST(GETDATE() AS DATE)";
@@ -35,11 +36,13 @@ public class OrderDAO extends DBContext {
                     return rs.getInt(1);
                 }
             }
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return 0;
     }
     // Thống kê doanh thu theo tuần trong năm
-    
+
     // Đếm tổng số hóa đơn toàn hệ thống
     public int countAllOrders() {
         String sql = "SELECT COUNT(*) FROM tbOrder WHERE paymentStatus = 1";
@@ -49,7 +52,9 @@ public class OrderDAO extends DBContext {
                     return rs.getInt(1);
                 }
             }
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return 0;
     }
 
@@ -62,7 +67,9 @@ public class OrderDAO extends DBContext {
                     return rs.getDouble(1);
                 }
             }
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return 0.0;
     }
 
@@ -76,10 +83,11 @@ public class OrderDAO extends DBContext {
                     return rs.getInt(1);
                 }
             }
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return 0;
     }
-
 
     // Tổng doanh thu cá nhân của sales
     public double sumRevenueBySalesId(int salesId) {
@@ -91,10 +99,11 @@ public class OrderDAO extends DBContext {
                     return rs.getDouble(1);
                 }
             }
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return 0.0;
     }
-
 
     // Lấy N hóa đơn gần đây nhất do sales xử lý
     public List<Order> getRecentOrdersBySalesId(int salesId, int top) {
@@ -116,10 +125,13 @@ public class OrderDAO extends DBContext {
                     list.add(o);
                 }
             }
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return list;
     }
-        // Thống kê doanh thu theo tháng
+    // Thống kê doanh thu theo tháng
+
     public List<Models.MonthValue> getMonthlyRevenue(int year) {
         List<Models.MonthValue> list = new ArrayList<>();
         String sql = "SELECT MONTH(orderDate) as month, SUM(total) as revenue FROM tbOrder WHERE YEAR(orderDate) = ? AND paymentStatus = 1 GROUP BY MONTH(orderDate) ORDER BY month";
@@ -130,10 +142,13 @@ public class OrderDAO extends DBContext {
                     list.add(new Models.MonthValue(rs.getInt("month"), rs.getDouble("revenue")));
                 }
             }
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return list;
     }
-        // Lấy top N user chi nhiều tiền nhất
+    // Lấy top N user chi nhiều tiền nhất
+
     public List<Models.MonthValue> getTopUserSpending(int top) {
         List<Models.MonthValue> list = new ArrayList<>();
         String sql = "SELECT TOP " + top + " u.userID, SUM(o.total) as totalSpent FROM tbOrder o JOIN tbUsers u ON o.userID = u.userID WHERE o.paymentStatus = 1 GROUP BY u.userID ORDER BY totalSpent DESC";
@@ -143,9 +158,12 @@ public class OrderDAO extends DBContext {
                     list.add(new Models.MonthValue(rs.getInt("userID"), rs.getDouble("totalSpent")));
                 }
             }
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return list;
     }
+
     // Lấy 5 đơn hàng gần nhất
     public List<Order> getLatestOrders(int top) {
         List<Order> list = new ArrayList<>();
@@ -165,10 +183,11 @@ public class OrderDAO extends DBContext {
                     list.add(o);
                 }
             }
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return list;
     }
-
 
     // Thống kê số đơn hàng theo tháng
     public List<Models.MonthValue> getMonthlyOrderCount(int year) {
@@ -181,9 +200,12 @@ public class OrderDAO extends DBContext {
                     list.add(new Models.MonthValue(rs.getInt("month"), rs.getInt("count")));
                 }
             }
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return list;
     }
+
     public List<Order> getOrder(int userID, String[] info) {
         List<Order> orders = new ArrayList<>();
         int limit = 2;
@@ -736,6 +758,7 @@ public class OrderDAO extends DBContext {
         }
         return false;
     }
+
     public boolean updateOrderStatuss(int orderID, int status) {
         String sql = "UPDATE dbo.tbOrder SET orderStatus = ? WHERE orderID = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -749,7 +772,21 @@ public class OrderDAO extends DBContext {
         }
         return false;
     }
-    public boolean plusWallet(double amount, int userID){
+    public boolean updateWallet(int uid) {
+        String sql = "UPDATE dbo.tbUsers SET wallet = ? WHERE userID = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, 0);
+            ps.setInt(2, uid);
+            int row = ps.executeUpdate();
+            if (row > 0) {
+                return true;
+            }
+        } catch (Exception e) {
+        }
+        return false;
+    }
+
+    public boolean plusWallet(double amount, int userID) {
         String sql = "UPDATE dbo.tbUsers SET wallet = wallet + ? WHERE userID = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setDouble(1, amount);
@@ -760,8 +797,58 @@ public class OrderDAO extends DBContext {
             }
         } catch (Exception e) {
         }
-        return false; 
+        return false;
     }
+    // Lấy số dư ví của user
+
+    public double getWalletBalance(int userID) {
+        String sql = "SELECT wallet FROM dbo.tbUsers WHERE userID = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, userID);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getDouble("wallet");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0.0;
+    }
+
+    // Trừ tiền ví nếu đủ số dư
+    public boolean deductWallet(double amount, int userID) {
+        boolean success = false;
+        try {
+            connection.setAutoCommit(false); // Bắt đầu transaction
+
+            String sql = "UPDATE dbo.tbUsers SET wallet = wallet - ? WHERE userID = ? AND wallet >= ?";
+            try (PreparedStatement ps = connection.prepareStatement(sql)) {
+                ps.setDouble(1, amount);
+                ps.setInt(2, userID);
+                ps.setDouble(3, amount);
+                int row = ps.executeUpdate();
+                success = row > 0;
+            }
+
+            connection.commit(); // Commit nếu không lỗi
+        } catch (Exception e) {
+            try {
+                connection.rollback();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            e.printStackTrace();
+        } finally {
+            try {
+                connection.setAutoCommit(true);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return success;
+    }
+    
+    
 
     public static void main(String[] args) {
         OrderDAO odao = new OrderDAO();
