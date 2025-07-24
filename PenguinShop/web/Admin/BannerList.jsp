@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <!DOCTYPE html>
 <html>
@@ -141,6 +142,65 @@
                 </div>
             </div>
         </div>
+
+        <!-- Pagination -->
+        <c:if test="${totalPages > 0}">
+            <div class="row">
+                <div class="col-12 d-flex justify-content-center">
+                    <ul class="pagination">
+                        <c:if test="${currentPage > 1}">
+                            <li class="page-item">
+                                <a class="page-link" href="listBanner?page=${currentPage - 1}
+                                    <c:if test='${not empty param.bannerName}'>
+                                        &amp;bannerName=${fn:escapeXml(param.bannerName)}
+                                    </c:if>
+                                    <c:if test='${not empty param.bannerHref}'>
+                                        &amp;bannerHref=${fn:escapeXml(param.bannerHref)}
+                                    </c:if>
+                                    <c:if test='${not empty param.bannerStatus}'>
+                                        &amp;bannerStatus=${param.bannerStatus}
+                                    </c:if>">
+                                    &laquo;
+                                </a>
+                            </li>
+                        </c:if>
+                        <c:forEach var="i" begin="1" end="${totalPages}">
+                            <li class="page-item <c:if test='${i == currentPage}'>active</c:if>"> 
+                                <a class="page-link" href="listBanner?page=${i}
+                                    <c:if test='${not empty param.bannerName}'>
+                                        &amp;bannerName=${fn:escapeXml(param.bannerName)}
+                                    </c:if>
+                                    <c:if test='${not empty param.bannerHref}'>
+                                        &amp;bannerHref=${fn:escapeXml(param.bannerHref)}
+                                    </c:if>
+                                    <c:if test='${not empty param.bannerStatus}'>
+                                        &amp;bannerStatus=${param.bannerStatus}
+                                    </c:if>">
+                                    ${i}
+                                </a>
+                            </li>
+                        </c:forEach>
+                        <c:if test="${currentPage < totalPages}">
+                            <li class="page-item">
+                                <a class="page-link" href="listBanner?page=${currentPage + 1}
+                                    <c:if test='${not empty param.bannerName}'>
+                                        &amp;bannerName=${fn:escapeXml(param.bannerName)}
+                                    </c:if>
+                                    <c:if test='${not empty param.bannerHref}'>
+                                        &amp;bannerHref=${fn:escapeXml(param.bannerHref)}
+                                    </c:if>
+                                    <c:if test='${not empty param.bannerStatus}'>
+                                        &amp;bannerStatus=${param.bannerStatus}
+                                    </c:if>">
+                                    &raquo;
+                                </a>
+                            </li>
+                        </c:if>
+                    </ul>
+                </div>
+            </div>
+        </c:if>
+
         <jsp:include page="Common/Js.jsp"/>
         <jsp:include page="Common/Message.jsp"/>
         <style>

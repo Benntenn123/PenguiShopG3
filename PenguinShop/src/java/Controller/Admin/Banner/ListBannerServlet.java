@@ -23,33 +23,47 @@ public class ListBannerServlet extends HttpServlet {
         String bannerHref = request.getParameter("bannerHref");
         String bannerStatusStr = request.getParameter("bannerStatus");
         
+        // Phân trang
+        int page = 1;
+        int pageSize = 10;
+        String pageParam = request.getParameter("page");
+        if (pageParam != null) {
+            try {
+                page = Integer.parseInt(pageParam);
+                if (page < 1) page = 1;
+            } catch (NumberFormatException e) { }
+        }
+
         List<Banner> bannerList;
-        
-        // Kiểm tra nếu có tham số search thì gọi method search, không thì lấy tất cả
+        int totalRecords = 0;
+        int totalPages = 1;
+
         if ((bannerName != null && !bannerName.trim().isEmpty()) ||
             (bannerHref != null && !bannerHref.trim().isEmpty()) ||
             (bannerStatusStr != null && !bannerStatusStr.trim().isEmpty())) {
-            
             Integer bannerStatus = null;
             if (bannerStatusStr != null && !bannerStatusStr.trim().isEmpty()) {
                 try {
                     bannerStatus = Integer.parseInt(bannerStatusStr);
-                } catch (NumberFormatException e) {
-                    // Ignore invalid status
-                }
+                } catch (NumberFormatException e) { }
             }
-            
-            bannerList = dao.searchBanners(bannerName, bannerHref, bannerStatus);
+            // Cần thêm 2 hàm mới trong BannerDAO: searchBannersPaging và countBannersSearch
+            bannerList = dao.searchBannersPaging(bannerName, bannerHref, bannerStatus, page, pageSize);
+            totalRecords = dao.countBannersSearch(bannerName, bannerHref, bannerStatus);
         } else {
-            bannerList = dao.getAllBannersList();
+            bannerList = dao.getAllBannersPaging(page, pageSize);
+            totalRecords = dao.countAllBanners();
         }
-        
+        totalPages = (int) Math.ceil((double) totalRecords / pageSize);
+
         // Set attributes cho JSP
         request.setAttribute("bannerList", bannerList);
         request.setAttribute("bannerName", bannerName);
         request.setAttribute("bannerHref", bannerHref);
         request.setAttribute("bannerStatus", bannerStatusStr);
-        
+        request.setAttribute("currentPage", page);
+        request.setAttribute("totalPages", totalPages);
+
         request.getRequestDispatcher("../Admin/BannerList.jsp").forward(request, response);
     }
 }

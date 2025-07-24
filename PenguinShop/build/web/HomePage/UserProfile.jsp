@@ -1,4 +1,4 @@
-
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -57,12 +57,19 @@
                                                                        placeholder="+8488**0899" name="telephone" value="${user.phone}">
                                                             </div>
                                                         </div>
-
-                                                        <div class="review-form-name address-form">
+                                                            <div class=" account-inner-form">   
+                                                        <div class="review-form-name">
                                                             <label for="addres" class="form-label">Địa chỉ</label>
                                                             <input type="text" id="addres" class="form-control"
                                                                    placeholder="Địa chỉ" readonly="" name="addres" value="${user.address}">
                                                         </div>
+                                                        <div class="review-form-name ">
+                                                            <label for="addres" class="form-label">Số dư ví</label>
+                                                            <input type="text" id="addres" class="form-control"
+                                                                   placeholder="Số dư ví" readonly name="addres"
+                                                                   value="<fmt:formatNumber value='${user.wallet}' type='currency' currencySymbol='₫' groupingUsed='true' maxFractionDigits='0'/>">
+                                                        </div>
+                                                        </div> 
                                                         <div class="review-form-name address-form">
                                                             <label for="birthday" class="form-label">Ngày sinh*</label>
                                                             <input type="date" id="birthday" class="form-control"

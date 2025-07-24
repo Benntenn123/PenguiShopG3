@@ -188,7 +188,9 @@ public class UserDAO extends DBContext {
     
 
     public User loadUserInfoByEmail(String email) {
-        String sql = "SELECT u.userID,u.fullName,u.roleID,d.addressDetail AS address, u.birthday,u.phone, u.email, u.image_user,u.created_at,u.status_account FROM tbUsers u \n"
+        String sql = "SELECT u.userID,u.fullName,u.roleID,d.addressDetail AS address,"
+                + " u.birthday,u.phone, u.email, u.image_user,u.created_at,u.status_account,u.wallet "
+                + "FROM tbUsers u \n"
                 + "LEFT JOIN dbo.tbDeliveryInfo d ON d.userID = u.userID\n"
                 + "WHERE u.email = ?";
         try {
@@ -209,6 +211,7 @@ public class UserDAO extends DBContext {
                 user.setImage_user(rs.getString("image_user"));
                 user.setStatus_account(rs.getInt("status_account"));
                 user.setCreated_at(rs.getString("created_at"));
+                user.setWallet(rs.getDouble("wallet"));
                 return user;
             }
         } catch (SQLException e) {

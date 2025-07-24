@@ -49,7 +49,7 @@
                                                         <option value="0" ${o.orderStatus == '0' ? 'selected' : ''}>Đã Hủy</option>
                                                         <option value="1" ${o.orderStatus == '1' ? 'selected' : ''}>Giao Hàng Thành Công</option>
                                                         <option value="2" ${o.orderStatus == '2' ? 'selected' : ''}>Đang Giao</option>
-                                                        <option value="3" ${o.orderStatus == '3' ? 'selected' : ''}>Hoàn Hàng</option>
+                                                        <option value="3" ${o.orderStatus == '3' ? 'selected' : ''}>Chờ hủy đơn</option>
                                                         <option value="4" ${o.orderStatus == '4' ? 'selected' : ''}>Đang Chờ Xử Lí</option>
                                                         <option value="5" ${o.orderStatus == '5' ? 'selected' : ''}>Đã Xác Nhận</option>
                                                     </select>

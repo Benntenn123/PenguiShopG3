@@ -169,7 +169,7 @@ public class Order {
             case 2:
                 return "Đang Giao";
             case 3:
-                return "Hoàn Hàng";
+                return "Đang chờ hoàn";
             case 4:
                 return "Đang Chờ Xử Lí";
             case 5:

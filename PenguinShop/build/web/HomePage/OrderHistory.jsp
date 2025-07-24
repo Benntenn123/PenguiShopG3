@@ -742,8 +742,8 @@
                                                             <c:if test="${order.stringOrderStatus == 'Đang Giao'}">
                                                                 <i class="fas fa-truck"></i> Đang Giao
                                                             </c:if>
-                                                            <c:if test="${order.stringOrderStatus == 'Hoàn Hàng'}">
-                                                                <i class="fas fa-undo"></i> Hoàn Hàng
+                                                            <c:if test="${order.stringOrderStatus == 'Đang chờ hoàn'}">
+                                                                <i class="fas fa-undo"></i> Đang chờ hoàn
                                                             </c:if>
                                                             <c:if test="${order.stringOrderStatus == 'Đang Chờ Xử Lí'}">
                                                                 <i class="fas fa-clock"></i> Đang Chờ Xử Lí
@@ -751,7 +751,13 @@
                                                             <c:if test="${order.stringOrderStatus == 'Đã Xác Nhận'}">
                                                                 <i class="fas fa-cog fa-spin"></i> Đã Xác Nhận
                                                             </c:if>
-                                                            <c:if test="${order.stringOrderStatus != 'Đã Hủy' && order.stringOrderStatus != 'Giao Hàng Thành công' && order.stringOrderStatus != 'Đang Giao' && order.stringOrderStatus != 'Hoàn Hàng' && order.stringOrderStatus != 'Đang Chờ Xử Lí' && order.stringOrderStatus != 'Đã Xác Nhận'}">
+                                                            <c:if test="${order.stringOrderStatus != 'Đã Hủy' &&
+                                                                          order.stringOrderStatus != 'Giao Hàng Thành công'
+                                                                          && order.stringOrderStatus != 'Đang Giao'
+                                                                          && order.stringOrderStatus != 'Hoàn Hàng'
+                                                                          && order.stringOrderStatus != 'Đang Chờ Xử Lí'
+                                                                          && order.stringOrderStatus != 'Đã Xác Nhận'
+                                                                          && order.stringOrderStatus != 'Đang chờ hoàn'}">
                                                                 <i class="fas fa-exclamation-circle"></i> Lỗi
                                                             </c:if>
                                                         </span>
@@ -797,9 +803,11 @@
                                                             </button>
                                                         </c:if>
 
-                                                        <button class="btn btn-outline">
-                                                            <i class="fas fa-download"></i> Xuất hóa đơn
-                                                        </button>
+                                                        <c:if test="${order.stringOrderStatus == 'Giao Hàng Thành công'}">
+                                                            <button class="btn btn-outline">
+                                                                <i class="fas fa-download"></i> Xuất hóa đơn
+                                                            </button>
+                                                        </c:if>
                                                     </div>
 
                                                     <!-- Order Details -->
@@ -960,14 +968,32 @@
                 if (confirm('Bạn có chắc chắn muốn hủy đơn hàng này không?')) {
                     const button = event.target.closest('button');
                     const originalText = button.innerHTML;
-
                     button.innerHTML = '<div class="loading"></div> Đang hủy...';
                     button.disabled = true;
 
-                    setTimeout(() => {
-                        alert('Đơn hàng đã được hủy thành công!');
-                        location.reload();
-                    }, 2000);
+                    fetch('cancelOrder', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body: 'orderID=' + encodeURIComponent(orderID)
+                    })
+                    .then(response => response.text().then(text => ({ status: response.status, text })))
+                    .then(({ status, text }) => {
+                        if (status === 200) {
+                            alert('Yêu cầu hủy đơn hàng đã được gửi!');
+                            location.reload();
+                        } else {
+                            alert('Hủy đơn hàng thất bại: ' + text);
+                            button.innerHTML = originalText;
+                            button.disabled = false;
+                        }
+                    })
+                    .catch(() => {
+                        alert('Có lỗi xảy ra khi gửi yêu cầu hủy đơn hàng!');
+                        button.innerHTML = originalText;
+                        button.disabled = false;
+                    });
                 }
             }
 

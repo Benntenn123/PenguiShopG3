@@ -21,6 +21,7 @@ public class User {
     private List<Permission> permissions;
 
     private int permissionCount;
+    private double wallet;
     // Getter & Setter cho permissions
     public List<Permission> getPermissions() {
         return permissions;
@@ -139,6 +140,14 @@ public class User {
     // Getters and Setters
     public int getUserID() {
         return userID;
+    }
+
+    public double getWallet() {
+        return wallet;
+    }
+
+    public void setWallet(double wallet) {
+        this.wallet = wallet;
     }
 
     public int getPermissionCount() {

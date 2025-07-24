@@ -327,6 +327,83 @@
                         </div>
                     </c:otherwise>
                 </c:choose>
+
+                <!-- Pagination -->
+                <c:if test="${totalPages > 0}">
+                    <div class="row">
+                        <div class="col-12 d-flex justify-content-center">
+                            <ul class="pagination custom-pagination">
+                                <c:if test="${currentPage > 1}">
+                                    <li class="page-item">
+                                        <a class="page-link" href="brands?page=${currentPage - 1}
+                                            <c:if test='${not empty searchName}'>
+                                                &amp;searchName=${fn:escapeXml(searchName)}
+                                            </c:if>">
+                                            &laquo;
+                                        </a>
+                                    </li>
+                                </c:if>
+                                <c:forEach var="i" begin="1" end="${totalPages}">
+                                    <li class="page-item <c:if test='${i == currentPage}'>active</c:if>">
+                                        <a class="page-link" href="brands?page=${i}
+                                            <c:if test='${not empty searchName}'>
+                                                &amp;searchName=${fn:escapeXml(searchName)}
+                                            </c:if>">
+                                            ${i}
+                                        </a>
+                                    </li>
+                                </c:forEach>
+                                <c:if test="${currentPage < totalPages}">
+                                    <li class="page-item">
+                                        <a class="page-link" href="brands?page=${currentPage + 1}
+                                            <c:if test='${not empty searchName}'>
+                                                &amp;searchName=${fn:escapeXml(searchName)}
+                                            </c:if>">
+                                            &raquo;
+                                        </a>
+                                    </li>
+                                </c:if>
+                            </ul>
+                        </div>
+                    </div>
+                </c:if>
+
+        <style>
+            .custom-pagination {
+                background: none;
+                border-radius: 32px;
+                box-shadow: none;
+                padding: 0 8px;
+            }
+            .custom-pagination .page-item {
+                margin: 0 4px;
+            }
+            .custom-pagination .page-link {
+                min-width: 48px;
+                height: 48px;
+                font-size: 1.25rem;
+                font-weight: 600;
+                border-radius: 50px !important;
+                border: none;
+                color: #AE1C9A;
+                background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: all 0.2s;
+                box-shadow: 0 2px 8px rgba(174,28,154,0.08);
+            }
+            .custom-pagination .page-link:hover, .custom-pagination .page-item.active .page-link {
+                background: linear-gradient(135deg, #AE1C9A 0%, #c44ca8 100%);
+                color: #fff;
+                box-shadow: 0 4px 16px rgba(174,28,154,0.18);
+                text-decoration: none;
+            }
+            .custom-pagination .page-item.active .page-link {
+                font-weight: bold;
+                border: none;
+            }
+        </style>
             </div>
         </section>
 

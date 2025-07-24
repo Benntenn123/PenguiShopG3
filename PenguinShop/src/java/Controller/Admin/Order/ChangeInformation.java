@@ -8,6 +8,7 @@ import Const.Delivery;
 import Const.StatusOrder;
 import DAL.DeliveryDAO;
 import DAL.OrderDAO;
+import DAL.UserDAO;
 import Models.DeliveryInfo;
 import Models.Order;
 import Utils.ReadFile;
@@ -57,7 +58,7 @@ public class ChangeInformation extends HttpServlet {
                 int oID = Integer.parseInt(orderID);  // chuyển thành integer
                 Order o = odao.getOrderDetails(oID);
                 request.setAttribute("o", o);
-                
+
                 List<DeliveryInfo> deli = ddao.loadDefaultDelivery(o.getUser().getUserID());
                 request.setAttribute("deli", deli);
 
@@ -84,10 +85,26 @@ public class ChangeInformation extends HttpServlet {
         } else {
             try {
                 int status = Integer.parseInt(data[6]);
-                
+                int statusNew = Integer.parseInt(data[4]);
                 System.out.println(status);
+                System.out.println(statusNew);
                 if (status == StatusOrder.DANG_CHO_XU_LI || status == StatusOrder.DA_XAC_NHAN) {   // chỉ cho đổi trong th chưa ship chưa giao xong như shoppee
                     if (odao.UpdateOrder(data)) {
+                        if (statusNew == StatusOrder.DA_HUY) {
+                            try {
+                                int oID = Integer.parseInt(data[5]);
+                                Order o = odao.getOrderDetails(oID);
+                                System.out.println(o.getTotal() +" hejshns");
+                                System.out.println(o.getUser().getUserID() +"jsnansnc");
+                                odao.plusWallet(o.getTotal(), o.getUser().getUserID());
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            request.getSession().setAttribute("ms", "Chỉnh sửa thông tin thành công!");
+                        }
+                        else{
+                            
+                        }
                         request.getSession().setAttribute("ms", "Chỉnh sửa thông tin thành công!");
                     } else {
                         request.getSession().setAttribute("error", "Chỉnh sửa thông tin không thành công!");
@@ -111,7 +128,7 @@ public class ChangeInformation extends HttpServlet {
         String phone = request.getParameter("phone");
         String address = request.getParameter("address");
         String oldStatus = request.getParameter("statusOld");
-        return new String[]{address, email, phone, name_receiver, status, orderID,oldStatus};
+        return new String[]{address, email, phone, name_receiver, status, orderID, oldStatus};
     }
 
     @Override

@@ -736,6 +736,32 @@ public class OrderDAO extends DBContext {
         }
         return false;
     }
+    public boolean updateOrderStatuss(int orderID, int status) {
+        String sql = "UPDATE dbo.tbOrder SET orderStatus = ? WHERE orderID = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, status);
+            ps.setInt(2, orderID);
+            int row = ps.executeUpdate();
+            if (row > 0) {
+                return true;
+            }
+        } catch (Exception e) {
+        }
+        return false;
+    }
+    public boolean plusWallet(double amount, int userID){
+        String sql = "UPDATE dbo.tbUsers SET wallet = wallet + ? WHERE userID = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setDouble(1, amount);
+            ps.setInt(2, userID);
+            int row = ps.executeUpdate();
+            if (row > 0) {
+                return true;
+            }
+        } catch (Exception e) {
+        }
+        return false; 
+    }
 
     public static void main(String[] args) {
         OrderDAO odao = new OrderDAO();

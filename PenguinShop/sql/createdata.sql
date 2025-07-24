@@ -90,6 +90,7 @@ CREATE TABLE tbUsers (
     google_id NVARCHAR(255),
     created_at DATETIME, -- Bỏ CURRENT_TIMESTAMP
     updated_at DATETIME, -- Bỏ CURRENT_TIMESTAMP
+    wallet DECIMAL(18,2) DEFAULT 0, -- Số dư ví
     FOREIGN KEY (roleID) REFERENCES tbRoles(roleID)
 );
 

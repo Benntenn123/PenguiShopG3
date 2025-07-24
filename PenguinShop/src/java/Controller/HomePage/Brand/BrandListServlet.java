@@ -23,22 +23,41 @@ public class BrandListServlet extends HttpServlet {
         try {
             // Get search parameters
             String searchName = request.getParameter("searchName");
-            
-            // For now, we'll get all brands and implement basic filtering
-            List<Brand> brands = brandDAO.getAllBrand();
-            
-            // Filter brands if search name is provided
+
+            // Phân trang
+            int page = 1;
+            int pageSize = 9;
+            String pageParam = request.getParameter("page");
+            if (pageParam != null) {
+                try {
+                    page = Integer.parseInt(pageParam);
+                    if (page < 1) page = 1;
+                } catch (NumberFormatException e) { }
+            }
+
+            // Lấy danh sách brand và lọc search
+            List<Brand> allBrands = brandDAO.getAllBrand();
             if (searchName != null && !searchName.trim().isEmpty()) {
-                brands = brands.stream()
+                allBrands = allBrands.stream()
                     .filter(brand -> brand.getBrandName().toLowerCase()
                         .contains(searchName.toLowerCase().trim()))
                     .collect(java.util.stream.Collectors.toList());
             }
+            int totalBrands = allBrands.size();
+            int totalPages = (int) Math.ceil((double) totalBrands / pageSize);
+            if (page > totalPages && totalPages > 0) page = totalPages;
 
-            // Set attributes for JSP
+            // Lấy danh sách brand cho trang hiện tại
+            int fromIndex = (page - 1) * pageSize;
+            int toIndex = Math.min(fromIndex + pageSize, totalBrands);
+            List<Brand> brands = (fromIndex < toIndex) ? allBrands.subList(fromIndex, toIndex) : java.util.Collections.emptyList();
+
+            // Set attributes cho JSP
             request.setAttribute("brands", brands);
-            request.setAttribute("totalBrands", brands.size());
+            request.setAttribute("totalBrands", totalBrands);
             request.setAttribute("searchName", searchName);
+            request.setAttribute("currentPage", page);
+            request.setAttribute("totalPages", totalPages);
 
             // Forward to JSP page
             request.getRequestDispatcher("HomePage/BrandList.jsp").forward(request, response);
