@@ -71,7 +71,7 @@
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label for="user" class="form-label">Người dùng</label>
-                                                    <input type="number" class="form-control" id="user" name="user" 
+                                                    <input type="text" class="form-control" id="email" name="email" 
                                                            placeholder="Nhập email..." value="${param.email}" min="0">
                                                 </div>
                                             </div>
@@ -216,7 +216,7 @@
                                         <!-- Trang đầu -->
                                         <c:if test="${currentPage > 3}">
                                             <li class="page-item">
-                                                <a class="page-link" href="?page=1&orderID=${param.orderID}&from=${param.from}&to=${param.to}&status=${param.status}&user=${param.user}">1</a>
+                                                <a class="page-link" href="?page=1&orderID=${param.orderID}&from=${param.from}&to=${param.to}&status=${param.status}&email=${param.email}">1</a>
                                             </li>
                                             <c:if test="${currentPage > 4}">
                                                 <li class="page-item disabled"><span class="page-link">...</span></li>
@@ -231,7 +231,7 @@
                                                         <span class="page-link">${i}</span>
                                                     </c:when>
                                                     <c:otherwise>
-                                                        <a class="page-link" href="?page=${i}&orderID=${param.orderID}&from=${param.from}&to=${param.to}&status=${param.status}&user=${param.user}">${i}</a>
+                                                        <a class="page-link" href="?page=${i}&orderID=${param.orderID}&from=${param.from}&to=${param.to}&status=${param.status}&email=${param.email}">${i}</a>
                                                     </c:otherwise>
                                                 </c:choose>
                                             </li>
@@ -243,7 +243,7 @@
                                                 <li class="page-item disabled"><span class="page-link">...</span></li>
                                                 </c:if>
                                             <li class="page-item">
-                                                <a class="page-link" href="?page=${totalPages}&orderID=${param.orderID}&from=${param.from}&to=${param.to}&status=${param.status}&user=${param.user}">${totalPages}</a>
+                                                <a class="page-link" href="?page=${totalPages}&orderID=${param.orderID}&from=${param.from}&to=${param.to}&status=${param.status}&email=${param.email}">${totalPages}</a>
                                             </li>
                                         </c:if>
 
@@ -256,7 +256,7 @@
                                                     </span>
                                                 </c:when>
                                                 <c:otherwise>
-                                                    <a class="page-link" href="?page=${currentPage + 1}&orderID=${param.orderID}&from=${param.from}&to=${param.to}&status=${param.status}&user=${param.user}">
+                                                    <a class="page-link" href="?page=${currentPage + 1}&orderID=${param.orderID}&from=${param.from}&to=${param.to}&status=${param.status}&email=${param.user}">
                                                         <i class="mdi mdi-chevron-right"></i>
                                                     </a>
                                                 </c:otherwise>
