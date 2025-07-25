@@ -88,7 +88,7 @@ public class ChangeInformation extends HttpServlet {
                 int statusNew = Integer.parseInt(data[4]);
                 System.out.println(status);
                 System.out.println(statusNew);
-                if (status == StatusOrder.DANG_CHO_XU_LI || status == StatusOrder.DA_XAC_NHAN) {   // chỉ cho đổi trong th chưa ship chưa giao xong như shoppee
+                if (status == StatusOrder.DANG_CHO_XU_LI || status == StatusOrder.DA_XAC_NHAN || status == StatusOrder.CHO_HUY_DON) {   // chỉ cho đổi trong th chưa ship chưa giao xong như shoppee
                     if (odao.UpdateOrder(data)) {
                         if (statusNew == StatusOrder.DA_HUY) {
                             try {

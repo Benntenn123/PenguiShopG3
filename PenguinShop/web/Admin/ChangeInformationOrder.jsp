@@ -44,7 +44,7 @@
                                                     <label for="choices-single-default" class="form-label font-size-13 text-muted">Trạng thái order</label>
                                                     <select class="form-control" data-trigger name="orderStatus"
                                                             id="orderStatus" name="orderStatus" placeholder="Chọn trạng thái đơn hàng" required
-                                                            ${o.orderStatus == '0' || o.orderStatus == '1'|| o.orderStatus == '2' ||o.orderStatus == '3'? 'disabled' : ''}>
+                                                            ${o.orderStatus == '0' || o.orderStatus == '1'|| o.orderStatus == '2'? 'disabled' : ''}>
                                                         <option value="">Lựa chọn trạng thái</option>
                                                         <option value="0" ${o.orderStatus == '0' ? 'selected' : ''}>Đã Hủy</option>
                                                         <option value="1" ${o.orderStatus == '1' ? 'selected' : ''}>Giao Hàng Thành Công</option>
@@ -70,11 +70,7 @@
                                                             <i class="fas fa-lock"></i> Đơn hàng đã được xử lí không thể thay đổi trạng thái
                                                         </small>
                                                     </c:if>
-                                                    <c:if test="${o.orderStatus == '3'}">
-                                                        <small class="text-muted">
-                                                            <i class="fas fa-lock"></i> Đơn hàng đã được hoàn trả không thể thay đổi trạng thái
-                                                        </small>
-                                                    </c:if>
+                                                    
                                                 </div>
                                             </div>
                                             <div class="col-md-12">
@@ -199,9 +195,9 @@ document.getElementById('edit-province').addEventListener('change', function() {
                                         </div>
 
                                         <button class="btn btn-primary" type="submit" 
-                                                ${o.orderStatus == '0' || o.orderStatus == '1'|| o.orderStatus == '2'||o.orderStatus == '3' ? 'disabled' : ''}>
+                                                ${o.orderStatus == '0' || o.orderStatus == '1'|| o.orderStatus == '2' ? 'disabled' : ''}>
                                             <c:choose>
-                                                <c:when test="${o.orderStatus == '0' || o.orderStatus == '1'|| o.orderStatus == '2'|| o.orderStatus == '3'}">
+                                                <c:when test="${o.orderStatus == '0' || o.orderStatus == '1'|| o.orderStatus == '2'}">
                                                     <i class="fas fa-lock me-2"></i>Không thể cập nhật
                                                 </c:when>
                                                 <c:otherwise>
