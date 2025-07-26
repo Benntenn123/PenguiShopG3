@@ -2,9 +2,9 @@ package APIKey;
 
 public class Google {
     
-    public static final String GOOGLE_CLIENT_ID = "146140634281-fpcq5p7mocfjo2lu3g8vvv9th2qqf6le.apps.googleusercontent.com";
+    public static final String GOOGLE_CLIENT_ID = "";
 
-    public static final String GOOGLE_CLIENT_SECRET = "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";
+    public static final String GOOGLE_CLIENT_SECRET = "";
 //    public static final String GOOGLE_CLIENT_ID = "";
 //
 //    public static final String GOOGLE_CLIENT_SECRET = "";
