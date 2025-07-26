@@ -627,26 +627,26 @@
                 });
 
                 // Handle form submission
-                document.getElementById('partnershipSupportForm').addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    
-                    const formData = new FormData(this);
-                    
-                    fetch('sendRequestSupport', {
-                        method: 'POST',
-                        body: formData
-                    })
-                    .then(response => response.text())
-                    .then(data => {
-                        alert('Cảm ơn bạn! Yêu cầu hỗ trợ đã được gửi thành công. Chúng tôi sẽ liên hệ với bạn sớm nhất.');
-                        partnershipChatWindow.classList.remove('active');
-                        this.reset();
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        alert('Có lỗi xảy ra. Vui lòng thử lại sau.');
-                    });
-                });
+//                document.getElementById('partnershipSupportForm').addEventListener('submit', function(e) {
+//                    e.preventDefault();
+//                    
+//                    const formData = new FormData(this);
+//                    
+//                    fetch('sendRequestSupport', {
+//                        method: 'POST',
+//                        body: formData
+//                    })
+//                    .then(response => response.text())
+//                    .then(data => {
+//                        alert('Cảm ơn bạn! Yêu cầu hỗ trợ đã được gửi thành công. Chúng tôi sẽ liên hệ với bạn sớm nhất.');
+//                        partnershipChatWindow.classList.remove('active');
+//                        this.reset();
+//                    })
+//                    .catch(error => {
+//                        console.error('Error:', error);
+//                        alert('Có lỗi xảy ra. Vui lòng thử lại sau.');
+//                    });
+//                });
             </script>
 
             <!--------------- jQuery ---------------->

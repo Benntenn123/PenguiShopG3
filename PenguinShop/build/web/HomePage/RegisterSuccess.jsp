@@ -51,6 +51,9 @@
                 width: 100%;
                 animation: slideInUp 0.8s ease-out 0.3s both;
                 border: 1px solid rgba(255, 255, 255, 0.2);
+                /* Đảm bảo tất cả nội dung nằm trong card */
+                box-sizing: border-box;
+                overflow: hidden;
             }
 
             .thank-you-title {
@@ -68,20 +71,40 @@
             .thank-you-message {
                 font-size: 1.2rem;
                 color: #666;
-                margin-bottom: 30px;
+                margin-bottom: 25px;
                 line-height: 1.6;
                 animation: fadeIn 1s ease-out 0.6s both;
             }
 
-            .email-verification {
+            .email-check-button {
+                display: inline-flex; /* Dùng inline-flex để nút giữ kích thước nội dung */
+                align-items: center;
+                justify-content: center;
+
                 background: linear-gradient(135deg, #ff6b6b, #feca57);
                 color: white;
                 padding: 15px 25px;
                 border-radius: 50px;
-                margin: 20px 0;
                 font-weight: bold;
+                font-size: 1rem;
+                text-align: center;
                 animation: pulse 2s infinite;
                 box-shadow: 0 10px 30px rgba(255, 107, 107, 0.3);
+
+                margin: 0 auto 25px auto; /* Căn giữa theo chiều ngang */
+                width: auto; /* Không ép kích thước */
+                max-width: 100%;
+                margin-top: 40px;
+                gap: 10px; /* Khoảng cách giữa icon và text */
+                margin-left: 240px;
+            }
+
+
+
+            /* Thêm spacing cho text sau email check button */
+            .email-check-button + .thank-you-message {
+                margin-top: 20px;
+                margin-bottom: 25px;
             }
 
             .social-icon {
@@ -89,8 +112,10 @@
                 gap: 20px;
                 padding: 0;
                 list-style: none;
-                margin-top: 30px;
+                margin-top: 25px;
+                margin-bottom: 0;
                 animation: fadeInUp 1s ease-out 0.9s both;
+                justify-content: center;
             }
 
             .social-icon li a {
@@ -338,29 +363,35 @@
                     padding: 30px 20px;
                     margin: 20px;
                 }
-                
+
                 .thank-you-title {
                     font-size: 2rem;
                 }
-                
+
                 .success-icon {
                     font-size: 80px;
                 }
-                
+
                 .social-icon li a {
                     width: 50px;
                     height: 50px;
                     font-size: 20px;
                 }
+
+                .email-check-button {
+                    padding: 12px 20px;
+                    font-size: 0.9rem;
+                    margin: 10px auto;
+                }
             }
         </style>
     </head>
     <body>
-                
+
         <!--------------- header-section --------------->
         <jsp:include page="Common/Header.jsp" />
         <!--------------- header-section-end --------------->
-        
+
         <!--------------- thank-you-section --------------->
         <div class="thank-you-main">
             <!-- Floating Particles Background -->
@@ -377,44 +408,44 @@
             </div>
 
             <div class="thank-you-container">
-            <div class="success-icon">
-                <i class="fas fa-check-circle"></i>
-            </div>
-            
-            <div class="thank-you-card">
-                <h1 class="thank-you-title">Chúc Mừng!</h1>
-                <p class="thank-you-message">
-                    Tài khoản của bạn đã được tạo thành công. 
-                    Cảm ơn bạn đã tham gia cộng đồng của chúng tôi!
-                </p>
-                
-                <div class="email-verification">
-                    <i class="fas fa-envelope"></i>
-                    Vui lòng kiểm tra email để xác thực tài khoản
+                <div class="success-icon">
+                    <i class="fas fa-check-circle"></i>
                 </div>
-                
-                <p class="thank-you-message">
-                    Chúng tôi đã gửi một email xác thực đến địa chỉ email của bạn. 
-                    Hãy click vào link trong email để hoàn tất quá trình đăng ký.
-                </p>
-                
-                <ul class="social-icon">
-                    <li class="google">
-                        <a href="mailto:peguing6@gmail.com" title="Liên hệ hỗ trợ">
-                            <i class="fas fa-envelope"></i>
-                        </a>
-                    </li>
-                    <li class="comeback">
-                        <a href="trangchu" title="Về trang chủ">
-                            <i class="fas fa-home"></i>
-                        </a>
-                    </li>
-                </ul>
+
+                <div class="thank-you-card">
+                    <h1 class="thank-you-title">Chúc Mừng!</h1>
+                    <p class="thank-you-message">
+                        Tài khoản của bạn đã được tạo thành công. 
+                        Cảm ơn bạn đã tham gia cộng đồng của chúng tôi!
+                    </p>
+
+                    <div class="email-check-button">
+                        <i class="fas fa-envelope"></i>
+                        Vui lòng kiểm tra email để xác thực tài khoản
+                    </div>
+
+                    <p class="thank-you-message">
+                        Chúng tôi đã gửi một email xác thực đến địa chỉ email của bạn. 
+                        Hãy click vào link trong email để hoàn tất quá trình đăng ký.
+                    </p>
+
+                    <ul class="social-icon">
+                        <li class="google">
+                            <a href="mailto:peguing6@gmail.com" title="Liên hệ hỗ trợ">
+                                <i class="fas fa-envelope"></i>
+                            </a>
+                        </li>
+                        <li class="comeback">
+                            <a href="trangchu" title="Về trang chủ">
+                                <i class="fas fa-home"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </div>
-        </div>
         </div>
         <!--------------- thank-you-section-end --------------->
-        
+
         <!-- Confetti Animation -->
         <div class="confetti" style="left: 10%;"></div>
         <div class="confetti" style="left: 20%;"></div>
@@ -424,30 +455,30 @@
         <div class="confetti" style="left: 70%;"></div>
         <div class="confetti" style="left: 80%;"></div>
         <div class="confetti" style="left: 90%;"></div>
-        
+
         <!--------------- footer-section--------------->
         <jsp:include page="Common/Footer.jsp" />
         <!--------------- footer-section-end--------------->
-        
+
         <jsp:include page="Common/Js.jsp" />
         <jsp:include page="Common/Message.jsp" />
-        
+
         <script>
             // Auto redirect after 10 seconds
-            setTimeout(function() {
+            setTimeout(function () {
                 if (confirm('Bạn có muốn về trang chủ không?')) {
                     window.location.href = 'trangchu';
                 }
             }, 10000);
 
             // Create more confetti on click
-            document.addEventListener('click', function(e) {
+            document.addEventListener('click', function (e) {
                 createConfetti(e.clientX, e.clientY);
             });
 
             function createConfetti(x, y) {
                 const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#feca57'];
-                
+
                 for (let i = 0; i < 6; i++) {
                     const confetti = document.createElement('div');
                     confetti.style.position = 'fixed';
@@ -459,12 +490,12 @@
                     confetti.style.pointerEvents = 'none';
                     confetti.style.zIndex = '1000';
                     confetti.style.borderRadius = '50%';
-                    
+
                     const angle = (Math.PI * 2 * i) / 6;
                     const velocity = 50 + Math.random() * 100;
-                    
+
                     document.body.appendChild(confetti);
-                    
+
                     confetti.animate([
                         {
                             transform: `translate(0, 0) scale(1)`,

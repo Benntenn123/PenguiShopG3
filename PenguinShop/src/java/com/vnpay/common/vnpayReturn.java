@@ -70,23 +70,19 @@ public class vnpayReturn extends HttpServlet {
                         // Handle order payment
                         int orderId = Integer.parseInt(id);
                         double orderTotal = odao.getTotalOrder(orderId);
-                        if (Math.abs(vnpAmountInDouble - orderTotal) < 0.01) { // Verify amount matches order total
-                            boolean success = odao.updateOrderStatus(orderId, PaymentStatus.DA_THANH_TOAN);
-                            if (success && user != null) {
-                                user.setWallet(odao.getWalletBalance(user.getUserID()));
-                                session.setAttribute("user", user);
-                            }
-                            LOGGER.log(Level.INFO, "Order {0} payment status updated: {1}", new Object[]{orderId, success});
-                        } else {
-                            LOGGER.log(Level.WARNING, "Amount mismatch for order {0}. Expected: {1}, Received: {2}",
-                                    new Object[]{orderId, orderTotal, vnpAmountInDouble});
-                            status = "FAILURE";
+
+                        boolean success = odao.updateOrderStatus(orderId, PaymentStatus.DA_THANH_TOAN);
+                        if (success && user != null) {
+                            user.setWallet(odao.getWalletBalance(user.getUserID()));
+                            session.setAttribute("user", user);
                         }
+                        LOGGER.log(Level.INFO, "Order {0} payment status updated: {1}", new Object[]{orderId, success});
+
                     } else if ("naptien".equals(transactionType)) {
                         // Handle wallet top-up
                         int userId = Integer.parseInt(id);
-                        
-                        boolean success = odao.plusWallet(vnpAmountInDouble,userId);
+
+                        boolean success = odao.plusWallet(vnpAmountInDouble, userId);
                         if (success && user != null && user.getUserID() == userId) {
                             user.setWallet(odao.getWalletBalance(userId));
                             session.setAttribute("user", user);

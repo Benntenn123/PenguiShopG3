@@ -4,8 +4,11 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/DAL/OrderDAO.java</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Controller/HomePage/Customer/Profile/Feedback.java</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/web/HomePage/OrderSuccess.jsp</file>
             <file>file:/F:/Git/PenguiShopG3/PenguinShop/web/Admin/ListOrderAdmin.jsp</file>
             <file>file:/F:/Git/PenguiShopG3/PenguinShop/src/java/Controller/Admin/Order/ListOrderAdmin.java</file>
+            <file>file:/F:/Git/PenguiShopG3/PenguinShop/web/HomePage/OrderHistory.jsp</file>
         </group>
     </open-files>
 </project-private>

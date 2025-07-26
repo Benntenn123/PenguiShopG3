@@ -63,7 +63,7 @@
                                         </c:forEach>
                                     </ul>
                                 </div>
-                                <a href="login" class="shop-btn">
+                                <a href="trangchu" class="shop-btn">
                                     Bắt đầu
                                     <span>
                                         <svg width="8" height="14" viewBox="0 0 8 14" fill="none"

@@ -44,7 +44,8 @@ public class UserProfile extends HttpServlet {
         String address = request.getParameter("addres");
         String birthdayStr = request.getParameter("birthday");
         String imageUser = request.getParameter("imageOld"); // Mặc định là ảnh cũ (public_id)
-        String[] string = new String[]{fullName, email, phone, birthdayStr};
+        String createdDate = request.getParameter("createDate");
+        String[] string = new String[]{fullName, email, phone, birthdayStr, createdDate};
 
         // Kiểm tra trường trống
         if (StringConvert.isAnyFieldEmpty(string)) {
@@ -121,7 +122,7 @@ public class UserProfile extends HttpServlet {
         User user = (User) request.getSession().getAttribute("user");
         System.out.println("Ảnh cuối cùng: " + imageUser);
 
-        return new User(user.getUserID(), fullName, address, birthday, phone, email, imageUser);
+        return new User(user.getUserID(), fullName, address, birthday, phone, email, imageUser, createdDate);
     }
 
 //    private boolean isImageFile(String fileName) {
@@ -158,7 +159,8 @@ public class UserProfile extends HttpServlet {
                 UserDAO udao = new UserDAO();
                 udao.insertLog(user.getUserID(), thongbao, thongbao);
                 request.getSession().setAttribute("ms", "Cập nhật hồ sơ thành công!");
-                request.getSession().setAttribute("user", user); // Cập nhật lại user trong session
+                User u = udao.loadUserInfoByEmail(user.getEmail());
+                request.getSession().setAttribute("user", u); // Cập nhật lại user trong session
                 if (!response.isCommitted()) {
                     response.sendRedirect("trangchu");
                 } else {

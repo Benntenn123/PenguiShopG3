@@ -22,6 +22,17 @@ public class User {
 
     private int permissionCount;
     private double wallet;
+
+    public User(int userID, String fullName, String address, Date birthday, String phone, String email, String imageUser, String createdDate) {
+        this.userID = userID;
+        this.fullName = fullName;
+        this.address = address;
+        this.birthday = birthday;
+        this.phone = phone;
+        this.email = email;
+        this.image_user = imageUser;
+        this.created_at = createdDate;
+    }
     // Getter & Setter cho permissions
     public List<Permission> getPermissions() {
         return permissions;

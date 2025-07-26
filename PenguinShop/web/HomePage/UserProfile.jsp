@@ -78,7 +78,7 @@
                                                         <div class="review-form-name address-form">
                                                             <label for="addres" class="form-label">Ngày tham gia</label>
                                                             <input type="text" id="addres" class="form-control"
-                                                                   placeholder="Địa chỉ" readonly="" name="addres" value="${user.created_at}">
+                                                                   placeholder="Ngày tham gia" readonly="" name="createDate" value="${user.created_at}">
                                                         </div>
                                                         <div class="submit-btn">
                                                             <a href="userprofile" class="shop-btn cancel-btn">Hủy bỏ</a>

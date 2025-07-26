@@ -10,6 +10,9 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Collection;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.CountDownLatch;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
@@ -24,17 +27,21 @@ import org.apache.logging.log4j.Logger;
 @WebServlet(name="Feedback", urlPatterns={"/feedback"})
 @MultipartConfig(fileSizeThreshold = 1024 * 1024 * 2, // 2MB
                  maxFileSize = 1024 * 1024 * 10,      // 10MB
-                 maxRequestSize = 1024 * 1024 * 50)   //
+                 maxRequestSize = 1024 * 1024 * 50)   // 50MB
 public class Feedback extends HttpServlet {
     private static final Logger LOGGER = LogManager.getLogger(Feedback.class);
     private CloudinaryConfig cloudinary = new CloudinaryConfig();
     private static final int MAX_IMAGES = 5;
     private final FeedbackDAO feedbackDAO = new FeedbackDAO();
+
+    // Thread-safe list để lưu kết quả upload
+    private final List<String> uploadResults = new CopyOnWriteArrayList<>();
+    private final List<String> uploadErrors = new CopyOnWriteArrayList<>();
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
@@ -53,11 +60,10 @@ public class Feedback extends HttpServlet {
         processRequest(request, response);
     } 
 
-   
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-     try {
+        try {
             HttpSession session = request.getSession();
             User user = (User) session.getAttribute("user");
             
@@ -105,34 +111,35 @@ public class Feedback extends HttpServlet {
                 return;
             }
 
-//            // Validate order status
-//            if (!isOrderEligibleForReview(orderId)) {
-//                request.getSession().setAttribute("errorMessage", "Đơn hàng không đủ điều kiện để đánh giá");
-//                response.sendRedirect(request.getContextPath() + "/order-status");
-//                return;
-//            }
-
-            // Get image parts
-            // Process uploaded images
-            List<String> imageUrls = new ArrayList<>();
-            for (Part part : request.getParts()) {
+            // Collect image parts first
+            List<Part> imageParts = new ArrayList<>();
+            Collection<Part> allParts = request.getParts();
+            
+            for (Part part : allParts) {
                 if ("images".equals(part.getName()) && part.getSize() > 0) {
                     String fileName = part.getSubmittedFileName();
-                    if (fileName != null && fileName.matches(".*\\.(jpg|jpeg|png|gif)$")) {
-                        try (InputStream inputStream = part.getInputStream()) {
-                            String imageUrl = cloudinary.uploadImage(inputStream, fileName);
-                            if (imageUrl != null) {
-                                imageUrls.add(imageUrl);
-                            }
-                        }
+                    if (fileName != null && fileName.toLowerCase().matches(".*\\.(jpg|jpeg|png|gif|bmp|webp)$")) {
+                        imageParts.add(part);
                     }
                 }
             }
 
-            if (imageUrls.size() > MAX_IMAGES) {
+            if (imageParts.size() > MAX_IMAGES) {
                 session.setAttribute("error", "Chỉ được tải lên tối đa " + MAX_IMAGES + " ảnh");
                 response.sendRedirect("orderhistory");
                 return;
+            }
+
+            // Clear previous results
+            uploadResults.clear();
+            uploadErrors.clear();
+
+            // MULTI-THREADING UPLOAD IMAGES
+            List<String> imageUrls = uploadImagesMultiThreaded(imageParts);
+
+            LOGGER.info("Total images uploaded successfully: " + imageUrls.size());
+            if (!uploadErrors.isEmpty()) {
+                LOGGER.warn("Upload errors: " + uploadErrors);
             }
 
             // Create and save feedback
@@ -149,22 +156,25 @@ public class Feedback extends HttpServlet {
             boolean success = feedbackDAO.addFeedback(feedback);
 
             if (success) {
-                String thongbao = "User đánh giá sản phẩm với id" +variantID;
+                String thongbao = "User đánh giá sản phẩm với id " + variantID + 
+                                (imageUrls.size() > 0 ? " với " + imageUrls.size() + " ảnh" : "");
                 UserDAO udao = new UserDAO();
                 udao.insertLog(user.getUserID(), thongbao, thongbao);
-                session.setAttribute("ms", "Đánh giá sản phẩm thành công!");
+                
+                String successMsg = "Đánh giá sản phẩm thành công!";
+                if (imageUrls.size() > 0) {
+                    successMsg += " Đã tải lên " + imageUrls.size() + " ảnh.";
+                }
+                if (!uploadErrors.isEmpty()) {
+                    successMsg += " (Có " + uploadErrors.size() + " ảnh lỗi)";
+                }
+                session.setAttribute("ms", successMsg);
             } else {
                 session.setAttribute("error", "Có lỗi xảy ra khi lưu đánh giá");
             }
 
-        } catch (IOException e) {
-            LOGGER.error("Lỗi khi upload ảnh: " + e.getMessage());
-            request.getSession().setAttribute("error", "Lỗi khi tải ảnh lên");
-        } catch (ServletException e) {
-            LOGGER.error("Lỗi servlet: " + e.getMessage());
-            request.getSession().setAttribute("error", "Lỗi hệ thống");
         } catch (Exception e) {
-            LOGGER.error("Lỗi không xác định: " + e.getMessage());
+            LOGGER.error("Lỗi không xác định: " + e.getMessage(), e);
             request.getSession().setAttribute("error", "Lỗi không xác định");
         }
 
@@ -172,9 +182,80 @@ public class Feedback extends HttpServlet {
         response.sendRedirect("orderhistory");
     }
 
+    /**
+     * Upload images using multiple threads (basic implementation)
+     */
+    private List<String> uploadImagesMultiThreaded(List<Part> imageParts) {
+        if (imageParts.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        // CountDownLatch để chờ tất cả threads hoàn thành
+        CountDownLatch latch = new CountDownLatch(imageParts.size());
+        
+        LOGGER.info("Starting multi-threaded upload for " + imageParts.size() + " images");
+
+        // Tạo thread cho mỗi ảnh
+        for (int i = 0; i < imageParts.size(); i++) {
+            final Part imagePart = imageParts.get(i);
+            final int index = i;
+            
+            // Tạo thread mới để upload ảnh
+            Thread uploadThread = new Thread(() -> {
+                try {
+                    String fileName = imagePart.getSubmittedFileName();
+                    LOGGER.info("Thread " + index + " uploading: " + fileName);
+                    
+                    try (InputStream inputStream = imagePart.getInputStream()) {
+                        String imageUrl = cloudinary.uploadImage(inputStream, fileName);
+                        
+                        if (imageUrl != null && !imageUrl.trim().isEmpty()) {
+                            uploadResults.add(imageUrl);
+                            LOGGER.info("Thread " + index + " successfully uploaded: " + fileName + " -> " + imageUrl);
+                        } else {
+                            String error = "Failed to upload: " + fileName;
+                            uploadErrors.add(error);
+                            LOGGER.warn("Thread " + index + " " + error);
+                        }
+                    }
+                } catch (Exception e) {
+                    String error = "Error uploading " + imagePart.getSubmittedFileName() + ": " + e.getMessage();
+                    uploadErrors.add(error);
+                    LOGGER.error("Thread " + index + " " + error, e);
+                } finally {
+                    // Giảm count của latch khi thread hoàn thành
+                    latch.countDown();
+                }
+            });
+            
+            // Đặt tên cho thread để dễ debug
+            uploadThread.setName("ImageUpload-" + index);
+            
+            // Start thread
+            uploadThread.start();
+        }
+
+        try {
+            // Chờ tất cả threads hoàn thành (timeout 30 giây)
+            boolean completed = latch.await(30, java.util.concurrent.TimeUnit.SECONDS);
+            
+            if (!completed) {
+                LOGGER.warn("Some upload threads did not complete within 30 seconds");
+            }
+            
+        } catch (InterruptedException e) {
+            LOGGER.error("Upload process was interrupted", e);
+            Thread.currentThread().interrupt();
+        }
+
+        LOGGER.info("Multi-threaded upload completed. Success: " + uploadResults.size() + ", Errors: " + uploadErrors.size());
+        
+        // Return list of successful uploads
+        return new ArrayList<>(uploadResults);
+    }
+
     @Override
     public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
-
+        return "Feedback servlet with multi-threaded image upload";
+    }
 }

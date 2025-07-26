@@ -46,6 +46,7 @@ public class SendRequestSupport extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         String[] data = getData(request);
+        System.out.println(data[0] +"-" +data[1] +"-"+data[2]+"-"+data[3]+ "-" + data[4]);
         if(StringConvert.isAnyFieldEmpty(data)){
             request.getSession().setAttribute("error", "Vui lòng điền đủ thông tin");      
         }
